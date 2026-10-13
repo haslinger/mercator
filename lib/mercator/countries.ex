@@ -17,10 +17,19 @@ defmodule Mercator.Countries do
   def delivery, do: Application.get_env(:mercator, :delivery_countries, ~w(AT))
 
   @doc "Postcode format per country; nil means any non-empty postcode."
-  def postcode_format("AT"), do: ~r/^\d{4}$/
-  def postcode_format(code) when code in ~w(DE IT FR ES FI EE HR), do: ~r/^\d{5}$/
-  def postcode_format("CH"), do: ~r/^\d{4}$/
-  def postcode_format("LI"), do: ~r/^\d{4}$/
+  def postcode_format(code) when code in ~w(AT BE BG CH CY DK HU LI SI), do: ~r/^\d{4}$/
+  def postcode_format(code) when code in ~w(DE EE ES FI FR HR IT), do: ~r/^\d{5}$/
+  def postcode_format(code) when code in ~w(CZ GR SE SK), do: ~r/^\d{3} ?\d{2}$/
+  def postcode_format("NL"), do: ~r/^\d{4} ?[A-Z]{2}$/i
+  def postcode_format("PL"), do: ~r/^\d{2}-\d{3}$/
+  def postcode_format("PT"), do: ~r/^\d{4}-\d{3}$/
+  def postcode_format("RO"), do: ~r/^\d{6}$/
+  def postcode_format("LU"), do: ~r/^(L-)?\d{4}$/i
+  def postcode_format("LV"), do: ~r/^(LV-)?\d{4}$/i
+  def postcode_format("LT"), do: ~r/^(LT-)?\d{5}$/i
+  def postcode_format("MT"), do: ~r/^[A-Z]{3} ?\d{2,4}$/i
+  # Eircode, e.g. D02 X285
+  def postcode_format("IE"), do: ~r/^[A-Z]\d[\dW] ?[A-Z\d]{4}$/i
   def postcode_format(_code), do: nil
 
   @doc "The translated name of a country."

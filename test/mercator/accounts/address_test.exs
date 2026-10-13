@@ -31,6 +31,33 @@ defmodule Mercator.Accounts.AddressTest do
     assert {:ok, _} = create(user, %{country: "DE", postcode: "80331", city: "München"})
     assert {:error, %Ash.Error.Invalid{}} = create(user, %{country: "DE", postcode: "8033"})
     assert {:ok, _} = create(user, %{country: "NL", postcode: "1011 AB", city: "Amsterdam"})
+    assert {:error, %Ash.Error.Invalid{}} = create(user, %{country: "NL", postcode: "2513"})
+  end
+
+  test "postcode formats of other countries" do
+    valid = [
+      NL: "2513AA",
+      PL: "00-950",
+      CZ: "110 00",
+      SE: "11122",
+      PT: "1100-148",
+      LU: "L-1009",
+      IE: "D02 X285",
+      MT: "VLT 1117",
+      RO: "010011"
+    ]
+
+    invalid = [PL: "00950", CZ: "1100", PT: "1100", RO: "01001", IE: "D02", CH: "80331"]
+
+    for {country, postcode} <- valid do
+      assert Regex.match?(Mercator.Countries.postcode_format("#{country}"), postcode),
+             "#{country} #{postcode}"
+    end
+
+    for {country, postcode} <- invalid do
+      refute Regex.match?(Mercator.Countries.postcode_format("#{country}"), postcode),
+             "#{country} #{postcode}"
+    end
   end
 
   test "only known countries" do

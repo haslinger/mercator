@@ -209,6 +209,7 @@ Rails sources (#1–#4) and continuing the overview (#5) were answered on 2026-1
   - order numbers `BH-2026-00042`
   - B2B reverse charge later
   - order email without PDF
+- **#71** (2026-10-13) **Postcode formats** are checked for all billing countries (EU + CH, LI), defined in `Mercator.Countries.postcode_format/1`.
 - **#25** (2026-10-13) **No security risk:** none of the old systems are deployed any more. Secrets still go only into env/`runtime.exs` in the port.
 
 ### Scope and target
