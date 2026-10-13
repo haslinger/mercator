@@ -115,3 +115,8 @@ msgstr "Übersetzung für %{locale} fehlt"
 #, elixir-autogen, elixir-format
 msgid "translation for %{locale} must be at most %{max} characters"
 msgstr "Übersetzung für %{locale} darf höchstens %{max} Zeichen lang sein"
+
+#: lib/mercator/catalog/validations/has_variant.ex:23
+#, elixir-autogen, elixir-format
+msgid "a product needs at least one variant"
+msgstr "Ein Produkt braucht mindestens eine Variante"

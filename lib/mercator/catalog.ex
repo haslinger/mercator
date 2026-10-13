@@ -7,6 +7,11 @@ defmodule Mercator.Catalog do
     otp_app: :mercator,
     extensions: [AshPhoenix]
 
+  defdelegate price_for(variant, quantity \\ 1, date \\ Date.utc_today()),
+    to: Mercator.Catalog.Pricing
+
+  defdelegate from_price(product, date \\ Date.utc_today()), to: Mercator.Catalog.Pricing
+
   resources do
     resource Mercator.Catalog.Category do
       define :list_categories, action: :read
@@ -23,6 +28,37 @@ defmodule Mercator.Catalog do
       define :hide_category, action: :hide
       define :deactivate_category, action: :deactivate
       define :destroy_category, action: :destroy
+    end
+
+    resource Mercator.Catalog.Product do
+      define :list_products, action: :read
+      define :get_product, action: :read, get_by: [:id]
+      define :get_product_by_slug, action: :read, get_by: [:slug]
+      define :get_product_by_number, action: :read, get_by: [:number]
+      define :create_product, action: :create
+      define :update_product, action: :update
+      define :activate_product, action: :activate
+      define :discontinue_product, action: :discontinue
+      define :destroy_product, action: :destroy
+    end
+
+    resource Mercator.Catalog.Variant do
+      define :get_variant, action: :read, get_by: [:id]
+      define :get_variant_by_number, action: :read, get_by: [:number]
+      define :create_variant, action: :create
+      define :update_variant, action: :update
+      define :destroy_variant, action: :destroy
+    end
+
+    resource Mercator.Catalog.Price do
+      define :create_price, action: :create
+      define :update_price, action: :update
+      define :destroy_price, action: :destroy
+    end
+
+    resource Mercator.Catalog.Categorization do
+      define :categorize, action: :create, args: [:category_id, :product_id]
+      define :destroy_categorization, action: :destroy
     end
 
     resource Mercator.Catalog.TaxClass do

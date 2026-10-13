@@ -167,6 +167,13 @@ defmodule Mercator.Catalog.Category do
       sort position: :asc
       public? true
     end
+
+    has_many :categorizations, Mercator.Catalog.Categorization, public?: true
+
+    many_to_many :products, Mercator.Catalog.Product do
+      through Mercator.Catalog.Categorization
+      public? true
+    end
   end
 
   identities do
