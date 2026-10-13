@@ -160,7 +160,10 @@ defmodule MercatorWeb.CatalogComponents do
   attr :size, :atom, default: :thumb, values: [:thumb, :large]
   attr :class, :any, default: nil
 
-  @doc "An uploaded catalogue image, or the placeholder if there is none."
+  @doc """
+  An uploaded catalogue image, or the placeholder if there is none. Large
+  images (top of the product page) load immediately, thumbnails lazily.
+  """
   def catalog_image(%{image: nil} = assigns) do
     ~H"""
     <.placeholder_image label={@label} class={@class} />
@@ -174,7 +177,8 @@ defmodule MercatorWeb.CatalogComponents do
       alt={Translated.t(@image.alt, Gettext.get_locale(MercatorWeb.Gettext)) || @label}
       width={if @size == :thumb, do: 400, else: 1024}
       height={if @size == :thumb, do: 400, else: 1024}
-      loading="lazy"
+      loading={if @size == :large, do: "eager", else: "lazy"}
+      fetchpriority={if @size == :large, do: "high", else: "auto"}
       class={["w-full object-cover", @class]}
     />
     """
