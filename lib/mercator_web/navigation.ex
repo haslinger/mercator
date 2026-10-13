@@ -17,6 +17,6 @@ defmodule MercatorWeb.Navigation do
 
   # hidden categories are reachable by link but not listed (#52)
   defp categories do
-    Enum.filter(Mercator.Catalog.list_root_categories!(), &(&1.state == :active))
+    Enum.filter(Mercator.Catalog.list_root_categories!(load: :images), &(&1.state == :active))
   end
 end

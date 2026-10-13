@@ -42,6 +42,11 @@ end
 
 if config_env() == :prod do
   config :mercator,
+         :uploads_dir,
+         System.get_env("UPLOADS_DIR") ||
+           raise("environment variable UPLOADS_DIR is missing (directory for uploaded files).")
+
+  config :mercator,
          :mail_from,
          {System.get_env("MAIL_FROM_NAME", "Mercator"),
           System.get_env("MAIL_FROM_ADDRESS") ||

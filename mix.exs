@@ -63,6 +63,7 @@ defmodule Mercator.MixProject do
   defp deps do
     [
       {:bcrypt_elixir, "~> 3.0"},
+      {:image, "~> 0.72"},
       {:usage_rules, "~> 1.0", only: [:dev]},
       {:tidewave, "~> 0.9", only: [:dev]},
       {:picosat_elixir, "~> 0.2"},

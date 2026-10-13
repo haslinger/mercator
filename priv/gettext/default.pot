@@ -305,17 +305,17 @@ msgstr ""
 msgid "%{count} of %{total} products"
 msgstr ""
 
-#: lib/mercator_web/live/product_live.ex:262
+#: lib/mercator_web/live/product_live.ex:270
 #, elixir-autogen, elixir-format
 msgid "Add to basket"
 msgstr ""
 
-#: lib/mercator_web/live/product_live.ex:181
+#: lib/mercator_web/live/product_live.ex:189
 #, elixir-autogen, elixir-format
 msgid "Article no."
 msgstr ""
 
-#: lib/mercator_web/components/catalog_components.ex:139
+#: lib/mercator_web/components/catalog_components.ex:152
 #: lib/mercator_web/live/category_live.ex:236
 #, elixir-autogen, elixir-format
 msgid "Bestseller"
@@ -326,12 +326,12 @@ msgstr ""
 msgid "Category not found."
 msgstr ""
 
-#: lib/mercator_web/live/product_live.ex:277
+#: lib/mercator_web/live/product_live.ex:285
 #, elixir-autogen, elixir-format
 msgid "Description"
 msgstr ""
 
-#: lib/mercator_web/live/product_live.ex:494
+#: lib/mercator_web/live/product_live.ex:502
 #, elixir-autogen, elixir-format
 msgid "Graduated prices"
 msgstr ""
@@ -341,12 +341,12 @@ msgstr ""
 msgid "Home"
 msgstr ""
 
-#: lib/mercator_web/live/product_live.ex:302
+#: lib/mercator_web/live/product_live.ex:310
 #, elixir-autogen, elixir-format
 msgid "Matching accessories"
 msgstr ""
 
-#: lib/mercator_web/components/catalog_components.ex:138
+#: lib/mercator_web/components/catalog_components.ex:151
 #: lib/mercator_web/live/category_live.ex:236
 #, elixir-autogen, elixir-format
 msgid "New"
@@ -367,12 +367,12 @@ msgstr ""
 msgid "Our range"
 msgstr ""
 
-#: lib/mercator_web/live/product_live.ex:127
+#: lib/mercator_web/live/product_live.ex:128
 #, elixir-autogen, elixir-format
 msgid "Please enter a quantity greater than zero."
 msgstr ""
 
-#: lib/mercator_web/live/product_live.ex:124
+#: lib/mercator_web/live/product_live.ex:125
 #, elixir-autogen, elixir-format
 msgid "Please enter a whole number."
 msgstr ""
@@ -382,8 +382,8 @@ msgstr ""
 msgid "Price"
 msgstr ""
 
-#: lib/mercator_web/components/catalog_components.ex:81
-#: lib/mercator_web/live/product_live.ex:197
+#: lib/mercator_web/components/catalog_components.ex:94
+#: lib/mercator_web/live/product_live.ex:205
 #, elixir-autogen, elixir-format
 msgid "Price on request"
 msgstr ""
@@ -398,7 +398,7 @@ msgstr ""
 msgid "Price, low to high"
 msgstr ""
 
-#: lib/mercator_web/live/product_live.ex:45
+#: lib/mercator_web/live/product_live.ex:46
 #, elixir-autogen, elixir-format
 msgid "Product not found."
 msgstr ""
@@ -408,13 +408,13 @@ msgstr ""
 msgid "Products"
 msgstr ""
 
-#: lib/mercator_web/live/product_live.ex:283
+#: lib/mercator_web/live/product_live.ex:291
 #, elixir-autogen, elixir-format
 msgid "Properties"
 msgstr ""
 
-#: lib/mercator_web/live/product_live.ex:232
-#: lib/mercator_web/live/product_live.ex:363
+#: lib/mercator_web/live/product_live.ex:240
+#: lib/mercator_web/live/product_live.ex:371
 #, elixir-autogen, elixir-format
 msgid "Quantity"
 msgstr ""
@@ -429,7 +429,7 @@ msgstr ""
 msgid "Reset filters"
 msgstr ""
 
-#: lib/mercator_web/components/catalog_components.ex:140
+#: lib/mercator_web/components/catalog_components.ex:153
 #: lib/mercator_web/live/category_live.ex:236
 #, elixir-autogen, elixir-format
 msgid "Sale"
@@ -440,7 +440,7 @@ msgstr ""
 msgid "Show only"
 msgstr ""
 
-#: lib/mercator_web/live/product_live.ex:304
+#: lib/mercator_web/live/product_live.ex:312
 #, elixir-autogen, elixir-format
 msgid "Similar products"
 msgstr ""
@@ -450,34 +450,34 @@ msgstr ""
 msgid "Sort by"
 msgstr ""
 
-#: lib/mercator_web/live/product_live.ex:260
+#: lib/mercator_web/live/product_live.ex:268
 #, elixir-autogen, elixir-format
 msgid "The basket follows soon."
 msgstr ""
 
-#: lib/mercator_web/live/product_live.ex:247
-#: lib/mercator_web/live/product_live.ex:408
+#: lib/mercator_web/live/product_live.ex:255
+#: lib/mercator_web/live/product_live.ex:416
 #, elixir-autogen, elixir-format
 msgid "Total"
 msgstr ""
 
-#: lib/mercator_web/live/product_live.ex:205
+#: lib/mercator_web/live/product_live.ex:213
 #, elixir-autogen, elixir-format
 msgid "Variant"
 msgstr ""
 
-#: lib/mercator_web/live/product_live.ex:303
+#: lib/mercator_web/live/product_live.ex:311
 #, elixir-autogen, elixir-format
 msgid "We recommend"
 msgstr ""
 
-#: lib/mercator_web/components/catalog_components.ex:104
+#: lib/mercator_web/components/catalog_components.ex:117
 #: lib/mercator_web/live/category_live.ex:172
 #, elixir-autogen, elixir-format
 msgid "from"
 msgstr ""
 
-#: lib/mercator_web/live/product_live.ex:499
+#: lib/mercator_web/live/product_live.ex:507
 #, elixir-autogen, elixir-format
 msgid "from %{quantity} %{unit}"
 msgstr ""
@@ -492,12 +492,12 @@ msgstr ""
 msgid "to"
 msgstr ""
 
-#: lib/mercator_web/components/catalog_components.ex:120
+#: lib/mercator_web/components/catalog_components.ex:133
 #, elixir-autogen, elixir-format
 msgid "excl. %{rate} % VAT"
 msgstr ""
 
-#: lib/mercator_web/components/catalog_components.ex:118
+#: lib/mercator_web/components/catalog_components.ex:131
 #, elixir-autogen, elixir-format
 msgid "incl. %{rate} % VAT"
 msgstr ""
@@ -533,47 +533,47 @@ msgstr ""
 msgid "What are you looking for?"
 msgstr ""
 
-#: lib/mercator_web/live/product_live.ex:382
+#: lib/mercator_web/live/product_live.ex:390
 #, elixir-autogen, elixir-format
 msgid "%{measure} %{unit} per piece"
 msgstr ""
 
-#: lib/mercator_web/live/product_live.ex:462
+#: lib/mercator_web/live/product_live.ex:470
 #, elixir-autogen, elixir-format
 msgid "%{name}: %{measure} %{unit} × %{price}"
 msgstr ""
 
-#: lib/mercator_web/live/product_live.ex:385
+#: lib/mercator_web/live/product_live.ex:393
 #, elixir-autogen, elixir-format
 msgid "Configuration no."
 msgstr ""
 
-#: lib/mercator_web/live/product_live.ex:471
+#: lib/mercator_web/live/product_live.ex:479
 #, elixir-autogen, elixir-format
 msgid "Cutting to size"
 msgstr ""
 
-#: lib/mercator_web/live/product_live.ex:472
+#: lib/mercator_web/live/product_live.ex:480
 #, elixir-autogen, elixir-format
 msgid "Minimum order surcharge"
 msgstr ""
 
-#: lib/mercator_web/live/product_live.ex:400
+#: lib/mercator_web/live/product_live.ex:408
 #, elixir-autogen, elixir-format
 msgid "Net total"
 msgstr ""
 
-#: lib/mercator_web/live/product_live.ex:404
+#: lib/mercator_web/live/product_live.ex:412
 #, elixir-autogen, elixir-format
 msgid "VAT %{rate} %"
 msgstr ""
 
-#: lib/mercator_web/live/product_live.ex:390
+#: lib/mercator_web/live/product_live.ex:398
 #, elixir-autogen, elixir-format
 msgid "Calculation"
 msgstr ""
 
-#: lib/mercator_web/live/product_live.ex:391
+#: lib/mercator_web/live/product_live.ex:399
 #, elixir-autogen, elixir-format
 msgid "net"
 msgstr ""

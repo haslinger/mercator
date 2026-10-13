@@ -196,6 +196,7 @@ Rails sources (#1–#4) and continuing the overview (#5) were answered on 2026-1
 - **#58** (2026-10-13) Product and category images become **real uploads** (an image resource with upload and storage), not static files per brand.
 - **#11** (2026-10-13) Uploaded files are stored on **local disk**.
 - **#59** (2026-10-13) Demo images are **generated externally as photos** from the prompt list in `assets/lists/` (124 images), not as SVG illustrations. They are imported through the upload resource (#58).
+- **#60** (2026-10-13) Image processing with the Elixir library **`image`** (libvips via `vix`, precompiled, nothing to install on servers).
 - **#25** (2026-10-13) **No security risk:** none of the old systems are deployed any more. Secrets still go only into env/`runtime.exs` in the port.
 
 ### Scope and target

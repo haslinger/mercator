@@ -1,5 +1,8 @@
 import Config
 config :mercator, Oban, testing: :manual
+# Uploaded files in tests; each test run starts empty (see test_helper.exs)
+config :mercator, :uploads_dir, Path.expand("../tmp/test_uploads", __DIR__)
+
 config :mercator, token_signing_secret: "ilfoFdFrYuSbZKTWiq0aRYjeMPbEUawB"
 config :bcrypt_elixir, log_rounds: 1
 config :ash, policies: [show_policy_breakdowns?: true], disable_async?: true

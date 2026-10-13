@@ -86,7 +86,7 @@ defmodule MercatorWeb.CategoryLive do
 
   defp active_children(category, actor) do
     category.id
-    |> Catalog.list_child_categories!(actor: actor)
+    |> Catalog.list_child_categories!(actor: actor, load: :images)
     |> Enum.filter(&(&1.state == :active))
   end
 

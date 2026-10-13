@@ -27,6 +27,10 @@ defmodule MercatorWeb.Router do
     get "/:image", BrandController, :show
   end
 
+  scope "/uploads", MercatorWeb do
+    get "/*path", UploadController, :show
+  end
+
   scope "/", MercatorWeb do
     pipe_through :browser
 

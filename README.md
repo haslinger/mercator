@@ -22,7 +22,7 @@ mix phx.server     # or: iex -S mix phx.server
 
 Then open [localhost:4000](http://localhost:4000).
 
-`mix setup` also loads demo data (`mix run priv/repo/seeds.exs`, safe to repeat). The demo users all have the password `mercator-demo`:
+`mix setup` also loads demo data (`mix run priv/repo/seeds.exs`, safe to repeat), including the demo images from `assets/img/` (`mix run priv/repo/import_images.exs` imports them on their own; uploads are stored in `uploads/`). The demo users all have the password `mercator-demo`:
 
 | Email | Name | Roles |
 |---|---|---|
@@ -92,6 +92,7 @@ Production is configured through environment variables, read in `config/runtime.
 | `TOKEN_SIGNING_SECRET` | yes | Signs authentication tokens; generate with `mix phx.gen.secret` |
 | `PHX_HOST` | yes | Public host name, used for generated URLs (e.g. in emails) |
 | `MAIL_FROM_ADDRESS` | yes | Sender address of all system emails |
+| `UPLOADS_DIR` | yes | Directory for uploaded files (product and category images); must be persistent and writable |
 | `MAIL_FROM_NAME` | no | Sender name (default `Mercator`) |
 | `PORT` | no | HTTP port (default `4000`) |
 | `POOL_SIZE` | no | Database connection pool size (default `10`) |

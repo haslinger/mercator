@@ -54,6 +54,9 @@ config :mercator, MercatorWeb.Endpoint,
 # different ports.
 
 # Enable dev routes for dashboard and mailbox
+# Uploaded files (#11), git-ignored
+config :mercator, :uploads_dir, Path.expand("../uploads", __DIR__)
+
 # Demo brand for development (decision #36)
 config :mercator, :brand,
   name: "Biber Holz",

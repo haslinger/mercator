@@ -269,6 +269,11 @@ defmodule Mercator.Catalog.Product do
 
     has_many :product_properties, Mercator.Catalog.ProductProperty, public?: true
 
+    has_many :images, Mercator.Catalog.Image do
+      sort position: :asc, inserted_at: :asc
+      public? true
+    end
+
     has_many :options, Mercator.Catalog.ProductOption do
       sort position: :asc, key: :asc
       public? true

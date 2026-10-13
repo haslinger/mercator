@@ -172,3 +172,13 @@ msgstr ""
 #, elixir-autogen, elixir-format
 msgid "configurable products need a pricing model"
 msgstr ""
+
+#: lib/mercator/catalog/validations/exactly_one_owner.ex:16
+#, elixir-autogen, elixir-format
+msgid "an image belongs to exactly one product or category"
+msgstr ""
+
+#: lib/mercator/catalog/changes/process_image.ex:31
+#, elixir-autogen, elixir-format
+msgid "is not a readable image"
+msgstr ""

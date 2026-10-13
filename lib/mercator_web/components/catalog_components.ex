@@ -45,7 +45,11 @@ defmodule MercatorWeb.CatalogComponents do
       class="card bg-base-100 shadow-sm hover:shadow-md transition-shadow"
       id={"category-tile-#{@category.slug}"}
     >
-      <.placeholder_image label={Translated.t(@category.name, @locale)} class="h-28 rounded-t-box" />
+      <.catalog_image
+        image={first_image(@category)}
+        label={Translated.t(@category.name, @locale)}
+        class="h-40 rounded-t-box"
+      />
       <div class="card-body p-4">
         <h3 class="font-semibold">{Translated.t(@category.name, @locale)}</h3>
         <p :if={@category.description} class="text-sm text-base-content/70 line-clamp-2">
@@ -68,7 +72,11 @@ defmodule MercatorWeb.CatalogComponents do
       id={"product-card-#{@product.slug}"}
     >
       <div class="relative">
-        <.placeholder_image label={Translated.t(@product.title, @locale)} class="h-40 rounded-t-box" />
+        <.catalog_image
+          image={first_image(@product)}
+          label={Translated.t(@product.title, @locale)}
+          class="h-48 rounded-t-box"
+        />
         <div class="absolute top-2 left-2"><.badges product={@product} price={@price} /></div>
       </div>
       <div class="card-body p-4 gap-1">
@@ -147,10 +155,39 @@ defmodule MercatorWeb.CatalogComponents do
     """
   end
 
+  attr :image, :any, required: true, doc: "a Mercator.Catalog.Image or nil"
+  attr :label, :string, required: true
+  attr :size, :atom, default: :thumb, values: [:thumb, :large]
+  attr :class, :any, default: nil
+
+  @doc "An uploaded catalogue image, or the placeholder if there is none."
+  def catalog_image(%{image: nil} = assigns) do
+    ~H"""
+    <.placeholder_image label={@label} class={@class} />
+    """
+  end
+
+  def catalog_image(assigns) do
+    ~H"""
+    <img
+      src={Mercator.Catalog.Image.url(@image, @size)}
+      alt={Translated.t(@image.alt, Gettext.get_locale(MercatorWeb.Gettext)) || @label}
+      width={if @size == :thumb, do: 400, else: 1024}
+      height={if @size == :thumb, do: 400, else: 1024}
+      loading="lazy"
+      class={["w-full object-cover", @class]}
+    />
+    """
+  end
+
+  @doc "The first image of a product or category with loaded images, or nil."
+  def first_image(%{images: [image | _]}), do: image
+  def first_image(_record), do: nil
+
   attr :label, :string, required: true
   attr :class, :any, default: nil
 
-  @doc "Placeholder until product images exist (#41): a wood-toned area with an icon."
+  @doc "Placeholder for products and categories without images: a wood-toned area with an icon."
   def placeholder_image(assigns) do
     ~H"""
     <div

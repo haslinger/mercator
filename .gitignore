@@ -35,3 +35,5 @@ mercator-*.tar
 npm-debug.log
 /assets/node_modules/
 
+# Uploaded files in development (#11)
+/uploads/

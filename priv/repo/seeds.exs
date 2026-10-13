@@ -11,6 +11,11 @@ else
 
   IO.puts("Demo users (password: #{Mercator.Seeds.demo_password()}):")
 
+  if File.dir?("assets/img") do
+    %{imported: imported} = Mercator.Seeds.Images.import("assets/img")
+    IO.puts("Imported #{imported} demo images from assets/img.")
+  end
+
   for user <- users do
     roles = Enum.map_join(user.roles, ", ", &to_string/1)
 

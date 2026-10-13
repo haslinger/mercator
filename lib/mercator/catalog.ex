@@ -75,6 +75,12 @@ defmodule Mercator.Catalog do
       define :update_option_choice, action: :update
     end
 
+    resource Mercator.Catalog.Image do
+      define :upload_image, action: :upload
+      define :update_image, action: :update
+      define :destroy_image, action: :destroy
+    end
+
     resource Mercator.Catalog.PropertyGroup do
       define :list_property_groups, action: :read
       define :create_property_group, action: :create

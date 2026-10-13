@@ -18,6 +18,7 @@ defmodule MercatorWeb.ProductLive do
   @loads [
     :tax_class,
     :categories,
+    :images,
     variants: :prices,
     options: :choices,
     product_properties: [property: :property_group],
@@ -166,7 +167,14 @@ defmodule MercatorWeb.ProductLive do
       } />
 
       <div class="grid gap-8 lg:grid-cols-2">
-        <.placeholder_image label={Translated.t(@product.title, @locale)} class="h-80 rounded-box" />
+        <div id="gallery">
+          <.catalog_image
+            image={first_image(@product)}
+            label={Translated.t(@product.title, @locale)}
+            size={:large}
+            class="aspect-square rounded-box"
+          />
+        </div>
 
         <div class="space-y-4">
           <.badges product={@product} price={@price} />

@@ -170,6 +170,11 @@ defmodule Mercator.Catalog.Category do
 
     has_many :categorizations, Mercator.Catalog.Categorization, public?: true
 
+    has_many :images, Mercator.Catalog.Image do
+      sort position: :asc, inserted_at: :asc
+      public? true
+    end
+
     many_to_many :products, Mercator.Catalog.Product do
       through Mercator.Catalog.Categorization
       public? true
