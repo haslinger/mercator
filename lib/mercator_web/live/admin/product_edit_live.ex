@@ -14,7 +14,7 @@ defmodule MercatorWeb.Admin.ProductEditLive do
 
   on_mount {MercatorWeb.LiveUserAuth, {:require_any_role, [:productmanager, :administrator]}}
 
-  @tabs ~w(general variants images properties relations)
+  @tabs ~w(general variants images properties relations configurator)
 
   @impl true
   def mount(%{"id" => id}, _session, socket) do
@@ -197,7 +197,7 @@ defmodule MercatorWeb.Admin.ProductEditLive do
 
       <div role="tablist" class="tabs tabs-border" id="product-tabs">
         <.link
-          :for={{tab, label} <- tabs()}
+          :for={{tab, label} <- tabs(@product)}
           patch={~p"/admin/products/#{@product.id}?tab=#{tab}"}
           role="tab"
           class={["tab", @tab == tab && "tab-active"]}
@@ -252,17 +252,30 @@ defmodule MercatorWeb.Admin.ProductEditLive do
         current_user={@current_user}
         locale={@locale}
       />
+
+      <.live_component
+        :if={@tab == "configurator"}
+        module={MercatorWeb.Admin.ProductConfiguratorTab}
+        id="configurator-tab"
+        product_id={@product.id}
+        current_user={@current_user}
+        locale={@locale}
+      />
     </Layouts.admin>
     """
   end
 
-  defp tabs,
+  defp tabs(%{kind: :configurable}), do: all_tabs()
+  defp tabs(_product), do: Enum.reject(all_tabs(), &(elem(&1, 0) == "configurator"))
+
+  defp all_tabs,
     do: [
       {"general", gettext("General")},
       {"variants", gettext("Variants & prices")},
       {"images", gettext("Images")},
       {"properties", gettext("Properties")},
-      {"relations", gettext("Relations")}
+      {"relations", gettext("Relations")},
+      {"configurator", gettext("Configurator")}
     ]
 
   attr :form, :any, required: true

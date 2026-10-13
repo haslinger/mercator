@@ -123,6 +123,8 @@ msgstr "Mein Konto"
 
 #: lib/mercator_web/live/account_live.ex:45
 #: lib/mercator_web/live/admin/category_tree_live.ex:289
+#: lib/mercator_web/live/admin/product_configurator_tab.ex:301
+#: lib/mercator_web/live/admin/product_configurator_tab.ex:343
 #: lib/mercator_web/live/admin/product_variants_tab.ex:329
 #: lib/mercator_web/live/admin/user_index_live.ex:40
 #: lib/mercator_web/live/category_live.ex:242
@@ -152,7 +154,10 @@ msgstr "Neues Passwort wiederholen"
 
 #: lib/mercator_web/live/account_live.ex:54
 #: lib/mercator_web/live/admin/category_tree_live.ex:304
-#: lib/mercator_web/live/admin/product_edit_live.ex:376
+#: lib/mercator_web/live/admin/product_configurator_tab.ex:190
+#: lib/mercator_web/live/admin/product_configurator_tab.ex:324
+#: lib/mercator_web/live/admin/product_configurator_tab.ex:370
+#: lib/mercator_web/live/admin/product_edit_live.ex:389
 #: lib/mercator_web/live/admin/product_properties_tab.ex:306
 #: lib/mercator_web/live/admin/product_variants_tab.ex:345
 #: lib/mercator_web/live/admin/product_variants_tab.ex:394
@@ -319,7 +324,7 @@ msgstr "%{count} von %{total} Produkten"
 msgid "Add to basket"
 msgstr "In den Warenkorb"
 
-#: lib/mercator_web/live/admin/product_edit_live.ex:322
+#: lib/mercator_web/live/admin/product_edit_live.ex:335
 #: lib/mercator_web/live/admin/product_index_live.ex:213
 #: lib/mercator_web/live/admin/product_index_live.ex:315
 #: lib/mercator_web/live/admin/product_variants_tab.ex:321
@@ -329,7 +334,7 @@ msgid "Article no."
 msgstr "Art.-Nr."
 
 #: lib/mercator_web/components/catalog_components.ex:152
-#: lib/mercator_web/live/admin/product_edit_live.ex:345
+#: lib/mercator_web/live/admin/product_edit_live.ex:358
 #: lib/mercator_web/live/category_live.ex:236
 #, elixir-autogen, elixir-format
 msgid "Bestseller"
@@ -340,7 +345,7 @@ msgstr "Bestseller"
 msgid "Category not found."
 msgstr "Kategorie nicht gefunden."
 
-#: lib/mercator_web/live/admin/product_edit_live.ex:286
+#: lib/mercator_web/live/admin/product_edit_live.ex:299
 #: lib/mercator_web/live/product_live.ex:285
 #, elixir-autogen, elixir-format
 msgid "Description"
@@ -356,14 +361,14 @@ msgstr "Staffelpreise"
 msgid "Home"
 msgstr "Startseite"
 
-#: lib/mercator_web/live/admin/product_relations_tab.ex:194
+#: lib/mercator_web/live/admin/product_relations_tab.ex:229
 #: lib/mercator_web/live/product_live.ex:310
 #, elixir-autogen, elixir-format
 msgid "Matching accessories"
 msgstr "Passendes Zubehör"
 
 #: lib/mercator_web/components/catalog_components.ex:151
-#: lib/mercator_web/live/admin/product_edit_live.ex:344
+#: lib/mercator_web/live/admin/product_edit_live.ex:357
 #: lib/mercator_web/live/category_live.ex:236
 #, elixir-autogen, elixir-format
 msgid "New"
@@ -432,7 +437,7 @@ msgstr "Produkt nicht gefunden."
 msgid "Products"
 msgstr "Sortiment"
 
-#: lib/mercator_web/live/admin/product_edit_live.ex:264
+#: lib/mercator_web/live/admin/product_edit_live.ex:276
 #: lib/mercator_web/live/product_live.ex:291
 #, elixir-autogen, elixir-format
 msgid "Properties"
@@ -466,7 +471,7 @@ msgstr "Aktion"
 msgid "Show only"
 msgstr "Nur anzeigen"
 
-#: lib/mercator_web/live/admin/product_relations_tab.ex:196
+#: lib/mercator_web/live/admin/product_relations_tab.ex:231
 #: lib/mercator_web/live/product_live.ex:312
 #, elixir-autogen, elixir-format
 msgid "Similar products"
@@ -494,7 +499,7 @@ msgstr "Gesamt"
 msgid "Variant"
 msgstr "Ausführung"
 
-#: lib/mercator_web/live/admin/product_relations_tab.ex:195
+#: lib/mercator_web/live/admin/product_relations_tab.ex:230
 #: lib/mercator_web/live/product_live.ex:311
 #, elixir-autogen, elixir-format
 msgid "We recommend"
@@ -553,7 +558,7 @@ msgid "Search"
 msgstr "Suche"
 
 #: lib/mercator_web/live/admin/product_index_live.ex:171
-#: lib/mercator_web/live/admin/product_relations_tab.ex:150
+#: lib/mercator_web/live/admin/product_relations_tab.ex:165
 #: lib/mercator_web/live/search_live.ex:70
 #, elixir-autogen, elixir-format
 msgid "Search products or article numbers"
@@ -604,6 +609,7 @@ msgstr "MwSt. %{rate} %"
 msgid "Calculation"
 msgstr "Berechnung"
 
+#: lib/mercator_web/live/admin/product_configurator_tab.ex:403
 #: lib/mercator_web/live/admin/product_variants_tab.ex:244
 #: lib/mercator_web/live/product_live.ex:399
 #, elixir-autogen, elixir-format
@@ -630,7 +636,7 @@ msgstr "Verwaltung"
 #: lib/mercator_web/live/admin/category_tree_live.ex:17
 #: lib/mercator_web/live/admin/category_tree_live.ex:137
 #: lib/mercator_web/live/admin/dashboard_live.ex:47
-#: lib/mercator_web/live/admin/product_edit_live.ex:351
+#: lib/mercator_web/live/admin/product_edit_live.ex:364
 #, elixir-autogen, elixir-format
 msgid "Categories"
 msgstr "Kategorien"
@@ -701,12 +707,14 @@ msgid "Add subcategory"
 msgstr "Unterkategorie anlegen"
 
 #: lib/mercator_web/live/admin/category_tree_live.ex:302
+#: lib/mercator_web/live/admin/product_configurator_tab.ex:323
+#: lib/mercator_web/live/admin/product_configurator_tab.ex:369
 #: lib/mercator_web/live/admin/product_images_tab.ex:153
 #: lib/mercator_web/live/admin/product_index_live.ex:339
 #: lib/mercator_web/live/admin/product_properties_tab.ex:282
 #: lib/mercator_web/live/admin/product_properties_tab.ex:303
-#: lib/mercator_web/live/admin/product_relations_tab.ex:180
-#: lib/mercator_web/live/admin/product_relations_tab.ex:186
+#: lib/mercator_web/live/admin/product_relations_tab.ex:211
+#: lib/mercator_web/live/admin/product_relations_tab.ex:219
 #: lib/mercator_web/live/admin/product_variants_tab.ex:342
 #: lib/mercator_web/live/admin/product_variants_tab.ex:391
 #, elixir-autogen, elixir-format
@@ -758,6 +766,7 @@ msgid "Draft"
 msgstr "Entwurf"
 
 #: lib/mercator_web/live/admin/category_tree_live.ex:176
+#: lib/mercator_web/live/admin/product_configurator_tab.ex:230
 #: lib/mercator_web/live/admin/product_variants_tab.ex:204
 #, elixir-autogen, elixir-format
 msgid "Drag"
@@ -863,34 +872,35 @@ msgstr "Dieses Produkt auslaufen lassen? Es wird im Shop nicht mehr angezeigt."
 msgid "Discontinued"
 msgstr "Ausgelaufen"
 
-#: lib/mercator_web/live/admin/product_edit_live.ex:385
+#: lib/mercator_web/live/admin/product_edit_live.ex:398
 #, elixir-autogen, elixir-format
 msgid "Freight"
 msgstr "Spedition"
 
-#: lib/mercator_web/live/admin/product_edit_live.ex:261
+#: lib/mercator_web/live/admin/product_edit_live.ex:273
 #, elixir-autogen, elixir-format
 msgid "General"
 msgstr "Allgemein"
 
-#: lib/mercator_web/live/admin/product_edit_live.ex:303
+#: lib/mercator_web/live/admin/product_edit_live.ex:316
 #, elixir-autogen, elixir-format
 msgid "Highlights (one per line)"
 msgstr "Highlights (eines pro Zeile)"
 
-#: lib/mercator_web/live/admin/product_edit_live.ex:327
+#: lib/mercator_web/live/admin/product_configurator_tab.ex:312
+#: lib/mercator_web/live/admin/product_edit_live.ex:340
 #: lib/mercator_web/live/admin/product_index_live.ex:215
 #: lib/mercator_web/live/admin/product_index_live.ex:321
 #, elixir-autogen, elixir-format
 msgid "Kind"
 msgstr "Art"
 
-#: lib/mercator_web/live/admin/product_edit_live.ex:292
+#: lib/mercator_web/live/admin/product_edit_live.ex:305
 #, elixir-autogen, elixir-format, fuzzy
 msgid "Long description"
 msgstr "Ausführliche Beschreibung"
 
-#: lib/mercator_web/live/admin/product_edit_live.ex:321
+#: lib/mercator_web/live/admin/product_edit_live.ex:334
 #, elixir-autogen, elixir-format
 msgid "Master data"
 msgstr "Stammdaten"
@@ -901,21 +911,22 @@ msgstr "Stammdaten"
 msgid "New product"
 msgstr "Neues Produkt"
 
-#: lib/mercator_web/live/admin/product_edit_live.ex:387
+#: lib/mercator_web/live/admin/product_edit_live.ex:400
 #, elixir-autogen, elixir-format
 msgid "No shipping (service)"
 msgstr "Kein Versand (Dienstleistung)"
 
-#: lib/mercator_web/live/admin/product_edit_live.ex:384
+#: lib/mercator_web/live/admin/product_edit_live.ex:397
 #, elixir-autogen, elixir-format, fuzzy
 msgid "Parcel"
 msgstr "Paket"
 
-#: lib/mercator_web/live/admin/product_edit_live.ex:386
+#: lib/mercator_web/live/admin/product_edit_live.ex:399
 #, elixir-autogen, elixir-format
 msgid "Pickup only"
 msgstr "Nur Abholung"
 
+#: lib/mercator_web/live/admin/product_configurator_tab.ex:177
 #: lib/mercator_web/live/admin/product_index_live.ex:335
 #, elixir-autogen, elixir-format
 msgid "Pricing"
@@ -936,7 +947,7 @@ msgstr "Produkt angelegt. Als Nächstes Varianten und Preise ergänzen."
 msgid "Product saved."
 msgstr "Produkt gespeichert."
 
-#: lib/mercator_web/live/admin/product_edit_live.ex:341
+#: lib/mercator_web/live/admin/product_edit_live.ex:354
 #, elixir-autogen, elixir-format
 msgid "Shipping"
 msgstr "Versand"
@@ -951,29 +962,29 @@ msgstr "Einfach"
 msgid "State"
 msgstr "Status"
 
-#: lib/mercator_web/live/admin/product_edit_live.ex:283
+#: lib/mercator_web/live/admin/product_edit_live.ex:296
 #, elixir-autogen, elixir-format
 msgid "Subtitle"
 msgstr "Untertitel"
 
-#: lib/mercator_web/live/admin/product_edit_live.ex:335
+#: lib/mercator_web/live/admin/product_edit_live.ex:348
 #: lib/mercator_web/live/admin/product_index_live.ex:327
 #, elixir-autogen, elixir-format
 msgid "Tax class"
 msgstr "Steuerklasse"
 
-#: lib/mercator_web/live/admin/product_edit_live.ex:281
+#: lib/mercator_web/live/admin/product_edit_live.ex:294
 #, elixir-autogen, elixir-format
 msgid "Texts"
 msgstr "Texte"
 
-#: lib/mercator_web/live/admin/product_edit_live.ex:282
+#: lib/mercator_web/live/admin/product_edit_live.ex:295
 #: lib/mercator_web/live/admin/product_index_live.ex:316
 #, elixir-autogen, elixir-format
 msgid "Title"
 msgstr "Titel"
 
-#: lib/mercator_web/live/admin/product_edit_live.ex:323
+#: lib/mercator_web/live/admin/product_edit_live.ex:336
 #, elixir-autogen, elixir-format
 msgid "URL name (slug)"
 msgstr "URL-Name (Slug)"
@@ -989,7 +1000,7 @@ msgstr "Varianten"
 msgid "View in shop"
 msgstr "Im Shop ansehen"
 
-#: lib/mercator_web/live/admin/product_edit_live.ex:298
+#: lib/mercator_web/live/admin/product_edit_live.ex:311
 #, elixir-autogen, elixir-format
 msgid "Warranty"
 msgstr "Garantie"
@@ -1090,7 +1101,7 @@ msgstr "Gültig ab"
 msgid "Valid until"
 msgstr "Gültig bis"
 
-#: lib/mercator_web/live/admin/product_edit_live.ex:262
+#: lib/mercator_web/live/admin/product_edit_live.ex:274
 #, elixir-autogen, elixir-format, fuzzy
 msgid "Variants & prices"
 msgstr "Varianten & Preise"
@@ -1162,7 +1173,7 @@ msgstr "Bilder ziehen, um sie zu sortieren. Das erste Bild ist das Hauptbild im 
 msgid "Drop images here or click to choose"
 msgstr "Bilder hierher ziehen oder klicken zum Auswählen"
 
-#: lib/mercator_web/live/admin/product_edit_live.ex:263
+#: lib/mercator_web/live/admin/product_edit_live.ex:275
 #, elixir-autogen, elixir-format
 msgid "Images"
 msgstr "Bilder"
@@ -1208,8 +1219,8 @@ msgid "Upload failed."
 msgstr "Hochladen fehlgeschlagen."
 
 #: lib/mercator_web/live/admin/product_properties_tab.ex:285
-#: lib/mercator_web/live/admin/product_relations_tab.ex:108
-#: lib/mercator_web/live/admin/product_relations_tab.ex:181
+#: lib/mercator_web/live/admin/product_relations_tab.ex:112
+#: lib/mercator_web/live/admin/product_relations_tab.ex:214
 #, elixir-autogen, elixir-format
 msgid "Add"
 msgstr "Hinzufügen"
@@ -1255,6 +1266,7 @@ msgstr "Neue Eigenschaft"
 msgid "No properties yet."
 msgstr "Noch keine Eigenschaften."
 
+#: lib/mercator_web/live/admin/product_configurator_tab.ex:313
 #: lib/mercator_web/live/admin/product_properties_tab.ex:341
 #: lib/mercator_web/live/admin/product_properties_tab.ex:364
 #, elixir-autogen, elixir-format
@@ -1307,17 +1319,189 @@ msgstr "Ja/Nein"
 msgid "– or create a new one below –"
 msgstr "– oder unten eine neue anlegen –"
 
-#: lib/mercator_web/live/admin/product_relations_tab.ex:175
+#: lib/mercator_web/live/admin/product_relations_tab.ex:206
 #, elixir-autogen, elixir-format
 msgid "Reason"
 msgstr "Begründung"
 
-#: lib/mercator_web/live/admin/product_edit_live.ex:265
+#: lib/mercator_web/live/admin/product_edit_live.ex:277
 #, elixir-autogen, elixir-format
 msgid "Relations"
 msgstr "Verknüpfungen"
 
-#: lib/mercator_web/live/admin/product_relations_tab.ex:77
+#: lib/mercator_web/live/admin/product_relations_tab.ex:81
 #, elixir-autogen, elixir-format
 msgid "This relation already exists."
 msgstr "Diese Verknüpfung gibt es bereits."
+
+#: lib/mercator_web/live/admin/product_configurator_tab.ex:278
+#, elixir-autogen, elixir-format
+msgid "Add choice"
+msgstr "Auswahl hinzufügen"
+
+#: lib/mercator_web/live/admin/product_configurator_tab.ex:382
+#, elixir-autogen, elixir-format
+msgid "Base price"
+msgstr "Grundpreis"
+
+#: lib/mercator_web/live/admin/product_configurator_tab.ex:350
+#, elixir-autogen, elixir-format, fuzzy
+msgid "Base price per unit (net)"
+msgstr "Grundpreis pro Einheit (netto)"
+
+#: lib/mercator_web/live/admin/product_configurator_tab.ex:313
+#: lib/mercator_web/live/admin/product_configurator_tab.ex:340
+#, elixir-autogen, elixir-format
+msgid "Choice"
+msgstr "Auswahl"
+
+#: lib/mercator_web/live/admin/product_edit_live.ex:278
+#, elixir-autogen, elixir-format, fuzzy
+msgid "Configurator"
+msgstr "Konfigurator"
+
+#: lib/mercator_web/live/admin/product_configurator_tab.ex:188
+#, elixir-autogen, elixir-format
+msgid "Cutting fee per piece (net)"
+msgstr "Zuschnittgebühr pro Stück (netto)"
+
+#: lib/mercator_web/live/admin/product_configurator_tab.ex:367
+#, elixir-autogen, elixir-format
+msgid "Default choice"
+msgstr "Standardauswahl"
+
+#: lib/mercator_web/live/admin/product_configurator_tab.ex:197
+#, elixir-autogen, elixir-format
+msgid "Default configuration"
+msgstr "Standardkonfiguration"
+
+#: lib/mercator_web/live/admin/product_configurator_tab.ex:320
+#, elixir-autogen, elixir-format
+msgid "Default value"
+msgstr "Standardwert"
+
+#: lib/mercator_web/live/admin/product_configurator_tab.ex:248
+#, elixir-autogen, elixir-format, fuzzy
+msgid "Delete this option and its choices?"
+msgstr "Diese Option samt Auswahlmöglichkeiten löschen?"
+
+#: lib/mercator_web/live/admin/product_configurator_tab.ex:342
+#, elixir-autogen, elixir-format
+msgid "Key (e.g. oak)"
+msgstr "Schlüssel (z. B. oak)"
+
+#: lib/mercator_web/live/admin/product_configurator_tab.ex:306
+#, elixir-autogen, elixir-format
+msgid "Key (e.g. species, length)"
+msgstr "Schlüssel (z. B. species, length)"
+
+#: lib/mercator_web/live/admin/product_configurator_tab.ex:384
+#, elixir-autogen, elixir-format
+msgid "Length"
+msgstr "Länge"
+
+#: lib/mercator_web/live/admin/product_configurator_tab.ex:318
+#, elixir-autogen, elixir-format
+msgid "Maximum"
+msgstr "Maximum"
+
+#: lib/mercator_web/live/admin/product_configurator_tab.ex:317
+#, elixir-autogen, elixir-format
+msgid "Minimum"
+msgstr "Minimum"
+
+#: lib/mercator_web/live/admin/product_configurator_tab.ex:185
+#, elixir-autogen, elixir-format
+msgid "Minimum billed quantity (m³, m², lfm or pieces)"
+msgstr "Mindestens verrechnete Menge (m³, m², lfm oder Stück)"
+
+#: lib/mercator_web/live/admin/product_configurator_tab.ex:187
+#, elixir-autogen, elixir-format
+msgid "Minimum order value (net)"
+msgstr "Mindestbestellwert (netto)"
+
+#: lib/mercator_web/live/admin/product_configurator_tab.ex:221
+#, elixir-autogen, elixir-format
+msgid "New option"
+msgstr "Neue Option"
+
+#: lib/mercator_web/live/admin/product_configurator_tab.ex:387
+#, elixir-autogen, elixir-format
+msgid "No effect on price"
+msgstr "Ohne Preiswirkung"
+
+#: lib/mercator_web/live/admin/product_configurator_tab.ex:210
+#, elixir-autogen, elixir-format
+msgid "Not calculable yet:"
+msgstr "Noch nicht berechenbar:"
+
+#: lib/mercator_web/live/admin/product_configurator_tab.ex:299
+#, elixir-autogen, elixir-format
+msgid "Option"
+msgstr "Option"
+
+#: lib/mercator_web/live/admin/product_configurator_tab.ex:219
+#, elixir-autogen, elixir-format, fuzzy
+msgid "Options"
+msgstr "Optionen"
+
+#: lib/mercator_web/live/admin/product_configurator_tab.ex:171
+#, elixir-autogen, elixir-format
+msgid "Price calculation"
+msgstr "Preisberechnung"
+
+#: lib/mercator_web/live/admin/product_configurator_tab.ex:315
+#, elixir-autogen, elixir-format
+msgid "Role in the price"
+msgstr "Rolle im Preis"
+
+#: lib/mercator_web/live/admin/product_configurator_tab.ex:180
+#, elixir-autogen, elixir-format
+msgid "Round dimensions up to (mm)"
+msgstr "Maße aufrunden auf (mm)"
+
+#: lib/mercator_web/live/admin/product_configurator_tab.ex:319
+#, elixir-autogen, elixir-format
+msgid "Step"
+msgstr "Schrittweite"
+
+#: lib/mercator_web/live/admin/product_configurator_tab.ex:383
+#, elixir-autogen, elixir-format
+msgid "Surcharge"
+msgstr "Aufschlag"
+
+#: lib/mercator_web/live/admin/product_configurator_tab.ex:357
+#, elixir-autogen, elixir-format
+msgid "Surcharge in %"
+msgstr "Aufschlag in %"
+
+#: lib/mercator_web/live/admin/product_configurator_tab.ex:364
+#, elixir-autogen, elixir-format
+msgid "Surcharge per piece (net)"
+msgstr "Aufschlag pro Stück (netto)"
+
+#: lib/mercator_web/live/admin/product_configurator_tab.ex:386
+#, elixir-autogen, elixir-format
+msgid "Thickness"
+msgstr "Stärke"
+
+#: lib/mercator_web/live/admin/product_configurator_tab.ex:316
+#, elixir-autogen, elixir-format
+msgid "Unit (numbers), e.g. mm"
+msgstr "Einheit (Zahlen), z. B. mm"
+
+#: lib/mercator_web/live/admin/product_configurator_tab.ex:385
+#, elixir-autogen, elixir-format
+msgid "Width"
+msgstr "Breite"
+
+#: lib/mercator_web/live/admin/product_configurator_tab.ex:262
+#: lib/mercator_web/live/admin/product_configurator_tab.ex:395
+#, elixir-autogen, elixir-format
+msgid "default"
+msgstr "Standard"
+
+#: lib/mercator_web/live/admin/product_configurator_tab.ex:202
+#, elixir-autogen, elixir-format
+msgid "net %{net}, %{measure} %{unit} per piece"
+msgstr "netto %{net}, %{measure} %{unit} pro Stück"

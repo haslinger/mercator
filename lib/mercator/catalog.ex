@@ -122,11 +122,13 @@ defmodule Mercator.Catalog do
     resource Mercator.Catalog.ProductOption do
       define :create_product_option, action: :create
       define :update_product_option, action: :update
+      define :destroy_product_option, action: :destroy
     end
 
     resource Mercator.Catalog.OptionChoice do
       define :create_option_choice, action: :create
       define :update_option_choice, action: :update
+      define :destroy_option_choice, action: :destroy
     end
 
     resource Mercator.Catalog.Image do
