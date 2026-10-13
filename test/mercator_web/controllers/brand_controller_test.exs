@@ -23,5 +23,6 @@ defmodule MercatorWeb.BrandControllerTest do
     assert html =~ ~s(href="/brand/favicon")
     assert html =~ ~s(data-light-theme="light")
     assert html =~ "Mercator"
+    assert html =~ ~r{<title[^>]*>\s*Mercator\s*</title>}
   end
 end
