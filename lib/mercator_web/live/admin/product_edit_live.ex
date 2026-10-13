@@ -14,7 +14,7 @@ defmodule MercatorWeb.Admin.ProductEditLive do
 
   on_mount {MercatorWeb.LiveUserAuth, {:require_any_role, [:productmanager, :administrator]}}
 
-  @tabs ~w(general variants images)
+  @tabs ~w(general variants images properties)
 
   @impl true
   def mount(%{"id" => id}, _session, socket) do
@@ -234,6 +234,15 @@ defmodule MercatorWeb.Admin.ProductEditLive do
         current_user={@current_user}
         locale={@locale}
       />
+
+      <.live_component
+        :if={@tab == "properties"}
+        module={MercatorWeb.Admin.ProductPropertiesTab}
+        id="properties-tab"
+        product_id={@product.id}
+        current_user={@current_user}
+        locale={@locale}
+      />
     </Layouts.admin>
     """
   end
@@ -242,7 +251,8 @@ defmodule MercatorWeb.Admin.ProductEditLive do
     do: [
       {"general", gettext("General")},
       {"variants", gettext("Variants & prices")},
-      {"images", gettext("Images")}
+      {"images", gettext("Images")},
+      {"properties", gettext("Properties")}
     ]
 
   attr :form, :any, required: true

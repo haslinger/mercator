@@ -149,6 +149,7 @@ defmodule Mercator.Catalog do
     resource Mercator.Catalog.ProductProperty do
       define :set_product_property, action: :create
       define :update_product_property, action: :update
+      define :destroy_product_property, action: :destroy
     end
 
     resource Mercator.Catalog.ProductRelation do

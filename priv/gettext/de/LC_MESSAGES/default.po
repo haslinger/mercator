@@ -152,7 +152,8 @@ msgstr "Neues Passwort wiederholen"
 
 #: lib/mercator_web/live/account_live.ex:54
 #: lib/mercator_web/live/admin/category_tree_live.ex:304
-#: lib/mercator_web/live/admin/product_edit_live.ex:351
+#: lib/mercator_web/live/admin/product_edit_live.ex:366
+#: lib/mercator_web/live/admin/product_properties_tab.ex:234
 #: lib/mercator_web/live/admin/product_variants_tab.ex:345
 #: lib/mercator_web/live/admin/product_variants_tab.ex:394
 #: lib/mercator_web/live/admin/user_edit_live.ex:80
@@ -318,7 +319,7 @@ msgstr "%{count} von %{total} Produkten"
 msgid "Add to basket"
 msgstr "In den Warenkorb"
 
-#: lib/mercator_web/live/admin/product_edit_live.ex:297
+#: lib/mercator_web/live/admin/product_edit_live.ex:312
 #: lib/mercator_web/live/admin/product_index_live.ex:213
 #: lib/mercator_web/live/admin/product_index_live.ex:315
 #: lib/mercator_web/live/admin/product_variants_tab.ex:321
@@ -328,7 +329,7 @@ msgid "Article no."
 msgstr "Art.-Nr."
 
 #: lib/mercator_web/components/catalog_components.ex:152
-#: lib/mercator_web/live/admin/product_edit_live.ex:320
+#: lib/mercator_web/live/admin/product_edit_live.ex:335
 #: lib/mercator_web/live/category_live.ex:236
 #, elixir-autogen, elixir-format
 msgid "Bestseller"
@@ -339,7 +340,7 @@ msgstr "Bestseller"
 msgid "Category not found."
 msgstr "Kategorie nicht gefunden."
 
-#: lib/mercator_web/live/admin/product_edit_live.ex:261
+#: lib/mercator_web/live/admin/product_edit_live.ex:276
 #: lib/mercator_web/live/product_live.ex:285
 #, elixir-autogen, elixir-format
 msgid "Description"
@@ -361,7 +362,7 @@ msgid "Matching accessories"
 msgstr "Passendes Zubehör"
 
 #: lib/mercator_web/components/catalog_components.ex:151
-#: lib/mercator_web/live/admin/product_edit_live.ex:319
+#: lib/mercator_web/live/admin/product_edit_live.ex:334
 #: lib/mercator_web/live/category_live.ex:236
 #, elixir-autogen, elixir-format
 msgid "New"
@@ -430,6 +431,7 @@ msgstr "Produkt nicht gefunden."
 msgid "Products"
 msgstr "Sortiment"
 
+#: lib/mercator_web/live/admin/product_edit_live.ex:255
 #: lib/mercator_web/live/product_live.ex:291
 #, elixir-autogen, elixir-format
 msgid "Properties"
@@ -624,7 +626,7 @@ msgstr "Verwaltung"
 #: lib/mercator_web/live/admin/category_tree_live.ex:17
 #: lib/mercator_web/live/admin/category_tree_live.ex:137
 #: lib/mercator_web/live/admin/dashboard_live.ex:47
-#: lib/mercator_web/live/admin/product_edit_live.ex:326
+#: lib/mercator_web/live/admin/product_edit_live.ex:341
 #, elixir-autogen, elixir-format
 msgid "Categories"
 msgstr "Kategorien"
@@ -695,8 +697,10 @@ msgid "Add subcategory"
 msgstr "Unterkategorie anlegen"
 
 #: lib/mercator_web/live/admin/category_tree_live.ex:302
-#: lib/mercator_web/live/admin/product_images_tab.ex:133
+#: lib/mercator_web/live/admin/product_images_tab.ex:153
 #: lib/mercator_web/live/admin/product_index_live.ex:339
+#: lib/mercator_web/live/admin/product_properties_tab.ex:219
+#: lib/mercator_web/live/admin/product_properties_tab.ex:233
 #: lib/mercator_web/live/admin/product_variants_tab.ex:342
 #: lib/mercator_web/live/admin/product_variants_tab.ex:391
 #, elixir-autogen, elixir-format
@@ -853,34 +857,34 @@ msgstr "Dieses Produkt auslaufen lassen? Es wird im Shop nicht mehr angezeigt."
 msgid "Discontinued"
 msgstr "Ausgelaufen"
 
-#: lib/mercator_web/live/admin/product_edit_live.ex:360
+#: lib/mercator_web/live/admin/product_edit_live.ex:375
 #, elixir-autogen, elixir-format
 msgid "Freight"
 msgstr "Spedition"
 
-#: lib/mercator_web/live/admin/product_edit_live.ex:241
+#: lib/mercator_web/live/admin/product_edit_live.ex:252
 #, elixir-autogen, elixir-format
 msgid "General"
 msgstr "Allgemein"
 
-#: lib/mercator_web/live/admin/product_edit_live.ex:278
+#: lib/mercator_web/live/admin/product_edit_live.ex:293
 #, elixir-autogen, elixir-format
 msgid "Highlights (one per line)"
 msgstr "Highlights (eines pro Zeile)"
 
-#: lib/mercator_web/live/admin/product_edit_live.ex:302
+#: lib/mercator_web/live/admin/product_edit_live.ex:317
 #: lib/mercator_web/live/admin/product_index_live.ex:215
 #: lib/mercator_web/live/admin/product_index_live.ex:321
 #, elixir-autogen, elixir-format
 msgid "Kind"
 msgstr "Art"
 
-#: lib/mercator_web/live/admin/product_edit_live.ex:267
+#: lib/mercator_web/live/admin/product_edit_live.ex:282
 #, elixir-autogen, elixir-format, fuzzy
 msgid "Long description"
 msgstr "Ausführliche Beschreibung"
 
-#: lib/mercator_web/live/admin/product_edit_live.ex:296
+#: lib/mercator_web/live/admin/product_edit_live.ex:311
 #, elixir-autogen, elixir-format
 msgid "Master data"
 msgstr "Stammdaten"
@@ -891,17 +895,17 @@ msgstr "Stammdaten"
 msgid "New product"
 msgstr "Neues Produkt"
 
-#: lib/mercator_web/live/admin/product_edit_live.ex:362
+#: lib/mercator_web/live/admin/product_edit_live.ex:377
 #, elixir-autogen, elixir-format
 msgid "No shipping (service)"
 msgstr "Kein Versand (Dienstleistung)"
 
-#: lib/mercator_web/live/admin/product_edit_live.ex:359
+#: lib/mercator_web/live/admin/product_edit_live.ex:374
 #, elixir-autogen, elixir-format, fuzzy
 msgid "Parcel"
 msgstr "Paket"
 
-#: lib/mercator_web/live/admin/product_edit_live.ex:361
+#: lib/mercator_web/live/admin/product_edit_live.ex:376
 #, elixir-autogen, elixir-format
 msgid "Pickup only"
 msgstr "Nur Abholung"
@@ -926,7 +930,7 @@ msgstr "Produkt angelegt. Als Nächstes Varianten und Preise ergänzen."
 msgid "Product saved."
 msgstr "Produkt gespeichert."
 
-#: lib/mercator_web/live/admin/product_edit_live.ex:316
+#: lib/mercator_web/live/admin/product_edit_live.ex:331
 #, elixir-autogen, elixir-format
 msgid "Shipping"
 msgstr "Versand"
@@ -941,29 +945,29 @@ msgstr "Einfach"
 msgid "State"
 msgstr "Status"
 
-#: lib/mercator_web/live/admin/product_edit_live.ex:258
+#: lib/mercator_web/live/admin/product_edit_live.ex:273
 #, elixir-autogen, elixir-format
 msgid "Subtitle"
 msgstr "Untertitel"
 
-#: lib/mercator_web/live/admin/product_edit_live.ex:310
+#: lib/mercator_web/live/admin/product_edit_live.ex:325
 #: lib/mercator_web/live/admin/product_index_live.ex:327
 #, elixir-autogen, elixir-format
 msgid "Tax class"
 msgstr "Steuerklasse"
 
-#: lib/mercator_web/live/admin/product_edit_live.ex:256
+#: lib/mercator_web/live/admin/product_edit_live.ex:271
 #, elixir-autogen, elixir-format
 msgid "Texts"
 msgstr "Texte"
 
-#: lib/mercator_web/live/admin/product_edit_live.ex:257
+#: lib/mercator_web/live/admin/product_edit_live.ex:272
 #: lib/mercator_web/live/admin/product_index_live.ex:316
 #, elixir-autogen, elixir-format
 msgid "Title"
 msgstr "Titel"
 
-#: lib/mercator_web/live/admin/product_edit_live.ex:298
+#: lib/mercator_web/live/admin/product_edit_live.ex:313
 #, elixir-autogen, elixir-format
 msgid "URL name (slug)"
 msgstr "URL-Name (Slug)"
@@ -979,7 +983,7 @@ msgstr "Varianten"
 msgid "View in shop"
 msgstr "Im Shop ansehen"
 
-#: lib/mercator_web/live/admin/product_edit_live.ex:273
+#: lib/mercator_web/live/admin/product_edit_live.ex:288
 #, elixir-autogen, elixir-format
 msgid "Warranty"
 msgstr "Garantie"
@@ -1080,7 +1084,7 @@ msgstr "Gültig ab"
 msgid "Valid until"
 msgstr "Gültig bis"
 
-#: lib/mercator_web/live/admin/product_edit_live.ex:241
+#: lib/mercator_web/live/admin/product_edit_live.ex:253
 #, elixir-autogen, elixir-format, fuzzy
 msgid "Variants & prices"
 msgstr "Varianten & Preise"
@@ -1130,69 +1134,167 @@ msgstr "bis %{date}"
 msgid "valid"
 msgstr "gültig"
 
-#: lib/mercator_web/live/admin/product_images_tab.ex:65
+#: lib/mercator_web/live/admin/product_images_tab.ex:74
 #, elixir-autogen, elixir-format
 msgid "1 file is not a readable image."
 msgid_plural "%{count} files are not readable images."
 msgstr[0] "1 Datei ist kein lesbares Bild."
 msgstr[1] "%{count} Dateien sind keine lesbaren Bilder."
 
-#: lib/mercator_web/live/admin/product_images_tab.ex:170
+#: lib/mercator_web/live/admin/product_images_tab.ex:194
 #, elixir-autogen, elixir-format, fuzzy
 msgid "Delete this image?"
 msgstr "Dieses Bild löschen?"
 
-#: lib/mercator_web/live/admin/product_images_tab.ex:145
+#: lib/mercator_web/live/admin/product_images_tab.ex:165
 #, elixir-autogen, elixir-format
 msgid "Drag images to sort them. The first image is the main image in the shop."
 msgstr "Bilder ziehen, um sie zu sortieren. Das erste Bild ist das Hauptbild im Shop."
 
-#: lib/mercator_web/live/admin/product_images_tab.ex:112
+#: lib/mercator_web/live/admin/product_images_tab.ex:128
 #, elixir-autogen, elixir-format
 msgid "Drop images here or click to choose"
 msgstr "Bilder hierher ziehen oder klicken zum Auswählen"
 
-#: lib/mercator_web/live/admin/product_edit_live.ex:241
+#: lib/mercator_web/live/admin/product_edit_live.ex:254
 #, elixir-autogen, elixir-format
 msgid "Images"
 msgstr "Bilder"
 
-#: lib/mercator_web/live/admin/product_images_tab.ex:114
+#: lib/mercator_web/live/admin/product_images_tab.ex:130
 #, elixir-autogen, elixir-format
 msgid "JPEG, PNG or WebP, up to 20 MB each. Converted to WebP automatically."
 msgstr "JPEG, PNG oder WebP, je bis 20 MB. Werden automatisch in WebP umgewandelt."
 
-#: lib/mercator_web/live/admin/product_images_tab.ex:159
+#: lib/mercator_web/live/admin/product_images_tab.ex:183
 #, elixir-autogen, elixir-format
 msgid "Main image"
 msgstr "Hauptbild"
 
-#: lib/mercator_web/live/admin/product_images_tab.ex:182
+#: lib/mercator_web/live/admin/product_images_tab.ex:206
 #, elixir-autogen, elixir-format, fuzzy
 msgid "No images yet."
 msgstr "Noch keine Bilder."
 
-#: lib/mercator_web/live/admin/product_images_tab.ex:189
+#: lib/mercator_web/live/admin/product_images_tab.ex:213
 #, elixir-autogen, elixir-format
 msgid "Only JPEG, PNG or WebP images."
 msgstr "Nur JPEG-, PNG- oder WebP-Bilder."
 
-#: lib/mercator_web/live/admin/product_images_tab.ex:188
+#: lib/mercator_web/live/admin/product_images_tab.ex:212
 #, elixir-autogen, elixir-format
 msgid "The file is too large."
 msgstr "Die Datei ist zu groß."
 
-#: lib/mercator_web/live/admin/product_images_tab.ex:190
+#: lib/mercator_web/live/admin/product_images_tab.ex:214
 #, elixir-autogen, elixir-format
 msgid "Too many files at once."
 msgstr "Zu viele Dateien auf einmal."
 
-#: lib/mercator_web/live/admin/product_images_tab.ex:139
+#: lib/mercator_web/live/admin/product_images_tab.ex:159
 #, elixir-autogen, elixir-format
 msgid "Upload"
 msgstr "Hochladen"
 
-#: lib/mercator_web/live/admin/product_images_tab.ex:191
+#: lib/mercator_web/live/admin/product_images_tab.ex:215
 #, elixir-autogen, elixir-format
 msgid "Upload failed."
 msgstr "Hochladen fehlgeschlagen."
+
+#: lib/mercator_web/live/admin/product_properties_tab.ex:220
+#, elixir-autogen, elixir-format
+msgid "Add"
+msgstr "Hinzufügen"
+
+#: lib/mercator_web/live/admin/product_properties_tab.ex:135
+#: lib/mercator_web/live/admin/product_properties_tab.ex:186
+#, elixir-autogen, elixir-format
+msgid "Add property"
+msgstr "Eigenschaft hinzufügen"
+
+#: lib/mercator_web/live/admin/product_properties_tab.ex:190
+#, elixir-autogen, elixir-format
+msgid "Existing property"
+msgstr "Vorhandene Eigenschaft"
+
+#: lib/mercator_web/live/admin/product_properties_tab.ex:275
+#, elixir-autogen, elixir-format
+msgid "Fill in the field that matches the kind of the property."
+msgstr "Das Feld passend zur Art der Eigenschaft ausfüllen."
+
+#: lib/mercator_web/live/admin/product_properties_tab.ex:153
+#, elixir-autogen, elixir-format
+msgid "Filter"
+msgstr "Filter"
+
+#: lib/mercator_web/live/admin/product_properties_tab.ex:203
+#, elixir-autogen, elixir-format, fuzzy
+msgid "Name (DE)"
+msgstr "Name (DE)"
+
+#: lib/mercator_web/live/admin/product_properties_tab.ex:204
+#, elixir-autogen, elixir-format, fuzzy
+msgid "Name (EN)"
+msgstr "Name (EN)"
+
+#: lib/mercator_web/live/admin/product_properties_tab.ex:200
+#, elixir-autogen, elixir-format
+msgid "New property"
+msgstr "Neue Eigenschaft"
+
+#: lib/mercator_web/live/admin/product_properties_tab.ex:140
+#, elixir-autogen, elixir-format
+msgid "No properties yet."
+msgstr "Noch keine Eigenschaften."
+
+#: lib/mercator_web/live/admin/product_properties_tab.ex:266
+#: lib/mercator_web/live/admin/product_properties_tab.ex:282
+#, elixir-autogen, elixir-format
+msgid "Number"
+msgstr "Zahl"
+
+#: lib/mercator_web/live/admin/product_properties_tab.ex:59
+#, elixir-autogen, elixir-format
+msgid "Please check the property and its value."
+msgstr "Bitte Eigenschaft und Wert prüfen."
+
+#: lib/mercator_web/live/admin/product_properties_tab.ex:68
+#, elixir-autogen, elixir-format
+msgid "Please check the value."
+msgstr "Bitte den Wert prüfen."
+
+#: lib/mercator_web/live/admin/product_properties_tab.ex:152
+#, elixir-autogen, elixir-format
+msgid "Shown as filter on category pages"
+msgstr "Wird auf Kategorieseiten als Filter angezeigt"
+
+#: lib/mercator_web/live/admin/product_properties_tab.ex:255
+#: lib/mercator_web/live/admin/product_properties_tab.ex:281
+#, elixir-autogen, elixir-format, fuzzy
+msgid "Text"
+msgstr "Text"
+
+#: lib/mercator_web/live/admin/product_properties_tab.ex:208
+#, elixir-autogen, elixir-format
+msgid "Unit, e.g. mm"
+msgstr "Einheit, z. B. mm"
+
+#: lib/mercator_web/live/admin/product_properties_tab.ex:249
+#, elixir-autogen, elixir-format
+msgid "Value"
+msgstr "Wert"
+
+#: lib/mercator_web/live/admin/product_properties_tab.ex:272
+#, elixir-autogen, elixir-format
+msgid "Yes"
+msgstr "Ja"
+
+#: lib/mercator_web/live/admin/product_properties_tab.ex:283
+#, elixir-autogen, elixir-format
+msgid "Yes/no"
+msgstr "Ja/Nein"
+
+#: lib/mercator_web/live/admin/product_properties_tab.ex:192
+#, elixir-autogen, elixir-format
+msgid "– or create a new one below –"
+msgstr "– oder unten eine neue anlegen –"
