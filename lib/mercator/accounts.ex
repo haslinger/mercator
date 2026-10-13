@@ -11,6 +11,7 @@ defmodule Mercator.Accounts do
     resource Mercator.Accounts.User do
       define :get_user, action: :read, get_by: [:id]
       define :list_users, action: :read
+      define :update_profile, action: :update_profile
       define :set_user_roles, action: :set_roles, args: [:roles]
     end
   end

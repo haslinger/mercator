@@ -67,6 +67,11 @@ defmodule Mercator.Accounts.User do
   actions do
     defaults [:read]
 
+    update :update_profile do
+      description "Update one's own name, phone number and language."
+      accept [:name, :phone, :locale]
+    end
+
     update :set_roles do
       description "Replace the staff roles of a user (administrators only)."
       accept [:roles]
@@ -289,7 +294,7 @@ defmodule Mercator.Accounts.User do
       authorize_if expr(id == ^actor(:id))
     end
 
-    policy action(:change_password) do
+    policy action([:change_password, :update_profile]) do
       authorize_if expr(id == ^actor(:id))
     end
   end
@@ -307,6 +312,25 @@ defmodule Mercator.Accounts.User do
     end
 
     attribute :confirmed_at, :utc_datetime_usec
+
+    attribute :name, :string do
+      description "Full name, as the person wants to be addressed."
+      public? true
+      constraints max_length: 200
+    end
+
+    attribute :phone, :string do
+      public? true
+      constraints max_length: 50
+    end
+
+    attribute :locale, :atom do
+      description "Preferred language for the UI and emails."
+      allow_nil? false
+      default :de
+      public? true
+      constraints one_of: [:de, :en]
+    end
 
     attribute :roles, {:array, Mercator.Accounts.Role} do
       allow_nil? false

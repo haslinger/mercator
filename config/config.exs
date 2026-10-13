@@ -65,6 +65,13 @@ config :spark,
     "Ash.Domain": [section_order: [:resources, :policies, :authorization, :domain, :execution]]
   ]
 
+# AshPostgres recognises its own database errors only when Postgres reports
+# them with the English severity "ERROR". Localised servers (e.g. German
+# "FEHLER") would turn policy errors into unknown errors, so force English
+# server messages. Setting lc_messages needs superuser rights or a matching
+# GRANT SET; alternatively configure lc_messages on the database server.
+config :mercator, Mercator.Repo, parameters: [lc_messages: "C"]
+
 config :mercator,
   ecto_repos: [Mercator.Repo],
   generators: [timestamp_type: :utc_datetime],
