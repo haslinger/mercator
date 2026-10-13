@@ -1574,7 +1574,7 @@ msgid "This tax class is still used by products."
 msgstr "Diese Steuerklasse wird noch von Produkten verwendet."
 
 #: lib/mercator_web/components/layouts.ex:166
-#, elixir-autogen, elixir-format, fuzzy
+#, elixir-autogen, elixir-format
 msgctxt "shop navigation"
 msgid "Products"
-msgstr "Produkte"
+msgstr "Sortiment"
