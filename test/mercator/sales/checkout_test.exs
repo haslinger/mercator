@@ -151,9 +151,19 @@ defmodule Mercator.Sales.CheckoutTest do
     checkout = Checkout.prepare(user)
     assert checkout.billing_address.country == "NL"
     assert checkout.shipping_address == nil
-    assert Keyword.has_key?(Checkout.problems(checkout, true), :shipping_address)
+    assert Keyword.keys(Checkout.problems(checkout, true)) == [:shipping_address]
 
     assert Checkout.problems(Checkout.prepare(user, %{"shipping_method" => "pickup"}), true) == []
+  end
+
+  test "without addresses only the addresses are reported", %{board: board} do
+    user = user_fixture()
+    Baskets.add({:user, user}, board.id, 1)
+
+    problems =
+      user |> Checkout.prepare(%{"shipping_method" => "parcel"}) |> Checkout.problems(true)
+
+    assert Keyword.keys(problems) == [:billing_address, :shipping_address]
   end
 
   test "customers see only their own orders; sales staff see all", %{user: user, board: board} do

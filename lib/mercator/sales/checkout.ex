@@ -81,7 +81,7 @@ defmodule Mercator.Sales.Checkout do
       {:shipping_address,
        checkout.shipping_method != :pickup and is_nil(checkout.shipping_address),
        gettext("Please add a delivery address in a country we deliver to.")},
-      {:shipping_method, is_nil(checkout.shipping_cost),
+      {:shipping_method, shipping_method_problem?(checkout),
        gettext("Please choose a shipping method.")},
       {:payment_method, is_nil(checkout.payment_method),
        gettext("Please choose a payment method.")},
@@ -91,6 +91,16 @@ defmodule Mercator.Sales.Checkout do
     |> Enum.filter(fn {_field, problem?, _message} -> problem? end)
     |> Enum.map(fn {field, _problem?, message} -> {field, message} end)
   end
+
+  # Without a delivery address there are no costs yet; that is reported as a
+  # missing address, not as a missing shipping method.
+  defp shipping_method_problem?(%{shipping_method: nil}), do: true
+
+  defp shipping_method_problem?(%{shipping_method: method, shipping_address: nil})
+       when method != :pickup,
+       do: false
+
+  defp shipping_method_problem?(checkout), do: is_nil(checkout.shipping_cost)
 
   @doc """
   Places the order. Params as for `prepare/2`, plus `"gtc" => "true"` and an
