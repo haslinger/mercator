@@ -188,6 +188,8 @@ Rails sources (#1–#4) and continuing the overview (#5) were answered on 2026-1
 - **#43** (2026-10-13) The Biber Holz brand settings move to one shared file used by dev and production (`BRAND=biberholz`).
 - **#44** (2026-10-13) Demo data in production through a release task, enabled with `DEMO_DATA=true`, plus a **regular (nightly) reset** of the demo, so visitors can freely try it out as **sales rep and customer**.
 - **#45** (2026-10-13) **No public admin login**: it's a demo, not a trial. Visitors get public demo logins for non-admin accounts (sales rep, customer); the admin password comes from an environment variable. Truly interested companies get a trial instance on premises.
+- **#46** (2026-10-13) Public demo accounts are protected in demo mode (no change of password, email or roles; no password reset). The user wants the demo clearly separated from production behaviour, see #48.
+- **#47** (2026-10-13) **All non-admin demo accounts are public** (customers, sales, sales manager, content, products). The nightly reset repairs any changes; the login page says so.
 - **#25** (2026-10-13) **No security risk:** none of the old systems are deployed any more. Secrets still go only into env/`runtime.exs` in the port.
 
 ### Scope and target
@@ -233,6 +235,7 @@ Rails sources (#1–#4) and continuing the overview (#5) were answered on 2026-1
 - ~~**#43**~~ *(answered, see Decisions)* Selecting the brand in production: move the Biber Holz brand settings from `config/dev.exs` to one shared place (e.g. `config/brands/biberholz.exs`) that dev and production (`BRAND=biberholz`) both use?
 - ~~**#44**~~ *(answered, see Decisions)* Demo data in production: a release task (`bin/mercator eval "Mercator.Release.seed()"`) controlled by a flag such as `DEMO_DATA=true`. Should the demo be reset regularly (e.g. nightly), so that visitors' changes disappear?
 - ~~**#45**~~ *(answered, see Decisions)* Public demo logins on biber.mittenin.at: which demo accounts may visitors use (shown on the login page)? The administrator account should **not** have a published password, since an admin can change roles and later everything else.
-- **#46** Protect the public demo accounts: in demo mode, their password, email and roles can't be changed and no password reset can be requested for them, so one visitor can't lock out the next.
-- **#47** Which accounts are public: Karl Luchs (customer, German), Lena Igel (customer, English), Sepp Fuchs (sales), Maria Hirsch (sales manager)? And also Klara Eichhorn (content) and Peter Dachs (products), to show CMS and product management, with the risk that visitors deface the shop until the next reset?
+- ~~**#46**~~ *(answered, see Decisions)* Protect the public demo accounts: in demo mode, their password, email and roles can't be changed and no password reset can be requested for them, so one visitor can't lock out the next.
+- ~~**#47**~~ *(answered, see Decisions)* Which accounts are public: Karl Luchs (customer, German), Lena Igel (customer, English), Sepp Fuchs (sales), Maria Hirsch (sales manager)? And also Klara Eichhorn (content) and Peter Dachs (products), to show CMS and product management, with the risk that visitors deface the shop until the next reset?
+- **#48** The demo as a **production release with a runtime switch** `MERCATOR_MODE=demo` (one build artifact; `Mercator.Demo.enabled?()` bundles all demo behaviour: seeding, nightly reset, account protection, login hints, demo badge), rather than a separate Mix environment `demo`?
 
