@@ -155,6 +155,7 @@ This makes it the test case for **configurable material**: wood species, dimensi
 - Logo: `assets/img/logo.jpeg`, provided by the user. Its "transparent" background is baked into the JPEG pixels, so a cut-out PNG is needed (#37).
 - Logo palette: cream `#efd7ab`, walnut `#67482d`, oak/bronze `#be9e73`, dark wood `#180d06`, plus forest-green accents.
 - Mercator itself stays generic. Biber Holz is one deployment's branding and demo data (#28).
+- The demo runs in production at **https://biber.mittenin.at**.
 
 ## 6. Open questions
 
@@ -224,4 +225,8 @@ Rails sources (#1–#4) and continuing the overview (#5) were answered on 2026-1
 - ~~**#39**~~ *(answered, see Decisions)* Product kinds: (a) **simple** products (one price, e.g. a stool or a pellet sack), (b) **variants** with their own article number, stock and price (e.g. "Terrassendiele Lärche 28×145×4000"; Rails' inventories), (c) **configurable** products where the customer enters dimensions and options and the price is calculated by rules (wood species price per m³ × volume + surcharges for surface or drying; minimum quantities, rounding). Design the data model for all three now, implement (a)+(b) first and (c) right after?
 - ~~**#40**~~ *(answered, see Decisions)* Units: piece, lfm, m², m³, Festmeter (fm), Raummeter (rm), Schüttraummeter (srm), kg, t, pallet, sack. Prices per unit and decimal quantities (e.g. 2.5 m³)?
 - ~~**#41**~~ *(answered, see Decisions)* Demo catalogue scope and images: about 8 top categories, about 30 subcategories and 80–120 products with German and English texts? Product images: none or neutral placeholders at first, or will you provide (e.g. AI-generated) images?
+- **#42** Demo email addresses: make the domain configurable, `firstname.lastname@<domain>`. Keep `example.com` (reserved, never deliverable) in dev and tests, and use `mittenin.at` on biber.mittenin.at? This needs mailboxes or a catch-all on mittenin.at, otherwise confirmation, magic-link and reset emails bounce.
+- **#43** Selecting the brand in production: move the Biber Holz brand settings from `config/dev.exs` to one shared place (e.g. `config/brands/biberholz.exs`) that dev and production (`BRAND=biberholz`) both use?
+- **#44** Demo data in production: a release task (`bin/mercator eval "Mercator.Release.seed()"`) controlled by a flag such as `DEMO_DATA=true`. Should the demo be reset regularly (e.g. nightly), so that visitors' changes disappear?
+- **#45** Public demo logins on biber.mittenin.at: which demo accounts may visitors use (shown on the login page)? The administrator account should **not** have a published password, since an admin can change roles and later everything else.
 
