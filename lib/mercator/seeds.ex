@@ -26,6 +26,24 @@ defmodule Mercator.Seeds do
     %{email: "customer@example.com", name: "Lena Igel", roles: [], locale: :en}
   ]
 
+  # Austrian VAT rates for the demo (#51, information from the Wirtschaftskammer):
+  # 13 % for firewood, wood pellets and Christmas trees, 20 % for everything
+  # else, including saw logs that are not sold as fuel.
+  @tax_classes [
+    %{
+      key: "standard",
+      name: %{"de" => "Normalsatz 20 %", "en" => "Standard rate 20 %"},
+      rate: 20,
+      position: 1
+    },
+    %{
+      key: "reduced",
+      name: %{"de" => "Ermäßigt 13 %", "en" => "Reduced rate 13 %"},
+      rate: 13,
+      position: 2
+    }
+  ]
+
   @doc "The password of all demo users."
   def demo_password, do: @demo_password
 
@@ -34,7 +52,15 @@ defmodule Mercator.Seeds do
 
   @doc "Seeds all demo data. Returns the demo users."
   def run do
+    Enum.each(@tax_classes, &ensure_tax_class/1)
     Enum.map(@demo_users, &ensure_user/1)
+  end
+
+  defp ensure_tax_class(%{key: key} = attrs) do
+    case Mercator.Catalog.get_tax_class_by_key(key, authorize?: false) do
+      {:ok, tax_class} -> tax_class
+      {:error, _} -> Ash.Seed.seed!(Mercator.Catalog.TaxClass, attrs)
+    end
   end
 
   defp ensure_user(%{email: email} = attrs) do

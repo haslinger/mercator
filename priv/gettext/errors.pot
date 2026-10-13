@@ -118,7 +118,7 @@ msgstr ""
 msgid "translation for %{locale} is missing"
 msgstr ""
 
-#: lib/mercator/translated.ex:129
+#: lib/mercator/translated.ex:130
 #, elixir-autogen, elixir-format
 msgid "translation for %{locale} must be at most %{max} characters"
 msgstr ""

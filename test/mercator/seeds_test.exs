@@ -15,6 +15,15 @@ defmodule Mercator.SeedsTest do
     assert admin.roles == [:administrator]
   end
 
+  test "creates the Austrian tax classes" do
+    Seeds.run()
+
+    assert {:ok, standard} = Mercator.Catalog.get_tax_class_by_key("standard")
+    assert {:ok, reduced} = Mercator.Catalog.get_tax_class_by_key("reduced")
+    assert Decimal.equal?(standard.rate, 20)
+    assert Decimal.equal?(reduced.rate, 13)
+  end
+
   test "is idempotent" do
     first = Seeds.run()
     second = Seeds.run()

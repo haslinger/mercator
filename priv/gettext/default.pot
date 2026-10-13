@@ -243,3 +243,58 @@ msgstr ""
 #, elixir-autogen, elixir-format
 msgid "You are not allowed to access this page."
 msgstr ""
+
+#: lib/mercator/catalog/unit.ex:38
+#, elixir-autogen, elixir-format
+msgid "cubic metre"
+msgstr ""
+
+#: lib/mercator/catalog/unit.ex:42
+#, elixir-autogen, elixir-format
+msgid "kilogram"
+msgstr ""
+
+#: lib/mercator/catalog/unit.ex:41
+#, elixir-autogen, elixir-format
+msgid "loose cubic metre (Schüttraummeter)"
+msgstr ""
+
+#: lib/mercator/catalog/unit.ex:44
+#, elixir-autogen, elixir-format
+msgid "pallet"
+msgstr ""
+
+#: lib/mercator/catalog/unit.ex:35
+#, elixir-autogen, elixir-format
+msgid "piece"
+msgstr ""
+
+#: lib/mercator/catalog/unit.ex:36
+#, elixir-autogen, elixir-format
+msgid "running metre"
+msgstr ""
+
+#: lib/mercator/catalog/unit.ex:45
+#, elixir-autogen, elixir-format
+msgid "sack"
+msgstr ""
+
+#: lib/mercator/catalog/unit.ex:39
+#, elixir-autogen, elixir-format
+msgid "solid cubic metre (Festmeter)"
+msgstr ""
+
+#: lib/mercator/catalog/unit.ex:37
+#, elixir-autogen, elixir-format
+msgid "square metre"
+msgstr ""
+
+#: lib/mercator/catalog/unit.ex:40
+#, elixir-autogen, elixir-format
+msgid "stacked cubic metre (Raummeter)"
+msgstr ""
+
+#: lib/mercator/catalog/unit.ex:43
+#, elixir-autogen, elixir-format
+msgid "tonne"
+msgstr ""

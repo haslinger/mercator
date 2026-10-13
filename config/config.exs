@@ -75,7 +75,7 @@ config :mercator, Mercator.Repo, parameters: [lc_messages: "C"]
 config :mercator,
   ecto_repos: [Mercator.Repo],
   generators: [timestamp_type: :utc_datetime],
-  ash_domains: [Mercator.Accounts],
+  ash_domains: [Mercator.Accounts, Mercator.Catalog],
   ash_authentication: [return_error_on_invalid_magic_link_token?: true]
 
 # Configure the endpoint
