@@ -27,6 +27,10 @@ defmodule MercatorWeb.Router do
     get "/:image", BrandController, :show
   end
 
+  scope "/", MercatorWeb do
+    get "/manifest.webmanifest", ManifestController, :show
+  end
+
   scope "/uploads", MercatorWeb do
     get "/*path", UploadController, :show
   end

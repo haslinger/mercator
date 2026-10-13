@@ -72,6 +72,9 @@ config :mercator, :brand,
   pin: "pin.webp",
   favicon: "favicon.svg",
   apple_touch_icon: "apple-touch-icon.png",
+  short_name: "Biber Holz",
+  theme_color: "#67482d",
+  background_color: "#fbf6ec",
   light_theme: "biberholz",
   dark_theme: "biberholz-dark"
 

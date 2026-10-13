@@ -27,11 +27,17 @@ defmodule Mercator.Brand do
     pin: nil,
     favicon: "favicon.svg",
     apple_touch_icon: "apple-touch-icon.png",
+    icon_192: "icon-192.png",
+    icon_512: "icon-512.png",
+    icon_maskable: "icon-maskable-512.png",
+    short_name: nil,
+    theme_color: "#4b5563",
+    background_color: "#ffffff",
     light_theme: "light",
     dark_theme: "dark"
   ]
 
-  @images [:logo, :pin, :favicon, :apple_touch_icon]
+  @images [:logo, :pin, :favicon, :apple_touch_icon, :icon_192, :icon_512, :icon_maskable]
 
   @doc "The complete brand configuration as a keyword list."
   def config do
@@ -42,6 +48,9 @@ defmodule Mercator.Brand do
   def get(key) when is_atom(key), do: Keyword.fetch!(config(), key)
 
   def name, do: get(:name)
+
+  @doc "Short name for the installed app (PWA), falling back to the name."
+  def short_name, do: get(:short_name) || name()
 
   @doc """
   The tagline in the given locale, falling back to German, then nil.

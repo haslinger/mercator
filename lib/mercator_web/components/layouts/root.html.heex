@@ -17,6 +17,10 @@
     </.live_title>
     <link rel="icon" href={~p"/brand/favicon"} />
     <link rel="apple-touch-icon" href={~p"/brand/apple-touch-icon"} />
+    <link rel="manifest" href={~p"/manifest.webmanifest"} />
+    <meta name="theme-color" content={Mercator.Brand.get(:theme_color)} />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content={Mercator.Brand.short_name()} />
     <link phx-track-static rel="stylesheet" href={~p"/assets/css/app.css"} />
     <script defer phx-track-static type="text/javascript" src={~p"/assets/js/app.js"}>
     </script>
