@@ -14,7 +14,7 @@ defmodule Mercator.Catalog.Pricing do
   Prices are net (#50); VAT comes from the product's tax class.
   """
 
-  alias Mercator.Catalog.{PriceInfo, Variant}
+  alias Mercator.Catalog.{Configurator, PriceInfo, Variant}
 
   @doc """
   The price of `quantity` units of a variant on `date`.
@@ -37,7 +37,29 @@ defmodule Mercator.Catalog.Pricing do
   the "from" price on category pages. Returns `{:ok, %PriceInfo{}}` or
   `{:error, :no_price}`.
   """
-  def from_price(product, date \\ Date.utc_today()) do
+  def from_price(product, date \\ Date.utc_today())
+
+  # configurable products: the price of one piece in the default configuration
+  def from_price(%{kind: :configurable} = product, _date) do
+    case Configurator.quote(product, %{}, 1) do
+      {:ok, quote} ->
+        {:ok,
+         %PriceInfo{
+           quantity: Decimal.new(1),
+           unit_net: quote.net,
+           unit_gross: quote.gross,
+           vat_rate: quote.vat_rate,
+           net: quote.net,
+           vat: quote.vat,
+           gross: quote.gross
+         }}
+
+      {:error, _} ->
+        {:error, :no_price}
+    end
+  end
+
+  def from_price(product, date) do
     product = Ash.load!(product, [:tax_class, variants: :prices], authorize?: false, lazy?: true)
 
     product.variants

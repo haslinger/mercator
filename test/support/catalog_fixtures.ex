@@ -84,4 +84,83 @@ defmodule Mercator.CatalogFixtures do
 
     variant
   end
+
+  @doc """
+  A configurable product priced per m³ (timber cut to size):
+
+    * species (base price): spruce 560 €/m³ (default), oak 1650 €/m³
+    * surface (surcharge): rough-sawn (default), planed +15 %
+    * finish (surcharge): none (default), oiled +8 € per piece
+    * length 500–6000 mm (default 4000), width 40–300 (100), thickness 40–300 (120)
+    * rounding 10 mm, cutting fee 2.50 € per piece, minimum 0.05 m³,
+      minimum order value 20 €, 20 % VAT
+  """
+  def configurable_product_fixture(attrs \\ %{}) do
+    product =
+      product_fixture(
+        Map.merge(
+          %{
+            kind: :configurable,
+            pricing: :per_volume,
+            rounding_mm: 10,
+            cutting_fee: "2.50",
+            min_billing_quantity: "0.05",
+            min_order_value: "20",
+            variants: [%{prices: []}]
+          },
+          Map.new(attrs)
+        )
+      )
+
+    option = fn key, kind, role, extra ->
+      Map.merge(
+        %{product_id: product.id, key: key, name: %{"de" => key}, kind: kind, role: role},
+        extra
+      )
+      |> Catalog.create_product_option!(authorize?: false)
+    end
+
+    choice = fn option, key, extra ->
+      Map.merge(%{option_id: option.id, key: key, name: %{"de" => key}}, extra)
+      |> Catalog.create_option_choice!(authorize?: false)
+    end
+
+    species = option.("species", :choice, :base_price, %{position: 1})
+    choice.(species, "spruce", %{base_price: "560", default: true, position: 1})
+    choice.(species, "oak", %{base_price: "1650", position: 2})
+
+    surface = option.("surface", :choice, :surcharge, %{position: 2})
+    choice.(surface, "rough", %{default: true, position: 1})
+    choice.(surface, "planed", %{surcharge_percent: "15", position: 2})
+
+    finish = option.("finish", :choice, :surcharge, %{position: 3})
+    choice.(finish, "none", %{default: true, position: 1})
+    choice.(finish, "oiled", %{surcharge_amount: "8", position: 2})
+
+    option.("length", :number, :length, %{
+      unit: "mm",
+      min: "500",
+      max: "6000",
+      default: "4000",
+      position: 4
+    })
+
+    option.("width", :number, :width, %{
+      unit: "mm",
+      min: "40",
+      max: "300",
+      default: "100",
+      position: 5
+    })
+
+    option.("thickness", :number, :thickness, %{
+      unit: "mm",
+      min: "40",
+      max: "300",
+      default: "120",
+      position: 6
+    })
+
+    product
+  end
 end

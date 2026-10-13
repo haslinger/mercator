@@ -13,6 +13,8 @@ defmodule Mercator.Catalog.Product do
     authorizers: [Ash.Policy.Authorizer],
     extensions: [AshStateMachine]
 
+  use Gettext, backend: MercatorWeb.Gettext
+
   alias Mercator.Accounts.Checks.ActorHasRole
   alias Mercator.Catalog.Changes.SetSlug
   alias Mercator.Catalog.Validations.HasVariant
@@ -30,7 +32,12 @@ defmodule Mercator.Catalog.Product do
     :tax_class_id,
     :new_arrival,
     :bestseller,
-    :shipping
+    :shipping,
+    :pricing,
+    :min_billing_quantity,
+    :min_order_value,
+    :rounding_mm,
+    :cutting_fee
   ]
 
   postgres do
@@ -134,6 +141,12 @@ defmodule Mercator.Catalog.Product do
     end
   end
 
+  validations do
+    validate present(:pricing),
+      where: [attribute_equals(:kind, :configurable)],
+      message: dgettext_noop("errors", "configurable products need a pricing model")
+  end
+
   attributes do
     uuid_primary_key :id
 
@@ -201,6 +214,37 @@ defmodule Mercator.Catalog.Product do
       public? true
     end
 
+    # --- configurable products (#55) ---
+
+    attribute :pricing, Mercator.Catalog.PricingModel do
+      description "Price calculation of configurable products."
+      public? true
+    end
+
+    attribute :min_billing_quantity, :decimal do
+      description "Minimum measure billed per order line, in the pricing unit (e.g. 0.1 m³)."
+      public? true
+      constraints min: 0
+    end
+
+    attribute :min_order_value, :decimal do
+      description "Minimum net value of an order line."
+      public? true
+      constraints min: 0
+    end
+
+    attribute :rounding_mm, :integer do
+      description "Dimensions are rounded up to multiples of this, e.g. 10 for whole cm."
+      public? true
+      constraints min: 1
+    end
+
+    attribute :cutting_fee, :decimal do
+      description "Net fee per piece for cutting to size."
+      public? true
+      constraints min: 0
+    end
+
     timestamps()
   end
 
@@ -224,6 +268,11 @@ defmodule Mercator.Catalog.Product do
     end
 
     has_many :product_properties, Mercator.Catalog.ProductProperty, public?: true
+
+    has_many :options, Mercator.Catalog.ProductOption do
+      sort position: :asc, key: :asc
+      public? true
+    end
 
     has_many :relations, Mercator.Catalog.ProductRelation do
       sort position: :asc, inserted_at: :asc

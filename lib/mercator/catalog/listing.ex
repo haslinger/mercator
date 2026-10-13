@@ -14,7 +14,7 @@ defmodule Mercator.Catalog.Listing do
   alias Mercator.Catalog.Pricing
   alias Mercator.Translated
 
-  @loads [:tax_class, variants: :prices, product_properties: :property]
+  @loads [:tax_class, variants: :prices, options: :choices, product_properties: :property]
 
   @doc "What to load on products before calling `build/3`."
   def loads, do: @loads

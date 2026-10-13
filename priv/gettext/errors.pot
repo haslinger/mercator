@@ -137,3 +137,38 @@ msgstr ""
 #, elixir-autogen, elixir-format
 msgid "exactly one value matching the property's kind is required"
 msgstr ""
+
+#: lib/mercator/catalog/configurator.ex:59
+#, elixir-autogen, elixir-format
+msgid "must be a whole number greater than zero"
+msgstr ""
+
+#: lib/mercator/catalog/configurator.ex:110
+#, elixir-autogen, elixir-format
+msgid "must be at least %{min}"
+msgstr ""
+
+#: lib/mercator/catalog/configurator.ex:116
+#, elixir-autogen, elixir-format
+msgid "must be at most %{max}"
+msgstr ""
+
+#: lib/mercator/catalog/configurator.ex:80
+#, elixir-autogen, elixir-format
+msgid "please choose"
+msgstr ""
+
+#: lib/mercator/catalog/configurator.ex:102
+#, elixir-autogen, elixir-format
+msgid "please enter a number"
+msgstr ""
+
+#: lib/mercator/catalog/configurator.ex:97
+#, elixir-autogen, elixir-format
+msgid "please enter a value"
+msgstr ""
+
+#: lib/mercator/catalog/product.ex:147
+#, elixir-autogen, elixir-format
+msgid "configurable products need a pricing model"
+msgstr ""

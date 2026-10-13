@@ -12,6 +12,8 @@ defmodule Mercator.Catalog do
 
   defdelegate from_price(product, date \\ Date.utc_today()), to: Mercator.Catalog.Pricing
 
+  defdelegate quote(product, selections, quantity \\ 1), to: Mercator.Catalog.Configurator
+
   resources do
     resource Mercator.Catalog.Category do
       define :list_categories, action: :read
@@ -61,6 +63,16 @@ defmodule Mercator.Catalog do
     resource Mercator.Catalog.Categorization do
       define :categorize, action: :create, args: [:category_id, :product_id]
       define :destroy_categorization, action: :destroy
+    end
+
+    resource Mercator.Catalog.ProductOption do
+      define :create_product_option, action: :create
+      define :update_product_option, action: :update
+    end
+
+    resource Mercator.Catalog.OptionChoice do
+      define :create_option_choice, action: :create
+      define :update_option_choice, action: :update
     end
 
     resource Mercator.Catalog.PropertyGroup do
