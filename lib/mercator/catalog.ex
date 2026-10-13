@@ -14,6 +14,37 @@ defmodule Mercator.Catalog do
 
   defdelegate quote(product, selections, quantity \\ 1), to: Mercator.Catalog.Configurator
 
+  @doc """
+  Places a category at `index` below `parent_id` (nil = top level), as after a
+  drag & drop in the admin category tree: moves it if the parent changes and
+  renumbers the positions of its new siblings. Runs the actions as `actor`.
+  """
+  def place_category(category, parent_id, index, actor) do
+    with {:ok, category} <- maybe_move(category, parent_id, actor) do
+      parent_id
+      |> siblings(actor)
+      |> Enum.reject(&(&1.id == category.id))
+      |> List.insert_at(index, category)
+      |> Enum.with_index(1)
+      |> Enum.each(fn {sibling, position} -> set_position(sibling, position, actor) end)
+
+      get_category(category.id, actor: actor)
+    end
+  end
+
+  defp siblings(nil, actor), do: list_root_categories!(actor: actor)
+  defp siblings(parent_id, actor), do: list_child_categories!(parent_id, actor: actor)
+
+  defp set_position(%{position: position}, position, _actor), do: :ok
+
+  defp set_position(category, position, actor),
+    do: update_category!(category, %{position: position}, actor: actor)
+
+  defp maybe_move(%{parent_id: parent_id} = category, parent_id, _actor), do: {:ok, category}
+
+  defp maybe_move(category, parent_id, actor),
+    do: move_category(category, parent_id, actor: actor)
+
   admin do
     show? true
   end

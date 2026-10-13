@@ -181,6 +181,15 @@ defmodule Mercator.Catalog.Category do
     end
   end
 
+  aggregates do
+    count :product_count, :categorizations do
+      description "Number of products assigned directly to this category."
+      public? true
+    end
+
+    count :child_count, :children, public?: true
+  end
+
   identities do
     identity :unique_slug, [:slug]
   end
