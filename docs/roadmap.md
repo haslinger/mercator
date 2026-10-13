@@ -142,7 +142,7 @@ Customer systems and the modules they mount (the last commit date of each system
 4. **Back office:** admin CRUD; productmanager tools (tree, price, property and relation manager).
 5. **CMS:** Webpages, templates, content elements, folders; blog and podcasts if needed.
 6. **Guided selling:** Conversations, realtime chat, offers, the sales desk, consultant assignment, cobrowsing, A/V chat.
-7. **Integrations:** Mesonic ERP, mPAY24 (or successor), Icecat, Bechlem.
+7. **Integrations:** payment provider (replacing mPAY24, #14). Mesonic, Icecat and Bechlem are out of scope (#15).
 8. **Contracting** module.
 9. **Seed/dummy data** (built up alongside every phase), and go-live.
 
@@ -154,6 +154,11 @@ Rails sources (#1–#4) and continuing the overview (#5) were answered on 2026-1
 - **#6** (2026-10-13) Build a **generic multi-customer product**. The customer-system repos are reference material only (approaches, completeness); re-implementing those specific customers is very unlikely.
 - **#21** (2026-10-13) **No data migration.** We create dummy/seed data instead. As a result, #11 (migrating files), #22 (migrating history) and #23 (keeping old passwords) only matter in their non-migration parts.
 - **#28** (2026-10-13) **Single tenant: one deployment per customer.** Customer specifics come from runtime config, a DaisyUI theme and enabled modules. We design so a later move to Ash multitenancy stays possible: customer config lives in one place, and integrations are optional modules.
+- **#14** (2026-10-13) mPAY24 **will be replaced**; we choose the provider when payment is implemented.
+- **#15** (2026-10-13) **Mesonic ERP, Icecat and Bechlem will not be implemented.**
+- **#26** (2026-10-13) `CLAUDE.md` written (it imports the generated `AGENTS.md`).
+- **#27** (2026-10-13) Start with **phase 1**, pulling in phases 2 and 9 (seed data) as needed.
+- **#29 / #30** (2026-10-13) Toolchain via **asdf**, always the latest stable release (Erlang 29.1.1, Elixir 1.20.4-otp-29). App generated with `mix igniter.new … --with phx.new` (Phoenix 1.8.15, Ash 3, AshPostgres, AshPhoenix, AshAuthentication(Phoenix), AshStateMachine, AshPaperTrail, Oban).
 - **#25** (2026-10-13) **No security risk:** none of the old systems are deployed any more. Secrets still go only into env/`runtime.exs` in the port.
 
 ### Scope and target
@@ -165,8 +170,8 @@ Rails sources (#1–#4) and continuing the overview (#5) were answered on 2026-1
 - **#11** File storage: local disk or S3-compatible? ~~Do the existing Paperclip files have to be migrated?~~ (no, see #21)
 - **#12** Audio/video chat and cobrowsing: still wanted? If so, should WebRTC signalling run over Phoenix Channels? Cobrowsing in Rails worked by sending events to the customer's page. Is that still needed in the same form?
 - **#13** Which rich-text editor for content elements and descriptions (TipTap, Trix, or something else)? Must existing CKEditor HTML stay renderable as-is?
-- **#14** Payment: is mPAY24 still the provider? (I couldn't confirm whether the SOAP API used in 2015 still exists.) Are other providers wanted (e.g. Stripe, PayPal)?
-- **#15** Integrations: which are still in use? Is Mesonic ERP still the ERP, with MSSQL access still available? Are the Icecat and Bechlem accounts still active? (Their APIs/feeds have likely changed since 2016.)
+- ~~**#14**~~ *(answered, see Decisions)* Payment: is mPAY24 still the provider? (I couldn't confirm whether the SOAP API used in 2015 still exists.) Are other providers wanted (e.g. Stripe, PayPal)?
+- ~~**#15**~~ *(answered, see Decisions)* Integrations: which are still in use? Is Mesonic ERP still the ERP, with MSSQL access still available? Are the Icecat and Bechlem accounts still active? (Their APIs/feeds have likely changed since 2016.)
 - **#16** Back office UI: one unified admin area with role-based menus, or the five separate subsites as in Rails? Is AshAdmin acceptable for low-traffic CRUD screens?
 - **#17** PDF output: which documents are needed (offers, orders, contracts)? Which tool do you prefer (ChromicPDF needs headless Chrome; Typst is a single binary)?
 - **#18** Which of these features are still needed: blog, podcasts, comments, Twitter integration, Ahoy visitor tracking, the contact form with its captcha question, Gravatar?
@@ -183,5 +188,6 @@ Rails sources (#1–#4) and continuing the overview (#5) were answered on 2026-1
 - ~~**#25**~~ *(answered, see Decisions)* The customer-system repos (`systems/*/config/application.yml`, `database.yml`) contain **plaintext credentials**: DB, Mesonic ERP, mPAY24 merchant, Icecat, Bechlem and secret tokens. In the port, secrets will live only in environment variables or `runtime.exs`. Are any of these credentials still live? If so, they should be rotated, since they are in git history.
 
 ### Process
-- **#26** Should I write a `CLAUDE.md` with project conventions (Ash domains layout, naming, testing, Rails source location) before we start coding?
-- **#27** Which phase or feature should come first? (My suggestion: phases 1 and 2.)
+- ~~**#26**~~ *(answered, see Decisions)* Should I write a `CLAUDE.md` with project conventions (Ash domains layout, naming, testing, Rails source location) before we start coding?
+- ~~**#27**~~ *(answered, see Decisions)* Which phase or feature should come first? (My suggestion: phases 1 and 2.)
+- **#31** Should I add the `usage_rules` dev dependency? It syncs the official usage rules of Ash, AshPostgres, AshPhoenix, AshAuthentication, Oban and others into `AGENTS.md`. The generated `AGENTS.md` currently covers only Phoenix/Elixir, and the Ash rules help keep generated code idiomatic.
