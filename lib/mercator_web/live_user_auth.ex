@@ -4,6 +4,7 @@ defmodule MercatorWeb.LiveUserAuth do
   """
 
   use MercatorWeb, :verified_routes
+  use Gettext, backend: MercatorWeb.Gettext
 
   import Phoenix.Component
 
@@ -29,6 +30,28 @@ defmodule MercatorWeb.LiveUserAuth do
       {:cont, socket}
     else
       {:halt, Phoenix.LiveView.redirect(socket, to: ~p"/sign-in")}
+    end
+  end
+
+  # Requires a signed-in user holding the given staff role, e.g.
+  # on_mount {MercatorWeb.LiveUserAuth, {:require_role, :administrator}}
+  def on_mount({:require_role, role}, _params, _session, socket) do
+    case socket.assigns[:current_user] do
+      nil ->
+        {:halt, Phoenix.LiveView.redirect(socket, to: ~p"/sign-in")}
+
+      %{roles: roles} = _user ->
+        if role in roles do
+          {:cont, socket}
+        else
+          {:halt,
+           socket
+           |> Phoenix.LiveView.put_flash(
+             :error,
+             gettext("You are not allowed to access this page.")
+           )
+           |> Phoenix.LiveView.redirect(to: ~p"/")}
+        end
     end
   end
 

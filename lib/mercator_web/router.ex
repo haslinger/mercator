@@ -39,6 +39,9 @@ defmodule MercatorWeb.Router do
       # on_mount {MercatorWeb.LiveUserAuth, :live_no_user}
 
       live "/account", AccountLive
+
+      live "/admin/users", Admin.UserIndexLive
+      live "/admin/users/:id", Admin.UserEditLive
     end
   end
 

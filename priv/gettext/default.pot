@@ -21,8 +21,8 @@ msgstr ""
 msgid "An account with this email already exists. We've sent a link to that address - confirm it to finish linking this provider to your account."
 msgstr ""
 
-#: lib/mercator_web/components/layouts.ex:130
-#: lib/mercator_web/components/layouts.ex:145
+#: lib/mercator_web/components/layouts.ex:133
+#: lib/mercator_web/components/layouts.ex:148
 #, elixir-autogen, elixir-format
 msgid "Attempting to reconnect"
 msgstr ""
@@ -47,17 +47,17 @@ msgstr ""
 msgid "Sign in"
 msgstr ""
 
-#: lib/mercator_web/components/layouts.ex:79
+#: lib/mercator_web/components/layouts.ex:82
 #, elixir-autogen, elixir-format
 msgid "Sign out"
 msgstr ""
 
-#: lib/mercator_web/components/layouts.ex:137
+#: lib/mercator_web/components/layouts.ex:140
 #, elixir-autogen, elixir-format
 msgid "Something went wrong!"
 msgstr ""
 
-#: lib/mercator_web/components/layouts.ex:122
+#: lib/mercator_web/components/layouts.ex:125
 #, elixir-autogen, elixir-format
 msgid "We can't find the internet"
 msgstr ""
@@ -109,6 +109,7 @@ msgid "Current password"
 msgstr ""
 
 #: lib/mercator_web/live/account_live.ex:45
+#: lib/mercator_web/live/admin/user_index_live.ex:42
 #, elixir-autogen, elixir-format
 msgid "Language"
 msgstr ""
@@ -121,6 +122,7 @@ msgid "My account"
 msgstr ""
 
 #: lib/mercator_web/live/account_live.ex:40
+#: lib/mercator_web/live/admin/user_index_live.ex:40
 #, elixir-autogen, elixir-format
 msgid "Name"
 msgstr ""
@@ -146,11 +148,12 @@ msgid "Repeat new password"
 msgstr ""
 
 #: lib/mercator_web/live/account_live.ex:49
+#: lib/mercator_web/live/admin/user_edit_live.ex:77
 #, elixir-autogen, elixir-format
 msgid "Save"
 msgstr ""
 
-#: lib/mercator_web/live/account_live.ex:124
+#: lib/mercator_web/live/account_live.ex:128
 #, elixir-autogen, elixir-format
 msgid "Your password has been changed. Please sign in again."
 msgstr ""
@@ -158,4 +161,85 @@ msgstr ""
 #: lib/mercator_web/live/account_live.ex:105
 #, elixir-autogen, elixir-format
 msgid "Your profile has been saved."
+msgstr ""
+
+#: lib/mercator_web/live/admin/user_index_live.ex:31
+#, elixir-autogen, elixir-format
+msgid "1 user"
+msgid_plural "%{count} users"
+msgstr[0] ""
+msgstr[1] ""
+
+#: lib/mercator_web/components/role_components.ex:9
+#, elixir-autogen, elixir-format
+msgid "Administrator"
+msgstr ""
+
+#: lib/mercator_web/live/admin/user_index_live.ex:43
+#, elixir-autogen, elixir-format
+msgid "Confirmed"
+msgstr ""
+
+#: lib/mercator_web/components/role_components.ex:12
+#, elixir-autogen, elixir-format
+msgid "Content manager"
+msgstr ""
+
+#: lib/mercator_web/live/admin/user_edit_live.ex:50
+#, elixir-autogen, elixir-format
+msgid "Customers have no role. Staff members can have several roles."
+msgstr ""
+
+#: lib/mercator_web/live/admin/user_index_live.ex:62
+#, elixir-autogen, elixir-format
+msgid "Edit"
+msgstr ""
+
+#: lib/mercator_web/live/admin/user_index_live.ex:39
+#, elixir-autogen, elixir-format
+msgid "Email"
+msgstr ""
+
+#: lib/mercator_web/components/role_components.ex:13
+#, elixir-autogen, elixir-format
+msgid "Product manager"
+msgstr ""
+
+#: lib/mercator_web/live/admin/user_edit_live.ex:48
+#: lib/mercator_web/live/admin/user_index_live.ex:41
+#, elixir-autogen, elixir-format
+msgid "Roles"
+msgstr ""
+
+#: lib/mercator_web/live/admin/user_edit_live.ex:101
+#, elixir-autogen, elixir-format
+msgid "Roles saved."
+msgstr ""
+
+#: lib/mercator_web/components/role_components.ex:10
+#, elixir-autogen, elixir-format
+msgid "Sales"
+msgstr ""
+
+#: lib/mercator_web/components/role_components.ex:11
+#, elixir-autogen, elixir-format
+msgid "Sales manager"
+msgstr ""
+
+#: lib/mercator_web/live/admin/user_edit_live.ex:30
+#, elixir-autogen, elixir-format
+msgid "User not found."
+msgstr ""
+
+#: lib/mercator_web/components/layouts.ex:80
+#: lib/mercator_web/live/admin/user_edit_live.ex:40
+#: lib/mercator_web/live/admin/user_index_live.ex:19
+#: lib/mercator_web/live/admin/user_index_live.ex:29
+#, elixir-autogen, elixir-format
+msgid "Users"
+msgstr ""
+
+#: lib/mercator_web/live_user_auth.ex:49
+#, elixir-autogen, elixir-format
+msgid "You are not allowed to access this page."
 msgstr ""

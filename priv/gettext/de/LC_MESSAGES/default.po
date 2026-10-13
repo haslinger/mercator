@@ -21,8 +21,8 @@ msgstr "Aktionen"
 msgid "An account with this email already exists. We've sent a link to that address - confirm it to finish linking this provider to your account."
 msgstr "Ein Konto mit dieser E-Mail-Adresse existiert bereits. Wir haben einen Link an diese Adresse gesendet – bestätigen Sie ihn, um die Verknüpfung abzuschließen."
 
-#: lib/mercator_web/components/layouts.ex:130
-#: lib/mercator_web/components/layouts.ex:145
+#: lib/mercator_web/components/layouts.ex:133
+#: lib/mercator_web/components/layouts.ex:148
 #, elixir-autogen, elixir-format
 msgid "Attempting to reconnect"
 msgstr "Verbindung wird wiederhergestellt"
@@ -47,17 +47,17 @@ msgstr "Kaufen Sie selbständig ein oder lassen Sie sich von unseren Beraterinne
 msgid "Sign in"
 msgstr "Anmelden"
 
-#: lib/mercator_web/components/layouts.ex:79
+#: lib/mercator_web/components/layouts.ex:82
 #, elixir-autogen, elixir-format
 msgid "Sign out"
 msgstr "Abmelden"
 
-#: lib/mercator_web/components/layouts.ex:137
+#: lib/mercator_web/components/layouts.ex:140
 #, elixir-autogen, elixir-format
 msgid "Something went wrong!"
 msgstr "Etwas ist schiefgelaufen!"
 
-#: lib/mercator_web/components/layouts.ex:122
+#: lib/mercator_web/components/layouts.ex:125
 #, elixir-autogen, elixir-format
 msgid "We can't find the internet"
 msgstr "Keine Internetverbindung"
@@ -109,6 +109,7 @@ msgid "Current password"
 msgstr "Aktuelles Passwort"
 
 #: lib/mercator_web/live/account_live.ex:45
+#: lib/mercator_web/live/admin/user_index_live.ex:42
 #, elixir-autogen, elixir-format
 msgid "Language"
 msgstr "Sprache"
@@ -121,6 +122,7 @@ msgid "My account"
 msgstr "Mein Konto"
 
 #: lib/mercator_web/live/account_live.ex:40
+#: lib/mercator_web/live/admin/user_index_live.ex:40
 #, elixir-autogen, elixir-format
 msgid "Name"
 msgstr "Name"
@@ -146,11 +148,12 @@ msgid "Repeat new password"
 msgstr "Neues Passwort wiederholen"
 
 #: lib/mercator_web/live/account_live.ex:49
+#: lib/mercator_web/live/admin/user_edit_live.ex:77
 #, elixir-autogen, elixir-format
 msgid "Save"
 msgstr "Speichern"
 
-#: lib/mercator_web/live/account_live.ex:124
+#: lib/mercator_web/live/account_live.ex:128
 #, elixir-autogen, elixir-format, fuzzy
 msgid "Your password has been changed. Please sign in again."
 msgstr "Ihr Passwort wurde geändert. Bitte melden Sie sich erneut an."
@@ -159,3 +162,84 @@ msgstr "Ihr Passwort wurde geändert. Bitte melden Sie sich erneut an."
 #, elixir-autogen, elixir-format
 msgid "Your profile has been saved."
 msgstr "Ihr Profil wurde gespeichert."
+
+#: lib/mercator_web/live/admin/user_index_live.ex:31
+#, elixir-autogen, elixir-format
+msgid "1 user"
+msgid_plural "%{count} users"
+msgstr[0] "1 Benutzer"
+msgstr[1] "%{count} Benutzer"
+
+#: lib/mercator_web/components/role_components.ex:9
+#, elixir-autogen, elixir-format
+msgid "Administrator"
+msgstr "Administration"
+
+#: lib/mercator_web/live/admin/user_index_live.ex:43
+#, elixir-autogen, elixir-format
+msgid "Confirmed"
+msgstr "Bestätigt"
+
+#: lib/mercator_web/components/role_components.ex:12
+#, elixir-autogen, elixir-format
+msgid "Content manager"
+msgstr "Content-Management"
+
+#: lib/mercator_web/live/admin/user_edit_live.ex:50
+#, elixir-autogen, elixir-format
+msgid "Customers have no role. Staff members can have several roles."
+msgstr "Kundinnen und Kunden haben keine Rolle. Mitarbeitende können mehrere Rollen haben."
+
+#: lib/mercator_web/live/admin/user_index_live.ex:62
+#, elixir-autogen, elixir-format
+msgid "Edit"
+msgstr "Bearbeiten"
+
+#: lib/mercator_web/live/admin/user_index_live.ex:39
+#, elixir-autogen, elixir-format
+msgid "Email"
+msgstr "E-Mail"
+
+#: lib/mercator_web/components/role_components.ex:13
+#, elixir-autogen, elixir-format
+msgid "Product manager"
+msgstr "Produktmanagement"
+
+#: lib/mercator_web/live/admin/user_edit_live.ex:48
+#: lib/mercator_web/live/admin/user_index_live.ex:41
+#, elixir-autogen, elixir-format
+msgid "Roles"
+msgstr "Rollen"
+
+#: lib/mercator_web/live/admin/user_edit_live.ex:101
+#, elixir-autogen, elixir-format
+msgid "Roles saved."
+msgstr "Rollen gespeichert."
+
+#: lib/mercator_web/components/role_components.ex:10
+#, elixir-autogen, elixir-format
+msgid "Sales"
+msgstr "Vertrieb"
+
+#: lib/mercator_web/components/role_components.ex:11
+#, elixir-autogen, elixir-format
+msgid "Sales manager"
+msgstr "Vertriebsleitung"
+
+#: lib/mercator_web/live/admin/user_edit_live.ex:30
+#, elixir-autogen, elixir-format
+msgid "User not found."
+msgstr "Benutzer nicht gefunden."
+
+#: lib/mercator_web/components/layouts.ex:80
+#: lib/mercator_web/live/admin/user_edit_live.ex:40
+#: lib/mercator_web/live/admin/user_index_live.ex:19
+#: lib/mercator_web/live/admin/user_index_live.ex:29
+#, elixir-autogen, elixir-format
+msgid "Users"
+msgstr "Benutzer"
+
+#: lib/mercator_web/live_user_auth.ex:49
+#, elixir-autogen, elixir-format
+msgid "You are not allowed to access this page."
+msgstr "Sie haben keinen Zugriff auf diese Seite."

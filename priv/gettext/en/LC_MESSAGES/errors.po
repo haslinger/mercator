@@ -110,3 +110,8 @@ msgstr ""
 
 msgid "must be equal to %{number}"
 msgstr ""
+
+#: lib/mercator/accounts/validations/keep_own_admin_role.ex:23
+#, elixir-autogen, elixir-format
+msgid "you cannot remove your own administrator role"
+msgstr ""

@@ -74,7 +74,9 @@ defmodule Mercator.Accounts.User do
 
     update :set_roles do
       description "Replace the staff roles of a user (administrators only)."
+      require_atomic? false
       accept [:roles]
+      validate Mercator.Accounts.Validations.KeepOwnAdminRole
     end
 
     read :get_by_subject do

@@ -76,6 +76,9 @@ defmodule MercatorWeb.Layouts do
       </div>
       <ul tabindex="0" class="menu dropdown-content bg-base-100 rounded-box z-10 mt-2 w-56 p-2 shadow">
         <li><.link navigate={~p"/account"} id="account-link">{gettext("My account")}</.link></li>
+        <li :if={:administrator in @current_user.roles}>
+          <.link navigate={~p"/admin/users"} id="admin-users-link">{gettext("Users")}</.link>
+        </li>
         <li><.link href={~p"/sign-out"} id="sign-out-link">{gettext("Sign out")}</.link></li>
       </ul>
     </div>

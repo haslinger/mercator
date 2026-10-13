@@ -43,6 +43,25 @@ defmodule Mercator.Accounts.UserRolesTest do
                Accounts.set_user_roles(sales, [:administrator], actor: sales)
     end
 
+    test "administrators cannot remove their own administrator role" do
+      admin = user_fixture(roles: [:administrator])
+
+      assert {:error, %Ash.Error.Invalid{}} =
+               Accounts.set_user_roles(admin, [:sales], actor: admin)
+
+      assert {:ok, %{roles: roles}} =
+               Accounts.set_user_roles(admin, [:administrator, :sales], actor: admin)
+
+      assert :sales in roles
+    end
+
+    test "an administrator can remove another administrator's role" do
+      admin = user_fixture(roles: [:administrator])
+      other_admin = user_fixture(roles: [:administrator])
+
+      assert {:ok, %{roles: []}} = Accounts.set_user_roles(other_admin, [], actor: admin)
+    end
+
     test "unknown roles are rejected" do
       admin = user_fixture(roles: [:administrator])
 
