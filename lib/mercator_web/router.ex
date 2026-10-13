@@ -64,6 +64,7 @@ defmodule MercatorWeb.Router do
       live "/admin/categories", Admin.CategoryTreeLive, :index
       live "/admin/categories/new", Admin.CategoryTreeLive, :new
       live "/admin/categories/:id/edit", Admin.CategoryTreeLive, :edit
+      live "/admin/tax-classes", Admin.TaxClassLive
       live "/admin/users", Admin.UserIndexLive
       live "/admin/users/:id", Admin.UserEditLive
     end

@@ -36,7 +36,16 @@ defmodule MercatorWeb.AdminNav do
        ]},
       {gettext("Administration"),
        [
-         item(gettext("Users"), ~p"/admin/users", "hero-users", "users", [:administrator])
+         item(gettext("Users"), ~p"/admin/users", "hero-users", "users", [:administrator]),
+         item(
+           gettext("Tax classes"),
+           ~p"/admin/tax-classes",
+           "hero-receipt-percent",
+           "tax-classes",
+           [
+             :administrator
+           ]
+         )
        ]}
     ]
     |> Enum.map(fn {title, items} -> {title, Enum.filter(items, &visible?(&1, roles))} end)

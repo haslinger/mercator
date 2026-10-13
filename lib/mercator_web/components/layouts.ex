@@ -163,7 +163,7 @@ defmodule MercatorWeb.Layouts do
     <div class="dropdown dropdown-end" id="catalog-menu">
       <div tabindex="0" role="button" class="btn btn-ghost btn-sm">
         <.icon name="hero-squares-2x2" class="size-5" />
-        <span class="hidden sm:inline">{gettext("Products")}</span>
+        <span class="hidden sm:inline">{pgettext("shop navigation", "Products")}</span>
       </div>
       <ul tabindex="0" class="menu dropdown-content bg-base-100 rounded-box z-10 mt-2 w-64 p-2 shadow">
         <li :for={category <- @categories}>

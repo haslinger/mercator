@@ -165,6 +165,7 @@ defmodule Mercator.Catalog do
       define :get_tax_class_by_key, action: :read, get_by: [:key]
       define :create_tax_class, action: :create
       define :update_tax_class, action: :update
+      define :destroy_tax_class, action: :destroy
     end
   end
 end

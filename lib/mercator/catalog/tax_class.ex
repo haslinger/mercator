@@ -72,6 +72,14 @@ defmodule Mercator.Catalog.TaxClass do
     timestamps()
   end
 
+  relationships do
+    has_many :products, Mercator.Catalog.Product, public?: true
+  end
+
+  aggregates do
+    count :product_count, :products, public?: true
+  end
+
   identities do
     identity :unique_key, [:key]
   end
