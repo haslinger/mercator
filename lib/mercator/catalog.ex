@@ -61,6 +61,27 @@ defmodule Mercator.Catalog do
       define :destroy_categorization, action: :destroy
     end
 
+    resource Mercator.Catalog.PropertyGroup do
+      define :list_property_groups, action: :read
+      define :create_property_group, action: :create
+    end
+
+    resource Mercator.Catalog.Property do
+      define :list_properties, action: :read
+      define :create_property, action: :create
+      define :update_property, action: :update
+    end
+
+    resource Mercator.Catalog.ProductProperty do
+      define :set_product_property, action: :create
+      define :update_product_property, action: :update
+    end
+
+    resource Mercator.Catalog.ProductRelation do
+      define :relate_products, action: :create
+      define :destroy_product_relation, action: :destroy
+    end
+
     resource Mercator.Catalog.TaxClass do
       define :list_tax_classes, action: :read
       define :get_tax_class, action: :read, get_by: [:id]

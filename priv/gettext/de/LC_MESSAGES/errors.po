@@ -116,7 +116,17 @@ msgstr "Übersetzung für %{locale} fehlt"
 msgid "translation for %{locale} must be at most %{max} characters"
 msgstr "Übersetzung für %{locale} darf höchstens %{max} Zeichen lang sein"
 
-#: lib/mercator/catalog/validations/has_variant.ex:23
+#: lib/mercator/catalog/validations/has_variant.ex:24
 #, elixir-autogen, elixir-format
 msgid "a product needs at least one variant"
 msgstr "Ein Produkt braucht mindestens eine Variante"
+
+#: lib/mercator/catalog/validations/not_self_related.ex:15
+#, elixir-autogen, elixir-format, fuzzy
+msgid "a product cannot be related to itself"
+msgstr "Ein Produkt kann nicht mit sich selbst verknüpft werden"
+
+#: lib/mercator/catalog/validations/value_matches_kind.ex:30
+#, elixir-autogen, elixir-format
+msgid "exactly one value matching the property's kind is required"
+msgstr "Genau ein Wert passend zum Typ der Eigenschaft ist erforderlich"

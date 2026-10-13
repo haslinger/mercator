@@ -181,6 +181,13 @@ defmodule Mercator.Catalog.Product do
       through Mercator.Catalog.Categorization
       public? true
     end
+
+    has_many :product_properties, Mercator.Catalog.ProductProperty, public?: true
+
+    has_many :relations, Mercator.Catalog.ProductRelation do
+      sort position: :asc
+      public? true
+    end
   end
 
   identities do

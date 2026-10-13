@@ -126,7 +126,17 @@ msgstr ""
 msgid "translation for %{locale} must be at most %{max} characters"
 msgstr ""
 
-#: lib/mercator/catalog/validations/has_variant.ex:23
+#: lib/mercator/catalog/validations/has_variant.ex:24
 #, elixir-autogen, elixir-format
 msgid "a product needs at least one variant"
+msgstr ""
+
+#: lib/mercator/catalog/validations/not_self_related.ex:15
+#, elixir-autogen, elixir-format, fuzzy
+msgid "a product cannot be related to itself"
+msgstr ""
+
+#: lib/mercator/catalog/validations/value_matches_kind.ex:30
+#, elixir-autogen, elixir-format
+msgid "exactly one value matching the property's kind is required"
 msgstr ""
