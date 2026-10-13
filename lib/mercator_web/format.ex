@@ -42,6 +42,16 @@ defmodule MercatorWeb.Format do
     |> then(&number(&1, places(&1), locale))
   end
 
+  @doc """
+  A percentage without trailing zeros and never in scientific notation.
+
+      iex> MercatorWeb.Format.percent(Decimal.new("20.00"))
+      "20"
+      iex> MercatorWeb.Format.percent(Decimal.new("12.5"))
+      "12.5"
+  """
+  def percent(%Decimal{} = rate), do: rate |> Decimal.normalize() |> Decimal.to_string(:normal)
+
   @doc ~s(Price per unit, e.g. "pro m³" / "per m³".)
   def per_unit(unit), do: gettext("per %{unit}", unit: Unit.symbol(unit))
 

@@ -115,9 +115,9 @@ defmodule MercatorWeb.CatalogComponents do
     </div>
     <p :if={@size == "lg"} class="text-xs text-base-content/60">
       <%= if @gross? do %>
-        {gettext("incl. %{rate} % VAT", rate: Decimal.normalize(@price.vat_rate))}
+        {gettext("incl. %{rate} % VAT", rate: Format.percent(@price.vat_rate))}
       <% else %>
-        {gettext("excl. %{rate} % VAT", rate: Decimal.normalize(@price.vat_rate))}
+        {gettext("excl. %{rate} % VAT", rate: Format.percent(@price.vat_rate))}
       <% end %>
     </p>
     """

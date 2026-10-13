@@ -49,7 +49,9 @@ defmodule MercatorWeb.CatalogLiveTest do
     Catalog.categorize!(root.id, draft.id, authorize?: false)
 
     Catalog.relate_products!(
-      %{product_id: batten.id, related_product_id: beam.id, kind: :accessory}, authorize?: false)
+      %{product_id: batten.id, related_product_id: beam.id, kind: :accessory},
+      authorize?: false
+    )
 
     %{root: root, child: child, batten: batten, beam: beam, draft: draft}
   end
@@ -111,6 +113,7 @@ defmodule MercatorWeb.CatalogLiveTest do
       assert has_element?(view, "#product-title", "Dachlatte")
       assert has_element?(view, "#article-number", "LATTE-4M")
       assert has_element?(view, "#price-box", "4,08 €")
+      assert has_element?(view, "#price-box", "inkl. 20 % MwSt.")
       assert has_element?(view, "#graduated-prices")
       assert has_element?(view, "#relations-accessory")
       assert has_element?(view, "#add-to-basket[disabled]")
