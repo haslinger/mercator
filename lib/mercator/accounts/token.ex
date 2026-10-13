@@ -1,4 +1,7 @@
 defmodule Mercator.Accounts.Token do
+  @moduledoc """
+  Authentication tokens (AshAuthentication token resource).
+  """
   use Ash.Resource,
     otp_app: :mercator,
     domain: Mercator.Accounts,

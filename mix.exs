@@ -41,8 +41,10 @@ defmodule Mercator.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
+      {:tidewave, "~> 0.9", only: [:dev]},
       {:picosat_elixir, "~> 0.2"},
       {:sourceror, "~> 1.8", only: [:dev, :test]},
+      {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:oban, "~> 2.0"},
       {:ash_paper_trail, "~> 0.8"},
       {:ash_state_machine, "~> 0.2"},
@@ -106,7 +108,13 @@ defmodule Mercator.MixProject do
         "esbuild mercator --minify",
         "phx.digest"
       ],
-      precommit: ["compile --warnings-as-errors", "deps.unlock --unused", "format", "test"]
+      precommit: [
+        "compile --warnings-as-errors",
+        "deps.unlock --unused",
+        "format",
+        "credo --strict",
+        "test"
+      ]
     ]
   end
 end

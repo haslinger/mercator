@@ -1,4 +1,7 @@
 defmodule Mercator.Accounts.User do
+  @moduledoc """
+  A user of Mercator: customer or staff member.
+  """
   use Ash.Resource,
     otp_app: :mercator,
     domain: Mercator.Accounts,

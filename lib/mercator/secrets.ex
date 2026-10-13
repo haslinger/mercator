@@ -1,4 +1,7 @@
 defmodule Mercator.Secrets do
+  @moduledoc """
+  Provides secrets (e.g. the token signing secret) to AshAuthentication at runtime.
+  """
   use AshAuthentication.Secret
 
   def secret_for(

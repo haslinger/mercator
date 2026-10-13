@@ -27,6 +27,8 @@ defmodule MercatorWeb.CoreComponents do
 
   """
   use Phoenix.Component
+
+  alias Phoenix.HTML.Form
   use Gettext, backend: MercatorWeb.Gettext
 
   alias Phoenix.LiveView.JS
@@ -208,7 +210,7 @@ defmodule MercatorWeb.CoreComponents do
   def input(%{type: "checkbox"} = assigns) do
     assigns =
       assign_new(assigns, :checked, fn ->
-        Phoenix.HTML.Form.normalize_value("checkbox", assigns[:value])
+        Form.normalize_value("checkbox", assigns[:value])
       end)
 
     ~H"""

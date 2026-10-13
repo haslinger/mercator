@@ -15,7 +15,9 @@ Guided-selling web shop with a CMS: a port of the Rails/Hobo app "Mercator" to *
 ## Toolchain
 
 - asdf, always the latest stable versions, pinned in `.tool-versions` (currently Erlang 29.1.1, Elixir 1.20.4-otp-29).
-- Run `mix precommit` before committing.
+- Run `mix precommit` before committing: compile with warnings as errors, format, **Credo `--strict`**, tests. Fix Credo findings; don't silence them without a reason.
+- Dev DB: local PostgreSQL with `postgres`/`postgres` (`mercator_dev`, `mercator_test`). Use `mix ash.setup` to create and migrate.
+- **Tidewave MCP** (dev only) runs at `http://localhost:4000/tidewave/mcp` and is registered in `.mcp.json`. It needs a running `mix phx.server`. Use it for logs, `project_eval`, SQL and docs. After changing deps or config, the server must be restarted.
 
 ## Rails reference sources (read-only)
 
