@@ -252,4 +252,5 @@ Rails sources (#1–#4) and continuing the overview (#5) were answered on 2026-1
 - ~~**#49–#57**~~ *(answered, see Decisions)* Catalogue design questions (tree storage, net/gross, tax classes, states, Neuheiten/Topseller, stock, configurator scope, search, customer prices): see [catalog-design.md](catalog-design.md#9-open-questions).
 - ~~**#58**~~ *(answered, see Decisions)* Image storage: static files per brand, or real uploads?
 - ~~**#59**~~ *(answered, see Decisions)* Demo images: SVG illustrations, or photos generated externally from a prompt list?
+- **#64–#70** Basket and checkout questions (payment methods, shipping costs, signed-in checkout, delivery countries, order numbers, B2B reverse charge, order email): see [checkout-design.md](checkout-design.md#9-open-questions).
 
