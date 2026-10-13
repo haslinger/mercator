@@ -1,0 +1,186 @@
+# Mercator – Port Roadmap
+
+Port of **Mercator** (Rails 4.2 + Hobo 2.2, MySQL, last commit 2017-10) to **Elixir / Phoenix / Ash / LiveView / DaisyUI**, using PostgreSQL.
+
+Status: overview finished (2026-10-13), nothing implemented yet.
+Goal: a **generic multi-customer product** (#6). Customer specifics are handled through configuration, themes and optional modules.
+Open questions are numbered globally (`#N`) and continue from previous conversations.
+
+---
+
+## 1. What Mercator is
+
+Mercator is a **guided-selling web shop**: a web shop combined with a sales consulting tool.
+(The Rails wiki calls it "Beratungs- und Webshopsoftware".)
+
+- Customers can shop on their own, or ask for a sales consultant.
+- Customer and consultant communicate by text chat, audio/video chat (WebRTC) and **cobrowsing**: the consultant can remote-control the customer's browser.
+- Consultants can build offers with the customer and share texts, links, documents and product suggestions.
+- An accepted offer becomes an order, which then follows the normal checkout.
+- The app also includes a CMS (pages, templates, content elements), a blog, podcasts, and a **contracting** module that calculates printer leasing and consumables contracts.
+
+Sales process (from the Rails wiki, `mercator.wiki/images/verkaufsprozess.png`):
+
+```
+CMS pages → Promotions → Category ⇄ Product ⇄ Product comparison
+Product → Basket → Billing address → Shipping address → Shipping method
+        → Billing method → GTC → Review → (Order into ERP) → Payment
+        → Confirmation | still in payment | Error (→ retry payment)
+Product → Start conversation → Conversation → { Text chat, A/V chat, Cobrowsing,
+          Documents, Product suggestions } → Offer → Basket
+```
+
+## 2. Source inventory
+
+Working copies are in `/daten/DATA/rails/mercator-src/`. The origins are the bare repos in `/daten/DATA/rails/mercator/`.
+
+| Repo | What it is | Relevance |
+|---|---|---|
+| `mercator` | The shop. Rails 4.2.10, Ruby 2.3.5, Hobo 2.2.4. About 50 models, 160 specs, 202 migrations. `Gemfile`, `database.yml` and `routes.rb` are **symlinks into `vendor/customer`**, which is a customer-system repo. | **Core** |
+| `systems/*` (11) | Per-customer config: Gemfile, routes, `application.yml`, theme (SCSS, fonts, logo), DRYML tag overrides, order confirmation view. Customers: informatom, ivellio-vellin, miranda, mercator-demo, plus the `mercator-customer` template. | Config and theming reference |
+| `mercator_mesonic` | Engine for the Mesonic ERP, accessed directly on MSSQL through TDS. Handles product import (WEBARTIKEL view), customer accounts, customer-specific prices, and order export. | Integration |
+| `mercator_icecat` | Engine for the Icecat product catalogue: XML import of texts, images, properties and relations. | Integration |
+| `mercator_bechlem` | Engine for the Bechlem catalogue (local MySQL DB plus FTP import). Provides the printer → consumables finder (`/consumables`). | Integration |
+| `mercator_mpay24` | Engine for mPAY24 e-payment over SOAP, with a confirmation callback and an admin payments view. | Integration |
+| `mercator_legacy_importer` | One-off import from the older Opensteam-based shop. | Probably not needed |
+| `miranda-weissenfeld` | That predecessor shop (Rails 2.3, Opensteam, 2012–2013). | Probably not needed |
+| `hobo_bootstrap`, `hobo_bootstrap_ui`, `hobo_w2ui` | Hobo UI gems (Bootstrap 3 theme, w2ui grids). | Replaced by DaisyUI and LiveView |
+| `mercator-faye` | Faye / private_pub server config for realtime messaging. | Replaced by Phoenix PubSub |
+| `palava-machine` | WebRTC signalling server (EventMachine + Redis). | Replaced, or dropped (see #12) |
+| `ember-contracting`, `ember-rails-contracting` | 2014 prototypes of the contracting UI, later superseded by the in-app w2ui version. | Probably not needed |
+| `mesonic-browser` | Debug tool for browsing the Mesonic DB. | Probably not needed |
+| `mercator.wiki` | German documentation: installation, modules, jobs, templates, and two diagrams. | **Reference** |
+
+Customer systems and the modules they mount (the last commit date of each system is in brackets):
+
+| System | Mesonic | Icecat | Bechlem | mPAY24 | Legacy importer |
+|---|---|---|---|---|---|
+| ivellio-vellin (dev/test/staging/prod) (2017-10) | ✓ | ✓ | ✓ | ✓ | |
+| miranda (dev/staging) (2016-02) | ✓ | | | | staging only |
+| mercator-demo (dev/prod) (2016-03) | ✓ | | | | ✓ |
+| informatom (dev/prod) (2016-03) | | | | | |
+
+## 3. Architecture of the Rails app
+
+### Subsites (separate UI areas, each with its own layout and JS)
+| Subsite | Users | Content |
+|---|---|---|
+| front (`/`) | everyone | Shop, categories, products, comparison, basket/checkout, offers, conversations, CMS pages, blog, podcasts, user account |
+| `admin` | administrator | Hobo CRUD for all models, page templates, logs, payments, Icecat metadata |
+| `sales` | sales, sales_manager | Conversation desk, offer editing, downloads, links, suggestions, feedback |
+| `productmanager` | productmanager | Category tree (drag & drop), price manager, property manager, relation manager |
+| `contentmanager` | contentmanager | Webpage tree, folder tree, content elements, assignments |
+| `contracting` | sales? | w2ui single-page app for contracts, contract items and consumables, plus toner XLS upload |
+
+### Domain model (about 50 models; all versioned with paper_trail)
+- **Catalogue:** Category (tree, states new/active/deprecated/switched_off, filters, Elasticsearch-indexed), Product (states new/announced/active/deprecated, Elasticsearch-indexed), Categorization (ordered), Inventory (stock-keeping variant of a product), Price (validity date range, quantity scale, VAT, promotion), Feature, PropertyGroup / Property / Value (typed: textual/numeric/flag), Productrelation, Supplyrelation, Recommendation.
+- **Shop:** Order (state machine: basket, parked, archived_basket, accepted_offer, ordered, in_payment, payment_failed, paid, shipped), Lineitem, ShippingCost (per country and method), Address, BillingAddress (EU VAT number validation), Country, Gtc (versioned terms; acceptance is tracked on both user and order).
+- **Sales:** Conversation, Message, Download, Link, Suggestion, Feedback, Offer (states in_progress, pending_approval, valid, invalid, accepted), Offeritem.
+- **Contracting:** Contract, Contractitem, Consumableitem, Toner. Holds the calculation logic for monthly rates, balance, expenses and profit.
+- **CMS:** Webpage (tree, slug, states draft/published/published_but_hidden/archived), PageTemplate (**DRYML/ERB stored in the DB and rendered at runtime**), ContentElement (CKEditor HTML, photo, document), PageContentElementAssignment, Folder (tree).
+- **Blog/Podcast:** Blogpost, PostCategory (tree), Comment (threaded), Podcast (mp3/ogg), Chapter.
+- **System:** User (roles as booleans: administrator, sales, sales_manager, contentmanager, productmanager; states inactive/guest/active), Constant (key/value settings), Logentry, Submission (contact form), Visit / Ahoy::Event (tracking).
+
+### Cross-cutting patterns
+- **Translations:** `name_de` / `name_en` column pairs read through `traco`. Locales are de (default) and en.
+- **Hobo lifecycles:** state machines with transitions restricted to particular users (e.g. `available_to: "User.sales"`).
+- **Hobo permissions:** `*_permitted?` methods on every model.
+- **Guest users:** every visitor automatically gets a real `User` row (surname "Gast", random email). The basket belongs to that user. Login via email link, password reset by key. A cleanup cron removes stale guests and empty baskets.
+- **Special system users** are looked up by surname: "Job User", "Robot", "MPay24".
+- **Trees:** `ancestry` gem, for categories, webpages, folders, post categories and comments.
+- **Ordering:** `acts_as_list`.
+- **Attachments:** Paperclip, with image styles.
+- **Search:** Searchkick (Elasticsearch 1.x), with category facets/filters and price range filters.
+- **Realtime:** private_pub over Faye, about 44 publish calls (chat, typing indicators, refreshes, consultant calls).
+- **Background jobs:** delayed_job, plus cron/whenever for imports and cleanups.
+- **PDF:** wicked_pdf (offers/orders).
+- **Multi-domain:** separate domains for CMS, shop and podcast. A session handover uses a `remember_token` in the URL.
+- **Customer-specific feature flags:** `config.erp == "mesonic"`, `config.payment == "mpay24"`, `config.icecat`, plus `Constant` keys (e.g. `display_only_brutto_prices`, `inventories_are_variations`).
+
+### External interfaces (from `mercator.wiki/images/schnittstellen.png`)
+| Interface | Protocol | Phoenix candidate |
+|---|---|---|
+| Mesonic ERP | MSSQL over TDS (1433) | `tds` / `ecto_sql` TDS adapter, as a separate read-only Repo |
+| mPAY24 | SOAP/HTTPS plus HTTP callback (IP-restricted) | Req plus a hand-built SOAP client, or another provider (see #14) |
+| Icecat | XML over HTTP | Req plus an XML parser (Saxy/SweetXml), run as an Oban job |
+| Bechlem | FTP download plus local MySQL DB | MyXQL repo, or import into Postgres (see #15) |
+| Chat / cobrowsing | Faye websockets | Phoenix Channels / LiveView / PubSub |
+| A/V chat | WebRTC with palava signalling plus Redis | Phoenix Channel as signalling server (see #12) |
+| Search | Elasticsearch | Postgres FTS, or Meilisearch/Typesense (see #10) |
+| Mail | SMTP via Postfix | Swoosh |
+| Jobs | delayed_job on MySQL | Oban (Postgres) |
+
+## 4. Technology mapping (proposal)
+
+| Rails / Hobo | Phoenix / Ash |
+|---|---|
+| Hobo models + `fields do` | Ash resources (AshPostgres) |
+| Hobo lifecycles | `ash_state_machine` |
+| `*_permitted?` | Ash policies (role checks on the actor) |
+| Hobo auth, guest users, email key login | `ash_authentication` (password + magic link) plus a guest-user strategy (see #8) |
+| paper_trail | `ash_paper_trail` |
+| ancestry | Postgres `ltree` or `parent_id` with recursive CTEs |
+| acts_as_list | `position` attribute plus reorder actions |
+| traco `_de`/`_en` columns | Columns kept as they are, or a map/JSONB with a calculation (see #7) |
+| Paperclip | Local or S3 storage plus image processing (see #11) |
+| CKEditor | A WYSIWYG editor as a LiveView hook, e.g. TipTap or Trix (see #13) |
+| DRYML page templates in DB | A safe template language, e.g. Solid (Liquid), or fixed HEEx layouts (see #9) |
+| w2ui / jQuery / fancytree admin UIs | LiveView + DaisyUI; AshAdmin for raw CRUD (see #16) |
+| private_pub / Faye | Phoenix PubSub + LiveView |
+| delayed_job / whenever | Oban + Oban.Plugins.Cron |
+| wicked_pdf | ChromicPDF or Typst (see #17) |
+| i18n YAML (de/en) | Gettext (default `de`) |
+| Ahoy | Drop, or a simple event table (see #18) |
+| Constants table | Keep as a resource; secrets go to `runtime.exs` / env vars |
+| `vendor/customer` per-system repos | Runtime config, DaisyUI themes, feature flags (see #6) |
+
+## 5. Proposed phases (draft — depends on the answers below)
+
+1. **Foundation:** Phoenix + Ash project setup, Postgres, CI, Gettext de/en, DaisyUI layout, User resource with roles, authentication, guest users.
+2. **Catalogue (read side):** Category tree, Product, Inventory, Price (price determination), Properties/Values, Features, relations; public category and product pages; search.
+3. **Basket and checkout:** Order/Lineitem state machine, addresses, shipping costs, GTC, prepayment, cash and ATM payment, confirmation mails, PDF.
+4. **Back office:** admin CRUD; productmanager tools (tree, price, property and relation manager).
+5. **CMS:** Webpages, templates, content elements, folders; blog and podcasts if needed.
+6. **Guided selling:** Conversations, realtime chat, offers, the sales desk, consultant assignment, cobrowsing, A/V chat.
+7. **Integrations:** Mesonic ERP, mPAY24 (or successor), Icecat, Bechlem.
+8. **Contracting** module.
+9. **Seed/dummy data** (built up alongside every phase), and go-live.
+
+## 6. Open questions
+
+Rails sources (#1–#4) and continuing the overview (#5) were answered on 2026-10-13.
+
+### Decisions
+- **#6** (2026-10-13) Build a **generic multi-customer product**. The customer-system repos are reference material only (approaches, completeness); re-implementing those specific customers is very unlikely.
+- **#21** (2026-10-13) **No data migration.** We create dummy/seed data instead. As a result, #11 (migrating files), #22 (migrating history) and #23 (keeping old passwords) only matter in their non-migration parts.
+- **#25** (2026-10-13) **No security risk:** none of the old systems are deployed any more. Secrets still go only into env/`runtime.exs` in the port.
+
+### Scope and target
+- ~~**#6**~~ *(answered, see Decisions)* Who is the port for? One customer installation (which one: ivellio-vellin?), or a generic product that again supports several customer systems with their own themes, config and modules? Should one instance serve several tenants?
+- **#7** Translations: keep the `_de`/`_en` column pairs, or move to one map/JSONB column per field? Will there only ever be de/en?
+- **#8** Guest users: keep the Rails model, where every visitor gets a DB user? The alternative is a session-based anonymous basket that becomes a user at checkout or login. Do we keep email-link login and passwords?
+- **#9** Page templates: the Rails app lets content managers write DRYML/ERB templates in the DB. Do we need user-editable templates (e.g. Liquid/Solid with `container`/`photo`/`document` tags), or are a few fixed HEEx layouts with named content slots enough?
+- **#10** Search: Postgres full-text search (simplest, no extra service), or a dedicated engine (Meilisearch/Typesense/Elasticsearch)? How large is the catalogue (number of products/categories)?
+- **#11** File storage: local disk or S3-compatible? ~~Do the existing Paperclip files have to be migrated?~~ (no, see #21)
+- **#12** Audio/video chat and cobrowsing: still wanted? If so, should WebRTC signalling run over Phoenix Channels? Cobrowsing in Rails worked by sending events to the customer's page. Is that still needed in the same form?
+- **#13** Which rich-text editor for content elements and descriptions (TipTap, Trix, or something else)? Must existing CKEditor HTML stay renderable as-is?
+- **#14** Payment: is mPAY24 still the provider? (I couldn't confirm whether the SOAP API used in 2015 still exists.) Are other providers wanted (e.g. Stripe, PayPal)?
+- **#15** Integrations: which are still in use? Is Mesonic ERP still the ERP, with MSSQL access still available? Are the Icecat and Bechlem accounts still active? (Their APIs/feeds have likely changed since 2016.)
+- **#16** Back office UI: one unified admin area with role-based menus, or the five separate subsites as in Rails? Is AshAdmin acceptable for low-traffic CRUD screens?
+- **#17** PDF output: which documents are needed (offers, orders, contracts)? Which tool do you prefer (ChromicPDF needs headless Chrome; Typst is a single binary)?
+- **#18** Which of these features are still needed: blog, podcasts, comments, Twitter integration, Ahoy visitor tracking, the contact form with its captcha question, Gravatar?
+- **#19** Contracting module (printer/consumable leasing contracts): still needed? Who uses it? Should it stay a separate area?
+- **#20** Multi-domain setup (separate CMS, shop and podcast domains with session handover): still needed, or one domain?
+
+### Data and operations
+- ~~**#21**~~ *(answered, see Decisions)* Do we migrate existing production data from MySQL (users, orders, catalogue, CMS content), or start fresh? Is a recent DB dump available to develop against?
+- **#22** Do we keep the version history (paper_trail) for all resources, or only for selected ones (orders, prices, products)? ~~Should the old history be migrated?~~ (no, see #21)
+- ~~**#23**~~ *(obsolete because of #21)* Is there an existing user base whose passwords must keep working? Hobo stores crypted passwords; I'd need to check the hash algorithm. If they can't be verified, we'd force a reset.
+- **#24** Deployment target: where will it run (own server, Fly.io, Docker…)? Should a release or Docker setup be part of the first phase?
+
+### Security note
+- ~~**#25**~~ *(answered, see Decisions)* The customer-system repos (`systems/*/config/application.yml`, `database.yml`) contain **plaintext credentials**: DB, Mesonic ERP, mPAY24 merchant, Icecat, Bechlem and secret tokens. In the port, secrets will live only in environment variables or `runtime.exs`. Are any of these credentials still live? If so, they should be rotated, since they are in git history.
+
+### Process
+- **#26** Should I write a `CLAUDE.md` with project conventions (Ash domains layout, naming, testing, Rails source location) before we start coding?
+- **#27** Which phase or feature should come first? (My suggestion: phases 1 and 2.)
