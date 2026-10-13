@@ -192,6 +192,7 @@ Rails sources (#1–#4) and continuing the overview (#5) were answered on 2026-1
 - **#47** (2026-10-13) **All non-admin demo accounts are public** (customers, sales, sales manager, content, products). The nightly reset repairs any changes; the login page says so.
 - **#48** (2026-10-13) **Demo = production release + runtime switch `MERCATOR_MODE=demo`** (no separate Mix environment). `Mercator.Demo.enabled?()` bundles all demo behaviour: seeding, nightly reset, protection of the public accounts (#46), demo logins and reset hint on the login page, demo badge. Built together with deployment (#24).
 - **#51** (2026-10-13) **VAT (Austria, per Wirtschaftskammer):** 13 % for firewood, wood pellets and Christmas trees; 20 % standard, including unprocessed logs / saw logs not sold directly as fuel. Details in catalog-design.md.
+- **#49, #50, #52–#57** (2026-10-13) Catalogue design **as recommended** (see catalog-design.md): category tree with `ltree`; prices stored net, display net or gross by shop setting (demo: gross); products draft → active → discontinued; flags `new?`/`bestseller?` plus "on sale" derived from promotion prices; stock per variant (`nil` = made to order); configurator scope as in section 4 (house configurator later); Postgres full-text search (also answers #10); customer-specific prices later.
 - **#25** (2026-10-13) **No security risk:** none of the old systems are deployed any more. Secrets still go only into env/`runtime.exs` in the port.
 
 ### Scope and target
@@ -199,7 +200,7 @@ Rails sources (#1–#4) and continuing the overview (#5) were answered on 2026-1
 - ~~**#7**~~ *(answered, see Decisions)* Translations: keep the `_de`/`_en` column pairs, or move to one map/JSONB column per field? Will there only ever be de/en?
 - ~~**#8**~~ *(answered, see Decisions)* Guest users: keep the Rails model, where every visitor gets a DB user? The alternative is a session-based anonymous basket that becomes a user at checkout or login. Do we keep email-link login and passwords?
 - **#9** Page templates: the Rails app lets content managers write DRYML/ERB templates in the DB. Do we need user-editable templates (e.g. Liquid/Solid with `container`/`photo`/`document` tags), or are a few fixed HEEx layouts with named content slots enough?
-- **#10** Search: Postgres full-text search (simplest, no extra service), or a dedicated engine (Meilisearch/Typesense/Elasticsearch)? How large is the catalogue (number of products/categories)?
+- ~~**#10**~~ *(answered by #56: Postgres full-text search)* Search: Postgres full-text search (simplest, no extra service), or a dedicated engine (Meilisearch/Typesense/Elasticsearch)? How large is the catalogue (number of products/categories)?
 - **#11** File storage: local disk or S3-compatible? ~~Do the existing Paperclip files have to be migrated?~~ (no, see #21)
 - **#12** Audio/video chat and cobrowsing: still wanted? If so, should WebRTC signalling run over Phoenix Channels? Cobrowsing in Rails worked by sending events to the customer's page. Is that still needed in the same form?
 - **#13** Which rich-text editor for content elements and descriptions (TipTap, Trix, or something else)? Must existing CKEditor HTML stay renderable as-is?
@@ -240,5 +241,5 @@ Rails sources (#1–#4) and continuing the overview (#5) were answered on 2026-1
 - ~~**#46**~~ *(answered, see Decisions)* Protect the public demo accounts: in demo mode, their password, email and roles can't be changed and no password reset can be requested for them, so one visitor can't lock out the next.
 - ~~**#47**~~ *(answered, see Decisions)* Which accounts are public: Karl Luchs (customer, German), Lena Igel (customer, English), Sepp Fuchs (sales), Maria Hirsch (sales manager)? And also Klara Eichhorn (content) and Peter Dachs (products), to show CMS and product management, with the risk that visitors deface the shop until the next reset?
 - ~~**#48**~~ *(answered, see Decisions)* The demo as a **production release with a runtime switch** `MERCATOR_MODE=demo` (one build artifact; `Mercator.Demo.enabled?()` bundles all demo behaviour: seeding, nightly reset, account protection, login hints, demo badge), rather than a separate Mix environment `demo`?
-- **#49–#57** Catalogue design questions (tree storage, net/gross, tax classes, states, Neuheiten/Topseller, stock, configurator scope, search, customer prices): see [catalog-design.md](catalog-design.md#9-open-questions).
+- ~~**#49–#57**~~ *(answered, see Decisions)* Catalogue design questions (tree storage, net/gross, tax classes, states, Neuheiten/Topseller, stock, configurator scope, search, customer prices): see [catalog-design.md](catalog-design.md#9-open-questions).
 

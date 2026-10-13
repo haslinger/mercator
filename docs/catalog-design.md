@@ -1,6 +1,6 @@
 # Catalogue design (phase 2)
 
-Status: draft for discussion (2026-10-13). Decisions this builds on: #7 (translations), #39 (product kinds), #40 (units), #41 (demo catalogue). Open questions continue at **#49**.
+Status: agreed (2026-10-13): all questions in section 9 answered as recommended. Decisions this builds on: #7 (translations), #39 (product kinds), #40 (units), #41 (demo catalogue). Open questions continue at **#49**.
 
 ## 1. Scope of phase 2
 
@@ -207,12 +207,12 @@ The products get realistic names, dimensions, species and Austrian price levels.
 
 ## 9. Open questions
 
-- **#49 Category tree storage:** `parent_id` plus a materialised path in Postgres `ltree` (fast "all descendants" queries for category pages; AshPostgres supports `ltree`), or `parent_id` only with recursive queries? Recommendation: `ltree`.
-- **#50 Net or gross:** store prices net, and display net or gross by shop setting (B2C shop: gross, B2B: net)? Biber Holz demo: gross. Later per customer group, e.g. trade customers net.
+- ~~**#49 Category tree storage:**~~ *(answered 2026-10-13: as recommended)* `parent_id` plus a materialised path in Postgres `ltree` (fast "all descendants" queries for category pages; AshPostgres supports `ltree`), or `parent_id` only with recursive queries? Recommendation: `ltree`.
+- ~~**#50 Net or gross:**~~ *(answered 2026-10-13: as recommended)* store prices net, and display net or gross by shop setting (B2C shop: gross, B2B: net)? Biber Holz demo: gross. Later per customer group, e.g. trade customers net.
 - ~~**#51 Tax classes**~~ *(answered 2026-10-13, see section 3 "Tax class")*: 20 % standard; 13 % for firewood, wood pellets and Christmas trees; unprocessed logs / saw logs not sold as fuel 20 % (information from the Wirtschaftskammer).
-- **#52 States:** products `draft → active → discontinued` (Rails' `announced` dropped), categories `draft / active / hidden`. OK?
-- **#53 Neuheiten / Topseller / Aktion:** product flags `new?` and `bestseller?`, set by hand; "on sale" derived from current promotion prices. Shown as badges and filters, plus optional virtual categories ("Neuheiten") on the start page?
-- **#54 Stock:** tracked per variant (`stock`, `nil` = made to order or not tracked), delivery time as text per variant. No reservations or FIFO. Enough for now?
-- **#55 Configurator scope:** the pricing models in section 4 (volume, area, length, unit; base price from one option; surcharges; minimum quantities; rounding; cutting fee). Enough for the demo, with the house configurator as a later separate feature?
-- **#56 Search (#10):** Postgres full-text search with per-language indexes, no extra service?
-- **#57 Customer-specific prices:** Rails took them from the ERP. Out of scope for phase 2; later price lists per customer group?
+- ~~**#52 States:**~~ *(answered 2026-10-13: as recommended)* products `draft → active → discontinued` (Rails' `announced` dropped), categories `draft / active / hidden`. OK?
+- ~~**#53 Neuheiten / Topseller / Aktion:**~~ *(answered 2026-10-13: as recommended)* product flags `new?` and `bestseller?`, set by hand; "on sale" derived from current promotion prices. Shown as badges and filters, plus optional virtual categories ("Neuheiten") on the start page?
+- ~~**#54 Stock:**~~ *(answered 2026-10-13: as recommended)* tracked per variant (`stock`, `nil` = made to order or not tracked), delivery time as text per variant. No reservations or FIFO. Enough for now?
+- ~~**#55 Configurator scope:**~~ *(answered 2026-10-13: as recommended)* the pricing models in section 4 (volume, area, length, unit; base price from one option; surcharges; minimum quantities; rounding; cutting fee). Enough for the demo, with the house configurator as a later separate feature?
+- ~~**#56 Search (#10):**~~ *(answered 2026-10-13: as recommended)* Postgres full-text search with per-language indexes, no extra service?
+- ~~**#57 Customer-specific prices:**~~ *(answered 2026-10-13: as recommended)* Rails took them from the ERP. Out of scope for phase 2; later price lists per customer group?
