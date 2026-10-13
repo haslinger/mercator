@@ -146,6 +146,16 @@ Customer systems and the modules they mount (the last commit date of each system
 8. **Contracting** module.
 9. **Seed/dummy data** (built up alongside every phase), and go-live.
 
+## 5a. Demo customer: Biber Holz
+
+The demo, built from seed/dummy data, shows the fictional company **Biber Holz**: "Österreichische Alpen-Forstwirtschaft · Seit 1928 · Qualitäts-Bau- und Edelholz". The company makes nearly everything out of wood and owns its own forests. Its range goes from **complete wooden houses down to sawdust**.
+
+This makes it the test case for **configurable material**: wood species, dimensions, surface, drying and grading, sold in units such as m³, lfm, m², Festmeter, Raummeter and Schüttraummeter.
+
+- Logo: `assets/img/logo.jpeg`, provided by the user. Its "transparent" background is baked into the JPEG pixels, so a cut-out PNG is needed (#37).
+- Logo palette: cream `#efd7ab`, walnut `#67482d`, oak/bronze `#be9e73`, dark wood `#180d06`, plus forest-green accents.
+- Mercator itself stays generic. Biber Holz is one deployment's branding and demo data (#28).
+
 ## 6. Open questions
 
 Rails sources (#1–#4) and continuing the overview (#5) were answered on 2026-10-13.
@@ -202,3 +212,10 @@ Rails sources (#1–#4) and continuing the overview (#5) were answered on 2026-1
 - ~~**#32**~~ *(answered, see Decisions)* Roles: replace the five Rails role booleans with one `roles` list attribute (e.g. `[:sales, :contentmanager]`)?
 - ~~**#33**~~ *(answered, see Decisions)* Profile fields: first name, last name, phone, preferred language, plus salutation (Herr / Frau / divers / keine Angabe) and an optional academic title?
 - ~~**#34**~~ *(answered, see Decisions)* License of the port: GPL v3 like the Rails version, another open-source license, or proprietary?
+- **#36** Branding as per-deployment config (shop name, tagline, logo, DaisyUI theme, contact data). Mercator gets a neutral default; Biber Holz is the demo brand active in dev and seeds.
+- **#37** Logo: use the cut-out round PNG with real transparency? For the navbar, a small medallion plus the text "Biber Holz" (the medallion text is unreadable at 40 px). Keep the original JPEG out of the repo?
+- **#38** DaisyUI themes `biberholz` (light: parchment base, walnut primary, forest-green secondary, bronze accent) and `biberholz-dark` (dark wood).
+- **#39** Product kinds: (a) **simple** products (one price, e.g. a stool or a pellet sack), (b) **variants** with their own article number, stock and price (e.g. "Terrassendiele Lärche 28×145×4000"; Rails' inventories), (c) **configurable** products where the customer enters dimensions and options and the price is calculated by rules (wood species price per m³ × volume + surcharges for surface or drying; minimum quantities, rounding). Design the data model for all three now, implement (a)+(b) first and (c) right after?
+- **#40** Units: piece, lfm, m², m³, Festmeter (fm), Raummeter (rm), Schüttraummeter (srm), kg, t, pallet, sack. Prices per unit and decimal quantities (e.g. 2.5 m³)?
+- **#41** Demo catalogue scope and images: about 8 top categories, about 30 subcategories and 80–120 products with German and English texts? Product images: none or neutral placeholders at first, or will you provide (e.g. AI-generated) images?
+
