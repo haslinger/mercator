@@ -1699,6 +1699,25 @@ defmodule Mercator.Seeds.BiberHolz do
         stock: 25
       },
       %{
+        number: "BH-PLUSHIE",
+        category: "kuechenhelfer",
+        title: t("Plüsch-Biber mit Holzaxt", "Plush beaver with wooden axe"),
+        subtitle: t("Unser Maskottchen zum Kuscheln", "Our mascot to cuddle"),
+        description:
+          t(
+            "Der Biber aus unserem Logo als Plüschtier – mit rot-weiß kariertem Halstuch und einer Axt aus Holz.",
+            "The beaver from our logo as a plush toy – with a red-and-white checked scarf and an axe made of wood."
+          ),
+        highlights: [
+          t("Axt aus heimischem Buchenholz", "Axe made of local beech wood"),
+          t("Ca. 30 cm groß", "About 30 cm tall")
+        ],
+        new: true,
+        price: "24.92",
+        delivery: :stock,
+        stock: 200
+      },
+      %{
         number: "BH-ZIRBENKISSEN",
         category: "kuechenhelfer",
         title: t("Zirbenkissen mit Zirbenspänen", "Pillow filled with stone pine shavings"),

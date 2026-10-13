@@ -18,6 +18,9 @@ defmodule Mercator.Seeds.ImagesTest do
     # extension-less files are detected by their content
     File.cp!("test/fixtures/wood.jpg", Path.join(dir, "products/BH-KVH-FI"))
     File.cp!("test/fixtures/wood.jpg", Path.join(dir, "products/BH-UNKNOWN.jpeg"))
+    # file names are matched case-insensitively against article numbers
+    product_fixture(number: "BH-PLUSHIE")
+    File.cp!("test/fixtures/wood.jpg", Path.join(dir, "products/BH-plushie.jpeg"))
 
     %{dir: dir, category: category, product: product}
   end
@@ -27,7 +30,7 @@ defmodule Mercator.Seeds.ImagesTest do
     category: category,
     product: product
   } do
-    assert %{imported: 2, skipped: 0, unknown: ["products/BH-UNKNOWN.jpeg"]} = Images.import(dir)
+    assert %{imported: 3, skipped: 0, unknown: ["products/BH-UNKNOWN.jpeg"]} = Images.import(dir)
 
     assert [%{original_filename: "bauholz.jpeg"}] = Ash.load!(category, :images).images
     assert [%{original_filename: "BH-KVH-FI"} = image] = Ash.load!(product, :images).images
@@ -37,6 +40,6 @@ defmodule Mercator.Seeds.ImagesTest do
   test "can run repeatedly", %{dir: dir} do
     Images.import(dir)
 
-    assert %{imported: 0, skipped: 2} = Images.import(dir)
+    assert %{imported: 0, skipped: 3} = Images.import(dir)
   end
 end

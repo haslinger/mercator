@@ -36,8 +36,8 @@ categories/pellets.webp,subcategory,pellets,Brennholz & Energie,Pellets,Pellets,
 categories/briketts.webp,subcategory,briketts,Brennholz & Energie,Briketts,Briquettes,Briquettes (part of: Firewood & energy)
 categories/hackschnitzel.webp,subcategory,hackschnitzel,Brennholz & Energie,Hackschnitzel,Wood chips,Wood chips (part of: Firewood & energy)
 categories/spaene.webp,subcategory,spaene,Brennholz & Energie,Säge- & Hobelspäne,Sawdust & shavings,Sawdust & shavings (part of: Firewood & energy)
-categories/rundholz.webp,subcategory,rundholz,Forst & Rundholz,Rundholz,Round timber,Round timber (part of: Forestry & round timber)
 categories/christbaeume.webp,subcategory,christbaeume,Forst & Rundholz,Christbäume,Christmas trees,Christmas trees (part of: Forestry & round timber)
+categories/rundholz.webp,subcategory,rundholz,Forst & Rundholz,Rundholz,Round timber,Round timber (part of: Forestry & round timber)
 categories/dienstleistungen.webp,subcategory,dienstleistungen,Forst & Rundholz,Dienstleistungen,Services,Services (part of: Forestry & round timber)
 products/BH-3S-FI.webp,product,BH-3S-FI,3-Schicht-Platten,3-Schicht-Platte Fichte,Three-layer panel spruce,"Three-layer panel spruce – Solid wood panel for furniture, walls and ceilings, 5000 × 2050 mm. – wood species: Spruce"
 products/BH-3S-LAE.webp,product,BH-3S-LAE,3-Schicht-Platten,"3-Schicht-Platte Lärche 27 mm, wetterfest","Three-layer panel larch 27 mm, weatherproof","Three-layer panel larch 27 mm, weatherproof – Waterproof bonding for facades and balconies. – wood species: Larch"
@@ -50,7 +50,7 @@ products/BH-BANK-EICHE.webp,product,BH-BANK-EICHE,Tische & Bänke,Sitzbank Eiche
 products/BH-BETT-ZIRBE.webp,product,BH-BETT-ZIRBE,Zirbenbetten,Zirbenbett „Bergschlaf“,Stone pine bed “Bergschlaf”,"Stone pine bed “Bergschlaf” – Metal-free solid stone pine bed, oiled. – wood species: Swiss stone pine"
 products/BH-BLOCK-ALPENBLICK.webp,product,BH-BLOCK-ALPENBLICK,Blockhäuser,Blockhaus „Alpenblick“,Log house “Alpenblick”,"Log house “Alpenblick” – Holiday home 8 × 6 m with gallery – Spacious holiday home with covered terrace and gallery, 95 mm walls. – wood species: Spruce"
 products/BH-BLOCK-TIROL.webp,product,BH-BLOCK-TIROL,Blockhäuser,Blockhaus „Tirol“,Log house “Tirol”,"Log house “Tirol” – Residential log house 5 × 4 m, 70 mm walls – Solid spruce log house with double tongue and groove – as a kit or turnkey. – wood species: Spruce"
-products/BH-BRENNHOLZ-LANG.webp,product,BH-BRENNHOLZ-LANG,Rundholz,"Brennholz lang, 1-m-Stämme",Firewood in 1 m logs,"Firewood in 1 m logs – For splitting yourself, mixed beech and ash. – wood species: Mixed hardwood"
+products/BH-BRENNHOLZ-LANG.webp,product,BH-BRENNHOLZ-LANG,Scheitholz,"Brennholz lang, 1-m-Stämme",Firewood in 1 m logs,"Firewood in 1 m logs – For splitting yourself, mixed beech and ash. – wood species: Mixed hardwood"
 products/BH-BRIKETTS-BUCHE.webp,product,BH-BRIKETTS-BUCHE,Briketts,Holzbriketts Buche,Beech wood briquettes,Beech wood briquettes – wood species: Beech
 products/BH-BROTDOSE-ZIRBE.webp,product,BH-BROTDOSE-ZIRBE,Küchenhelfer & Wohnaccessoires,Brotdose Zirbe,Bread box stone pine,Bread box stone pine – Stone pine keeps bread fresh for longer. – wood species: Swiss stone pine
 products/BH-BSH-FI.webp,product,BH-BSH-FI,Brettschichtholz (BSH),Brettschichtholz Fichte GL24h,Glulam spruce GL24h,Glulam spruce GL24h – Dimensionally stable glulam beams for large spans. – wood species: Spruce
@@ -83,7 +83,7 @@ products/BH-KVH-DOU.webp,product,BH-KVH-DOU,Konstruktionsvollholz (KVH),Konstruk
 products/BH-KVH-FI.webp,product,BH-KVH-FI,Konstruktionsvollholz (KVH),Konstruktionsvollholz Fichte,Structural solid timber spruce,"Structural solid timber spruce – Finger-jointed, kiln-dried KVH for visible and hidden structures. – wood species: Spruce"
 products/BH-KVH-LAE.webp,product,BH-KVH-LAE,Konstruktionsvollholz (KVH),Konstruktionsvollholz Lärche,Structural solid timber larch,Structural solid timber larch – Weather-resistant larch KVH for outdoor use. – wood species: Larch
 products/BH-KVH-MASS.webp,product,BH-KVH-MASS,Kanthölzer & Balken,Konstruktionsholz nach Maß,Structural timber cut to size,"Structural timber cut to size – Choose species, cross-section and length – Cut to the millimetre in our sawmill – priced per cubic metre."
-products/BH-LEIMHOLZ-EICHE.webp,product,BH-LEIMHOLZ-EICHE,Leimholzplatten,Leimholzplatte Eiche durchgehende Lamelle,"Glued panel oak, full-length staves","Glued panel oak, full-length staves – For stair treads, window sills and worktops. – wood species: Oak"
+products/BH-LEIMHOLZ-EICHE.webp,product,BH-LEIMHOLZ-EICHE,Eiche,Leimholzplatte Eiche durchgehende Lamelle,"Glued panel oak, full-length staves","Glued panel oak, full-length staves – For stair treads, window sills and worktops. – wood species: Oak"
 products/BH-LEIMHOLZ-FI.webp,product,BH-LEIMHOLZ-FI,Leimholzplatten,Leimholzplatte Fichte 18 mm,Glued panel spruce 18 mm,Glued panel spruce 18 mm – wood species: Spruce
 products/BH-LEISTEN-MASS.webp,product,BH-LEISTEN-MASS,Latten & Staffeln,Latten & Leisten nach Maß,Battens and strips cut to length,"Battens and strips cut to length – Planed battens in standard profiles, cut to length."
 products/BH-MELKSCHEMEL.webp,product,BH-MELKSCHEMEL,Hocker & Garderoben,Melkschemel Esche,Milking stool ash,Milking stool ash
@@ -95,6 +95,7 @@ products/BH-PELLETS-LOSE.webp,product,BH-PELLETS-LOSE,Pellets,"Holzpellets lose,
 products/BH-PELLETS-SACK.webp,product,BH-PELLETS-SACK,Pellets,"Holzpellets ENplus A1, Sack 15 kg","Wood pellets ENplus A1, 15 kg bag","Wood pellets ENplus A1, 15 kg bag – Made from sawdust from our own sawmill."
 products/BH-PERGOLA.webp,product,BH-PERGOLA,Carports & Pergolen,Pergola Lärche 3 × 3 m,Larch pergola 3 × 3 m,"Larch pergola 3 × 3 m – Larch pergola, ideal for climbing plants. – wood species: Larch"
 products/BH-PFLANZKASTEN.webp,product,BH-PFLANZKASTEN,Hochbeete & Pflanzkästen,Pflanzkasten Zirbe 60 cm,Planter stone pine 60 cm,Planter stone pine 60 cm – wood species: Swiss stone pine
+products/BH-PLUSHIE.webp,product,BH-PLUSHIE,Küchenhelfer & Wohnaccessoires,Plüsch-Biber mit Holzaxt,Plush beaver with wooden axe,Plush beaver with wooden axe – Our mascot to cuddle – The beaver from our logo as a plush toy – with a red-and-white checked scarf and an axe made of wood.
 products/BH-RAUSPUND.webp,product,BH-RAUSPUND,Rauspund & Schalung,Rauspund Fichte 24 mm,Tongue and groove boards spruce 24 mm,Tongue and groove boards spruce 24 mm – Rough-sawn tongue and groove sheathing for roofs and floors. – wood species: Spruce
 products/BH-RUNDHOLZ-FI.webp,product,BH-RUNDHOLZ-FI,Rundholz,Rundholz Fichte ab Waldstraße,Spruce round timber at the forest road,"Spruce round timber at the forest road – Saw logs grade B/C, minimum order 10 fm. – wood species: Spruce"
 products/BH-RUNDHOLZ-LAE.webp,product,BH-RUNDHOLZ-LAE,Rundholz,Rundholz Lärche ab Waldstraße,Larch round timber at the forest road,Larch round timber at the forest road – wood species: Larch
@@ -120,7 +121,7 @@ products/BH-TD-THE.webp,product,BH-TD-THE,Terrassendielen,Terrassendiele Thermo-
 products/BH-TD-UK-LAE.webp,product,BH-TD-UK-LAE,Terrassendielen,Unterkonstruktion Lärche 45 × 70 mm,Substructure larch 45 × 70 mm,Substructure larch 45 × 70 mm – wood species: Larch
 products/BH-TISCH-EICHE.webp,product,BH-TISCH-EICHE,Tische & Bänke,Esstisch Eiche massiv,Solid oak dining table,Solid oak dining table – wood species: Oak
 products/BH-TISCHPLATTE-EICHE.webp,product,BH-TISCHPLATTE-EICHE,Tischplatten,Tischplatte Eiche massiv 40 mm,Solid oak table top 40 mm,"Solid oak table top 40 mm – Full-length staves, oiled. – wood species: Oak"
-products/BH-TISCHPLATTE-MASS.webp,product,BH-TISCHPLATTE-MASS,Nuss,Tischplatte nach Maß,Table top made to measure,"Table top made to measure – Solid wood from our joinery – Choose species, size, thickness, edge and finish – we make your table top."
+products/BH-TISCHPLATTE-MASS.webp,product,BH-TISCHPLATTE-MASS,Tischplatten,Tischplatte nach Maß,Table top made to measure,"Table top made to measure – Solid wood from our joinery – Choose species, size, thickness, edge and finish – we make your table top."
 products/BH-WANDREGAL-EICHE.webp,product,BH-WANDREGAL-EICHE,Hocker & Garderoben,Wandregal Eiche mit Baumkante,Oak wall shelf with live edge,Oak wall shelf with live edge – wood species: Oak
 products/BH-ZAUNPFOSTEN-LAE.webp,product,BH-ZAUNPFOSTEN-LAE,Zäune & Sichtschutz,Zaunpfosten Lärche 9 × 9 cm,Fence post larch 9 × 9 cm,Fence post larch 9 × 9 cm – wood species: Larch
 products/BH-ZIRBE-BRETT.webp,product,BH-ZIRBE-BRETT,Zirbe,Zirbenbrett 20 × 200 × 2000 mm,Stone pine board 20 × 200 × 2000 mm,Stone pine board 20 × 200 × 2000 mm – Knotty stone pine from high Tyrolean altitudes – with its typical scent. – wood species: Swiss stone pine

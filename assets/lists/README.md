@@ -1,6 +1,6 @@
 # Image list for the Biber Holz demo
 
-`images.csv` lists every image the demo catalogue needs: **128 images** (8 top categories, 32 subcategories, 88 products). It was generated from the demo seed data (`Mercator.Seeds.BiberHolz`) on 2026-10-13. If the catalogue changes, regenerate it with `mix run priv/repo/image_list.exs` (after seeding) rather than editing it by hand.
+`images.csv` lists every image the demo catalogue needs: **129 images** (8 top categories, 32 subcategories, 89 products). It was generated from the demo seed data (`Mercator.Seeds.BiberHolz`) on 2026-10-13. If the catalogue changes, regenerate it with `mix run priv/repo/image_list.exs` (after seeding) rather than editing it by hand.
 
 ## Columns
 

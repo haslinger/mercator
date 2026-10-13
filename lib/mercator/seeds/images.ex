@@ -52,8 +52,9 @@ defmodule Mercator.Seeds.Images do
     end
   end
 
+  # article numbers are upper case; file names may be written in any case
   defp owner("products", number) do
-    case Catalog.get_product_by_number(number, authorize?: false) do
+    case Catalog.get_product_by_number(String.upcase(number), authorize?: false) do
       {:ok, product} -> {:product_id, product.id, product.title}
       {:error, _} -> nil
     end
