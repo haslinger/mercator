@@ -105,7 +105,16 @@ Conversions (e.g. rm ↔ fm, which depends on the species) are out of scope.
 
 ### Tax class (#51)
 
-`TaxClass`: name and rate, e.g. "Normalsatz 20 %", "ermäßigt 13 %", "ermäßigt 10 %". Every product has one. Prices are stored net; display net or gross is a shop setting (#50).
+`TaxClass`: name and rate. Every product has one. Prices are stored net; display net or gross is a shop setting (#50).
+
+Austrian rates for the Biber Holz demo, per information from the Wirtschaftskammer (2026-10-13):
+
+| Tax class | Rate | Products in the demo |
+|---|---|---|
+| Normalsatz | 20 % | everything not listed below, **including unprocessed logs and saw logs (Sägerundholz) that are not sold directly as fuel** |
+| ermäßigt | 13 % | **firewood, wood pellets, Christmas trees** |
+
+Briquettes, wood chips and sawdust sold as fuel are treated like firewood (13 %) in the demo. That is an assumption, not confirmed by the Wirtschaftskammer; sawdust sold as animal bedding gets 20 %.
 
 ### Properties (Rails PropertyGroup / Property / Value)
 
@@ -179,7 +188,7 @@ Out of scope for now: the **house configurator** (floor plan, wall structure, bi
 | **Edelholz & Tischplatten** | Eiche, Nuss, Zirbe, Tischplatten nach Maß | configurable per m² / piece (species, dimensions, edge, oil) |
 | **Möbel & Wohnen** | Zirbenbetten, Tische & Bänke, Hocker, Küchenhelfer (cutting boards) | simple and variants (piece) |
 | **Brennholz & Energie** | Scheitholz, Pellets, Briketts, Hackschnitzel, Säge- & Hobelspäne | variants in rm, srm, t, sack, pallet, kg ("from the house down to sawdust") |
-| **Forst & Rundholz** | Rundholz ab Waldstraße, Christbäume, Zuschnitt- & Hobelservice | fm, piece; services without shipping |
+| **Forst & Rundholz** | Rundholz ab Waldstraße, Christbäume, Zuschnitt- & Hobelservice | fm, piece; services without shipping. VAT contrast: round timber 20 %, firewood and Christmas trees 13 % (#51) |
 
 The products get realistic names, dimensions, species and Austrian price levels. Prices are invented but plausible.
 
@@ -200,7 +209,7 @@ The products get realistic names, dimensions, species and Austrian price levels.
 
 - **#49 Category tree storage:** `parent_id` plus a materialised path in Postgres `ltree` (fast "all descendants" queries for category pages; AshPostgres supports `ltree`), or `parent_id` only with recursive queries? Recommendation: `ltree`.
 - **#50 Net or gross:** store prices net, and display net or gross by shop setting (B2C shop: gross, B2B: net)? Biber Holz demo: gross. Later per customer group, e.g. trade customers net.
-- **#51 Tax classes:** 20 % standard, 13 % and 10 % reduced, assigned per product. Which rate applies to firewood, pellets or Christmas trees in Austria needs checking by you or a tax advisor. For the demo I'd use plausible values and mark them as such.
+- ~~**#51 Tax classes**~~ *(answered 2026-10-13, see section 3 "Tax class")*: 20 % standard; 13 % for firewood, wood pellets and Christmas trees; unprocessed logs / saw logs not sold as fuel 20 % (information from the Wirtschaftskammer).
 - **#52 States:** products `draft → active → discontinued` (Rails' `announced` dropped), categories `draft / active / hidden`. OK?
 - **#53 Neuheiten / Topseller / Aktion:** product flags `new?` and `bestseller?`, set by hand; "on sale" derived from current promotion prices. Shown as badges and filters, plus optional virtual categories ("Neuheiten") on the start page?
 - **#54 Stock:** tracked per variant (`stock`, `nil` = made to order or not tracked), delivery time as text per variant. No reservations or FIFO. Enough for now?

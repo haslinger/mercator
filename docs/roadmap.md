@@ -191,6 +191,7 @@ Rails sources (#1–#4) and continuing the overview (#5) were answered on 2026-1
 - **#46** (2026-10-13) Public demo accounts are protected in demo mode (no change of password, email or roles; no password reset). The user wants the demo clearly separated from production behaviour, see #48.
 - **#47** (2026-10-13) **All non-admin demo accounts are public** (customers, sales, sales manager, content, products). The nightly reset repairs any changes; the login page says so.
 - **#48** (2026-10-13) **Demo = production release + runtime switch `MERCATOR_MODE=demo`** (no separate Mix environment). `Mercator.Demo.enabled?()` bundles all demo behaviour: seeding, nightly reset, protection of the public accounts (#46), demo logins and reset hint on the login page, demo badge. Built together with deployment (#24).
+- **#51** (2026-10-13) **VAT (Austria, per Wirtschaftskammer):** 13 % for firewood, wood pellets and Christmas trees; 20 % standard, including unprocessed logs / saw logs not sold directly as fuel. Details in catalog-design.md.
 - **#25** (2026-10-13) **No security risk:** none of the old systems are deployed any more. Secrets still go only into env/`runtime.exs` in the port.
 
 ### Scope and target
