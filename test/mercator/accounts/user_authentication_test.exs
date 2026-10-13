@@ -146,10 +146,10 @@ defmodule Mercator.Accounts.UserAuthenticationTest do
   end
 
   describe "policies" do
-    test "users cannot be read without going through authentication" do
+    test "users cannot be read without an actor" do
       {:ok, _user} = register()
 
-      assert {:error, %Ash.Error.Forbidden{}} = Ash.read(User)
+      assert {:ok, []} = Ash.read(User)
     end
   end
 end

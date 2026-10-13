@@ -67,6 +67,11 @@ defmodule Mercator.Accounts.User do
   actions do
     defaults [:read]
 
+    update :set_roles do
+      description "Replace the staff roles of a user (administrators only)."
+      accept [:roles]
+    end
+
     read :get_by_subject do
       description "Get a user by the subject claim in a JWT"
       argument :subject, :string, allow_nil?: false
@@ -275,6 +280,18 @@ defmodule Mercator.Accounts.User do
     bypass AshAuthentication.Checks.AshAuthenticationInteraction do
       authorize_if always()
     end
+
+    bypass {Mercator.Accounts.Checks.ActorHasRole, role: :administrator} do
+      authorize_if always()
+    end
+
+    policy action_type(:read) do
+      authorize_if expr(id == ^actor(:id))
+    end
+
+    policy action(:change_password) do
+      authorize_if expr(id == ^actor(:id))
+    end
   end
 
   attributes do
@@ -290,6 +307,12 @@ defmodule Mercator.Accounts.User do
     end
 
     attribute :confirmed_at, :utc_datetime_usec
+
+    attribute :roles, {:array, Mercator.Accounts.Role} do
+      allow_nil? false
+      default []
+      public? true
+    end
   end
 
   identities do
