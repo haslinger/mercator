@@ -17,6 +17,8 @@ defmodule MercatorWeb.ConnCase do
 
   use ExUnit.CaseTemplate
 
+  alias AshAuthentication.Plug.Helpers
+
   using do
     quote do
       # The default endpoint for testing
@@ -40,6 +42,6 @@ defmodule MercatorWeb.ConnCase do
   def log_in_user(conn, user) do
     conn
     |> Phoenix.ConnTest.init_test_session(%{})
-    |> AshAuthentication.Plug.Helpers.store_in_session(user)
+    |> Helpers.store_in_session(user)
   end
 end
