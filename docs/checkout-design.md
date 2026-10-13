@@ -1,6 +1,6 @@
 # Basket and checkout design (phase 3)
 
-Status: draft for discussion (2026-10-13). Builds on #8 (session basket for visitors, moved to the user at login), #14 (online payment later), #50 (prices net, displayed gross), #51 (VAT per tax class), #55 (configurable products). Open questions continue at **#64**.
+Status: agreed (2026-10-13): all questions in section 9 answered as suggested. Builds on #8 (session basket for visitors, moved to the user at login), #14 (online payment later), #50 (prices net, displayed gross), #51 (VAT per tax class), #55 (configurable products). Open questions continue at **#64**.
 
 ## 1. Scope
 
@@ -102,14 +102,14 @@ placed ─► confirmed ─► paid ─► shipped ─► completed
 
 ## 9. Open questions
 
-- **#64 Payment methods for now** (online payment comes later, #14): **prepayment** (bank details in the confirmation), **invoice** (only for customers that staff have approved, e.g. trade customers) and **payment on pickup** (cash or card, only with pickup)? Or fewer, or others?
-- **#65 Shipping costs:**
+- ~~**#64 Payment methods for now**~~ *(answered 2026-10-13: as suggested)* (online payment comes later, #14): **prepayment** (bank details in the confirmation), **invoice** (only for customers that staff have approved, e.g. trade customers) and **payment on pickup** (cash or card, only with pickup)? Or fewer, or others?
+- ~~**#65 Shipping costs:**~~ *(answered 2026-10-13: as suggested)*
   - **Parcel:** flat rate per country zone (e.g. AT €9.90, DE/IT €14.90, CH €24.90), free from a configurable order value (e.g. €250 in AT).
   - **Freight:** flat rate per zone as a "from" price (e.g. AT from €89), with the actual costs confirmed by staff (order state "confirmed").
   - **Pickup:** free, at the sawmill (address from the brand config).
   - OK, or a different model, e.g. by weight?
-- **#66 Checkout only for signed-in customers?** My recommendation: **yes**. The magic link keeps it painless (enter email, click the link, continue), and the order history, address book and later consultation (offers) need an account anyway. The alternative is a guest checkout with email only, which is more code, and customers would have no order overview.
-- **#67 Delivery countries:** AT, DE, IT, CH for the demo? Orders from CH (outside the EU) would need export rules (VAT-free delivery, customs). My suggestion: **leave out CH for now**, and treat VAT for deliveries into the EU like domestic sales (Austrian VAT, which applies to private customers below the EU distance-selling threshold). That's a simplification you should check with the Wirtschaftskammer or your tax advisor.
-- **#68 Order numbers:** `<prefix>-<year>-<sequential number>`, e.g. `BH-2026-00042`, with the prefix from the brand config? Sequential without gaps per year.
-- **#69 B2B:** do customers with a VAT ID (other EU countries) get a reverse charge invoice (net, without Austrian VAT)? That needs a VAT ID check (VIES); Rails used `valvat`. My suggestion: **later**, and for now show the VAT ID only on the order.
-- **#70 Order email:** for now as text/HTML email with all items and payment instructions, without a PDF (PDF invoice later, #17)?
+- ~~**#66 Checkout only for signed-in customers?**~~ *(answered 2026-10-13: as suggested)* My recommendation: **yes**. The magic link keeps it painless (enter email, click the link, continue), and the order history, address book and later consultation (offers) need an account anyway. The alternative is a guest checkout with email only, which is more code, and customers would have no order overview.
+- ~~**#67 Delivery countries:**~~ *(answered 2026-10-13: as suggested)* AT, DE, IT, CH for the demo? Orders from CH (outside the EU) would need export rules (VAT-free delivery, customs). My suggestion: **leave out CH for now**, and treat VAT for deliveries into the EU like domestic sales (Austrian VAT, which applies to private customers below the EU distance-selling threshold). That's a simplification you should check with the Wirtschaftskammer or your tax advisor. *(User: fine for the demo; a real customer's rules are implemented per deployment.)*
+- ~~**#68 Order numbers:**~~ *(answered 2026-10-13: as suggested)* `<prefix>-<year>-<sequential number>`, e.g. `BH-2026-00042`, with the prefix from the brand config? Sequential without gaps per year.
+- ~~**#69 B2B:**~~ *(answered 2026-10-13: as suggested)* do customers with a VAT ID (other EU countries) get a reverse charge invoice (net, without Austrian VAT)? That needs a VAT ID check (VIES); Rails used `valvat`. My suggestion: **later**, and for now show the VAT ID only on the order.
+- ~~**#70 Order email:**~~ *(answered 2026-10-13: as suggested)* for now as text/HTML email with all items and payment instructions, without a PDF (PDF invoice later, #17)?

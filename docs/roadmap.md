@@ -201,6 +201,14 @@ Rails sources (#1–#4) and continuing the overview (#5) were answered on 2026-1
 - **#61** (2026-10-13) AshAdmin only in development (`/dev/ash-admin`) as a raw-data tool; staff get proper pages.
 - **#62** (2026-10-13) Drag & drop sorting with **SortableJS** (vendored).
 - **#63** (2026-10-13) Back office order of work: admin layout → category tree → product list → product editor (general, variants & prices, properties, relations, images, configurator) → tax classes.
+- **#64–#70** (2026-10-13) Basket and checkout **as suggested** (see checkout-design.md):
+  - payment by prepayment, invoice (approved customers only) or on pickup
+  - parcel flat rate per zone, free above a threshold; freight "from" price confirmed by staff; pickup free
+  - checkout for signed-in customers only (magic link)
+  - delivery countries AT, DE, IT (no CH), Austrian VAT; demo simplification, per-customer rules in code
+  - order numbers `BH-2026-00042`
+  - B2B reverse charge later
+  - order email without PDF
 - **#25** (2026-10-13) **No security risk:** none of the old systems are deployed any more. Secrets still go only into env/`runtime.exs` in the port.
 
 ### Scope and target
@@ -252,5 +260,5 @@ Rails sources (#1–#4) and continuing the overview (#5) were answered on 2026-1
 - ~~**#49–#57**~~ *(answered, see Decisions)* Catalogue design questions (tree storage, net/gross, tax classes, states, Neuheiten/Topseller, stock, configurator scope, search, customer prices): see [catalog-design.md](catalog-design.md#9-open-questions).
 - ~~**#58**~~ *(answered, see Decisions)* Image storage: static files per brand, or real uploads?
 - ~~**#59**~~ *(answered, see Decisions)* Demo images: SVG illustrations, or photos generated externally from a prompt list?
-- **#64–#70** Basket and checkout questions (payment methods, shipping costs, signed-in checkout, delivery countries, order numbers, B2B reverse charge, order email): see [checkout-design.md](checkout-design.md#9-open-questions).
+- ~~**#64–#70**~~ *(answered, see Decisions)* Basket and checkout questions (payment methods, shipping costs, signed-in checkout, delivery countries, order numbers, B2B reverse charge, order email): see [checkout-design.md](checkout-design.md#9-open-questions).
 
