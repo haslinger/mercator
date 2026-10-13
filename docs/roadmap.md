@@ -197,6 +197,10 @@ Rails sources (#1–#4) and continuing the overview (#5) were answered on 2026-1
 - **#11** (2026-10-13) Uploaded files are stored on **local disk**.
 - **#59** (2026-10-13) Demo images are **generated externally as photos** from the prompt list in `assets/lists/` (124 images), not as SVG illustrations. They are imported through the upload resource (#58).
 - **#60** (2026-10-13) Image processing with the Elixir library **`image`** (libvips via `vix`, precompiled, nothing to install on servers).
+- **#16** (2026-10-13) **One admin area `/admin`** with a sidebar that shows each person what their roles allow (instead of Rails' five subsites).
+- **#61** (2026-10-13) AshAdmin only in development (`/dev/ash-admin`) as a raw-data tool; staff get proper pages.
+- **#62** (2026-10-13) Drag & drop sorting with **SortableJS** (vendored).
+- **#63** (2026-10-13) Back office order of work: admin layout → category tree → product list → product editor (general, variants & prices, properties, relations, images, configurator) → tax classes.
 - **#25** (2026-10-13) **No security risk:** none of the old systems are deployed any more. Secrets still go only into env/`runtime.exs` in the port.
 
 ### Scope and target
@@ -210,7 +214,7 @@ Rails sources (#1–#4) and continuing the overview (#5) were answered on 2026-1
 - **#13** Which rich-text editor for content elements and descriptions (TipTap, Trix, or something else)? Must existing CKEditor HTML stay renderable as-is?
 - ~~**#14**~~ *(answered, see Decisions)* Payment: is mPAY24 still the provider? (I couldn't confirm whether the SOAP API used in 2015 still exists.) Are other providers wanted (e.g. Stripe, PayPal)?
 - ~~**#15**~~ *(answered, see Decisions)* Integrations: which are still in use? Is Mesonic ERP still the ERP, with MSSQL access still available? Are the Icecat and Bechlem accounts still active? (Their APIs/feeds have likely changed since 2016.)
-- **#16** Back office UI: one unified admin area with role-based menus, or the five separate subsites as in Rails? Is AshAdmin acceptable for low-traffic CRUD screens?
+- ~~**#16**~~ *(answered, see Decisions)* Back office UI: one unified admin area with role-based menus, or the five separate subsites as in Rails? Is AshAdmin acceptable for low-traffic CRUD screens?
 - **#17** PDF output: which documents are needed (offers, orders, contracts)? Which tool do you prefer (ChromicPDF needs headless Chrome; Typst is a single binary)?
 - **#18** *(analytics part answered, see Decisions)* Which of these features are still needed: blog, podcasts, comments, Twitter integration, Ahoy visitor tracking, the contact form with its captcha question, Gravatar?
 - **#19** Contracting module (printer/consumable leasing contracts): still needed? Who uses it? Should it stay a separate area?
