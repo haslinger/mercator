@@ -37,6 +37,8 @@ defmodule MercatorWeb.Router do
       #
       # If an authenticated user must *not* be present:
       # on_mount {MercatorWeb.LiveUserAuth, :live_no_user}
+
+      live "/account", AccountLive
     end
   end
 

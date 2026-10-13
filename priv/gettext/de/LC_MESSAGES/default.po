@@ -21,8 +21,8 @@ msgstr "Aktionen"
 msgid "An account with this email already exists. We've sent a link to that address - confirm it to finish linking this provider to your account."
 msgstr "Ein Konto mit dieser E-Mail-Adresse existiert bereits. Wir haben einen Link an diese Adresse gesendet – bestätigen Sie ihn, um die Verknüpfung abzuschließen."
 
-#: lib/mercator_web/components/layouts.ex:129
-#: lib/mercator_web/components/layouts.ex:144
+#: lib/mercator_web/components/layouts.ex:130
+#: lib/mercator_web/components/layouts.ex:145
 #, elixir-autogen, elixir-format
 msgid "Attempting to reconnect"
 msgstr "Verbindung wird wiederhergestellt"
@@ -47,17 +47,17 @@ msgstr "Kaufen Sie selbständig ein oder lassen Sie sich von unseren Beraterinne
 msgid "Sign in"
 msgstr "Anmelden"
 
-#: lib/mercator_web/components/layouts.ex:78
+#: lib/mercator_web/components/layouts.ex:79
 #, elixir-autogen, elixir-format
 msgid "Sign out"
 msgstr "Abmelden"
 
-#: lib/mercator_web/components/layouts.ex:136
+#: lib/mercator_web/components/layouts.ex:137
 #, elixir-autogen, elixir-format
 msgid "Something went wrong!"
 msgstr "Etwas ist schiefgelaufen!"
 
-#: lib/mercator_web/components/layouts.ex:121
+#: lib/mercator_web/components/layouts.ex:122
 #, elixir-autogen, elixir-format
 msgid "We can't find the internet"
 msgstr "Keine Internetverbindung"
@@ -91,3 +91,71 @@ msgstr "Ihr Passwort wurde zurückgesetzt."
 #, elixir-autogen, elixir-format
 msgid "close"
 msgstr "schließen"
+
+#: lib/mercator_web/live/account_live.ex:59
+#, elixir-autogen, elixir-format
+msgid "After changing your password you will be signed out on all devices."
+msgstr "Nach der Änderung werden Sie auf allen Geräten abgemeldet."
+
+#: lib/mercator_web/live/account_live.ex:57
+#: lib/mercator_web/live/account_live.ex:83
+#, elixir-autogen, elixir-format
+msgid "Change password"
+msgstr "Passwort ändern"
+
+#: lib/mercator_web/live/account_live.ex:70
+#, elixir-autogen, elixir-format
+msgid "Current password"
+msgstr "Aktuelles Passwort"
+
+#: lib/mercator_web/live/account_live.ex:45
+#, elixir-autogen, elixir-format
+msgid "Language"
+msgstr "Sprache"
+
+#: lib/mercator_web/components/layouts.ex:78
+#: lib/mercator_web/live/account_live.ex:18
+#: lib/mercator_web/live/account_live.ex:27
+#, elixir-autogen, elixir-format
+msgid "My account"
+msgstr "Mein Konto"
+
+#: lib/mercator_web/live/account_live.ex:40
+#, elixir-autogen, elixir-format
+msgid "Name"
+msgstr "Name"
+
+#: lib/mercator_web/live/account_live.ex:75
+#, elixir-autogen, elixir-format
+msgid "New password"
+msgstr "Neues Passwort"
+
+#: lib/mercator_web/live/account_live.ex:41
+#, elixir-autogen, elixir-format
+msgid "Phone"
+msgstr "Telefon"
+
+#: lib/mercator_web/live/account_live.ex:33
+#, elixir-autogen, elixir-format
+msgid "Profile"
+msgstr "Profil"
+
+#: lib/mercator_web/live/account_live.ex:80
+#, elixir-autogen, elixir-format
+msgid "Repeat new password"
+msgstr "Neues Passwort wiederholen"
+
+#: lib/mercator_web/live/account_live.ex:49
+#, elixir-autogen, elixir-format
+msgid "Save"
+msgstr "Speichern"
+
+#: lib/mercator_web/live/account_live.ex:124
+#, elixir-autogen, elixir-format, fuzzy
+msgid "Your password has been changed. Please sign in again."
+msgstr "Ihr Passwort wurde geändert. Bitte melden Sie sich erneut an."
+
+#: lib/mercator_web/live/account_live.ex:105
+#, elixir-autogen, elixir-format
+msgid "Your profile has been saved."
+msgstr "Ihr Profil wurde gespeichert."

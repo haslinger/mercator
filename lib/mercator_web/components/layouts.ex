@@ -75,6 +75,7 @@ defmodule MercatorWeb.Layouts do
         <span class="hidden sm:inline">{@current_user.name || @current_user.email}</span>
       </div>
       <ul tabindex="0" class="menu dropdown-content bg-base-100 rounded-box z-10 mt-2 w-56 p-2 shadow">
+        <li><.link navigate={~p"/account"} id="account-link">{gettext("My account")}</.link></li>
         <li><.link href={~p"/sign-out"} id="sign-out-link">{gettext("Sign out")}</.link></li>
       </ul>
     </div>
