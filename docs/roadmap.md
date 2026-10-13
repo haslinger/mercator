@@ -159,11 +159,12 @@ Rails sources (#1–#4) and continuing the overview (#5) were answered on 2026-1
 - **#26** (2026-10-13) `CLAUDE.md` written (it imports the generated `AGENTS.md`).
 - **#27** (2026-10-13) Start with **phase 1**, pulling in phases 2 and 9 (seed data) as needed.
 - **#29 / #30** (2026-10-13) Toolchain via **asdf**, always the latest stable release (Erlang 29.1.1, Elixir 1.20.4-otp-29). App generated with `mix igniter.new … --with phx.new` (Phoenix 1.8.15, Ash 3, AshPostgres, AshPhoenix, AshAuthentication(Phoenix), AshStateMachine, AshPaperTrail, Oban).
+- **#7** (2026-10-13) **Translations:** UI texts use Gettext (in code). Translatable **content** is stored in the DB as **one JSONB map per attribute** (`%{"de" => …, "en" => …}`), with a calculation for the current locale that falls back to `de`. Search uses Postgres full-text search with one index per language (German/English stemming). Adding a language means config only, no migration.
 - **#25** (2026-10-13) **No security risk:** none of the old systems are deployed any more. Secrets still go only into env/`runtime.exs` in the port.
 
 ### Scope and target
 - ~~**#6**~~ *(answered, see Decisions)* Who is the port for? One customer installation (which one: ivellio-vellin?), or a generic product that again supports several customer systems with their own themes, config and modules? Should one instance serve several tenants? (→ no, see #28)
-- **#7** Translations: keep the `_de`/`_en` column pairs, or move to one map/JSONB column per field? Will there only ever be de/en?
+- ~~**#7**~~ *(answered, see Decisions)* Translations: keep the `_de`/`_en` column pairs, or move to one map/JSONB column per field? Will there only ever be de/en?
 - **#8** Guest users: keep the Rails model, where every visitor gets a DB user? The alternative is a session-based anonymous basket that becomes a user at checkout or login. Do we keep email-link login and passwords?
 - **#9** Page templates: the Rails app lets content managers write DRYML/ERB templates in the DB. Do we need user-editable templates (e.g. Liquid/Solid with `container`/`photo`/`document` tags), or are a few fixed HEEx layouts with named content slots enough?
 - **#10** Search: Postgres full-text search (simplest, no extra service), or a dedicated engine (Meilisearch/Typesense/Elasticsearch)? How large is the catalogue (number of products/categories)?

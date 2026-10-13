@@ -42,7 +42,8 @@ Translate concepts into idiomatic Ash rather than copying Rails patterns one-to-
 | delayed_job / cron | Oban workers / Oban cron |
 | private_pub / Faye | Phoenix PubSub + LiveView |
 | DRYML taglibs | Function components |
-| i18n YAML | Gettext. Locales are `de` (default) and `en`. |
+| i18n YAML (UI texts) | Gettext. Locales are `de` (default) and `en`. |
+| traco `name_de`/`name_en` (content) | **One JSONB map attribute** per translatable field (`%{"de" => …, "en" => …}`), plus a locale calculation with `de` fallback; per-language full-text indexes (#7) |
 | `Constant` key/value table | Typed runtime config where possible; a DB settings resource only for settings editable at runtime |
 
 - Domains are planned roughly as Accounts, Catalog, Sales (orders/basket), Consulting (conversations/offers), Content (CMS) and Contracting. Agree on any new domain before adding it.
