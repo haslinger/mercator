@@ -13,6 +13,8 @@ defmodule Mercator.Seeds.BiberHolz do
 
   require Ash.Query
 
+  @pricing_fields [:pricing, :rounding_mm, :cutting_fee, :min_billing_quantity, :min_order_value]
+
   # --- Entry point --------------------------------------------------------------
 
   @doc "Seeds the demo catalogue. Needs the tax classes `standard` and `reduced`."
@@ -271,6 +273,10 @@ defmodule Mercator.Seeds.BiberHolz do
     |> Enum.with_index()
     |> Enum.each(fn {variant, position} -> create_variant(product, variant, position) end)
 
+    for {option, position} <- Enum.with_index((spec[:configurable] || %{})[:options] || [], 1) do
+      create_option(product, option, position)
+    end
+
     for slug <- List.wrap(spec.category) do
       Catalog.categorize!(categories[slug].id, product.id, authorize?: false)
     end
@@ -286,6 +292,9 @@ defmodule Mercator.Seeds.BiberHolz do
 
   # A product without explicit variants gets one variant from its own price data.
   defp variant_specs(%{variants: variants}), do: variants
+
+  defp variant_specs(%{configurable: _} = spec),
+    do: [%{suffix: "1", price: nil, delivery: spec[:delivery]}]
 
   defp variant_specs(spec) do
     [
@@ -306,13 +315,18 @@ defmodule Mercator.Seeds.BiberHolz do
       subtitle: spec[:subtitle],
       description: spec[:description],
       highlights: spec.highlights,
-      kind: if(length(variants) > 1, do: :variants, else: :simple),
+      kind: kind(spec, variants),
       tax_class_id: tax[spec.tax],
       shipping: spec.shipping,
       new_arrival: spec.new,
       bestseller: spec.bestseller
     }
+    |> Map.merge(Map.take(spec[:configurable] || %{}, @pricing_fields))
   end
+
+  defp kind(%{configurable: _}, _variants), do: :configurable
+  defp kind(_spec, variants) when length(variants) > 1, do: :variants
+  defp kind(_spec, _variants), do: :simple
 
   defp create_variant(product, spec, position) do
     variant =
@@ -332,7 +346,7 @@ defmodule Mercator.Seeds.BiberHolz do
       )
 
     prices =
-      [%{amount: spec.price, min_quantity: 1}] ++
+      if(spec.price, do: [%{amount: spec.price, min_quantity: 1}], else: []) ++
         for({min, amount} <- spec[:tiers] || [], do: %{amount: amount, min_quantity: min}) ++
         if(spec[:promo], do: [%{amount: spec.promo, promotion: true}], else: [])
 
@@ -342,6 +356,50 @@ defmodule Mercator.Seeds.BiberHolz do
       |> Map.put(:variant_id, variant.id)
       |> Catalog.create_price!(authorize?: false)
     end
+  end
+
+  # {key, name, :choice, role, [{key, name, attrs}]} or {key, name, :number, role, attrs}
+  defp create_option(product, {key, name, :choice, role, choices}, position) do
+    option =
+      Catalog.create_product_option!(
+        %{
+          product_id: product.id,
+          key: key,
+          name: name,
+          kind: :choice,
+          role: role,
+          position: position
+        },
+        authorize?: false
+      )
+
+    for {{choice_key, choice_name, attrs}, choice_position} <- Enum.with_index(choices, 1) do
+      attrs
+      |> Map.new(fn {k, v} -> {k, if(is_boolean(v), do: v, else: to_string(v))} end)
+      |> Map.merge(%{
+        option_id: option.id,
+        key: choice_key,
+        name: choice_name,
+        position: choice_position
+      })
+      |> Map.put_new(:default, choice_position == 1)
+      |> Catalog.create_option_choice!(authorize?: false)
+    end
+  end
+
+  defp create_option(product, {key, name, :number, role, attrs}, position) do
+    attrs
+    |> Map.new(fn {k, v} -> {k, to_string(v)} end)
+    |> Map.merge(%{
+      product_id: product.id,
+      key: key,
+      name: name,
+      kind: :number,
+      role: role,
+      position: position,
+      unit: "mm"
+    })
+    |> Catalog.create_product_option!(authorize?: false)
   end
 
   defp property_value(product, property, value) do
@@ -404,9 +462,194 @@ defmodule Mercator.Seeds.BiberHolz do
 
   @doc false
   def products do
-    houses() ++
+    made_to_measure() ++
+      houses() ++
       construction_timber() ++
       panels() ++ outdoor() ++ fine_wood() ++ furniture() ++ energy() ++ forestry()
+  end
+
+  # Configurable products (#55): cut to size, price calculated by the configurator
+  defp made_to_measure do
+    length = fn min, max, default ->
+      {"length", t("Länge", "Length"), :number, :length,
+       %{min: min, max: max, default: default, step: 10}}
+    end
+
+    width = fn min, max, default ->
+      {"width", t("Breite", "Width"), :number, :width,
+       %{min: min, max: max, default: default, step: 10}}
+    end
+
+    [
+      %{
+        number: "BH-KVH-MASS",
+        category: ["konstruktionsvollholz", "kanthoelzer-balken"],
+        title: t("Konstruktionsholz nach Maß", "Structural timber cut to size"),
+        subtitle:
+          t(
+            "Holzart, Querschnitt und Länge frei wählbar",
+            "Choose species, cross-section and length"
+          ),
+        description:
+          t(
+            "Aus unserem Sägewerk auf den Millimeter zugeschnitten – abgerechnet nach Kubikmeter.",
+            "Cut to the millimetre in our sawmill – priced per cubic metre."
+          ),
+        highlights: [
+          t("Zuschnitt auf ganze Zentimeter", "Cut to whole centimetres"),
+          t("Ab 0,05 m³", "From 0.05 m³")
+        ],
+        new: true,
+        shipping: :freight,
+        delivery: :week,
+        configurable: %{
+          pricing: :per_volume,
+          rounding_mm: 10,
+          cutting_fee: "2.50",
+          min_billing_quantity: "0.05",
+          options: [
+            {"species", t("Holzart", "Wood species"), :choice, :base_price,
+             [
+               {"spruce", species(:spruce), %{base_price: 560}},
+               {"larch", species(:larch), %{base_price: 920}},
+               {"douglas", species(:douglas), %{base_price: 740}},
+               {"oak", species(:oak), %{base_price: 1650}}
+             ]},
+            {"surface", t("Oberfläche", "Surface"), :choice, :surcharge,
+             [
+               {"rough", t("sägerau", "rough-sawn"), %{}},
+               {"planed", t("gehobelt", "planed"), %{surcharge_percent: 15}},
+               {"chamfered", t("gehobelt und gefast", "planed and chamfered"),
+                %{surcharge_percent: 20}}
+             ]},
+            {"drying", t("Trocknung", "Drying"), :choice, :surcharge,
+             [
+               {"fresh", t("frisch", "fresh"), %{}},
+               {"kiln", t("technisch getrocknet", "kiln-dried"), %{surcharge_percent: 12}}
+             ]},
+            length.(500, 13_000, 4000),
+            width.(40, 300, 100),
+            {"height", t("Höhe", "Height"), :number, :thickness,
+             %{min: 40, max: 300, default: 120, step: 10}}
+          ]
+        }
+      },
+      %{
+        number: "BH-TISCHPLATTE-MASS",
+        category: ["tischplatten", "eiche", "nuss"],
+        title: t("Tischplatte nach Maß", "Table top made to measure"),
+        subtitle: t("Massivholz aus unserer Tischlerei", "Solid wood from our joinery"),
+        description:
+          t(
+            "Wählen Sie Holzart, Maße, Stärke, Kante und Oberfläche – wir fertigen Ihre Tischplatte.",
+            "Choose species, size, thickness, edge and finish – we make your table top."
+          ),
+        bestseller: true,
+        shipping: :freight,
+        delivery: :order,
+        configurable: %{
+          pricing: :per_area,
+          rounding_mm: 10,
+          min_order_value: "150",
+          options: [
+            {"species", t("Holzart", "Wood species"), :choice, :base_price,
+             [
+               {"oak", species(:oak), %{base_price: 320}},
+               {"walnut", species(:walnut), %{base_price: 520}},
+               {"stone_pine", species(:stone_pine), %{base_price: 280}},
+               {"cherry", species(:cherry), %{base_price: 360}}
+             ]},
+            {"thickness", t("Stärke", "Thickness"), :choice, :surcharge,
+             [
+               {"30", t("30 mm", "30 mm"), %{}},
+               {"40", t("40 mm", "40 mm"), %{surcharge_percent: 25}},
+               {"50", t("50 mm", "50 mm"), %{surcharge_percent: 45}}
+             ]},
+            {"edge", t("Kante", "Edge"), :choice, :surcharge,
+             [
+               {"straight", t("gerade", "straight"), %{}},
+               {"bevel", t("Facette", "bevelled"), %{surcharge_amount: 35}},
+               {"live_edge", t("Baumkante", "live edge"), %{surcharge_amount: 90}}
+             ]},
+            {"finish", t("Oberfläche", "Finish"), :choice, :surcharge,
+             [
+               {"oiled", t("natur geölt", "natural oil"), %{}},
+               {"white_oil", t("weiß geölt", "white oil"), %{surcharge_percent: 8}},
+               {"lacquered", t("matt lackiert", "matt lacquer"), %{surcharge_percent: 12}}
+             ]},
+            length.(600, 3000, 1800),
+            width.(400, 1200, 900)
+          ]
+        }
+      },
+      %{
+        number: "BH-3S-ZUSCHNITT",
+        category: "dreischichtplatten",
+        title: t("3-Schicht-Platte Zuschnitt", "Three-layer panel cut to size"),
+        description:
+          t(
+            "Massivholzplatte auf Ihr Maß zugeschnitten, ideal für Möbel und Regale.",
+            "Solid wood panel cut to your size, ideal for furniture and shelves."
+          ),
+        shipping: :parcel,
+        delivery: :week,
+        configurable: %{
+          pricing: :per_area,
+          rounding_mm: 1,
+          cutting_fee: "3.00",
+          min_billing_quantity: "0.25",
+          options: [
+            {"species", t("Holzart", "Wood species"), :choice, :base_price,
+             [
+               {"spruce", species(:spruce), %{base_price: 42}},
+               {"larch", species(:larch), %{base_price: 68}},
+               {"stone_pine", species(:stone_pine), %{base_price: 95}}
+             ]},
+            {"thickness", t("Stärke", "Thickness"), :choice, :surcharge,
+             [
+               {"19", t("19 mm", "19 mm"), %{}},
+               {"27", t("27 mm", "27 mm"), %{surcharge_percent: 18}},
+               {"42", t("42 mm", "42 mm"), %{surcharge_percent: 45}}
+             ]},
+            {"length", t("Länge", "Length"), :number, :length,
+             %{min: 200, max: 5000, default: 1000, step: 1}},
+            {"width", t("Breite", "Width"), :number, :width,
+             %{min: 100, max: 2050, default: 600, step: 1}}
+          ]
+        }
+      },
+      %{
+        number: "BH-LEISTEN-MASS",
+        category: "latten-staffeln",
+        title: t("Latten & Leisten nach Maß", "Battens and strips cut to length"),
+        description:
+          t(
+            "Gehobelte Latten in Standardprofilen, auf Länge geschnitten.",
+            "Planed battens in standard profiles, cut to length."
+          ),
+        delivery: :stock,
+        configurable: %{
+          pricing: :per_length,
+          rounding_mm: 10,
+          cutting_fee: "0.80",
+          options: [
+            {"profile", t("Profil", "Profile"), :choice, :base_price,
+             [
+               {"24x48", t("24 × 48 mm", "24 × 48 mm"), %{base_price: "0.95"}},
+               {"30x50", t("30 × 50 mm", "30 × 50 mm"), %{base_price: "1.10"}},
+               {"40x60", t("40 × 60 mm", "40 × 60 mm"), %{base_price: "1.60"}},
+               {"50x80", t("50 × 80 mm", "50 × 80 mm"), %{base_price: "2.40"}}
+             ]},
+            {"species", t("Holzart", "Wood species"), :choice, :surcharge,
+             [
+               {"spruce", species(:spruce), %{}},
+               {"larch", species(:larch), %{surcharge_percent: 70}}
+             ]},
+            length.(500, 6000, 3000)
+          ]
+        }
+      }
+    ]
   end
 
   defp houses do

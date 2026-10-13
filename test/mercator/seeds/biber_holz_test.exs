@@ -74,6 +74,32 @@ defmodule Mercator.Seeds.BiberHolzTest do
     assert Decimal.equal?(info.unit_net, Decimal.new("18.72"))
   end
 
+  test "creates configurable products for all pricing models (#55)" do
+    configurable = Enum.filter(Catalog.list_products!(), &(&1.kind == :configurable))
+
+    assert Enum.map(configurable, & &1.pricing) |> Enum.sort() ==
+             Enum.sort([:per_volume, :per_area, :per_area, :per_length])
+
+    # default: spruce, rough-sawn, fresh, 4000 × 100 × 120 mm = 0.048 m³ → minimum 0.05 m³
+    # 0.05 × 560 = 28.00 + 2.50 cutting fee = 30.50 net
+    timber = Catalog.get_product_by_number!("BH-KVH-MASS")
+    assert {:ok, quote} = Catalog.quote(timber, %{})
+    assert Decimal.equal?(quote.net, Decimal.new("30.50"))
+
+    # oak table top 2.0 × 1.0 m = 2 m² × 320 = 640, 40 mm +25 % = 160, live edge +90 → 890 net
+    table = Catalog.get_product_by_number!("BH-TISCHPLATTE-MASS")
+
+    assert {:ok, quote} =
+             Catalog.quote(table, %{
+               "length" => "2000",
+               "width" => "1000",
+               "thickness" => "40",
+               "edge" => "live_edge"
+             })
+
+    assert Decimal.equal?(quote.net, Decimal.new("890.00"))
+  end
+
   test "creates product relations" do
     larch = "BH-TD-LAE" |> product() |> Ash.load!(relations: :related_product)
 
