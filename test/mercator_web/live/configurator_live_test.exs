@@ -59,6 +59,8 @@ defmodule MercatorWeb.ConfiguratorLiveTest do
     # 145.35 net + 20 % = 174.42 gross (see ConfiguratorTest)
     assert view |> element("#quote-total") |> render() =~ "174,42 €"
     assert view |> element("#quote") |> render() =~ "Zuschnitt"
+    # the breakdown is net, so it's labelled as such next to the gross dropdown prices
+    assert view |> element("#quote thead") |> render() =~ "netto"
   end
 
   test "invalid dimensions show an error at the field", %{conn: conn, product: product} do

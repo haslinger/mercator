@@ -385,6 +385,12 @@ defmodule MercatorWeb.ProductLive do
           )} · {gettext("Configuration no.")} <span id="config-number">{@quote.config_number}</span>
         </p>
         <table class="table table-sm">
+          <thead>
+            <tr>
+              <th>{gettext("Calculation")}</th>
+              <th class="text-right">{gettext("net")}</th>
+            </tr>
+          </thead>
           <tbody>
             <tr :for={line <- @quote.lines}>
               <td>{line_label(line, @quote, @locale)}</td>

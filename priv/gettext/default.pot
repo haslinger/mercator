@@ -331,7 +331,7 @@ msgstr ""
 msgid "Description"
 msgstr ""
 
-#: lib/mercator_web/live/product_live.ex:489
+#: lib/mercator_web/live/product_live.ex:494
 #, elixir-autogen, elixir-format
 msgid "Graduated prices"
 msgstr ""
@@ -456,7 +456,7 @@ msgid "The basket follows soon."
 msgstr ""
 
 #: lib/mercator_web/live/product_live.ex:247
-#: lib/mercator_web/live/product_live.ex:402
+#: lib/mercator_web/live/product_live.ex:408
 #, elixir-autogen, elixir-format
 msgid "Total"
 msgstr ""
@@ -477,7 +477,7 @@ msgstr ""
 msgid "from"
 msgstr ""
 
-#: lib/mercator_web/live/product_live.ex:494
+#: lib/mercator_web/live/product_live.ex:499
 #, elixir-autogen, elixir-format
 msgid "from %{quantity} %{unit}"
 msgstr ""
@@ -538,7 +538,7 @@ msgstr ""
 msgid "%{measure} %{unit} per piece"
 msgstr ""
 
-#: lib/mercator_web/live/product_live.ex:457
+#: lib/mercator_web/live/product_live.ex:462
 #, elixir-autogen, elixir-format
 msgid "%{name}: %{measure} %{unit} × %{price}"
 msgstr ""
@@ -548,22 +548,32 @@ msgstr ""
 msgid "Configuration no."
 msgstr ""
 
-#: lib/mercator_web/live/product_live.ex:466
+#: lib/mercator_web/live/product_live.ex:471
 #, elixir-autogen, elixir-format
 msgid "Cutting to size"
 msgstr ""
 
-#: lib/mercator_web/live/product_live.ex:467
+#: lib/mercator_web/live/product_live.ex:472
 #, elixir-autogen, elixir-format
 msgid "Minimum order surcharge"
 msgstr ""
 
-#: lib/mercator_web/live/product_live.ex:394
+#: lib/mercator_web/live/product_live.ex:400
 #, elixir-autogen, elixir-format
 msgid "Net total"
 msgstr ""
 
-#: lib/mercator_web/live/product_live.ex:398
+#: lib/mercator_web/live/product_live.ex:404
 #, elixir-autogen, elixir-format
 msgid "VAT %{rate} %"
+msgstr ""
+
+#: lib/mercator_web/live/product_live.ex:390
+#, elixir-autogen, elixir-format
+msgid "Calculation"
+msgstr ""
+
+#: lib/mercator_web/live/product_live.ex:391
+#, elixir-autogen, elixir-format
+msgid "net"
 msgstr ""

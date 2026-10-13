@@ -331,7 +331,7 @@ msgstr "Kategorie nicht gefunden."
 msgid "Description"
 msgstr "Beschreibung"
 
-#: lib/mercator_web/live/product_live.ex:489
+#: lib/mercator_web/live/product_live.ex:494
 #, elixir-autogen, elixir-format
 msgid "Graduated prices"
 msgstr "Staffelpreise"
@@ -456,7 +456,7 @@ msgid "The basket follows soon."
 msgstr "Der Warenkorb folgt in Kürze."
 
 #: lib/mercator_web/live/product_live.ex:247
-#: lib/mercator_web/live/product_live.ex:402
+#: lib/mercator_web/live/product_live.ex:408
 #, elixir-autogen, elixir-format
 msgid "Total"
 msgstr "Gesamt"
@@ -477,7 +477,7 @@ msgstr "Unsere Empfehlung"
 msgid "from"
 msgstr "ab"
 
-#: lib/mercator_web/live/product_live.ex:494
+#: lib/mercator_web/live/product_live.ex:499
 #, elixir-autogen, elixir-format
 msgid "from %{quantity} %{unit}"
 msgstr "ab %{quantity} %{unit}"
@@ -538,7 +538,7 @@ msgstr "Wonach suchen Sie?"
 msgid "%{measure} %{unit} per piece"
 msgstr "%{measure} %{unit} pro Stück"
 
-#: lib/mercator_web/live/product_live.ex:457
+#: lib/mercator_web/live/product_live.ex:462
 #, elixir-autogen, elixir-format
 msgid "%{name}: %{measure} %{unit} × %{price}"
 msgstr "%{name}: %{measure} %{unit} × %{price}"
@@ -548,22 +548,32 @@ msgstr "%{name}: %{measure} %{unit} × %{price}"
 msgid "Configuration no."
 msgstr "Konfigurations-Nr."
 
-#: lib/mercator_web/live/product_live.ex:466
+#: lib/mercator_web/live/product_live.ex:471
 #, elixir-autogen, elixir-format
 msgid "Cutting to size"
 msgstr "Zuschnitt"
 
-#: lib/mercator_web/live/product_live.ex:467
+#: lib/mercator_web/live/product_live.ex:472
 #, elixir-autogen, elixir-format
 msgid "Minimum order surcharge"
 msgstr "Mindermengenzuschlag"
 
-#: lib/mercator_web/live/product_live.ex:394
+#: lib/mercator_web/live/product_live.ex:400
 #, elixir-autogen, elixir-format
 msgid "Net total"
 msgstr "Summe netto"
 
-#: lib/mercator_web/live/product_live.ex:398
+#: lib/mercator_web/live/product_live.ex:404
 #, elixir-autogen, elixir-format
 msgid "VAT %{rate} %"
 msgstr "MwSt. %{rate} %"
+
+#: lib/mercator_web/live/product_live.ex:390
+#, elixir-autogen, elixir-format
+msgid "Calculation"
+msgstr "Berechnung"
+
+#: lib/mercator_web/live/product_live.ex:391
+#, elixir-autogen, elixir-format
+msgid "net"
+msgstr "netto"
