@@ -115,3 +115,13 @@ msgstr ""
 #, elixir-autogen, elixir-format
 msgid "you cannot remove your own administrator role"
 msgstr ""
+
+#: lib/mercator/translated.ex:120
+#, elixir-autogen, elixir-format
+msgid "translation for %{locale} is missing"
+msgstr ""
+
+#: lib/mercator/translated.ex:129
+#, elixir-autogen, elixir-format
+msgid "translation for %{locale} must be at most %{max} characters"
+msgstr ""

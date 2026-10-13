@@ -21,8 +21,8 @@ msgstr "Aktionen"
 msgid "An account with this email already exists. We've sent a link to that address - confirm it to finish linking this provider to your account."
 msgstr "Ein Konto mit dieser E-Mail-Adresse existiert bereits. Wir haben einen Link an diese Adresse gesendet – bestätigen Sie ihn, um die Verknüpfung abzuschließen."
 
-#: lib/mercator_web/components/layouts.ex:133
-#: lib/mercator_web/components/layouts.ex:148
+#: lib/mercator_web/components/layouts.ex:134
+#: lib/mercator_web/components/layouts.ex:149
 #, elixir-autogen, elixir-format
 msgid "Attempting to reconnect"
 msgstr "Verbindung wird wiederhergestellt"
@@ -32,32 +32,32 @@ msgstr "Verbindung wird wiederhergestellt"
 msgid "Incorrect email or password."
 msgstr "E-Mail oder Passwort ist falsch."
 
-#: lib/mercator_web/components/layouts.ex:52
+#: lib/mercator_web/components/layouts.ex:53
 #, elixir-autogen, elixir-format
 msgid "Register"
 msgstr "Registrieren"
 
-#: lib/mercator_web/controllers/page_html/home.html.heex:7
+#: lib/mercator_web/controllers/page_html/home.html.heex:15
 #, elixir-autogen, elixir-format
 msgid "Shop on your own or get advice from our consultants."
 msgstr "Kaufen Sie selbständig ein oder lassen Sie sich von unseren Beraterinnen und Beratern unterstützen."
 
-#: lib/mercator_web/components/layouts.ex:49
+#: lib/mercator_web/components/layouts.ex:50
 #, elixir-autogen, elixir-format
 msgid "Sign in"
 msgstr "Anmelden"
 
-#: lib/mercator_web/components/layouts.ex:82
+#: lib/mercator_web/components/layouts.ex:83
 #, elixir-autogen, elixir-format
 msgid "Sign out"
 msgstr "Abmelden"
 
-#: lib/mercator_web/components/layouts.ex:140
+#: lib/mercator_web/components/layouts.ex:141
 #, elixir-autogen, elixir-format
 msgid "Something went wrong!"
 msgstr "Etwas ist schiefgelaufen!"
 
-#: lib/mercator_web/components/layouts.ex:125
+#: lib/mercator_web/components/layouts.ex:126
 #, elixir-autogen, elixir-format
 msgid "We can't find the internet"
 msgstr "Keine Internetverbindung"
@@ -114,7 +114,7 @@ msgstr "Aktuelles Passwort"
 msgid "Language"
 msgstr "Sprache"
 
-#: lib/mercator_web/components/layouts.ex:78
+#: lib/mercator_web/components/layouts.ex:79
 #: lib/mercator_web/live/account_live.ex:18
 #: lib/mercator_web/live/account_live.ex:27
 #, elixir-autogen, elixir-format
@@ -148,7 +148,7 @@ msgid "Repeat new password"
 msgstr "Neues Passwort wiederholen"
 
 #: lib/mercator_web/live/account_live.ex:49
-#: lib/mercator_web/live/admin/user_edit_live.ex:77
+#: lib/mercator_web/live/admin/user_edit_live.ex:80
 #, elixir-autogen, elixir-format
 msgid "Save"
 msgstr "Speichern"
@@ -211,7 +211,7 @@ msgstr "Produktmanagement"
 msgid "Roles"
 msgstr "Rollen"
 
-#: lib/mercator_web/live/admin/user_edit_live.ex:101
+#: lib/mercator_web/live/admin/user_edit_live.ex:104
 #, elixir-autogen, elixir-format
 msgid "Roles saved."
 msgstr "Rollen gespeichert."
@@ -231,7 +231,7 @@ msgstr "Vertriebsleitung"
 msgid "User not found."
 msgstr "Benutzer nicht gefunden."
 
-#: lib/mercator_web/components/layouts.ex:80
+#: lib/mercator_web/components/layouts.ex:81
 #: lib/mercator_web/live/admin/user_edit_live.ex:40
 #: lib/mercator_web/live/admin/user_index_live.ex:19
 #: lib/mercator_web/live/admin/user_index_live.ex:29
@@ -239,7 +239,7 @@ msgstr "Benutzer nicht gefunden."
 msgid "Users"
 msgstr "Benutzer"
 
-#: lib/mercator_web/live_user_auth.ex:49
+#: lib/mercator_web/live_user_auth.ex:51
 #, elixir-autogen, elixir-format
 msgid "You are not allowed to access this page."
 msgstr "Sie haben keinen Zugriff auf diese Seite."

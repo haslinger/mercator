@@ -106,6 +106,10 @@ config :mercator, Mercator.Mailer, adapter: Swoosh.Adapters.Local
 # UI languages; German is the default
 config :mercator, MercatorWeb.Gettext, default_locale: "de", locales: ~w(de en)
 
+# Languages of translatable content (Mercator.Translated); the first is the
+# default and fallback. Keep in sync with the UI languages above.
+config :mercator, :content_locales, ~w(de en)
+
 # Sender of all system emails; override per deployment in runtime.exs
 config :mercator, :mail_from, {"Mercator", "noreply@localhost"}
 

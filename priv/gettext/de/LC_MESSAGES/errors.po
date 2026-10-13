@@ -105,3 +105,13 @@ msgstr "muss gleich %{number} sein"
 #, elixir-autogen, elixir-format
 msgid "you cannot remove your own administrator role"
 msgstr "Sie können sich die Administrationsrolle nicht selbst entziehen"
+
+#: lib/mercator/translated.ex:120
+#, elixir-autogen, elixir-format
+msgid "translation for %{locale} is missing"
+msgstr "Übersetzung für %{locale} fehlt"
+
+#: lib/mercator/translated.ex:129
+#, elixir-autogen, elixir-format
+msgid "translation for %{locale} must be at most %{max} characters"
+msgstr "Übersetzung für %{locale} darf höchstens %{max} Zeichen lang sein"
