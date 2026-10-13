@@ -163,6 +163,7 @@ Rails sources (#1–#4) and continuing the overview (#5) were answered on 2026-1
 - **#31** (2026-10-13) `usage_rules` added: Elixir/OTP and Phoenix rules are inline in `AGENTS.md`; Ash rules form the on-demand `ash-framework` skill.
 - **#8** (2026-10-13) **No database user per visitor.** Anonymous visitors get a **session basket** that moves to the real user at login or registration. Login uses **password + magic link** (AshAuthentication). The session carries an anonymous session ID for later analytics.
 - **#18 (analytics part)** (2026-10-13) General traffic stats live **outside the app** (proxy logs or Plausible/Umami/Matomo, chosen per customer). **Shop funnel events** (visit → basket → checkout → order) come later as an anonymous in-app event table (no personal data, no IPs). Still open: which other features are needed (blog, podcasts, comments, Twitter, contact form, Gravatar).
+- **#32** (2026-10-13) **Roles as one list attribute** (`roles: [:sales, :contentmanager]`) using the enum `Mercator.Accounts.Role`. Only administrators may change roles. Implemented in c85e2e8.
 - **#25** (2026-10-13) **No security risk:** none of the old systems are deployed any more. Secrets still go only into env/`runtime.exs` in the port.
 
 ### Scope and target
@@ -195,5 +196,5 @@ Rails sources (#1–#4) and continuing the overview (#5) were answered on 2026-1
 - ~~**#26**~~ *(answered, see Decisions)* Should I write a `CLAUDE.md` with project conventions (Ash domains layout, naming, testing, Rails source location) before we start coding?
 - ~~**#27**~~ *(answered, see Decisions)* Which phase or feature should come first? (My suggestion: phases 1 and 2.)
 - ~~**#31**~~ *(answered, see Decisions)* Should I add the `usage_rules` dev dependency? It syncs the official usage rules of Ash, AshPostgres, AshPhoenix, AshAuthentication, Oban and others into `AGENTS.md`. The generated `AGENTS.md` currently covers only Phoenix/Elixir, and the Ash rules help keep generated code idiomatic.
-- **#32** Roles: replace the five Rails role booleans with one `roles` list attribute (e.g. `[:sales, :contentmanager]`)?
+- ~~**#32**~~ *(answered, see Decisions)* Roles: replace the five Rails role booleans with one `roles` list attribute (e.g. `[:sales, :contentmanager]`)?
 - **#33** Profile fields: first name, last name, phone, preferred language, plus salutation (Herr / Frau / divers / keine Angabe) and an optional academic title?
