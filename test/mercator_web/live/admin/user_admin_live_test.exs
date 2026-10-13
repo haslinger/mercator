@@ -89,5 +89,29 @@ defmodule MercatorWeb.Admin.UserAdminLiveTest do
       assert {:error, {:live_redirect, %{to: "/admin/users"}}} =
                live(conn, ~p"/admin/users/#{Ash.UUID.generate()}")
     end
+
+    test "approves payment by invoice", %{conn: conn, admin: admin} do
+      customer = user_fixture()
+
+      {:ok, view, _html} = live(conn, ~p"/admin/users/#{customer.id}")
+      refute customer.invoice_allowed
+
+      view |> element("#invoice-allowed") |> render_click()
+      assert Mercator.Accounts.get_user!(customer.id, actor: admin).invoice_allowed
+
+      view |> element("#invoice-allowed") |> render_click()
+      refute Mercator.Accounts.get_user!(customer.id, actor: admin).invoice_allowed
+    end
+
+    test "only administrators approve payment by invoice" do
+      customer = user_fixture()
+      manager = user_fixture(roles: [:sales_manager])
+
+      assert {:error, %Ash.Error.Forbidden{}} =
+               Mercator.Accounts.set_invoice_allowed(customer, true, actor: customer)
+
+      assert {:error, %Ash.Error.Forbidden{}} =
+               Mercator.Accounts.set_invoice_allowed(customer, true, actor: manager)
+    end
   end
 end

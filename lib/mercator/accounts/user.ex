@@ -79,6 +79,11 @@ defmodule Mercator.Accounts.User do
       validate Mercator.Accounts.Validations.KeepOwnAdminRole
     end
 
+    update :set_invoice_allowed do
+      description "Allow or forbid payment by invoice for a customer (#64)."
+      accept [:invoice_allowed]
+    end
+
     read :get_by_subject do
       description "Get a user by the subject claim in a JWT"
       argument :subject, :string, allow_nil?: false
@@ -337,6 +342,13 @@ defmodule Mercator.Accounts.User do
     attribute :roles, {:array, Mercator.Accounts.Role} do
       allow_nil? false
       default []
+      public? true
+    end
+
+    attribute :invoice_allowed, :boolean do
+      description "Approved by staff to pay by invoice (e.g. trade customers, #64)."
+      allow_nil? false
+      default false
       public? true
     end
   end

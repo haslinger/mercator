@@ -1,6 +1,7 @@
 defmodule MercatorWeb.Admin.UserEditLive do
   @moduledoc """
-  User administration: edit the roles of a user.
+  User administration: edit the roles of a user and approve payment by
+  invoice (#64).
   """
   use MercatorWeb, :live_view
 
@@ -82,6 +83,25 @@ defmodule MercatorWeb.Admin.UserEditLive do
           </.form>
         </div>
       </section>
+
+      <section class="card bg-base-100 shadow max-w-xl">
+        <div class="card-body">
+          <h2 class="card-title">{gettext("Payment")}</h2>
+          <label class="label text-base-content">
+            <input
+              type="checkbox"
+              class="toggle toggle-primary"
+              checked={@user.invoice_allowed}
+              phx-click="toggle_invoice"
+              id="invoice-allowed"
+            />
+            {gettext("May pay by invoice")}
+          </label>
+          <p class="text-sm text-base-content/70">
+            {gettext("For known customers, e.g. trade customers. Others pay in advance or on pickup.")}
+          </p>
+        </div>
+      </section>
     </Layouts.admin>
     """
   end
@@ -108,6 +128,19 @@ defmodule MercatorWeb.Admin.UserEditLive do
 
       {:error, form} ->
         {:noreply, assign(socket, :form, form)}
+    end
+  end
+
+  def handle_event("toggle_invoice", _params, socket) do
+    %{user: user, current_user: actor} = socket.assigns
+
+    case Accounts.set_invoice_allowed(user, !user.invoice_allowed, actor: actor) do
+      {:ok, user} ->
+        {:noreply,
+         socket |> assign(:user, user) |> put_flash(:info, gettext("Payment settings saved."))}
+
+      {:error, _} ->
+        {:noreply, put_flash(socket, :error, gettext("Could not save the payment settings."))}
     end
   end
 

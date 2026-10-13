@@ -1,6 +1,6 @@
 defmodule Mercator.Sales do
   @moduledoc """
-  Sales domain: baskets and (later) orders. See docs/checkout-design.md.
+  Sales domain: baskets, terms (GTC) and (later) orders. See docs/checkout-design.md.
 
   Baskets belong either to a browser session (visitors, identified by a
   token from the session) or to a signed-in user (#8). They are accessed
@@ -18,5 +18,10 @@ defmodule Mercator.Sales do
   resources do
     resource Mercator.Sales.Basket
     resource Mercator.Sales.BasketItem
+
+    resource Mercator.Sales.Gtc do
+      define :current_gtc, action: :current, not_found_error?: false
+      define :create_gtc, action: :create
+    end
   end
 end

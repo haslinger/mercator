@@ -67,6 +67,13 @@ config :mercator, :brand,
   email: "service@biberholz.example",
   phone: "+43 1 234 56 78",
   address: "Waldweg 1, 6020 Innsbruck",
+  # demo bank account (the example IBAN from the ISO 13616 standard)
+  bank: %{
+    holder: "Biber Holz GmbH",
+    iban: "AT61 1904 3002 3457 3201",
+    bic: "DEMOATWW",
+    name: "Demo-Bank"
+  },
   assets: "/images/brands/biberholz",
   logo: "logo.webp",
   pin: "pin.webp",

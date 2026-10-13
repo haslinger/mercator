@@ -57,6 +57,7 @@ defmodule MercatorWeb.Router do
       live "/produkte/:slug", ProductLive
       live "/suche", SearchLive
       live "/warenkorb", BasketLive
+      live "/agb", GtcLive
 
       live "/account", AccountLive
       live "/account/addresses", AddressesLive

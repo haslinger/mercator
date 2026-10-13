@@ -24,7 +24,13 @@ defmodule Mercator.Seeds do
     %{email: "manager@example.com", name: "Maria Hirsch", roles: [:sales, :sales_manager]},
     %{email: "content@example.com", name: "Klara Eichhorn", roles: [:contentmanager]},
     %{email: "products@example.com", name: "Peter Dachs", roles: [:productmanager]},
-    %{email: "kunde@example.com", name: "Karl Luchs", roles: [], locale: :de},
+    %{
+      email: "kunde@example.com",
+      name: "Karl Luchs",
+      roles: [],
+      locale: :de,
+      invoice_allowed: true
+    },
     %{email: "customer@example.com", name: "Lena Igel", roles: [], locale: :en}
   ]
 
@@ -57,7 +63,17 @@ defmodule Mercator.Seeds do
     Enum.each(@tax_classes, &ensure_tax_class/1)
     users = Enum.map(@demo_users, &ensure_user/1)
     BiberHolz.run()
+    ensure_gtc()
     users
+  end
+
+  defp ensure_gtc do
+    %{version: version, text: text} = BiberHolz.gtc()
+
+    Mercator.Sales.Gtc
+    |> Ash.Query.filter(version == ^version)
+    |> Ash.exists?(authorize?: false)
+    |> unless(do: Ash.Seed.seed!(Mercator.Sales.Gtc, %{version: version, text: text}))
   end
 
   defp ensure_tax_class(%{key: key} = attrs) do
@@ -73,9 +89,16 @@ defmodule Mercator.Seeds do
     |> Ash.read_one!(authorize?: false)
     |> case do
       nil -> create_user(attrs)
-      %{name: name} = user when name == attrs.name -> user
-      user -> Ash.Seed.update!(user, %{name: attrs.name})
+      user -> sync_user(user, attrs)
     end
+  end
+
+  defp sync_user(user, attrs) do
+    changes = %{name: attrs.name, invoice_allowed: Map.get(attrs, :invoice_allowed, false)}
+
+    if Map.take(user, Map.keys(changes)) == changes,
+      do: user,
+      else: Ash.Seed.update!(user, changes)
   end
 
   # Seeds bypass the registration action (no confirmation email, no token)

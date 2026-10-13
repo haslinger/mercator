@@ -100,6 +100,19 @@ defmodule MercatorWeb.Layouts do
       </div>
     </main>
 
+    <footer class="footer sm:footer-horizontal bg-base-200 text-base-content/70 px-4 py-6 sm:px-6 lg:px-8">
+      <aside>
+        <p class="font-semibold text-base-content">{Mercator.Brand.name()}</p>
+        <p :if={Mercator.Brand.get(:address)}>{Mercator.Brand.get(:address)}</p>
+        <p :if={Mercator.Brand.get(:email)}>{Mercator.Brand.get(:email)}</p>
+      </aside>
+      <nav>
+        <.link navigate={~p"/agb"} class="link link-hover" id="gtc-link">
+          {gettext("Terms and conditions")}
+        </.link>
+      </nav>
+    </footer>
+
     <.flash_group flash={@flash} />
     """
   end

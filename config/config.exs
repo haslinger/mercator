@@ -118,6 +118,25 @@ config :mercator, :content_locales, ~w(de en)
 # Countries the shop delivers to (#67); billing addresses may be in any EU country
 config :mercator, :delivery_countries, ~w(AT DE IT)
 
+# Shipping methods in display order with their costs (#65): gross amounts in EUR
+# per country zone, optionally free from an order value (goods, gross). Freight
+# costs are estimates ("from"), confirmed by staff. See Mercator.Sales.Shipping.
+config :mercator, :shipping,
+  parcel: [
+    rates: [
+      %{countries: ~w(AT), gross: "9.90", free_from: "250"},
+      %{countries: ~w(DE IT), gross: "14.90", free_from: "500"}
+    ]
+  ],
+  freight: [
+    estimate: true,
+    rates: [%{countries: ~w(AT), gross: "89"}, %{countries: ~w(DE IT), gross: "189"}]
+  ],
+  pickup: []
+
+# Payment methods offered at checkout (#64); see Mercator.Sales.Payment
+config :mercator, :payment_methods, [:prepayment, :invoice, :on_pickup]
+
 # Sender of all system emails; override per deployment in runtime.exs
 config :mercator, :mail_from, {"Mercator", "noreply@localhost"}
 

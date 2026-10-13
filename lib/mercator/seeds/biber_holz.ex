@@ -37,6 +37,64 @@ defmodule Mercator.Seeds.BiberHolz do
 
   defp t(de, en), do: %{"de" => de, "en" => en}
 
+  @doc "Placeholder terms and conditions of the demo shop."
+  def gtc do
+    %{
+      version: ~D[2026-10-01],
+      text:
+        t(
+          """
+          Dies sind Platzhalter-AGB des Demo-Shops Biber Holz. Sie haben keine rechtliche Wirkung; Bestellungen im Demo-Shop werden nicht ausgeführt.
+
+          ## 1. Geltungsbereich
+          Diese Bedingungen gelten für alle Bestellungen im Online-Shop der Biber Holz GmbH, Waldweg 1, 6020 Innsbruck.
+
+          ## 2. Vertragsabschluss
+          Mit dem Klick auf „Zahlungspflichtig bestellen“ geben Sie ein verbindliches Angebot ab. Der Vertrag kommt mit unserer Auftragsbestätigung zustande.
+
+          ## 3. Preise und Versand
+          Alle Preise verstehen sich in Euro inklusive Umsatzsteuer. Paketversand nach Österreich, Deutschland und Italien; Speditionskosten sind Richtpreise und werden vor der Lieferung bestätigt. Abholung im Sägewerk ist kostenlos.
+
+          ## 4. Zahlung
+          Vorauskasse per Überweisung, Zahlung bei Abholung oder – für freigeschaltete Kundinnen und Kunden – auf Rechnung, zahlbar innerhalb von 14 Tagen.
+
+          ## 5. Eigentumsvorbehalt
+          Die Ware bleibt bis zur vollständigen Bezahlung unser Eigentum.
+
+          ## 6. Holz ist ein Naturprodukt
+          Abweichungen in Farbe, Maserung, Ästen und Feuchte sind naturbedingt und kein Mangel.
+
+          ## 7. Rücktrittsrecht
+          Verbraucherinnen und Verbraucher können binnen 14 Tagen ohne Angabe von Gründen vom Vertrag zurücktreten. Ausgenommen sind nach Maß gefertigte Waren.
+          """,
+          """
+          These are placeholder terms of the Biber Holz demo shop. They have no legal effect; orders in the demo shop are not carried out.
+
+          ## 1. Scope
+          These terms apply to all orders in the online shop of Biber Holz GmbH, Waldweg 1, 6020 Innsbruck, Austria.
+
+          ## 2. Conclusion of contract
+          By clicking "Place binding order" you make a binding offer. The contract is concluded with our order confirmation.
+
+          ## 3. Prices and shipping
+          All prices are in euros including VAT. Parcel delivery to Austria, Germany and Italy; freight costs are guide prices and are confirmed before delivery. Pickup at the sawmill is free.
+
+          ## 4. Payment
+          Prepayment by bank transfer, payment on pickup or – for approved customers – by invoice, payable within 14 days.
+
+          ## 5. Retention of title
+          The goods remain our property until paid in full.
+
+          ## 6. Wood is a natural product
+          Variations in colour, grain, knots and moisture are natural and not a defect.
+
+          ## 7. Right of withdrawal
+          Consumers may withdraw from the contract within 14 days without giving reasons. Goods made to measure are excluded.
+          """
+        )
+    }
+  end
+
   defp delivery(:stock), do: t("sofort lieferbar", "in stock")
   defp delivery(:week), do: t("1–2 Wochen", "1–2 weeks")
   defp delivery(:order), do: t("auf Bestellung, 4–6 Wochen", "made to order, 4–6 weeks")

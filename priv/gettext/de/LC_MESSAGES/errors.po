@@ -176,7 +176,7 @@ msgstr "ein Bild gehört zu genau einem Produkt oder einer Kategorie"
 msgid "is not a readable image"
 msgstr "ist kein lesbares Bild"
 
-#: lib/mercator/accounts/validations/postcode_format.ex:21
+#: lib/mercator/accounts/validations/postcode_format.ex:23
 #, elixir-autogen, elixir-format
 msgid "is not a valid postcode for this country"
 msgstr "ist keine gültige Postleitzahl für dieses Land"
