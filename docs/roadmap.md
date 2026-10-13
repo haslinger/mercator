@@ -195,3 +195,5 @@ Rails sources (#1–#4) and continuing the overview (#5) were answered on 2026-1
 - ~~**#26**~~ *(answered, see Decisions)* Should I write a `CLAUDE.md` with project conventions (Ash domains layout, naming, testing, Rails source location) before we start coding?
 - ~~**#27**~~ *(answered, see Decisions)* Which phase or feature should come first? (My suggestion: phases 1 and 2.)
 - ~~**#31**~~ *(answered, see Decisions)* Should I add the `usage_rules` dev dependency? It syncs the official usage rules of Ash, AshPostgres, AshPhoenix, AshAuthentication, Oban and others into `AGENTS.md`. The generated `AGENTS.md` currently covers only Phoenix/Elixir, and the Ash rules help keep generated code idiomatic.
+- **#32** Roles: replace the five Rails role booleans with one `roles` list attribute (e.g. `[:sales, :contentmanager]`)?
+- **#33** Profile fields: first name, last name, phone, preferred language, plus salutation (Herr / Frau / divers / keine Angabe) and an optional academic title?
