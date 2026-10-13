@@ -58,6 +58,9 @@ defmodule MercatorWeb.Router do
       live "/account", AccountLive
 
       live "/admin", Admin.DashboardLive
+      live "/admin/products", Admin.ProductIndexLive, :index
+      live "/admin/products/new", Admin.ProductIndexLive, :new
+      live "/admin/products/:id", Admin.ProductEditLive
       live "/admin/categories", Admin.CategoryTreeLive, :index
       live "/admin/categories/new", Admin.CategoryTreeLive, :new
       live "/admin/categories/:id/edit", Admin.CategoryTreeLive, :edit

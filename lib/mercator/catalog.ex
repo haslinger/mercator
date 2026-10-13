@@ -40,6 +40,25 @@ defmodule Mercator.Catalog do
   defp set_position(category, position, actor),
     do: update_category!(category, %{position: position}, actor: actor)
 
+  @doc """
+  Sets the categories of a product to exactly `category_ids`: adds missing
+  assignments and removes the others. Runs the actions as `actor`.
+  """
+  def set_product_categories(product, category_ids, actor) do
+    product = Ash.load!(product, :categorizations, actor: actor)
+    wanted = MapSet.new(category_ids)
+    current = MapSet.new(product.categorizations, & &1.category_id)
+
+    for categorization <- product.categorizations,
+        not MapSet.member?(wanted, categorization.category_id) do
+      destroy_categorization!(categorization, actor: actor)
+    end
+
+    for id <- MapSet.difference(wanted, current), do: categorize!(id, product.id, actor: actor)
+
+    :ok
+  end
+
   defp maybe_move(%{parent_id: parent_id} = category, parent_id, _actor), do: {:ok, category}
 
   defp maybe_move(category, parent_id, actor),

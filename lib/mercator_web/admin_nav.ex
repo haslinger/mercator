@@ -25,6 +25,10 @@ defmodule MercatorWeb.AdminNav do
        ]},
       {gettext("Catalogue"),
        [
+         item(gettext("Products"), ~p"/admin/products", "hero-cube", "products", [
+           :productmanager,
+           :administrator
+         ]),
          item(gettext("Categories"), ~p"/admin/categories", "hero-folder", "categories", [
            :productmanager,
            :administrator
