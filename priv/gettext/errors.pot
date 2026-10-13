@@ -182,3 +182,8 @@ msgstr ""
 #, elixir-autogen, elixir-format
 msgid "is not a readable image"
 msgstr ""
+
+#: lib/mercator/accounts/validations/postcode_format.ex:21
+#, elixir-autogen, elixir-format
+msgid "is not a valid postcode for this country"
+msgstr ""

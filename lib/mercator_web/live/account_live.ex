@@ -32,6 +32,13 @@ defmodule MercatorWeb.AccountLive do
     >
       <h1 class="text-3xl font-bold">{gettext("My account")}</h1>
       <p class="text-base-content/70" id="account-email">{@current_user.email}</p>
+      <.link
+        navigate={~p"/account/addresses"}
+        class="btn btn-outline btn-sm w-fit"
+        id="addresses-link"
+      >
+        <.icon name="hero-map-pin" class="size-4" /> {gettext("My addresses")}
+      </.link>
 
       <div class="grid gap-6 md:grid-cols-2">
         <section class="card bg-base-100 shadow">

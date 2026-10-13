@@ -59,6 +59,7 @@ defmodule MercatorWeb.Router do
       live "/warenkorb", BasketLive
 
       live "/account", AccountLive
+      live "/account/addresses", AddressesLive
 
       live "/admin", Admin.DashboardLive
       live "/admin/products", Admin.ProductIndexLive, :index

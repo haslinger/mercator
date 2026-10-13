@@ -11,6 +11,14 @@ defmodule Mercator.Accounts do
   end
 
   resources do
+    resource Mercator.Accounts.Address do
+      define :list_my_addresses, action: :mine
+      define :get_address, action: :read, get_by: [:id]
+      define :create_address, action: :create
+      define :update_address, action: :update
+      define :destroy_address, action: :destroy
+    end
+
     resource Mercator.Accounts.Token
 
     resource Mercator.Accounts.User do

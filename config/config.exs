@@ -115,6 +115,9 @@ config :mercator, MercatorWeb.Gettext, default_locale: "de", locales: ~w(de en)
 # default and fallback. Keep in sync with the UI languages above.
 config :mercator, :content_locales, ~w(de en)
 
+# Countries the shop delivers to (#67); billing addresses may be in any EU country
+config :mercator, :delivery_countries, ~w(AT DE IT)
+
 # Sender of all system emails; override per deployment in runtime.exs
 config :mercator, :mail_from, {"Mercator", "noreply@localhost"}
 
