@@ -146,6 +146,22 @@ defmodule MercatorWeb.Admin.ProductAdminLiveTest do
       assert Enum.map(product.categories, & &1.id) == [ctx.energy.id]
     end
 
+    test "ignores the _unused_ keys LiveView sends for untouched highlights", ctx do
+      {:ok, view, _html} = live(ctx.conn, ~p"/admin/products/#{ctx.larch.id}")
+
+      highlights = %{"_unused_de" => "", "_unused_en" => "", "de" => "robust", "en" => "sturdy"}
+      form = %{"title" => %{"de" => "Lärche 36 m", "en" => "Larch 36 m"}}
+
+      render_change(view, "validate", %{"form" => form, "highlights" => highlights})
+      refute has_element?(view, "#highlights-_unused_de")
+
+      render_submit(view, "save", %{"form" => form, "highlights" => highlights})
+
+      product = Catalog.get_product!(ctx.larch.id, authorize?: false)
+      assert product.title["de"] == "Lärche 36 m"
+      assert product.highlights == [%{"de" => "robust", "en" => "sturdy"}]
+    end
+
     test "activates a product from the editor", ctx do
       {:ok, view, _html} = live(ctx.conn, ~p"/admin/products/#{ctx.draft.id}")
 

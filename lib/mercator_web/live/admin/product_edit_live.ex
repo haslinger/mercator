@@ -82,6 +82,13 @@ defmodule MercatorWeb.Admin.ProductEditLive do
         do: entry
   end
 
+  # only the locale keys: LiveView also sends "_unused_<locale>" keys for
+  # untouched fields, which must not become fields themselves
+  defp highlights_params(%{"highlights" => highlights}) when is_map(highlights),
+    do: Map.take(highlights, Translated.locales())
+
+  defp highlights_params(_params), do: nil
+
   # --- events ---
 
   @impl true
@@ -89,7 +96,7 @@ defmodule MercatorWeb.Admin.ProductEditLive do
     {:noreply,
      socket
      |> assign(:form, AshPhoenix.Form.validate(socket.assigns.form, params))
-     |> assign(:highlights, all["highlights"] || socket.assigns.highlights)
+     |> assign(:highlights, highlights_params(all) || socket.assigns.highlights)
      |> assign(
        :category_ids,
        Map.get(all, "category_ids", socket.assigns.category_ids) |> List.wrap()
@@ -98,7 +105,7 @@ defmodule MercatorWeb.Admin.ProductEditLive do
 
   def handle_event("save", %{"form" => params} = all, socket) do
     actor = socket.assigns.current_user
-    params = Map.put(params, "highlights", highlights_param(all["highlights"] || %{}))
+    params = Map.put(params, "highlights", highlights_param(highlights_params(all) || %{}))
     category_ids = all |> Map.get("category_ids", []) |> List.wrap() |> Enum.reject(&(&1 == ""))
 
     case AshPhoenix.Form.submit(socket.assigns.form, params: params) do
@@ -113,7 +120,10 @@ defmodule MercatorWeb.Admin.ProductEditLive do
          |> put_flash(:info, gettext("Product saved."))}
 
       {:error, form} ->
-        {:noreply, assign(socket, :form, form)}
+        {:noreply,
+         socket
+         |> assign(:form, form)
+         |> put_flash(:error, gettext("The product could not be saved. Please check the fields."))}
     end
   end
 
