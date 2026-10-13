@@ -12,7 +12,28 @@ defmodule Mercator.MixProject do
       deps: deps(),
       compilers: [:phoenix_live_view] ++ Mix.compilers(),
       listeners: [Phoenix.CodeReloader],
-      consolidate_protocols: Mix.env() != :dev
+      consolidate_protocols: Mix.env() != :dev,
+      usage_rules: usage_rules()
+    ]
+  end
+
+  # Usage rules for AI coding agents, synced with `mix usage_rules.sync`.
+  # Elixir/OTP and Phoenix rules are inlined into AGENTS.md; the larger
+  # Ash rules are built into an on-demand Claude Code skill.
+  defp usage_rules do
+    [
+      file: "AGENTS.md",
+      usage_rules: ["usage_rules:all", "phoenix:all"],
+      skills: [
+        location: ".claude/skills",
+        build: [
+          "ash-framework": [
+            description:
+              "Use this skill working with Ash Framework or any of its extensions. Always consult this when making any domain changes, features or fixes.",
+            usage_rules: [:ash, ~r/^ash_/]
+          ]
+        ]
+      ]
     ]
   end
 
@@ -41,6 +62,7 @@ defmodule Mercator.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
+      {:usage_rules, "~> 1.0", only: [:dev]},
       {:tidewave, "~> 0.9", only: [:dev]},
       {:picosat_elixir, "~> 0.2"},
       {:sourceror, "~> 1.8", only: [:dev, :test]},

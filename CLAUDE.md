@@ -50,6 +50,12 @@ Translate concepts into idiomatic Ash rather than copying Rails patterns one-to-
 - Money and VAT: use `Decimal` (`:decimal` attributes), never floats.
 - Generate migrations with `mix ash.codegen <name>` and review them. Never hand-edit resource snapshots.
 
+## Usage rules
+
+- Maintainers' rules for agents are synced by `usage_rules` (config in `mix.exs`, run `mix usage_rules.sync` after dependency updates). Elixir/OTP and Phoenix rules are inlined in `AGENTS.md`; Ash, AshPostgres and AshPhoenix rules are in the **`ash-framework` skill** (`.claude/skills/`). Consult that skill for any Ash work.
+- `ash_authentication` is only an indirect dependency, so it isn't synced. For authentication work, read `deps/ash_authentication/usage-rules.md`.
+- Search the docs of dependencies with `mix usage_rules.search_docs "term" -p <package>`.
+
 ## Testing
 
 - **Always ship tests with new code**: resource/action tests (calling actions through the domain code interface), policy tests with different actors, and LiveView tests for pages.
