@@ -1,0 +1,93 @@
+## "msgid"s in this file come from POT (.pot) files.
+###
+### Do not add, change, or remove "msgid"s manually here as
+### they're tied to the ones in the corresponding POT file
+### (with the same domain).
+###
+### Use "mix gettext.extract --merge" or "mix gettext.merge"
+### to merge POT files into PO files.
+msgid ""
+msgstr ""
+"Language: de\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: lib/mercator_web/components/core_components.ex:377
+#, elixir-autogen, elixir-format
+msgid "Actions"
+msgstr "Aktionen"
+
+#: lib/mercator_web/controllers/auth_controller.ex:42
+#, elixir-autogen, elixir-format
+msgid "An account with this email already exists. We've sent a link to that address - confirm it to finish linking this provider to your account."
+msgstr "Ein Konto mit dieser E-Mail-Adresse existiert bereits. Wir haben einen Link an diese Adresse gesendet – bestätigen Sie ihn, um die Verknüpfung abzuschließen."
+
+#: lib/mercator_web/components/layouts.ex:129
+#: lib/mercator_web/components/layouts.ex:144
+#, elixir-autogen, elixir-format
+msgid "Attempting to reconnect"
+msgstr "Verbindung wird wiederhergestellt"
+
+#: lib/mercator_web/controllers/auth_controller.ex:48
+#, elixir-autogen, elixir-format
+msgid "Incorrect email or password."
+msgstr "E-Mail oder Passwort ist falsch."
+
+#: lib/mercator_web/components/layouts.ex:52
+#, elixir-autogen, elixir-format
+msgid "Register"
+msgstr "Registrieren"
+
+#: lib/mercator_web/controllers/page_html/home.html.heex:7
+#, elixir-autogen, elixir-format
+msgid "Shop on your own or get advice from our consultants."
+msgstr "Kaufen Sie selbständig ein oder lassen Sie sich von unseren Beraterinnen und Beratern unterstützen."
+
+#: lib/mercator_web/components/layouts.ex:49
+#, elixir-autogen, elixir-format
+msgid "Sign in"
+msgstr "Anmelden"
+
+#: lib/mercator_web/components/layouts.ex:78
+#, elixir-autogen, elixir-format
+msgid "Sign out"
+msgstr "Abmelden"
+
+#: lib/mercator_web/components/layouts.ex:136
+#, elixir-autogen, elixir-format
+msgid "Something went wrong!"
+msgstr "Etwas ist schiefgelaufen!"
+
+#: lib/mercator_web/components/layouts.ex:121
+#, elixir-autogen, elixir-format
+msgid "We can't find the internet"
+msgstr "Keine Internetverbindung"
+
+#: lib/mercator_web/controllers/auth_controller.ex:12
+#, elixir-autogen, elixir-format
+msgid "You are now signed in."
+msgstr "Sie sind jetzt angemeldet."
+
+#: lib/mercator_web/controllers/auth_controller.ex:63
+#, elixir-autogen, elixir-format
+msgid "You are now signed out."
+msgstr "Sie sind jetzt abgemeldet."
+
+#: lib/mercator_web/controllers/auth_controller.ex:33
+#, elixir-autogen, elixir-format
+msgid "You have already signed in another way, but have not confirmed your account. You can confirm your account using the link we sent to you, or by resetting your password."
+msgstr "Sie haben sich bereits auf andere Weise angemeldet, Ihr Konto aber noch nicht bestätigt. Bestätigen Sie es über den Link, den wir Ihnen gesendet haben, oder setzen Sie Ihr Passwort zurück."
+
+#: lib/mercator_web/controllers/auth_controller.ex:10
+#, elixir-autogen, elixir-format
+msgid "Your email address has been confirmed."
+msgstr "Ihre E-Mail-Adresse wurde bestätigt."
+
+#: lib/mercator_web/controllers/auth_controller.ex:11
+#, elixir-autogen, elixir-format
+msgid "Your password has been reset."
+msgstr "Ihr Passwort wurde zurückgesetzt."
+
+#: lib/mercator_web/components/core_components.ex:83
+#, elixir-autogen, elixir-format
+msgid "close"
+msgstr "schließen"

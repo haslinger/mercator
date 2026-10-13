@@ -13,6 +13,7 @@ defmodule MercatorWeb.Router do
     plug :protect_from_forgery
     plug :put_secure_browser_headers
     plug :load_from_session
+    plug MercatorWeb.Locale
   end
 
   pipeline :api do
@@ -24,7 +25,8 @@ defmodule MercatorWeb.Router do
   scope "/", MercatorWeb do
     pipe_through :browser
 
-    ash_authentication_live_session :authenticated_routes do
+    ash_authentication_live_session :authenticated_routes,
+      on_mount_prepend: [{MercatorWeb.Locale, :default}] do
       # in each liveview, add one of the following at the top of the module:
       #
       # If an authenticated user must be present:
@@ -51,6 +53,8 @@ defmodule MercatorWeb.Router do
     sign_in_route register_path: "/register",
                   reset_path: "/reset",
                   auth_routes_prefix: "/auth",
+                  gettext_backend: {MercatorWeb.Gettext, "auth"},
+                  on_mount_prepend: [{MercatorWeb.Locale, :default}],
                   on_mount: [{MercatorWeb.LiveUserAuth, :live_no_user}],
                   overrides: [
                     MercatorWeb.AuthOverrides,
@@ -59,6 +63,8 @@ defmodule MercatorWeb.Router do
 
     # Remove this if you do not want to use the reset password feature
     reset_route auth_routes_prefix: "/auth",
+                gettext_backend: {MercatorWeb.Gettext, "auth"},
+                on_mount_prepend: [{MercatorWeb.Locale, :default}],
                 overrides: [
                   MercatorWeb.AuthOverrides,
                   AshAuthentication.Phoenix.Overrides.Default
@@ -67,11 +73,15 @@ defmodule MercatorWeb.Router do
     # Remove this if you do not use the confirmation strategy
     confirm_route Mercator.Accounts.User, :confirm_new_user,
       auth_routes_prefix: "/auth",
+      gettext_backend: {MercatorWeb.Gettext, "auth"},
+      on_mount_prepend: [{MercatorWeb.Locale, :default}],
       overrides: [MercatorWeb.AuthOverrides, AshAuthentication.Phoenix.Overrides.Default]
 
     # Remove this if you do not use the magic link strategy.
     magic_sign_in_route(Mercator.Accounts.User, :magic_link,
       auth_routes_prefix: "/auth",
+      gettext_backend: {MercatorWeb.Gettext, "auth"},
+      on_mount_prepend: [{MercatorWeb.Locale, :default}],
       overrides: [MercatorWeb.AuthOverrides, AshAuthentication.Phoenix.Overrides.Default]
     )
   end

@@ -1,0 +1,81 @@
+## Texts of the AshAuthentication.Phoenix components (domain "auth").
+msgid ""
+msgstr ""
+
+msgid "Already have an account?"
+msgstr ""
+
+msgid "Are you sure you want to sign out?"
+msgstr ""
+
+msgid "Change password"
+msgstr ""
+
+msgid "Changing password ..."
+msgstr ""
+
+msgid "Email"
+msgstr ""
+
+msgid "Email or password was incorrect"
+msgstr ""
+
+msgid "Forgot your password?"
+msgstr ""
+
+msgid "If this user exists in our database you will contacted with a sign-in link shortly."
+msgstr ""
+
+msgid "If this user exists in our database, you will be contacted with a sign-in link shortly."
+msgstr ""
+
+msgid "If this user exists in our system, you will be contacted with reset instructions shortly."
+msgstr ""
+
+msgid "Need an account?"
+msgstr ""
+
+msgid "Password"
+msgstr ""
+
+msgid "Password Confirmation"
+msgstr ""
+
+msgid "Register"
+msgstr ""
+
+msgid "Registering ..."
+msgstr ""
+
+msgid "Remember me"
+msgstr ""
+
+msgid "Request magic link"
+msgstr ""
+
+msgid "Request password reset token"
+msgstr ""
+
+msgid "Request reset password link"
+msgstr ""
+
+msgid "Requesting ..."
+msgstr ""
+
+msgid "Reset password with token"
+msgstr ""
+
+msgid "Sign in"
+msgstr ""
+
+msgid "Sign out"
+msgstr ""
+
+msgid "Signing in ..."
+msgstr ""
+
+msgid "Your password has successfully been reset"
+msgstr ""
+
+msgid "or"
+msgstr ""

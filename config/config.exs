@@ -103,6 +103,9 @@ config :phoenix_live_view,
 # at the `config/runtime.exs`.
 config :mercator, Mercator.Mailer, adapter: Swoosh.Adapters.Local
 
+# UI languages; German is the default
+config :mercator, MercatorWeb.Gettext, default_locale: "de", locales: ~w(de en)
+
 # Sender of all system emails; override per deployment in runtime.exs
 config :mercator, :mail_from, {"Mercator", "noreply@localhost"}
 

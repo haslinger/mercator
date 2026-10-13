@@ -1,0 +1,83 @@
+## German texts for the authentication pages (domain "auth").
+msgid ""
+msgstr ""
+"Language: de\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Already have an account?"
+msgstr "Schon ein Konto? Anmelden"
+
+msgid "Are you sure you want to sign out?"
+msgstr "Möchten Sie sich wirklich abmelden?"
+
+msgid "Change password"
+msgstr "Passwort ändern"
+
+msgid "Changing password ..."
+msgstr "Passwort wird geändert …"
+
+msgid "Email"
+msgstr "E-Mail"
+
+msgid "Email or password was incorrect"
+msgstr "E-Mail oder Passwort ist falsch"
+
+msgid "Forgot your password?"
+msgstr "Passwort vergessen?"
+
+msgid "If this user exists in our database you will contacted with a sign-in link shortly."
+msgstr "Falls ein Konto mit dieser E-Mail-Adresse existiert, erhalten Sie in Kürze einen Anmeldelink."
+
+msgid "If this user exists in our database, you will be contacted with a sign-in link shortly."
+msgstr "Falls ein Konto mit dieser E-Mail-Adresse existiert, erhalten Sie in Kürze einen Anmeldelink."
+
+msgid "If this user exists in our system, you will be contacted with reset instructions shortly."
+msgstr "Falls ein Konto mit dieser E-Mail-Adresse existiert, erhalten Sie in Kürze eine Anleitung zum Zurücksetzen."
+
+msgid "Need an account?"
+msgstr "Noch kein Konto? Registrieren"
+
+msgid "Password"
+msgstr "Passwort"
+
+msgid "Password Confirmation"
+msgstr "Passwort wiederholen"
+
+msgid "Register"
+msgstr "Registrieren"
+
+msgid "Registering ..."
+msgstr "Wird registriert …"
+
+msgid "Remember me"
+msgstr "Angemeldet bleiben"
+
+msgid "Request magic link"
+msgstr "Anmeldelink per E-Mail senden"
+
+msgid "Request password reset token"
+msgstr "Link zum Zurücksetzen anfordern"
+
+msgid "Request reset password link"
+msgstr "Link zum Zurücksetzen anfordern"
+
+msgid "Requesting ..."
+msgstr "Wird angefordert …"
+
+msgid "Reset password with token"
+msgstr "Neues Passwort setzen"
+
+msgid "Sign in"
+msgstr "Anmelden"
+
+msgid "Sign out"
+msgstr "Abmelden"
+
+msgid "Signing in ..."
+msgstr "Anmeldung läuft …"
+
+msgid "Your password has successfully been reset"
+msgstr "Ihr Passwort wurde zurückgesetzt."
+
+msgid "or"
+msgstr "oder"
