@@ -41,6 +41,12 @@ if config_env() == :dev do
 end
 
 if config_env() == :prod do
+  config :mercator,
+         :mail_from,
+         {System.get_env("MAIL_FROM_NAME", "Mercator"),
+          System.get_env("MAIL_FROM_ADDRESS") ||
+            raise("environment variable MAIL_FROM_ADDRESS is missing.")}
+
   database_url =
     System.get_env("DATABASE_URL") ||
       raise """

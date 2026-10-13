@@ -68,7 +68,8 @@ config :spark,
 config :mercator,
   ecto_repos: [Mercator.Repo],
   generators: [timestamp_type: :utc_datetime],
-  ash_domains: [Mercator.Accounts]
+  ash_domains: [Mercator.Accounts],
+  ash_authentication: [return_error_on_invalid_magic_link_token?: true]
 
 # Configure the endpoint
 config :mercator, MercatorWeb.Endpoint,
@@ -94,6 +95,9 @@ config :phoenix_live_view,
 # For production it's recommended to configure a different adapter
 # at the `config/runtime.exs`.
 config :mercator, Mercator.Mailer, adapter: Swoosh.Adapters.Local
+
+# Sender of all system emails; override per deployment in runtime.exs
+config :mercator, :mail_from, {"Mercator", "noreply@localhost"}
 
 # Configure esbuild (the version is required)
 config :esbuild,
