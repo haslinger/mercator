@@ -1,0 +1,125 @@
+file,type,number_or_slug,category,name_de,name_en,image_prompt_en
+categories/holzhaeuser-bausaetze.webp,category,holzhaeuser-bausaetze,,Holzhäuser & Bausätze,Timber houses & kits,Timber houses & kits – From tool sheds to log houses – made from our own alpine timber.
+categories/bauholz.webp,category,bauholz,,Bauholz,Construction timber,"Construction timber – Load-bearing timber for roofs, walls and ceilings."
+categories/platten-bretter.webp,category,platten-bretter,,Platten & Bretter,Panels & boards,"Panels & boards – For interior finishing, sheathing and floors."
+categories/terrasse-fassade-garten.webp,category,terrasse-fassade-garten,,"Terrasse, Fassade & Garten","Decking, cladding & garden","Decking, cladding & garden – Weatherproof timber for outdoors."
+categories/edelholz-tischplatten.webp,category,edelholz-tischplatten,,Edelholz & Tischplatten,Fine wood & table tops,Fine wood & table tops – Selected fine woods for furniture making and joinery.
+categories/moebel-wohnen.webp,category,moebel-wohnen,,Möbel & Wohnen,Furniture & living,Furniture & living – Solid wood furniture from our own joinery.
+categories/brennholz-energie.webp,category,brennholz-energie,,Brennholz & Energie,Firewood & energy,Firewood & energy – Heating with wood from sustainable forestry – down to the last shaving.
+categories/forst-rundholz.webp,category,forst-rundholz,,Forst & Rundholz,Forestry & round timber,Forestry & round timber – Straight from our forests in the Tyrolean Alps.
+categories/blockhaeuser.webp,subcategory,blockhaeuser,Holzhäuser & Bausätze,Blockhäuser,Log houses,Log houses (part of: Timber houses & kits)
+categories/gartenhaeuser.webp,subcategory,gartenhaeuser,Holzhäuser & Bausätze,Gartenhäuser,Garden houses,Garden houses (part of: Timber houses & kits)
+categories/carports-pergolen.webp,subcategory,carports-pergolen,Holzhäuser & Bausätze,Carports & Pergolen,Carports & pergolas,Carports & pergolas (part of: Timber houses & kits)
+categories/saunahaeuser.webp,subcategory,saunahaeuser,Holzhäuser & Bausätze,Saunahäuser,Sauna houses,Sauna houses (part of: Timber houses & kits)
+categories/konstruktionsvollholz.webp,subcategory,konstruktionsvollholz,Bauholz,Konstruktionsvollholz (KVH),Structural solid timber (KVH),Structural solid timber (KVH) (part of: Construction timber)
+categories/brettschichtholz.webp,subcategory,brettschichtholz,Bauholz,Brettschichtholz (BSH),Glued laminated timber (glulam),Glued laminated timber (glulam) (part of: Construction timber)
+categories/kanthoelzer-balken.webp,subcategory,kanthoelzer-balken,Bauholz,Kanthölzer & Balken,Squared timber & beams,Squared timber & beams (part of: Construction timber)
+categories/latten-staffeln.webp,subcategory,latten-staffeln,Bauholz,Latten & Staffeln,Battens & laths,Battens & laths (part of: Construction timber)
+categories/dreischichtplatten.webp,subcategory,dreischichtplatten,Platten & Bretter,3-Schicht-Platten,Three-layer panels,Three-layer panels (part of: Panels & boards)
+categories/rauspund-schalung.webp,subcategory,rauspund-schalung,Platten & Bretter,Rauspund & Schalung,Tongue & groove sheathing,Tongue & groove sheathing (part of: Panels & boards)
+categories/hobeldielen.webp,subcategory,hobeldielen,Platten & Bretter,Hobeldielen,Planed floorboards,Planed floorboards (part of: Panels & boards)
+categories/leimholzplatten.webp,subcategory,leimholzplatten,Platten & Bretter,Leimholzplatten,Glued wood panels,Glued wood panels (part of: Panels & boards)
+categories/terrassendielen.webp,subcategory,terrassendielen,"Terrasse, Fassade & Garten",Terrassendielen,Decking boards,"Decking boards (part of: Decking, cladding & garden)"
+categories/fassadenschalung.webp,subcategory,fassadenschalung,"Terrasse, Fassade & Garten",Fassadenschalung,Facade cladding,"Facade cladding (part of: Decking, cladding & garden)"
+categories/zaeune-sichtschutz.webp,subcategory,zaeune-sichtschutz,"Terrasse, Fassade & Garten",Zäune & Sichtschutz,Fences & privacy screens,"Fences & privacy screens (part of: Decking, cladding & garden)"
+categories/hochbeete.webp,subcategory,hochbeete,"Terrasse, Fassade & Garten",Hochbeete & Pflanzkästen,Raised beds & planters,"Raised beds & planters (part of: Decking, cladding & garden)"
+categories/eiche.webp,subcategory,eiche,Edelholz & Tischplatten,Eiche,Oak,Oak (part of: Fine wood & table tops)
+categories/nuss.webp,subcategory,nuss,Edelholz & Tischplatten,Nuss,Walnut,Walnut (part of: Fine wood & table tops)
+categories/zirbe.webp,subcategory,zirbe,Edelholz & Tischplatten,Zirbe,Swiss stone pine,Swiss stone pine (part of: Fine wood & table tops)
+categories/tischplatten.webp,subcategory,tischplatten,Edelholz & Tischplatten,Tischplatten,Table tops,Table tops (part of: Fine wood & table tops)
+categories/zirbenbetten.webp,subcategory,zirbenbetten,Möbel & Wohnen,Zirbenbetten,Stone pine beds,Stone pine beds (part of: Furniture & living)
+categories/tische-baenke.webp,subcategory,tische-baenke,Möbel & Wohnen,Tische & Bänke,Tables & benches,Tables & benches (part of: Furniture & living)
+categories/hocker-garderoben.webp,subcategory,hocker-garderoben,Möbel & Wohnen,Hocker & Garderoben,Stools & coat racks,Stools & coat racks (part of: Furniture & living)
+categories/kuechenhelfer.webp,subcategory,kuechenhelfer,Möbel & Wohnen,Küchenhelfer & Wohnaccessoires,Kitchen helpers & home accessories,Kitchen helpers & home accessories (part of: Furniture & living)
+categories/scheitholz.webp,subcategory,scheitholz,Brennholz & Energie,Scheitholz,Split logs,Split logs (part of: Firewood & energy)
+categories/pellets.webp,subcategory,pellets,Brennholz & Energie,Pellets,Pellets,Pellets (part of: Firewood & energy)
+categories/briketts.webp,subcategory,briketts,Brennholz & Energie,Briketts,Briquettes,Briquettes (part of: Firewood & energy)
+categories/hackschnitzel.webp,subcategory,hackschnitzel,Brennholz & Energie,Hackschnitzel,Wood chips,Wood chips (part of: Firewood & energy)
+categories/spaene.webp,subcategory,spaene,Brennholz & Energie,Säge- & Hobelspäne,Sawdust & shavings,Sawdust & shavings (part of: Firewood & energy)
+categories/rundholz.webp,subcategory,rundholz,Forst & Rundholz,Rundholz,Round timber,Round timber (part of: Forestry & round timber)
+categories/christbaeume.webp,subcategory,christbaeume,Forst & Rundholz,Christbäume,Christmas trees,Christmas trees (part of: Forestry & round timber)
+categories/dienstleistungen.webp,subcategory,dienstleistungen,Forst & Rundholz,Dienstleistungen,Services,Services (part of: Forestry & round timber)
+products/BH-3S-FI.webp,product,BH-3S-FI,3-Schicht-Platten,3-Schicht-Platte Fichte,Three-layer panel spruce,"Three-layer panel spruce – Solid wood panel for furniture, walls and ceilings, 5000 × 2050 mm. – wood species: Spruce"
+products/BH-3S-LAE.webp,product,BH-3S-LAE,3-Schicht-Platten,"3-Schicht-Platte Lärche 27 mm, wetterfest","Three-layer panel larch 27 mm, weatherproof","Three-layer panel larch 27 mm, weatherproof – Waterproof bonding for facades and balconies. – wood species: Larch"
+products/BH-3S-ZIRBE.webp,product,BH-3S-ZIRBE,Zirbe,3-Schicht-Platte Zirbe 19 mm,Three-layer panel stone pine 19 mm,Three-layer panel stone pine 19 mm – Knotty stone pine panel for bedroom furniture. – wood species: Swiss stone pine
+products/BH-AHORN-BRETT.webp,product,BH-AHORN-BRETT,Tischplatten,Ahornbrett gehobelt 26 mm,Maple board planed 26 mm,Maple board planed 26 mm
+products/BH-ANZUENDHOLZ.webp,product,BH-ANZUENDHOLZ,Scheitholz,"Anzündholz Fichte, 5 kg","Kindling spruce, 5 kg","Kindling spruce, 5 kg – wood species: Spruce"
+products/BH-BALKEN-EICHE.webp,product,BH-BALKEN-EICHE,Kanthölzer & Balken,Eichenbalken Altholz,Reclaimed oak beam,"Reclaimed oak beam – Hand-hewn reclaimed oak beam, every piece unique. – wood species: Oak"
+products/BH-BANK-EICHE.webp,product,BH-BANK-EICHE,Tische & Bänke,Sitzbank Eiche 160 cm,Oak bench 160 cm,Oak bench 160 cm – wood species: Oak
+products/BH-BETT-ZIRBE.webp,product,BH-BETT-ZIRBE,Zirbenbetten,Zirbenbett „Bergschlaf“,Stone pine bed “Bergschlaf”,"Stone pine bed “Bergschlaf” – Metal-free solid stone pine bed, oiled. – wood species: Swiss stone pine"
+products/BH-BLOCK-ALPENBLICK.webp,product,BH-BLOCK-ALPENBLICK,Blockhäuser,Blockhaus „Alpenblick“,Log house “Alpenblick”,"Log house “Alpenblick” – Holiday home 8 × 6 m with gallery – Spacious holiday home with covered terrace and gallery, 95 mm walls. – wood species: Spruce"
+products/BH-BLOCK-TIROL.webp,product,BH-BLOCK-TIROL,Blockhäuser,Blockhaus „Tirol“,Log house “Tirol”,"Log house “Tirol” – Residential log house 5 × 4 m, 70 mm walls – Solid spruce log house with double tongue and groove – as a kit or turnkey. – wood species: Spruce"
+products/BH-BRENNHOLZ-LANG.webp,product,BH-BRENNHOLZ-LANG,Rundholz,"Brennholz lang, 1-m-Stämme",Firewood in 1 m logs,"Firewood in 1 m logs – For splitting yourself, mixed beech and ash. – wood species: Mixed hardwood"
+products/BH-BRIKETTS-BUCHE.webp,product,BH-BRIKETTS-BUCHE,Briketts,Holzbriketts Buche,Beech wood briquettes,Beech wood briquettes – wood species: Beech
+products/BH-BROTDOSE-ZIRBE.webp,product,BH-BROTDOSE-ZIRBE,Küchenhelfer & Wohnaccessoires,Brotdose Zirbe,Bread box stone pine,Bread box stone pine – Stone pine keeps bread fresh for longer. – wood species: Swiss stone pine
+products/BH-BSH-FI.webp,product,BH-BSH-FI,Brettschichtholz (BSH),Brettschichtholz Fichte GL24h,Glulam spruce GL24h,Glulam spruce GL24h – Dimensionally stable glulam beams for large spans. – wood species: Spruce
+products/BH-BSH-LAE.webp,product,BH-BSH-LAE,Brettschichtholz (BSH),Brettschichtholz Lärche GL24h,Glulam larch GL24h,"Glulam larch GL24h – Larch glulam for carports, pergolas and balconies. – wood species: Larch"
+products/BH-CARPORT.webp,product,BH-CARPORT,Carports & Pergolen,Carport Lärche,Larch carport,Larch carport – Free-standing carport made of larch glulam with flat roof. – wood species: Larch
+products/BH-CHRISTBAUM-BLAUFICHTE.webp,product,BH-CHRISTBAUM-BLAUFICHTE,Christbäume,Christbaum Blaufichte 150–175 cm,Christmas tree blue spruce 150–175 cm,Christmas tree blue spruce 150–175 cm – wood species: Blue spruce
+products/BH-CHRISTBAUM-NORDMANN.webp,product,BH-CHRISTBAUM-NORDMANN,Christbäume,Christbaum Nordmanntanne,Christmas tree Nordmann fir,Christmas tree Nordmann fir – Freshly cut from our own plantation. – wood species: Nordmann fir
+products/BH-DACHLATTE.webp,product,BH-DACHLATTE,Latten & Staffeln,Dachlatte Fichte 30 × 50 mm,Roof batten spruce 30 × 50 mm,"Roof batten spruce 30 × 50 mm – Graded roof batten to DIN 4074, impregnated. – wood species: Spruce"
+products/BH-EICHE-BOHLE.webp,product,BH-EICHE-BOHLE,Eiche,Eichenbohle luftgetrocknet 52 mm,Oak plank air-dried 52 mm,"Oak plank air-dried 52 mm – Unedged plank of local oak, air-dried for several years. – wood species: Oak"
+products/BH-EICHE-BRETT.webp,product,BH-EICHE-BRETT,Eiche,Eichenbrett gehobelt 26 × 200 mm,Oak board planed 26 × 200 mm,Oak board planed 26 × 200 mm – wood species: Oak
+products/BH-EINSTREU-SPAENE.webp,product,BH-EINSTREU-SPAENE,Säge- & Hobelspäne,"Hobelspäne als Einstreu, Ballen 20 kg","Wood shavings for bedding, 20 kg bale","Wood shavings for bedding, 20 kg bale – Dust-extracted, for horses and small animals. – wood species: Spruce"
+products/BH-FASSADE-BODEN-DECKEL.webp,product,BH-FASSADE-BODEN-DECKEL,Fassadenschalung,Boden-Deckel-Schalung Fichte,Board-and-batten cladding spruce,Board-and-batten cladding spruce – wood species: Spruce
+products/BH-FASSADE-RHOMBUS.webp,product,BH-FASSADE-RHOMBUS,Fassadenschalung,Rhombusleiste Lärche 21 × 68 mm,Rhombus cladding larch 21 × 68 mm,"Rhombus cladding larch 21 × 68 mm – Modern, ventilated facade cladding. – wood species: Larch"
+products/BH-GARDEROBE-ZIRBE.webp,product,BH-GARDEROBE-ZIRBE,Hocker & Garderoben,Wandgarderobe Zirbe mit 5 Haken,Wall coat rack stone pine with 5 hooks,Wall coat rack stone pine with 5 hooks – wood species: Swiss stone pine
+products/BH-GARTENBANK-LAE.webp,product,BH-GARTENBANK-LAE,Hochbeete & Pflanzkästen,Gartenbank Lärche,Larch garden bench,Larch garden bench – wood species: Larch
+products/BH-GARTENTISCH-LAE.webp,product,BH-GARTENTISCH-LAE,Hochbeete & Pflanzkästen,Gartentisch Lärche 160 × 80 cm,Larch garden table 160 × 80 cm,Larch garden table 160 × 80 cm – wood species: Larch
+products/BH-GH-ALM.webp,product,BH-GH-ALM,Gartenhäuser,Gartenhaus „Almhütte“,Garden house “Almhütte”,"Garden house “Almhütte” – Rustic garden house with gable roof and canopy, 44 mm walls. – wood species: Spruce"
+products/BH-GH-KOMPAKT.webp,product,BH-GH-KOMPAKT,Gartenhäuser,Gerätehaus „Kompakt“,Tool shed “Kompakt”,Tool shed “Kompakt” – Small tool shed with pent roof for mower and tools. – wood species: Spruce
+products/BH-HACKSCHNITZEL.webp,product,BH-HACKSCHNITZEL,Hackschnitzel,Hackschnitzel G30,Wood chips G30,"Wood chips G30 – For wood chip boilers, moisture below 30 %."
+products/BH-HOBELDIELE-FI.webp,product,BH-HOBELDIELE-FI,Hobeldielen,Hobeldiele Fichte 27 × 146 mm,Planed floorboard spruce 27 × 146 mm,"Planed floorboard spruce 27 × 146 mm – Solid floorboard, planed, tongue and groove. – wood species: Spruce"
+products/BH-HOBELDIELE-LAE.webp,product,BH-HOBELDIELE-LAE,Hobeldielen,Hobeldiele Lärche 27 × 146 mm,Planed floorboard larch 27 × 146 mm,Planed floorboard larch 27 × 146 mm – wood species: Larch
+products/BH-HOCHBEET.webp,product,BH-HOCHBEET,Hochbeete & Pflanzkästen,Hochbeet Lärche,Raised bed larch,"Raised bed larch – Plug-in system without screws, with vole mesh. – wood species: Larch"
+products/BH-HOCKER-ZIRBE.webp,product,BH-HOCKER-ZIRBE,Hocker & Garderoben,Hocker Zirbe,Stone pine stool,Stone pine stool – wood species: Swiss stone pine
+products/BH-HOLZBRIKETT-RUF.webp,product,BH-HOLZBRIKETT-RUF,Briketts,"Holzbriketts Fichte (RUF), 10 kg","Spruce wood briquettes (RUF), 10 kg","Spruce wood briquettes (RUF), 10 kg – wood species: Spruce"
+products/BH-KAMINHOLZ-SACK.webp,product,BH-KAMINHOLZ-SACK,Scheitholz,"Kaminholz im Sack, 25 dm³","Fireplace wood in a sack, 25 dm³","Fireplace wood in a sack, 25 dm³ – wood species: Mixed hardwood"
+products/BH-KANT-FI.webp,product,BH-KANT-FI,Kanthölzer & Balken,Kantholz Fichte sägerau,"Squared timber spruce, rough-sawn","Squared timber spruce, rough-sawn – Rough-sawn squared timber for roof trusses and substructures. – wood species: Spruce"
+products/BH-KIRSCHE-BRETT.webp,product,BH-KIRSCHE-BRETT,Tischplatten,Kirschbrett gehobelt 26 mm,Cherry board planed 26 mm,Cherry board planed 26 mm – wood species: Cherry
+products/BH-KONTERLATTE.webp,product,BH-KONTERLATTE,Latten & Staffeln,Konterlatte Fichte 40 × 60 mm,Counter batten spruce 40 × 60 mm,Counter batten spruce 40 × 60 mm – wood species: Spruce
+products/BH-KVH-DOU.webp,product,BH-KVH-DOU,Konstruktionsvollholz (KVH),Konstruktionsvollholz Douglasie,Structural solid timber Douglas fir,Structural solid timber Douglas fir – Richly coloured KVH for visible roof structures. – wood species: Douglas fir
+products/BH-KVH-FI.webp,product,BH-KVH-FI,Konstruktionsvollholz (KVH),Konstruktionsvollholz Fichte,Structural solid timber spruce,"Structural solid timber spruce – Finger-jointed, kiln-dried KVH for visible and hidden structures. – wood species: Spruce"
+products/BH-KVH-LAE.webp,product,BH-KVH-LAE,Konstruktionsvollholz (KVH),Konstruktionsvollholz Lärche,Structural solid timber larch,Structural solid timber larch – Weather-resistant larch KVH for outdoor use. – wood species: Larch
+products/BH-LEIMHOLZ-EICHE.webp,product,BH-LEIMHOLZ-EICHE,Leimholzplatten,Leimholzplatte Eiche durchgehende Lamelle,"Glued panel oak, full-length staves","Glued panel oak, full-length staves – For stair treads, window sills and worktops. – wood species: Oak"
+products/BH-LEIMHOLZ-FI.webp,product,BH-LEIMHOLZ-FI,Leimholzplatten,Leimholzplatte Fichte 18 mm,Glued panel spruce 18 mm,Glued panel spruce 18 mm – wood species: Spruce
+products/BH-MELKSCHEMEL.webp,product,BH-MELKSCHEMEL,Hocker & Garderoben,Melkschemel Esche,Milking stool ash,Milking stool ash
+products/BH-NACHTKASTL-ZIRBE.webp,product,BH-NACHTKASTL-ZIRBE,Zirbenbetten,Nachtkästchen Zirbe,Bedside table stone pine,Bedside table stone pine – wood species: Swiss stone pine
+products/BH-NUSS-BAUMKANTE.webp,product,BH-NUSS-BAUMKANTE,Tischplatten,Tischplatte Nuss mit Baumkante,Walnut table top with live edge,"Walnut table top with live edge – Unique piece from a single log, 2200 × 900 × 40 mm. – wood species: Walnut"
+products/BH-NUSS-BRETT.webp,product,BH-NUSS-BRETT,Nuss,Nussbrett gehobelt 26 mm,Walnut board planed 26 mm,Walnut board planed 26 mm – wood species: Walnut
+products/BH-OEL-TERRASSE.webp,product,BH-OEL-TERRASSE,Fassadenschalung,"Holzöl Lärche 2,5 l",Wood oil larch 2.5 l,Wood oil larch 2.5 l – Pigmented care oil on a natural basis.
+products/BH-PELLETS-LOSE.webp,product,BH-PELLETS-LOSE,Pellets,"Holzpellets lose, Einblasung per Silowagen","Loose wood pellets, blown in by silo truck","Loose wood pellets, blown in by silo truck"
+products/BH-PELLETS-SACK.webp,product,BH-PELLETS-SACK,Pellets,"Holzpellets ENplus A1, Sack 15 kg","Wood pellets ENplus A1, 15 kg bag","Wood pellets ENplus A1, 15 kg bag – Made from sawdust from our own sawmill."
+products/BH-PERGOLA.webp,product,BH-PERGOLA,Carports & Pergolen,Pergola Lärche 3 × 3 m,Larch pergola 3 × 3 m,"Larch pergola 3 × 3 m – Larch pergola, ideal for climbing plants. – wood species: Larch"
+products/BH-PFLANZKASTEN.webp,product,BH-PFLANZKASTEN,Hochbeete & Pflanzkästen,Pflanzkasten Zirbe 60 cm,Planter stone pine 60 cm,Planter stone pine 60 cm – wood species: Swiss stone pine
+products/BH-RAUSPUND.webp,product,BH-RAUSPUND,Rauspund & Schalung,Rauspund Fichte 24 mm,Tongue and groove boards spruce 24 mm,Tongue and groove boards spruce 24 mm – Rough-sawn tongue and groove sheathing for roofs and floors. – wood species: Spruce
+products/BH-RUNDHOLZ-FI.webp,product,BH-RUNDHOLZ-FI,Rundholz,Rundholz Fichte ab Waldstraße,Spruce round timber at the forest road,"Spruce round timber at the forest road – Saw logs grade B/C, minimum order 10 fm. – wood species: Spruce"
+products/BH-RUNDHOLZ-LAE.webp,product,BH-RUNDHOLZ-LAE,Rundholz,Rundholz Lärche ab Waldstraße,Larch round timber at the forest road,Larch round timber at the forest road – wood species: Larch
+products/BH-SAEGEMEHL-KG.webp,product,BH-SAEGEMEHL-KG,Säge- & Hobelspäne,"Sägemehl fein, lose","Fine sawdust, loose","Fine sawdust, loose – For smokers and workshops – from the house down to the sawdust. – wood species: Beech"
+products/BH-SAEGESPAENE-LOSE.webp,product,BH-SAEGESPAENE-LOSE,Säge- & Hobelspäne,"Sägespäne lose, als Brennstoff",Loose sawdust as fuel,"Loose sawdust as fuel – Straight from the sawmill, pick-up or container delivery. – wood species: Spruce"
+products/BH-SAUNA-FASS.webp,product,BH-SAUNA-FASS,Saunahäuser,Fass-Sauna Thermoholz,Barrel sauna thermo wood,"Barrel sauna thermo wood – 2.4 m, for 4 people – Barrel sauna made of thermally treated wood with wood-fired stove. – wood species: Thermo ash"
+products/BH-SAUNA-ZIRBE.webp,product,BH-SAUNA-ZIRBE,Saunahäuser,Saunahaus „Zirbenstube“,Sauna house “Zirbenstube”,Sauna house “Zirbenstube” – 2.5 × 2.5 m with anteroom – Sauna house lined with fragrant Swiss stone pine. – wood species: Swiss stone pine
+products/BH-SCHALBRETT.webp,product,BH-SCHALBRETT,Rauspund & Schalung,"Schalbrett Fichte 24 mm, besäumt","Formwork board spruce 24 mm, edged","Formwork board spruce 24 mm, edged – wood species: Spruce"
+products/BH-SCHALUNG-OSB.webp,product,BH-SCHALUNG-OSB,Rauspund & Schalung,OSB-Platte 18 mm,OSB board 18 mm,"OSB board 18 mm – Tongue and groove flooring board, 2500 × 675 mm."
+products/BH-SCHEIT-BUCHE.webp,product,BH-SCHEIT-BUCHE,Scheitholz,Brennholz Buche ofenfertig,"Beech firewood, ready for the stove","Beech firewood, ready for the stove – Kiln-dried, delivered stacked. – wood species: Beech"
+products/BH-SCHEIT-FICHTE.webp,product,BH-SCHEIT-FICHTE,Scheitholz,Brennholz Fichte/Tanne,Spruce/fir firewood,"Spruce/fir firewood – Easily ignited softwood, ideal for lighting the fire. – wood species: Spruce"
+products/BH-SCHNEIDBRETT.webp,product,BH-SCHNEIDBRETT,Küchenhelfer & Wohnaccessoires,Schneidbrett Massivholz,Solid wood cutting board,Solid wood cutting board
+products/BH-SERVICE-HOBELN.webp,product,BH-SERVICE-HOBELN,Dienstleistungen,Hobelservice,Planing service,"Planing service – Planing of boards and squared timber, per running metre."
+products/BH-SERVICE-WALDPFLEGE.webp,product,BH-SERVICE-WALDPFLEGE,Dienstleistungen,Waldpflege durch unsere Forstwirte,Forest care by our foresters,"Forest care by our foresters – Thinning, felling and reforestation – charged per hour."
+products/BH-SERVICE-ZUSCHNITT.webp,product,BH-SERVICE-ZUSCHNITT,Dienstleistungen,Zuschnittservice,Cutting service,"Cutting service – Precise cutting to size, per cut."
+products/BH-SICHTSCHUTZ.webp,product,BH-SICHTSCHUTZ,Zäune & Sichtschutz,Sichtschutzelement Lärche 180 × 180 cm,Privacy screen larch 180 × 180 cm,Privacy screen larch 180 × 180 cm – wood species: Larch
+products/BH-STAFFEL.webp,product,BH-STAFFEL,Latten & Staffeln,Staffel Fichte 50 × 80 mm,Lath spruce 50 × 80 mm,Lath spruce 50 × 80 mm – wood species: Spruce
+products/BH-STAKETENZAUN.webp,product,BH-STAKETENZAUN,Zäune & Sichtschutz,"Staketenzaun Kastanie, Rolle 5 m","Chestnut picket fence, 5 m roll","Chestnut picket fence, 5 m roll"
+products/BH-TD-DOU.webp,product,BH-TD-DOU,Terrassendielen,Terrassendiele Douglasie 27 × 145 mm,Decking board Douglas fir 27 × 145 mm,Decking board Douglas fir 27 × 145 mm – wood species: Douglas fir
+products/BH-TD-LAE.webp,product,BH-TD-LAE,Terrassendielen,Terrassendiele Lärche 28 × 145 mm,Decking board larch 28 × 145 mm,"Decking board larch 28 × 145 mm – Siberian larch, smooth both sides, naturally durable. – wood species: Larch"
+products/BH-TD-SCHRAUBEN.webp,product,BH-TD-SCHRAUBEN,Terrassendielen,Terrassenschrauben Edelstahl 5 × 60 mm,Stainless steel decking screws 5 × 60 mm,"Stainless steel decking screws 5 × 60 mm – Pack of 500, bit included."
+products/BH-TD-THE.webp,product,BH-TD-THE,Terrassendielen,Terrassendiele Thermo-Esche 21 × 130 mm,Decking board thermo ash 21 × 130 mm,"Decking board thermo ash 21 × 130 mm – Thermally modified, splinter-free and stable. – wood species: Thermo ash"
+products/BH-TD-UK-LAE.webp,product,BH-TD-UK-LAE,Terrassendielen,Unterkonstruktion Lärche 45 × 70 mm,Substructure larch 45 × 70 mm,Substructure larch 45 × 70 mm – wood species: Larch
+products/BH-TISCH-EICHE.webp,product,BH-TISCH-EICHE,Tische & Bänke,Esstisch Eiche massiv,Solid oak dining table,Solid oak dining table – wood species: Oak
+products/BH-TISCHPLATTE-EICHE.webp,product,BH-TISCHPLATTE-EICHE,Tischplatten,Tischplatte Eiche massiv 40 mm,Solid oak table top 40 mm,"Solid oak table top 40 mm – Full-length staves, oiled. – wood species: Oak"
+products/BH-WANDREGAL-EICHE.webp,product,BH-WANDREGAL-EICHE,Hocker & Garderoben,Wandregal Eiche mit Baumkante,Oak wall shelf with live edge,Oak wall shelf with live edge – wood species: Oak
+products/BH-ZAUNPFOSTEN-LAE.webp,product,BH-ZAUNPFOSTEN-LAE,Zäune & Sichtschutz,Zaunpfosten Lärche 9 × 9 cm,Fence post larch 9 × 9 cm,Fence post larch 9 × 9 cm – wood species: Larch
+products/BH-ZIRBE-BRETT.webp,product,BH-ZIRBE-BRETT,Zirbe,Zirbenbrett 20 × 200 × 2000 mm,Stone pine board 20 × 200 × 2000 mm,Stone pine board 20 × 200 × 2000 mm – Knotty stone pine from high Tyrolean altitudes – with its typical scent. – wood species: Swiss stone pine
+products/BH-ZIRBE-KANTEL.webp,product,BH-ZIRBE-KANTEL,Zirbe,Zirbenkantel 60 × 60 mm,Stone pine square 60 × 60 mm,Stone pine square 60 × 60 mm – wood species: Swiss stone pine
+products/BH-ZIRBENKISSEN.webp,product,BH-ZIRBENKISSEN,Küchenhelfer & Wohnaccessoires,Zirbenkissen mit Zirbenspänen,Pillow filled with stone pine shavings,Pillow filled with stone pine shavings – wood species: Swiss stone pine
+products/BH-ZIRBENWUERFEL.webp,product,BH-ZIRBENWUERFEL,Küchenhelfer & Wohnaccessoires,Zirbenwürfel mit Duftöl,Stone pine cube with scented oil,Stone pine cube with scented oil – Natural room fragrance from stone pine wood. – wood species: Swiss stone pine
