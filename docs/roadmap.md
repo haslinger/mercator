@@ -199,3 +199,4 @@ Rails sources (#1–#4) and continuing the overview (#5) were answered on 2026-1
 - ~~**#31**~~ *(answered, see Decisions)* Should I add the `usage_rules` dev dependency? It syncs the official usage rules of Ash, AshPostgres, AshPhoenix, AshAuthentication, Oban and others into `AGENTS.md`. The generated `AGENTS.md` currently covers only Phoenix/Elixir, and the Ash rules help keep generated code idiomatic.
 - ~~**#32**~~ *(answered, see Decisions)* Roles: replace the five Rails role booleans with one `roles` list attribute (e.g. `[:sales, :contentmanager]`)?
 - ~~**#33**~~ *(answered, see Decisions)* Profile fields: first name, last name, phone, preferred language, plus salutation (Herr / Frau / divers / keine Angabe) and an optional academic title?
+- **#34** License of the port: GPL v3 like the Rails version, another open-source license, or proprietary?
