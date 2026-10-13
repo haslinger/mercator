@@ -132,7 +132,7 @@ msgid "a product needs at least one variant"
 msgstr ""
 
 #: lib/mercator/catalog/validations/not_self_related.ex:15
-#, elixir-autogen, elixir-format, fuzzy
+#, elixir-autogen, elixir-format
 msgid "a product cannot be related to itself"
 msgstr ""
 

@@ -170,7 +170,7 @@ msgid "Save"
 msgstr ""
 
 #: lib/mercator_web/live/account_live.ex:133
-#, elixir-autogen, elixir-format, fuzzy
+#, elixir-autogen, elixir-format
 msgid "Your password has been changed. Please sign in again."
 msgstr ""
 
@@ -465,7 +465,7 @@ msgstr ""
 #: lib/mercator_web/components/catalog_components.ex:153
 #: lib/mercator_web/live/admin/product_variants_tab.ex:260
 #: lib/mercator_web/live/category_live.ex:236
-#, elixir-autogen, elixir-format, fuzzy
+#, elixir-autogen, elixir-format
 msgid "Sale"
 msgstr ""
 
@@ -530,12 +530,12 @@ msgid "to"
 msgstr ""
 
 #: lib/mercator_web/components/catalog_components.ex:133
-#, elixir-autogen, elixir-format, fuzzy
+#, elixir-autogen, elixir-format
 msgid "excl. %{rate} % VAT"
 msgstr ""
 
 #: lib/mercator_web/components/catalog_components.ex:131
-#, elixir-autogen, elixir-format, fuzzy
+#, elixir-autogen, elixir-format
 msgid "incl. %{rate} % VAT"
 msgstr ""
 
@@ -631,7 +631,7 @@ msgstr ""
 
 #: lib/mercator_web/admin_nav.ex:37
 #: lib/mercator_web/components/layouts.ex:191
-#, elixir-autogen, elixir-format, fuzzy
+#, elixir-autogen, elixir-format
 msgid "Administration"
 msgstr ""
 
@@ -678,7 +678,7 @@ msgstr ""
 
 #: lib/mercator_web/live/admin/category_tree_live.ex:183
 #: lib/mercator_web/live/admin/product_index_live.ex:205
-#, elixir-autogen, elixir-format, fuzzy
+#, elixir-autogen, elixir-format
 msgid "1 product"
 msgid_plural "%{count} products"
 msgstr[0] ""
@@ -742,7 +742,7 @@ msgstr ""
 
 #: lib/mercator_web/live/admin/category_tree_live.ex:308
 #: lib/mercator_web/live/admin/product_index_live.ex:344
-#, elixir-autogen, elixir-format, fuzzy
+#, elixir-autogen, elixir-format
 msgid "Close"
 msgstr ""
 
@@ -835,7 +835,7 @@ msgid "A product needs at least one variant to be activated."
 msgstr ""
 
 #: lib/mercator_web/live/admin/product_index_live.ex:177
-#, elixir-autogen, elixir-format, fuzzy
+#, elixir-autogen, elixir-format
 msgid "All categories"
 msgstr ""
 
@@ -900,7 +900,7 @@ msgid "Kind"
 msgstr ""
 
 #: lib/mercator_web/live/admin/product_edit_live.ex:305
-#, elixir-autogen, elixir-format, fuzzy
+#, elixir-autogen, elixir-format
 msgid "Long description"
 msgstr ""
 
@@ -911,7 +911,7 @@ msgstr ""
 
 #: lib/mercator_web/live/admin/product_index_live.ex:160
 #: lib/mercator_web/live/admin/product_index_live.ex:307
-#, elixir-autogen, elixir-format, fuzzy
+#, elixir-autogen, elixir-format
 msgid "New product"
 msgstr ""
 
@@ -921,7 +921,7 @@ msgid "No shipping (service)"
 msgstr ""
 
 #: lib/mercator_web/live/admin/product_edit_live.ex:397
-#, elixir-autogen, elixir-format, fuzzy
+#, elixir-autogen, elixir-format
 msgid "Parcel"
 msgstr ""
 
@@ -937,7 +937,7 @@ msgid "Pricing"
 msgstr ""
 
 #: lib/mercator_web/live/admin/product_index_live.ex:214
-#, elixir-autogen, elixir-format, fuzzy
+#, elixir-autogen, elixir-format
 msgid "Product"
 msgstr ""
 
@@ -947,7 +947,7 @@ msgid "Product created. Add variants and prices next."
 msgstr ""
 
 #: lib/mercator_web/live/admin/product_edit_live.ex:113
-#, elixir-autogen, elixir-format, fuzzy
+#, elixir-autogen, elixir-format
 msgid "Product saved."
 msgstr ""
 
@@ -995,7 +995,7 @@ msgid "URL name (slug)"
 msgstr ""
 
 #: lib/mercator_web/live/admin/product_index_live.ex:373
-#, elixir-autogen, elixir-format, fuzzy
+#, elixir-autogen, elixir-format
 msgid "Variants"
 msgstr ""
 
@@ -1057,7 +1057,7 @@ msgid "Delivery time"
 msgstr ""
 
 #: lib/mercator_web/live/admin/product_variants_tab.ex:380
-#, elixir-autogen, elixir-format, fuzzy
+#, elixir-autogen, elixir-format
 msgid "From quantity"
 msgstr ""
 
@@ -1067,7 +1067,7 @@ msgid "Net price per unit"
 msgstr ""
 
 #: lib/mercator_web/live/admin/product_variants_tab.ex:181
-#, elixir-autogen, elixir-format, fuzzy
+#, elixir-autogen, elixir-format
 msgid "New variant"
 msgstr ""
 
@@ -1107,7 +1107,7 @@ msgid "Valid until"
 msgstr ""
 
 #: lib/mercator_web/live/admin/product_edit_live.ex:274
-#, elixir-autogen, elixir-format, fuzzy
+#, elixir-autogen, elixir-format
 msgid "Variants & prices"
 msgstr ""
 
@@ -1127,7 +1127,7 @@ msgid "from %{date}"
 msgstr ""
 
 #: lib/mercator_web/live/admin/product_variants_tab.ex:243
-#, elixir-autogen, elixir-format, fuzzy
+#, elixir-autogen, elixir-format
 msgid "from quantity"
 msgstr ""
 
@@ -1164,7 +1164,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: lib/mercator_web/live/admin/product_images_tab.ex:194
-#, elixir-autogen, elixir-format, fuzzy
+#, elixir-autogen, elixir-format
 msgid "Delete this image?"
 msgstr ""
 
@@ -1194,7 +1194,7 @@ msgid "Main image"
 msgstr ""
 
 #: lib/mercator_web/live/admin/product_images_tab.ex:206
-#, elixir-autogen, elixir-format, fuzzy
+#, elixir-autogen, elixir-format
 msgid "No images yet."
 msgstr ""
 
@@ -1252,12 +1252,12 @@ msgid "Filter"
 msgstr ""
 
 #: lib/mercator_web/live/admin/product_properties_tab.ex:252
-#, elixir-autogen, elixir-format, fuzzy
+#, elixir-autogen, elixir-format
 msgid "Name (DE)"
 msgstr ""
 
 #: lib/mercator_web/live/admin/product_properties_tab.ex:257
-#, elixir-autogen, elixir-format, fuzzy
+#, elixir-autogen, elixir-format
 msgid "Name (EN)"
 msgstr ""
 
@@ -1295,7 +1295,7 @@ msgstr ""
 
 #: lib/mercator_web/live/admin/product_properties_tab.ex:330
 #: lib/mercator_web/live/admin/product_properties_tab.ex:363
-#, elixir-autogen, elixir-format, fuzzy
+#, elixir-autogen, elixir-format
 msgid "Text"
 msgstr ""
 
@@ -1350,7 +1350,7 @@ msgid "Base price"
 msgstr ""
 
 #: lib/mercator_web/live/admin/product_configurator_tab.ex:459
-#, elixir-autogen, elixir-format, fuzzy
+#, elixir-autogen, elixir-format
 msgid "Base price per unit (net)"
 msgstr ""
 
@@ -1361,7 +1361,7 @@ msgid "Choice"
 msgstr ""
 
 #: lib/mercator_web/live/admin/product_edit_live.ex:278
-#, elixir-autogen, elixir-format, fuzzy
+#, elixir-autogen, elixir-format
 msgid "Configurator"
 msgstr ""
 
@@ -1386,7 +1386,7 @@ msgid "Default value"
 msgstr ""
 
 #: lib/mercator_web/live/admin/product_configurator_tab.ex:309
-#, elixir-autogen, elixir-format, fuzzy
+#, elixir-autogen, elixir-format
 msgid "Delete this option and its choices?"
 msgstr ""
 
@@ -1446,7 +1446,7 @@ msgid "Option"
 msgstr ""
 
 #: lib/mercator_web/live/admin/product_configurator_tab.ex:258
-#, elixir-autogen, elixir-format, fuzzy
+#, elixir-autogen, elixir-format
 msgid "Options"
 msgstr ""
 
@@ -1517,7 +1517,7 @@ msgid "Changing a rate affects the gross prices of all products in that class im
 msgstr ""
 
 #: lib/mercator_web/live/admin/tax_class_live.ex:124
-#, elixir-autogen, elixir-format, fuzzy
+#, elixir-autogen, elixir-format
 msgid "Delete this tax class?"
 msgstr ""
 
@@ -1552,19 +1552,19 @@ msgid "Rate in %"
 msgstr ""
 
 #: lib/mercator_web/live/admin/tax_class_live.ex:78
-#, elixir-autogen, elixir-format, fuzzy
+#, elixir-autogen, elixir-format
 msgid "Tax class deleted."
 msgstr ""
 
 #: lib/mercator_web/live/admin/tax_class_live.ex:64
-#, elixir-autogen, elixir-format, fuzzy
+#, elixir-autogen, elixir-format
 msgid "Tax class saved."
 msgstr ""
 
 #: lib/mercator_web/admin_nav.ex:41
 #: lib/mercator_web/live/admin/tax_class_live.ex:19
 #: lib/mercator_web/live/admin/tax_class_live.ex:87
-#, elixir-autogen, elixir-format, fuzzy
+#, elixir-autogen, elixir-format
 msgid "Tax classes"
 msgstr ""
 
@@ -1574,7 +1574,7 @@ msgid "This tax class is still used by products."
 msgstr ""
 
 #: lib/mercator_web/components/layouts.ex:166
-#, elixir-autogen, elixir-format, fuzzy
+#, elixir-autogen, elixir-format
 msgctxt "shop navigation"
 msgid "Products"
 msgstr ""
