@@ -153,10 +153,11 @@ Rails sources (#1–#4) and continuing the overview (#5) were answered on 2026-1
 ### Decisions
 - **#6** (2026-10-13) Build a **generic multi-customer product**. The customer-system repos are reference material only (approaches, completeness); re-implementing those specific customers is very unlikely.
 - **#21** (2026-10-13) **No data migration.** We create dummy/seed data instead. As a result, #11 (migrating files), #22 (migrating history) and #23 (keeping old passwords) only matter in their non-migration parts.
+- **#28** (2026-10-13) **Single tenant: one deployment per customer.** Customer specifics come from runtime config, a DaisyUI theme and enabled modules. We design so a later move to Ash multitenancy stays possible: customer config lives in one place, and integrations are optional modules.
 - **#25** (2026-10-13) **No security risk:** none of the old systems are deployed any more. Secrets still go only into env/`runtime.exs` in the port.
 
 ### Scope and target
-- ~~**#6**~~ *(answered, see Decisions)* Who is the port for? One customer installation (which one: ivellio-vellin?), or a generic product that again supports several customer systems with their own themes, config and modules? Should one instance serve several tenants?
+- ~~**#6**~~ *(answered, see Decisions)* Who is the port for? One customer installation (which one: ivellio-vellin?), or a generic product that again supports several customer systems with their own themes, config and modules? Should one instance serve several tenants? (→ no, see #28)
 - **#7** Translations: keep the `_de`/`_en` column pairs, or move to one map/JSONB column per field? Will there only ever be de/en?
 - **#8** Guest users: keep the Rails model, where every visitor gets a DB user? The alternative is a session-based anonymous basket that becomes a user at checkout or login. Do we keep email-link login and passwords?
 - **#9** Page templates: the Rails app lets content managers write DRYML/ERB templates in the DB. Do we need user-editable templates (e.g. Liquid/Solid with `container`/`photo`/`document` tags), or are a few fixed HEEx layouts with named content slots enough?
