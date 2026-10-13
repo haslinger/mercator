@@ -141,32 +141,32 @@ msgstr ""
 msgid "exactly one value matching the property's kind is required"
 msgstr ""
 
-#: lib/mercator/catalog/configurator.ex:59
+#: lib/mercator/catalog/configurator.ex:82
 #, elixir-autogen, elixir-format
 msgid "must be a whole number greater than zero"
 msgstr ""
 
-#: lib/mercator/catalog/configurator.ex:110
+#: lib/mercator/catalog/configurator.ex:133
 #, elixir-autogen, elixir-format
 msgid "must be at least %{min}"
 msgstr ""
 
-#: lib/mercator/catalog/configurator.ex:116
+#: lib/mercator/catalog/configurator.ex:139
 #, elixir-autogen, elixir-format
 msgid "must be at most %{max}"
 msgstr ""
 
-#: lib/mercator/catalog/configurator.ex:80
+#: lib/mercator/catalog/configurator.ex:103
 #, elixir-autogen, elixir-format
 msgid "please choose"
 msgstr ""
 
-#: lib/mercator/catalog/configurator.ex:102
+#: lib/mercator/catalog/configurator.ex:125
 #, elixir-autogen, elixir-format
 msgid "please enter a number"
 msgstr ""
 
-#: lib/mercator/catalog/configurator.ex:97
+#: lib/mercator/catalog/configurator.ex:120
 #, elixir-autogen, elixir-format
 msgid "please enter a value"
 msgstr ""

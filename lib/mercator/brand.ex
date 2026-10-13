@@ -23,6 +23,7 @@ defmodule Mercator.Brand do
     phone: nil,
     address: nil,
     bank: nil,
+    order_prefix: nil,
     assets: "/images/brands/mercator",
     logo: "logo.svg",
     pin: nil,

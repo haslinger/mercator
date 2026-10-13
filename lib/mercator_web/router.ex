@@ -61,6 +61,8 @@ defmodule MercatorWeb.Router do
 
       live "/account", AccountLive
       live "/account/addresses", AddressesLive
+      live "/account/orders/:number", OrderLive
+      live "/kasse", CheckoutLive
 
       live "/admin", Admin.DashboardLive
       live "/admin/products", Admin.ProductIndexLive, :index
@@ -79,6 +81,7 @@ defmodule MercatorWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+    get "/kasse/anmelden", CheckoutController, :sign_in
     auth_routes AuthController, Mercator.Accounts.User, path: "/auth"
 
     sign_out_route AuthController, "/sign-out",

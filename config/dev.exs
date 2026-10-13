@@ -67,6 +67,8 @@ config :mercator, :brand,
   email: "service@biberholz.example",
   phone: "+43 1 234 56 78",
   address: "Waldweg 1, 6020 Innsbruck",
+  # order numbers like BH-2026-00042 (#68)
+  order_prefix: "BH",
   # demo bank account (the example IBAN from the ISO 13616 standard)
   bank: %{
     holder: "Biber Holz GmbH",

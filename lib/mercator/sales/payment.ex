@@ -8,6 +8,8 @@ defmodule Mercator.Sales.Payment do
   - `:on_pickup`: only with the shipping method `:pickup`.
   """
 
+  use Gettext, backend: MercatorWeb.Gettext
+
   alias Mercator.Sales.PaymentMethod
 
   @doc "The enabled payment methods in display order."
@@ -22,6 +24,42 @@ defmodule Mercator.Sales.Payment do
   def bank_account, do: Mercator.Brand.get(:bank)
 
   defdelegate label(method), to: PaymentMethod
+
+  @doc """
+  Payment instructions for an order, as lines of text in the current
+  locale (confirmation page and email).
+  """
+  def instructions(%{payment_method: :prepayment} = order) do
+    amount = MercatorWeb.Format.money(order.gross, Gettext.get_locale(MercatorWeb.Gettext))
+
+    intro =
+      if order.shipping_estimate do
+        gettext(
+          "We will confirm the freight costs first. Then please transfer the final amount, stating the order number %{number}, to:",
+          number: order.number
+        )
+      else
+        gettext("Please transfer %{amount}, stating the order number %{number}, to:",
+          amount: amount,
+          number: order.number
+        )
+      end
+
+    case bank_account() do
+      nil ->
+        [intro]
+
+      bank ->
+        [intro, bank.holder, "IBAN #{bank.iban}", "BIC #{bank.bic}", bank.name]
+        |> Enum.reject(&is_nil/1)
+    end
+  end
+
+  def instructions(%{payment_method: :invoice}),
+    do: [gettext("You will receive an invoice with the delivery, payable within 14 days.")]
+
+  def instructions(%{payment_method: :on_pickup}),
+    do: [gettext("Please pay when you pick up the goods, in cash or by card.")]
 
   defp allowed?(:prepayment, _user, _shipping_method), do: true
   defp allowed?(:invoice, user, _shipping_method), do: user.invoice_allowed == true

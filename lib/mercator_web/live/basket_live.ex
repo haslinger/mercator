@@ -1,13 +1,13 @@
 defmodule MercatorWeb.BasketLive do
   @moduledoc """
   The basket (`/warenkorb`): items with live prices, quantities, removal,
-  totals with VAT per rate. Checkout follows in the next step.
+  totals with VAT per rate, and the way to the checkout.
   """
   use MercatorWeb, :live_view
 
   import MercatorWeb.CatalogComponents, only: [catalog_image: 1, first_image: 1]
 
-  alias Mercator.Catalog.Unit
+  alias Mercator.Catalog.{Configurator, Unit}
   alias Mercator.Sales.{BasketPricing, Baskets}
   alias Mercator.Translated
   alias MercatorWeb.Format
@@ -26,6 +26,7 @@ defmodule MercatorWeb.BasketLive do
     socket
     |> assign(:pricing, pricing)
     |> assign(:basket_count, length(pricing.lines))
+    |> assign(:checkout?, Enum.all?(pricing.lines, & &1.available?))
     |> assign_new(:quantity_errors, fn -> %{} end)
   end
 
@@ -101,7 +102,7 @@ defmodule MercatorWeb.BasketLive do
                     class="text-xs text-base-content/60"
                     id={"config-#{line.item.id}"}
                   >
-                    {configuration_text(line.product, line.item.selections, @locale)}
+                    {Configurator.describe(line.product, line.item.selections, @locale)}
                   </p>
                   <p :if={!line.available?} class="text-sm text-error">
                     {gettext("No longer available")}
@@ -165,9 +166,17 @@ defmodule MercatorWeb.BasketLive do
             <p class="text-xs text-base-content/60">
               {gettext("Plus shipping costs, calculated at checkout.")}
             </p>
-            <button type="button" class="btn btn-primary mt-2" disabled id="to-checkout">
+            <.link
+              navigate={if @current_user, do: ~p"/kasse"}
+              href={if !@current_user, do: ~p"/kasse/anmelden"}
+              class={["btn btn-primary mt-2", !@checkout? && "btn-disabled"]}
+              id="to-checkout"
+            >
               {gettext("Proceed to checkout")}
-            </button>
+            </.link>
+            <p :if={!@current_user} class="text-xs text-base-content/60">
+              {gettext("You sign in or register in the next step.")}
+            </p>
           </div>
         </aside>
       </div>
@@ -178,22 +187,4 @@ defmodule MercatorWeb.BasketLive do
   # configurable products are counted in pieces; others in the variant's unit
   defp quantity_unit(%{product: %{kind: :configurable}}), do: :piece
   defp quantity_unit(line), do: line.variant.unit
-
-  defp configuration_text(product, selections, locale) do
-    Enum.map_join(product.options, ", ", fn option ->
-      value = selections[option.key]
-
-      label =
-        case option.kind do
-          :choice ->
-            choice = Enum.find(option.choices, &(&1.key == value))
-            choice && Translated.t(choice.name, locale)
-
-          :number ->
-            "#{value} #{option.unit}"
-        end
-
-      "#{Translated.t(option.name, locale)}: #{label}"
-    end)
-  end
 end

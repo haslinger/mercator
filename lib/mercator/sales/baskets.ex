@@ -84,6 +84,14 @@ defmodule Mercator.Sales.Baskets do
     end
   end
 
+  @doc "Deletes the owner's basket with its items (after an order); returns notifications."
+  def clear(owner) do
+    case Basket |> filter_owner(owner) |> Ash.read_one!(authorize?: false) do
+      nil -> []
+      basket -> Ash.destroy!(basket, authorize?: false, return_notifications?: true)
+    end
+  end
+
   @doc """
   At login (#8): moves the items of the visitor basket into the user's
   basket (merging identical items) and deletes the visitor basket.

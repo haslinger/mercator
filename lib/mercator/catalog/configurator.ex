@@ -17,6 +17,7 @@ defmodule Mercator.Catalog.Configurator do
   use Gettext, backend: MercatorWeb.Gettext
 
   alias Mercator.Catalog.Quote
+  alias Mercator.Translated
 
   @units %{per_volume: :m3, per_area: :m2, per_length: :lfm, per_unit: :piece}
 
@@ -45,6 +46,28 @@ defmodule Mercator.Catalog.Configurator do
 
       %{kind: :number} = option ->
         {option.key, option.default && Decimal.to_string(option.default, :normal)}
+    end)
+  end
+
+  @doc """
+  A configuration as text, e.g. "Holzart: Lärche, Länge: 2500 mm", in the
+  given content locale. `product` needs `options: :choices` loaded.
+  """
+  def describe(product, selections, locale) do
+    Enum.map_join(product.options, ", ", fn option ->
+      value = selections[option.key]
+
+      label =
+        case option.kind do
+          :choice ->
+            choice = Enum.find(option.choices, &(&1.key == value))
+            choice && Translated.t(choice.name, locale)
+
+          :number ->
+            "#{value} #{option.unit}"
+        end
+
+      "#{Translated.t(option.name, locale)}: #{label}"
     end)
   end
 

@@ -19,6 +19,13 @@ defmodule Mercator.Sales do
     resource Mercator.Sales.Basket
     resource Mercator.Sales.BasketItem
 
+    resource Mercator.Sales.Order do
+      define :list_my_orders, action: :mine
+      define :get_order_by_number, action: :by_number, args: [:number]
+    end
+
+    resource Mercator.Sales.OrderItem
+
     resource Mercator.Sales.Gtc do
       define :current_gtc, action: :current, not_found_error?: false
       define :create_gtc, action: :create
