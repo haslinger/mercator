@@ -161,12 +161,14 @@ Rails sources (#1–#4) and continuing the overview (#5) were answered on 2026-1
 - **#29 / #30** (2026-10-13) Toolchain via **asdf**, always the latest stable release (Erlang 29.1.1, Elixir 1.20.4-otp-29). App generated with `mix igniter.new … --with phx.new` (Phoenix 1.8.15, Ash 3, AshPostgres, AshPhoenix, AshAuthentication(Phoenix), AshStateMachine, AshPaperTrail, Oban).
 - **#7** (2026-10-13) **Translations:** UI texts use Gettext (in code). Translatable **content** is stored in the DB as **one JSONB map per attribute** (`%{"de" => …, "en" => …}`), with a calculation for the current locale that falls back to `de`. Search uses Postgres full-text search with one index per language (German/English stemming). Adding a language means config only, no migration.
 - **#31** (2026-10-13) `usage_rules` added: Elixir/OTP and Phoenix rules are inline in `AGENTS.md`; Ash rules form the on-demand `ash-framework` skill.
+- **#8** (2026-10-13) **No database user per visitor.** Anonymous visitors get a **session basket** that moves to the real user at login or registration. Login uses **password + magic link** (AshAuthentication). The session carries an anonymous session ID for later analytics.
+- **#18 (analytics part)** (2026-10-13) General traffic stats live **outside the app** (proxy logs or Plausible/Umami/Matomo, chosen per customer). **Shop funnel events** (visit → basket → checkout → order) come later as an anonymous in-app event table (no personal data, no IPs). Still open: which other features are needed (blog, podcasts, comments, Twitter, contact form, Gravatar).
 - **#25** (2026-10-13) **No security risk:** none of the old systems are deployed any more. Secrets still go only into env/`runtime.exs` in the port.
 
 ### Scope and target
 - ~~**#6**~~ *(answered, see Decisions)* Who is the port for? One customer installation (which one: ivellio-vellin?), or a generic product that again supports several customer systems with their own themes, config and modules? Should one instance serve several tenants? (→ no, see #28)
 - ~~**#7**~~ *(answered, see Decisions)* Translations: keep the `_de`/`_en` column pairs, or move to one map/JSONB column per field? Will there only ever be de/en?
-- **#8** Guest users: keep the Rails model, where every visitor gets a DB user? The alternative is a session-based anonymous basket that becomes a user at checkout or login. Do we keep email-link login and passwords?
+- ~~**#8**~~ *(answered, see Decisions)* Guest users: keep the Rails model, where every visitor gets a DB user? The alternative is a session-based anonymous basket that becomes a user at checkout or login. Do we keep email-link login and passwords?
 - **#9** Page templates: the Rails app lets content managers write DRYML/ERB templates in the DB. Do we need user-editable templates (e.g. Liquid/Solid with `container`/`photo`/`document` tags), or are a few fixed HEEx layouts with named content slots enough?
 - **#10** Search: Postgres full-text search (simplest, no extra service), or a dedicated engine (Meilisearch/Typesense/Elasticsearch)? How large is the catalogue (number of products/categories)?
 - **#11** File storage: local disk or S3-compatible? ~~Do the existing Paperclip files have to be migrated?~~ (no, see #21)
@@ -176,7 +178,7 @@ Rails sources (#1–#4) and continuing the overview (#5) were answered on 2026-1
 - ~~**#15**~~ *(answered, see Decisions)* Integrations: which are still in use? Is Mesonic ERP still the ERP, with MSSQL access still available? Are the Icecat and Bechlem accounts still active? (Their APIs/feeds have likely changed since 2016.)
 - **#16** Back office UI: one unified admin area with role-based menus, or the five separate subsites as in Rails? Is AshAdmin acceptable for low-traffic CRUD screens?
 - **#17** PDF output: which documents are needed (offers, orders, contracts)? Which tool do you prefer (ChromicPDF needs headless Chrome; Typst is a single binary)?
-- **#18** Which of these features are still needed: blog, podcasts, comments, Twitter integration, Ahoy visitor tracking, the contact form with its captcha question, Gravatar?
+- **#18** *(analytics part answered, see Decisions)* Which of these features are still needed: blog, podcasts, comments, Twitter integration, Ahoy visitor tracking, the contact form with its captcha question, Gravatar?
 - **#19** Contracting module (printer/consumable leasing contracts): still needed? Who uses it? Should it stay a separate area?
 - **#20** Multi-domain setup (separate CMS, shop and podcast domains with session handover): still needed, or one domain?
 
