@@ -1,11 +1,18 @@
-# Script for populating the database. You can run it as:
+# Seeds demo data for development:
 #
 #     mix run priv/repo/seeds.exs
 #
-# Inside the script, you can read and write to any of your
-# repositories directly:
-#
-#     Mercator.Repo.insert!(%Mercator.SomeSchema{})
-#
-# We recommend using the bang functions (`insert!`, `update!`
-# and so on) as they will fail if something goes wrong.
+# Safe to run repeatedly. Demo users are not created in production.
+
+if Mix.env() == :prod do
+  IO.puts("Skipping demo data in production.")
+else
+  users = Mercator.Seeds.run()
+
+  IO.puts("Demo users (password: #{Mercator.Seeds.demo_password()}):")
+
+  for user <- users do
+    roles = Enum.map_join(user.roles, ", ", &to_string/1)
+    IO.puts("  #{user.email}  #{roles}")
+  end
+end

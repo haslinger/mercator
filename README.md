@@ -22,6 +22,18 @@ mix phx.server     # or: iex -S mix phx.server
 
 Then open [localhost:4000](http://localhost:4000).
 
+`mix setup` also loads demo data (`mix run priv/repo/seeds.exs`, safe to repeat). The demo users all have the password `mercator-demo`:
+
+| Email | Roles |
+|---|---|
+| `admin@example.com` | administrator |
+| `sales@example.com` | sales |
+| `manager@example.com` | sales, sales_manager |
+| `content@example.com` | contentmanager |
+| `products@example.com` | productmanager |
+| `kunde@example.com` | customer (German) |
+| `customer@example.com` | customer (English) |
+
 In development:
 
 - emails are not sent; they appear in the mailbox preview at [localhost:4000/dev/mailbox](http://localhost:4000/dev/mailbox)
