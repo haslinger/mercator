@@ -854,6 +854,29 @@ defmodule Mercator.Seeds.BiberHolz do
         ]
       },
       %{
+        number: "BH-TOWER",
+        category: "carports-pergolen",
+        title:
+          t("Aussichtsturm „Tour de Biber“, 12 m", "Observation tower \"Tour de Biber\", 12 m"),
+        subtitle:
+          t("Ein Hauch von Paris für Ihre Alm", "A touch of Paris for your alpine pasture"),
+        description:
+          t(
+            "12 Meter Lärche in unverkennbarer Silhouette: zwei Aussichtsplattformen, Rundbögen und eine rot-weiß-rote Fahne an der Spitze. Für Gemeinden, Tourismusverbände und alle, die schon immer einen Eiffelturm wollten, aber keinen Stahl mögen. Lieferung per Spedition, Aufbau durch unsere Zimmerleute.",
+            "12 metres of larch in an unmistakable silhouette: two viewing platforms, arches and a red-white-red flag on top. For municipalities, tourism boards and anyone who always wanted an Eiffel Tower but doesn't care for steel. Delivered by freight, assembled by our carpenters."
+          ),
+        highlights: [
+          t("Zwei Aussichtsplattformen", "Two viewing platforms"),
+          t("Lärche, statisch berechnet", "Larch, structurally calculated"),
+          t("Österreich-Fahne inklusive", "Austrian flag included")
+        ],
+        new: true,
+        shipping: :freight,
+        properties: [species: :larch],
+        price: "74900",
+        delivery: :order
+      },
+      %{
         number: "BH-PERGOLA",
         category: "carports-pergolen",
         title: t("Pergola Lärche 3 × 3 m", "Larch pergola 3 × 3 m"),
