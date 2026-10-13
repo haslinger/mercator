@@ -166,6 +166,7 @@ Rails sources (#1–#4) and continuing the overview (#5) were answered on 2026-1
 - **#32** (2026-10-13) **Roles as one list attribute** (`roles: [:sales, :contentmanager]`) using the enum `Mercator.Accounts.Role`. Only administrators may change roles. Implemented in c85e2e8.
 - **#33** (2026-10-13) **User profile:** an optional `name` (one field, no first/last split, no salutation or academic title), an optional `phone`, and `locale` (de/en, default de). Structured address data (company, recipient) belongs to billing and delivery addresses (phase 3).
 - **#34** (2026-10-13) License: **GPL v3**, as in the Rails version (`LICENSE` copied from the Rails repository).
+- **#35** (2026-10-13) License: **GPL v3 or any later version** (`GPL-3.0-or-later`).
 - **#25** (2026-10-13) **No security risk:** none of the old systems are deployed any more. Secrets still go only into env/`runtime.exs` in the port.
 
 ### Scope and target

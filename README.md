@@ -87,4 +87,4 @@ Still open for production:
 
 ## License
 
-Mercator is free software, licensed under the **GNU General Public License v3**, like the original Rails version. See [LICENSE](LICENSE).
+Mercator is free software: you can redistribute it and/or modify it under the terms of the **GNU General Public License** as published by the Free Software Foundation, either **version 3** of the License, or (at your option) **any later version** (SPDX: `GPL-3.0-or-later`). See [LICENSE](LICENSE).
