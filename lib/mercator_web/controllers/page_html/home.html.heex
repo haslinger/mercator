@@ -1,4 +1,9 @@
-<Layouts.app flash={@flash} current_user={@current_user} locale={@locale}>
+<Layouts.app
+  flash={@flash}
+  current_user={@current_user}
+  locale={@locale}
+  nav_categories={@nav_categories}
+>
   <div class="hero bg-base-200 rounded-box py-12" id="home-hero">
     <div class="hero-content flex-col gap-8 lg:flex-row">
       <img src={~p"/brand/logo"} alt={Mercator.Brand.name()} class="w-56 lg:w-72" id="brand-logo" />
@@ -17,4 +22,15 @@
       </div>
     </div>
   </div>
+
+  <section :if={@nav_categories != []} id="home-categories">
+    <h2 class="mb-4 text-2xl font-bold">{gettext("Our range")}</h2>
+    <div class="grid grid-cols-2 gap-4 md:grid-cols-4">
+      <MercatorWeb.CatalogComponents.category_tile
+        :for={category <- @nav_categories}
+        category={category}
+        locale={@locale}
+      />
+    </div>
+  </section>
 </Layouts.app>

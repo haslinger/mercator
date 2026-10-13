@@ -55,6 +55,13 @@ defmodule Mercator.Catalog.Product do
   actions do
     defaults [:read, :destroy]
 
+    read :in_categories do
+      description "Products assigned to any of the given categories, by position."
+      argument :category_ids, {:array, :uuid}, allow_nil?: false
+      filter expr(exists(categorizations, category_id in ^arg(:category_ids)))
+      prepare build(sort: [number: :asc])
+    end
+
     create :create do
       primary? true
       accept @editable

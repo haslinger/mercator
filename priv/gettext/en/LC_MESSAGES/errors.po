@@ -136,7 +136,7 @@ msgstr ""
 msgid "a product cannot be related to itself"
 msgstr ""
 
-#: lib/mercator/catalog/validations/value_matches_kind.ex:30
+#: lib/mercator/catalog/validations/value_matches_kind.ex:31
 #, elixir-autogen, elixir-format
 msgid "exactly one value matching the property's kind is required"
 msgstr ""

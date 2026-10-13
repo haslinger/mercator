@@ -126,7 +126,7 @@ msgstr "Ein Produkt braucht mindestens eine Variante"
 msgid "a product cannot be related to itself"
 msgstr "Ein Produkt kann nicht mit sich selbst verknüpft werden"
 
-#: lib/mercator/catalog/validations/value_matches_kind.ex:30
+#: lib/mercator/catalog/validations/value_matches_kind.ex:31
 #, elixir-autogen, elixir-format
 msgid "exactly one value matching the property's kind is required"
 msgstr "Genau ein Wert passend zum Typ der Eigenschaft ist erforderlich"

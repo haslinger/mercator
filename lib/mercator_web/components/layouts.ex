@@ -28,6 +28,7 @@ defmodule MercatorWeb.Layouts do
   attr :flash, :map, required: true, doc: "the map of flash messages"
   attr :current_user, :map, default: nil, doc: "the signed-in user, if any"
   attr :locale, :string, default: nil, doc: "the current UI language"
+  attr :nav_categories, :list, default: [], doc: "top-level categories for the main navigation"
 
   slot :inner_block, required: true
 
@@ -41,6 +42,7 @@ defmodule MercatorWeb.Layouts do
         </.link>
       </div>
       <div class="flex-none flex items-center gap-2">
+        <.catalog_menu :if={@nav_categories != []} categories={@nav_categories} locale={@locale} />
         <.locale_switch locale={@locale} />
         <.theme_toggle />
         <%= if @current_user do %>
@@ -63,6 +65,27 @@ defmodule MercatorWeb.Layouts do
     </main>
 
     <.flash_group flash={@flash} />
+    """
+  end
+
+  attr :categories, :list, required: true
+  attr :locale, :string, default: nil
+
+  defp catalog_menu(assigns) do
+    ~H"""
+    <div class="dropdown dropdown-end" id="catalog-menu">
+      <div tabindex="0" role="button" class="btn btn-ghost btn-sm">
+        <.icon name="hero-squares-2x2" class="size-5" />
+        <span class="hidden sm:inline">{gettext("Products")}</span>
+      </div>
+      <ul tabindex="0" class="menu dropdown-content bg-base-100 rounded-box z-10 mt-2 w-64 p-2 shadow">
+        <li :for={category <- @categories}>
+          <.link navigate={~p"/kategorien/#{category.slug}"} id={"nav-#{category.slug}"}>
+            {Mercator.Translated.t(category.name, @locale || "de")}
+          </.link>
+        </li>
+      </ul>
+    </div>
     """
   end
 

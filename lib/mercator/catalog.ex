@@ -32,6 +32,7 @@ defmodule Mercator.Catalog do
 
     resource Mercator.Catalog.Product do
       define :list_products, action: :read
+      define :list_products_in_categories, action: :in_categories, args: [:category_ids]
       define :get_product, action: :read, get_by: [:id]
       define :get_product_by_slug, action: :read, get_by: [:slug]
       define :get_product_by_number, action: :read, get_by: [:number]
