@@ -166,7 +166,7 @@ msgstr "bitte einen Wert eingeben"
 msgid "configurable products need a pricing model"
 msgstr "konfigurierbare Produkte brauchen ein Preismodell"
 
-#: lib/mercator/catalog/validations/exactly_one_owner.ex:16
+#: lib/mercator/catalog/validations/exactly_one_owner.ex:22
 #, elixir-autogen, elixir-format
 msgid "an image belongs to exactly one product or category"
 msgstr "ein Bild gehört zu genau einem Produkt oder einer Kategorie"

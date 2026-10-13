@@ -86,6 +86,75 @@ defmodule MercatorWeb.Layouts do
     """
   end
 
+  attr :flash, :map, required: true
+  attr :current_user, :map, required: true
+  attr :locale, :string, default: nil
+  attr :active, :string, default: nil, doc: "id of the active navigation entry"
+  slot :inner_block, required: true
+
+  @doc "Layout of the admin area (#16): top bar plus a sidebar filtered by role."
+  def admin(assigns) do
+    assigns = assign(assigns, :sections, MercatorWeb.AdminNav.sections(assigns.current_user))
+
+    ~H"""
+    <div class="drawer lg:drawer-open">
+      <input id="admin-drawer" type="checkbox" class="drawer-toggle" />
+      <div class="drawer-content flex min-h-screen flex-col">
+        <header class="navbar bg-base-100 shadow-sm px-4">
+          <div class="flex-1 gap-2">
+            <label
+              for="admin-drawer"
+              class="btn btn-ghost btn-sm lg:hidden"
+              aria-label={gettext("Menu")}
+            >
+              <.icon name="hero-bars-3" class="size-5" />
+            </label>
+            <.link navigate={~p"/admin"} class="flex items-center gap-2" id="admin-brand">
+              <img src={~p"/brand/pin"} alt="" class="h-8 w-auto" />
+              <span class="font-bold text-primary">{Mercator.Brand.name()}</span>
+              <span class="badge badge-neutral badge-sm">{gettext("Admin")}</span>
+            </.link>
+          </div>
+          <div class="flex-none flex items-center gap-2">
+            <.link navigate={~p"/"} class="btn btn-ghost btn-sm" id="to-shop">
+              <.icon name="hero-building-storefront" class="size-5" />
+              <span class="hidden sm:inline">{gettext("Shop")}</span>
+            </.link>
+            <.locale_switch locale={@locale} />
+            <.theme_toggle />
+            <.user_menu current_user={@current_user} />
+          </div>
+        </header>
+        <main class="flex-1 bg-base-200 px-4 py-8 sm:px-6 lg:px-8">
+          <div class="mx-auto max-w-6xl space-y-4">
+            {render_slot(@inner_block)}
+          </div>
+        </main>
+      </div>
+      <div class="drawer-side z-20">
+        <label for="admin-drawer" class="drawer-overlay" aria-label={gettext("Close menu")}></label>
+        <nav class="min-h-full w-64 bg-base-100 p-4" id="admin-nav">
+          <div :for={{title, items} <- @sections} class="mb-4">
+            <p class="menu-title px-2">{title}</p>
+            <ul class="menu w-full">
+              <li :for={item <- items}>
+                <.link
+                  navigate={item.path}
+                  class={[@active == item.id && "menu-active"]}
+                  id={"admin-nav-#{item.id}"}
+                >
+                  <.icon name={item.icon} class="size-5" /> {item.label}
+                </.link>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+    </div>
+    <.flash_group flash={@flash} />
+    """
+  end
+
   attr :categories, :list, required: true
   attr :locale, :string, default: nil
 
@@ -118,8 +187,8 @@ defmodule MercatorWeb.Layouts do
       </div>
       <ul tabindex="0" class="menu dropdown-content bg-base-100 rounded-box z-10 mt-2 w-56 p-2 shadow">
         <li><.link navigate={~p"/account"} id="account-link">{gettext("My account")}</.link></li>
-        <li :if={:administrator in @current_user.roles}>
-          <.link navigate={~p"/admin/users"} id="admin-users-link">{gettext("Users")}</.link>
+        <li :if={MercatorWeb.AdminNav.staff?(@current_user)}>
+          <.link navigate={~p"/admin"} id="admin-link">{gettext("Administration")}</.link>
         </li>
         <li><.link href={~p"/sign-out"} id="sign-out-link">{gettext("Sign out")}</.link></li>
       </ul>

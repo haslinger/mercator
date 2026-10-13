@@ -4,7 +4,11 @@ defmodule Mercator.Accounts do
   """
   use Ash.Domain,
     otp_app: :mercator,
-    extensions: [AshPhoenix]
+    extensions: [AshAdmin.Domain, AshPhoenix]
+
+  admin do
+    show? true
+  end
 
   resources do
     resource Mercator.Accounts.Token

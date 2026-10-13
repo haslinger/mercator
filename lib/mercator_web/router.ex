@@ -57,6 +57,7 @@ defmodule MercatorWeb.Router do
 
       live "/account", AccountLive
 
+      live "/admin", Admin.DashboardLive
       live "/admin/users", Admin.UserIndexLive
       live "/admin/users/:id", Admin.UserEditLive
     end
@@ -127,6 +128,17 @@ defmodule MercatorWeb.Router do
 
       live_dashboard "/dashboard", metrics: MercatorWeb.Telemetry
       forward "/mailbox", Plug.Swoosh.MailboxPreview
+    end
+  end
+
+  # Raw-data tool for development only (#61); staff use /admin.
+  if Application.compile_env(:mercator, :dev_routes) do
+    import AshAdmin.Router
+
+    scope "/dev" do
+      pipe_through :browser
+
+      ash_admin "/ash-admin"
     end
   end
 end

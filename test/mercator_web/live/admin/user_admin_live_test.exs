@@ -21,9 +21,9 @@ defmodule MercatorWeb.Admin.UserAdminLiveTest do
                live(conn, ~p"/admin/users/#{user_fixture().id}")
     end
 
-    test "the user menu links to user administration only for administrators", %{conn: conn} do
+    test "the user menu links to the admin area for staff", %{conn: conn} do
       html = conn |> log_in_user(user_fixture()) |> get(~p"/") |> html_response(200)
-      refute html =~ ~s(id="admin-users-link")
+      refute html =~ ~s(id="admin-link")
 
       html =
         build_conn()
@@ -31,7 +31,7 @@ defmodule MercatorWeb.Admin.UserAdminLiveTest do
         |> get(~p"/")
         |> html_response(200)
 
-      assert html =~ ~s(id="admin-users-link")
+      assert html =~ ~s(id="admin-link")
     end
   end
 

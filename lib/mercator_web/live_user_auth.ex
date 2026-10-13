@@ -9,6 +9,7 @@ defmodule MercatorWeb.LiveUserAuth do
   import Phoenix.Component
 
   alias AshAuthentication.Phoenix.LiveSession
+  alias Mercator.Accounts.Role
 
   # This is used for nested liveviews to fetch the current user.
   # To use, place the following at the top of that liveview:
@@ -33,6 +34,21 @@ defmodule MercatorWeb.LiveUserAuth do
     end
   end
 
+  # Requires a signed-in user with any staff role (the admin area, #16)
+  def on_mount(:require_staff, params, session, socket) do
+    on_mount({:require_any_role, Role.values()}, params, session, socket)
+  end
+
+  def on_mount({:require_any_role, roles}, _params, _session, socket) do
+    case socket.assigns[:current_user] do
+      nil ->
+        {:halt, Phoenix.LiveView.redirect(socket, to: ~p"/sign-in")}
+
+      user ->
+        if Enum.any?(roles, &(&1 in user.roles)), do: {:cont, socket}, else: forbidden(socket)
+    end
+  end
+
   # Requires a signed-in user holding the given staff role, e.g.
   # on_mount {MercatorWeb.LiveUserAuth, {:require_role, :administrator}}
   def on_mount({:require_role, role}, _params, _session, socket) do
@@ -41,17 +57,7 @@ defmodule MercatorWeb.LiveUserAuth do
         {:halt, Phoenix.LiveView.redirect(socket, to: ~p"/sign-in")}
 
       %{roles: roles} = _user ->
-        if role in roles do
-          {:cont, socket}
-        else
-          {:halt,
-           socket
-           |> Phoenix.LiveView.put_flash(
-             :error,
-             gettext("You are not allowed to access this page.")
-           )
-           |> Phoenix.LiveView.redirect(to: ~p"/")}
-        end
+        if role in roles, do: {:cont, socket}, else: forbidden(socket)
     end
   end
 
@@ -61,5 +67,12 @@ defmodule MercatorWeb.LiveUserAuth do
     else
       {:cont, assign(socket, :current_user, nil)}
     end
+  end
+
+  defp forbidden(socket) do
+    {:halt,
+     socket
+     |> Phoenix.LiveView.put_flash(:error, gettext("You are not allowed to access this page."))
+     |> Phoenix.LiveView.redirect(to: ~p"/")}
   end
 end

@@ -1,5 +1,6 @@
 [
   import_deps: [
+    :ash_admin,
     :oban,
     :ash_state_machine,
     :ash_authentication,

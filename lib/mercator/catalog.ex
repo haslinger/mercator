@@ -5,7 +5,7 @@ defmodule Mercator.Catalog do
   """
   use Ash.Domain,
     otp_app: :mercator,
-    extensions: [AshPhoenix]
+    extensions: [AshAdmin.Domain, AshPhoenix]
 
   defdelegate price_for(variant, quantity \\ 1, date \\ Date.utc_today()),
     to: Mercator.Catalog.Pricing
@@ -13,6 +13,10 @@ defmodule Mercator.Catalog do
   defdelegate from_price(product, date \\ Date.utc_today()), to: Mercator.Catalog.Pricing
 
   defdelegate quote(product, selections, quantity \\ 1), to: Mercator.Catalog.Configurator
+
+  admin do
+    show? true
+  end
 
   resources do
     resource Mercator.Catalog.Category do

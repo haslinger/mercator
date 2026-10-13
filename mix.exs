@@ -62,6 +62,7 @@ defmodule Mercator.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
+      {:ash_admin, "~> 1.0"},
       {:bcrypt_elixir, "~> 3.0"},
       {:image, "~> 0.72"},
       {:usage_rules, "~> 1.0", only: [:dev]},
