@@ -53,17 +53,20 @@ defmodule MercatorWeb.Admin.UserEditLive do
           <.form for={@form} id="roles-form" phx-change="validate" phx-submit="save">
             <%!-- the hidden field keeps "no roles" submittable --%>
             <input type="hidden" name="form[roles][]" value="" />
-            <label :for={role <- Role.values()} class="label cursor-pointer justify-start gap-3 py-1">
-              <input
-                type="checkbox"
-                name="form[roles][]"
-                value={role}
-                checked={role in @selected_roles}
-                class="checkbox checkbox-sm"
-                id={"role-#{role}"}
-              />
-              <span>{role_label(role)}</span>
-            </label>
+            <%!-- DaisyUI's .label is inline-flex, so stack the labels explicitly --%>
+            <div class="flex flex-col gap-2 mt-2" id="role-checkboxes">
+              <label :for={role <- Role.values()} class="label text-base-content">
+                <input
+                  type="checkbox"
+                  name="form[roles][]"
+                  value={role}
+                  checked={role in @selected_roles}
+                  class="checkbox checkbox-sm"
+                  id={"role-#{role}"}
+                />
+                {role_label(role)}
+              </label>
+            </div>
 
             <p
               :for={msg <- Enum.map(@form[:roles].errors, &translate_error/1)}
