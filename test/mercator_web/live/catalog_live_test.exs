@@ -136,7 +136,7 @@ defmodule MercatorWeb.CatalogLiveTest do
       view |> element("#quantity-form") |> render_change(%{"quantity" => "100"})
 
       # 100 × 3.00 net = 300 net, 360 gross
-      assert has_element?(view, "#total", "360,00 €")
+      assert view |> element("#total") |> render() =~ "360,00 €"
     end
 
     test "rejects decimal quantities for pieces but accepts them for m³", ctx do
@@ -155,7 +155,7 @@ defmodule MercatorWeb.CatalogLiveTest do
       {:ok, view, _html} = live(ctx.conn, ~p"/produkte/#{ctx.batten.slug}?locale=en")
 
       assert has_element?(view, "#product-title", "Roof batten")
-      assert has_element?(view, "#price-box", "€4.08")
+      assert view |> element("#price-box") |> render() =~ "€4.08"
     end
 
     test "draft products are not shown", ctx do

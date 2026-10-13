@@ -43,7 +43,7 @@ defmodule Mercator.Catalog.PropertyGroup do
 
   relationships do
     has_many :properties, Mercator.Catalog.Property do
-      sort position: :asc
+      sort position: :asc, inserted_at: :asc
       public? true
     end
   end

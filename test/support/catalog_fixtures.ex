@@ -53,7 +53,10 @@ defmodule Mercator.CatalogFixtures do
       |> Catalog.create_product!(authorize?: false)
 
     for {variant_attrs, index} <- Enum.with_index(variants, 1) do
-      variant_fixture(product, Map.put_new(variant_attrs, :number, "#{product.number}-#{index}"))
+      variant_attrs
+      |> Map.put_new(:number, "#{product.number}-#{index}")
+      |> Map.put_new(:position, index)
+      |> then(&variant_fixture(product, &1))
     end
 
     case state do

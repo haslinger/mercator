@@ -42,6 +42,24 @@ defmodule MercatorWeb.Layouts do
         </.link>
       </div>
       <div class="flex-none flex items-center gap-2">
+        <form action={~p"/suche"} method="get" class="hidden md:block" id="navbar-search">
+          <label class="input input-sm w-48 lg:w-64">
+            <.icon name="hero-magnifying-glass" class="size-4 opacity-50" />
+            <input
+              type="search"
+              name="q"
+              placeholder={gettext("Search")}
+              aria-label={gettext("Search")}
+            />
+          </label>
+        </form>
+        <.link
+          navigate={~p"/suche"}
+          class="btn btn-ghost btn-sm md:hidden"
+          aria-label={gettext("Search")}
+        >
+          <.icon name="hero-magnifying-glass" class="size-5" />
+        </.link>
         <.catalog_menu :if={@nav_categories != []} categories={@nav_categories} locale={@locale} />
         <.locale_switch locale={@locale} />
         <.theme_toggle />

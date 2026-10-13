@@ -40,6 +40,32 @@ defmodule Mercator.Catalog.Product do
     references do
       reference :tax_class, on_delete: :restrict
     end
+
+    # Full-text search (#56): one weighted document per language (title A,
+    # subtitle + description B) and a GIN index on the same expression.
+    custom_statements do
+      statement :product_search_document do
+        up """
+        CREATE OR REPLACE FUNCTION mercator_product_document(lang regconfig, locale text, title jsonb, subtitle jsonb, description jsonb)
+        RETURNS tsvector LANGUAGE sql IMMUTABLE PARALLEL SAFE AS $$
+          SELECT setweight(to_tsvector(lang, coalesce(title->>locale, '')), 'A') ||
+                 setweight(to_tsvector(lang, coalesce(subtitle->>locale, '') || ' ' || coalesce(description->>locale, '')), 'B')
+        $$;
+        """
+
+        down "DROP FUNCTION IF EXISTS mercator_product_document(regconfig, text, jsonb, jsonb, jsonb);"
+      end
+
+      statement :products_search_de_index do
+        up "CREATE INDEX products_search_de_index ON products USING gin (mercator_product_document('german', 'de', title, subtitle, description));"
+        down "DROP INDEX IF EXISTS products_search_de_index;"
+      end
+
+      statement :products_search_en_index do
+        up "CREATE INDEX products_search_en_index ON products USING gin (mercator_product_document('english', 'en', title, subtitle, description));"
+        down "DROP INDEX IF EXISTS products_search_en_index;"
+      end
+    end
   end
 
   state_machine do
@@ -54,6 +80,13 @@ defmodule Mercator.Catalog.Product do
 
   actions do
     defaults [:read, :destroy]
+
+    read :search do
+      description "Full-text search over titles, subtitles and descriptions (de and en) and article numbers."
+      # an empty query (nil) finds nothing instead of failing
+      argument :query, :string, allow_nil?: true
+      prepare Mercator.Catalog.Preparations.Search
+    end
 
     read :in_categories do
       description "Products assigned to any of the given categories, by position."
@@ -177,8 +210,9 @@ defmodule Mercator.Catalog.Product do
       public? true
     end
 
+    # number as tie-breaker, so equal positions still give a stable order
     has_many :variants, Mercator.Catalog.Variant do
-      sort position: :asc
+      sort position: :asc, number: :asc
       public? true
     end
 
@@ -192,7 +226,7 @@ defmodule Mercator.Catalog.Product do
     has_many :product_properties, Mercator.Catalog.ProductProperty, public?: true
 
     has_many :relations, Mercator.Catalog.ProductRelation do
-      sort position: :asc
+      sort position: :asc, inserted_at: :asc
       public? true
     end
   end

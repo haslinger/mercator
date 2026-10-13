@@ -164,7 +164,7 @@ defmodule Mercator.Catalog.Category do
 
     has_many :children, __MODULE__ do
       destination_attribute :parent_id
-      sort position: :asc
+      sort position: :asc, slug: :asc
       public? true
     end
 
