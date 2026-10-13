@@ -22,6 +22,10 @@ defmodule MercatorWeb.Router do
     plug :set_actor, :user
   end
 
+  scope "/brand", MercatorWeb do
+    get "/:image", BrandController, :show
+  end
+
   scope "/", MercatorWeb do
     pipe_through :browser
 

@@ -62,13 +62,16 @@ defmodule MercatorWeb.AuthOverrides do
 
   # --- Shared building blocks -------------------------------------------------
 
+  # /brand/logo always points to the logo of the configured brand
   override Components.Banner do
     set :root_class, "w-full flex justify-center pb-4"
     set :href_url, "/"
-    set :href_class, "text-3xl font-bold text-primary"
-    set :image_url, nil
-    set :dark_image_url, nil
-    set :text, "Mercator"
+    set :href_class, nil
+    set :image_url, "/brand/logo"
+    set :image_class, "h-28 w-auto"
+    set :dark_image_url, "/brand/logo"
+    set :dark_image_class, "hidden"
+    set :text, nil
     set :text_class, nil
   end
 

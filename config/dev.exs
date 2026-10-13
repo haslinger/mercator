@@ -54,6 +54,24 @@ config :mercator, MercatorWeb.Endpoint,
 # different ports.
 
 # Enable dev routes for dashboard and mailbox
+# Demo brand for development (decision #36)
+config :mercator, :brand,
+  name: "Biber Holz",
+  tagline: %{
+    "de" => "Österreichische Alpen-Forstwirtschaft · Qualitäts-Bau- und Edelholz seit 1928",
+    "en" => "Austrian alpine forestry · Quality construction and fine timber since 1928"
+  },
+  email: "service@biberholz.example",
+  phone: "+43 1 234 56 78",
+  address: "Waldweg 1, 6020 Innsbruck",
+  assets: "/images/brands/biberholz",
+  logo: "logo.webp",
+  pin: "pin.webp",
+  favicon: "favicon.svg",
+  apple_touch_icon: "apple-touch-icon.png",
+  light_theme: "biberholz",
+  dark_theme: "biberholz-dark"
+
 config :mercator, dev_routes: true, token_signing_secret: "A2FzW/GgtL1nGv0224PsZ+/D9Dx8o4ZV"
 
 # Do not include metadata nor timestamps in development logs

@@ -1,8 +1,15 @@
 <Layouts.app flash={@flash} current_user={@current_user} locale={@locale}>
-  <div class="hero bg-base-200 rounded-box py-16" id="home-hero">
-    <div class="hero-content text-center">
-      <div class="max-w-md">
-        <h1 class="text-4xl font-bold">Mercator</h1>
+  <div class="hero bg-base-200 rounded-box py-12" id="home-hero">
+    <div class="hero-content flex-col gap-8 lg:flex-row">
+      <img src={~p"/brand/logo"} alt={Mercator.Brand.name()} class="w-56 lg:w-72" id="brand-logo" />
+      <div class="max-w-xl text-center lg:text-left">
+        <h1 class="text-4xl font-bold" id="brand-name">{Mercator.Brand.name()}</h1>
+        <p
+          :if={tagline = Mercator.Brand.tagline(@locale)}
+          class="pt-2 text-lg text-base-content/80"
+        >
+          {tagline}
+        </p>
         <p class="py-6">
           {gettext("Shop on your own or get advice from our consultants.")}
         </p>

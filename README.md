@@ -40,6 +40,14 @@ In development:
 - the LiveDashboard is at [localhost:4000/dev/dashboard](http://localhost:4000/dev/dashboard)
 - the [Tidewave](https://tidewave.ai) MCP server is at `localhost:4000/tidewave/mcp` (registered for Claude Code in `.mcp.json`)
 
+## Branding
+
+Every deployment has its own branding: shop name, tagline, contact data, images and DaisyUI themes. It is configured with `config :mercator, :brand, …` (see `Mercator.Brand` for all keys); unset keys fall back to the neutral Mercator defaults.
+
+- Images live in `priv/static/images/brands/<brand>/`. Pages refer to them only through stable URLs (`/brand/logo`, `/brand/pin`, `/brand/favicon`, `/brand/apple-touch-icon`).
+- Themes are defined in `assets/css/app.css`. The brand names one theme for light mode and one for dark mode.
+- Development uses the demo brand **Biber Holz** (`config/dev.exs`); tests use the neutral default.
+
 ## Database
 
 Development and test expect a local PostgreSQL with user `postgres`, password `postgres` and the databases `mercator_dev` and `mercator_test` (see `config/dev.exs` and `config/test.exs`).

@@ -1,38 +1,51 @@
 <!DOCTYPE html>
-<html lang={assigns[:locale] || "de"}>
+<html
+  lang={assigns[:locale] || "de"}
+  data-light-theme={Mercator.Brand.get(:light_theme)}
+  data-dark-theme={Mercator.Brand.get(:dark_theme)}
+>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="csrf-token" content={get_csrf_token()} />
-    <.live_title default="Mercator" suffix=" · Mercator" phx-no-format>{assigns[:page_title]}</.live_title>
+    <.live_title default={Mercator.Brand.name()} suffix={" · " <> Mercator.Brand.name()}>
+      {assigns[:page_title]}
+    </.live_title>
+    <link rel="icon" href={~p"/brand/favicon"} />
+    <link rel="apple-touch-icon" href={~p"/brand/apple-touch-icon"} />
     <link phx-track-static rel="stylesheet" href={~p"/assets/css/app.css"} />
     <script defer phx-track-static type="text/javascript" src={~p"/assets/js/app.js"}>
     </script>
     <script>
       (() => {
-        const systemTheme = () => matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        // The toggle chooses a mode (system/light/dark); the brand decides
+        // which DaisyUI theme belongs to each mode (data-light-theme/-dark-theme).
+        const root = document.documentElement;
+        const systemMode = () => matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 
-        const setTheme = (theme) => {
-          if (theme === "system") {
+        const applyMode = (mode) => {
+          root.setAttribute("data-theme", mode === "dark" ? root.dataset.darkTheme : root.dataset.lightTheme);
+          root.setAttribute("data-theme-mode", mode);
+        };
+
+        const setTheme = (choice) => {
+          if (choice === "system") {
             localStorage.removeItem("phx:theme");
-            document.documentElement.setAttribute("data-theme", systemTheme());
-            document.documentElement.setAttribute("data-theme-source", "system");
+            applyMode(systemMode());
+            root.setAttribute("data-theme-source", "system");
           } else {
-            localStorage.setItem("phx:theme", theme);
-            document.documentElement.setAttribute("data-theme", theme);
-            document.documentElement.setAttribute("data-theme-source", "user");
+            localStorage.setItem("phx:theme", choice);
+            applyMode(choice);
+            root.setAttribute("data-theme-source", "user");
           }
         };
-        if (!document.documentElement.hasAttribute("data-theme")) {
-          setTheme(localStorage.getItem("phx:theme") || "system");
-        }
+
+        setTheme(localStorage.getItem("phx:theme") || "system");
         window.addEventListener("storage", (e) => e.key === "phx:theme" && setTheme(e.newValue || "system"));
         window.addEventListener("phx:set-theme", (e) => setTheme(e.target.dataset.phxTheme));
 
-        matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (e) => {
-          if (document.documentElement.getAttribute("data-theme-source") === "system") {
-            document.documentElement.setAttribute("data-theme", systemTheme());
-          }
+        matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
+          if (root.getAttribute("data-theme-source") === "system") applyMode(systemMode());
         });
       })();
     </script>

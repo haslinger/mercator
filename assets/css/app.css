@@ -92,13 +92,85 @@
   --noise: 0;
 }
 
+/* Biber Holz demo brand (decision #38): wood colours from the logo.
+   light: parchment, walnut, forest green, bronze. dark: dark wood. */
+@plugin "daisyui/packages/bundle/daisyui-theme" {
+  name: "biberholz";
+  default: false;
+  prefersdark: false;
+  color-scheme: "light";
+  --color-base-100: oklch(97.4% 0.014 84.6);
+  --color-base-200: oklch(93.7% 0.027 83.5);
+  --color-base-300: oklch(87.4% 0.051 82.8);
+  --color-base-content: oklch(24.4% 0.028 61.2);
+  --color-primary: oklch(42.9% 0.059 61.3);
+  --color-primary-content: oklch(97.4% 0.014 84.6);
+  --color-secondary: oklch(44.5% 0.066 141.0);
+  --color-secondary-content: oklch(95.3% 0.017 88.0);
+  --color-accent: oklch(71.8% 0.069 74.5);
+  --color-accent-content: oklch(24.4% 0.028 61.2);
+  --color-neutral: oklch(34.4% 0.028 73.4);
+  --color-neutral-content: oklch(88.8% 0.063 82.6);
+  --color-info: oklch(51.7% 0.076 238.9);
+  --color-info-content: oklch(97.7% 0.006 239.8);
+  --color-success: oklch(53.2% 0.105 136.3);
+  --color-success-content: oklch(97.4% 0.013 126.4);
+  --color-warning: oklch(68.0% 0.137 74.7);
+  --color-warning-content: oklch(24.4% 0.028 61.2);
+  --color-error: oklch(50.4% 0.143 32.4);
+  --color-error-content: oklch(96.5% 0.012 37.4);
+  --radius-selector: 0.5rem;
+  --radius-field: 0.375rem;
+  --radius-box: 0.75rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 1;
+  --noise: 1;
+}
+
+@plugin "daisyui/packages/bundle/daisyui-theme" {
+  name: "biberholz-dark";
+  default: false;
+  prefersdark: false;
+  color-scheme: "dark";
+  --color-base-100: oklch(25.0% 0.024 60.7);
+  --color-base-200: oklch(22.1% 0.023 69.1);
+  --color-base-300: oklch(17.2% 0.024 55.1);
+  --color-base-content: oklch(88.8% 0.063 82.6);
+  --color-primary: oklch(71.8% 0.069 74.5);
+  --color-primary-content: oklch(17.2% 0.024 55.1);
+  --color-secondary: oklch(61.0% 0.082 137.6);
+  --color-secondary-content: oklch(19.4% 0.022 136.5);
+  --color-accent: oklch(75.2% 0.109 78.4);
+  --color-accent-content: oklch(17.2% 0.024 55.1);
+  --color-neutral: oklch(34.4% 0.028 73.4);
+  --color-neutral-content: oklch(88.8% 0.063 82.6);
+  --color-info: oklch(69.1% 0.074 237.1);
+  --color-info-content: oklch(21.0% 0.024 236.6);
+  --color-success: oklch(70.0% 0.110 135.9);
+  --color-success-content: oklch(20.2% 0.034 136.5);
+  --color-warning: oklch(76.8% 0.135 80.3);
+  --color-warning-content: oklch(20.0% 0.033 78.9);
+  --color-error: oklch(64.2% 0.136 32.7);
+  --color-error-content: oklch(17.3% 0.039 38.0);
+  --radius-selector: 0.5rem;
+  --radius-field: 0.375rem;
+  --radius-box: 0.75rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 1;
+  --noise: 1;
+}
+
 /* Add variants based on LiveView classes */
 @custom-variant phx-click-loading (.phx-click-loading&, .phx-click-loading &);
 @custom-variant phx-submit-loading (.phx-submit-loading&, .phx-submit-loading &);
 @custom-variant phx-change-loading (.phx-change-loading&, .phx-change-loading &);
 
-/* Use the data attribute for dark mode  */
-@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+/* Dark mode follows the light/dark mode, whatever the brand's theme names are */
+@custom-variant dark (&:where([data-theme-mode=dark], [data-theme-mode=dark] *));
 
 /* Make LiveView wrapper divs transparent for layout */
 [data-phx-session], [data-phx-teleported-src] { display: contents }

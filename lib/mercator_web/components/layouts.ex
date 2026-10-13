@@ -35,8 +35,9 @@ defmodule MercatorWeb.Layouts do
     ~H"""
     <header class="navbar bg-base-100 shadow-sm px-4 sm:px-6 lg:px-8">
       <div class="flex-1">
-        <.link navigate={~p"/"} class="text-xl font-bold text-primary" id="brand">
-          Mercator
+        <.link navigate={~p"/"} class="flex items-center gap-3" id="brand">
+          <img src={~p"/brand/pin"} alt="" class="h-10 w-auto" id="brand-pin" />
+          <span class="text-xl font-bold text-primary">{Mercator.Brand.name()}</span>
         </.link>
       </div>
       <div class="flex-none flex items-center gap-2">
@@ -160,7 +161,7 @@ defmodule MercatorWeb.Layouts do
   def theme_toggle(assigns) do
     ~H"""
     <div class="card relative flex flex-row items-center border-2 border-base-300 bg-base-300 rounded-full">
-      <div class="absolute w-1/3 h-full rounded-full border-1 border-base-200 bg-base-100 brightness-200 left-0 [[data-theme=light]_&]:left-1/3 [[data-theme=dark]_&]:left-2/3 [[data-theme-source=system]_&]:!left-0 transition-[left]" />
+      <div class="absolute w-1/3 h-full rounded-full border-1 border-base-200 bg-base-100 brightness-200 left-0 [[data-theme-mode=light]_&]:left-1/3 [[data-theme-mode=dark]_&]:left-2/3 [[data-theme-source=system]_&]:!left-0 transition-[left]" />
 
       <button
         class="flex p-2 cursor-pointer w-1/3"
