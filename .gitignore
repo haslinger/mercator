@@ -37,3 +37,6 @@ npm-debug.log
 
 # Uploaded files in development (#11)
 /uploads/
+
+# LibreOffice lock files
+.~lock.*#
