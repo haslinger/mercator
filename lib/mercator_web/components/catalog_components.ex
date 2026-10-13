@@ -77,7 +77,12 @@ defmodule MercatorWeb.CatalogComponents do
           {Translated.t(@product.subtitle, @locale)}
         </p>
         <div class="mt-auto pt-2">
-          <.price :if={@price} price={@price} locale={@locale} from={length(@product.variants) > 1} />
+          <.price
+            :if={@price}
+            price={@price}
+            locale={@locale}
+            from={@product.kind == :configurable or length(@product.variants) > 1}
+          />
           <span :if={!@price} class="text-sm text-base-content/60">{gettext("Price on request")}</span>
         </div>
       </div>

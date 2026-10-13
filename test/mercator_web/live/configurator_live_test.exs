@@ -81,6 +81,8 @@ defmodule MercatorWeb.ConfiguratorLiveTest do
 
     {:ok, view, _html} = live(conn, ~p"/kategorien/nach-mass")
 
-    assert view |> element("#product-#{product.id} [data-role=price]") |> render() =~ "36,60 €"
+    price = view |> element("#product-#{product.id} [data-role=price]") |> render()
+    assert price =~ "ab"
+    assert price =~ "36,60 €"
   end
 end
