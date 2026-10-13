@@ -195,6 +195,7 @@ Rails sources (#1–#4) and continuing the overview (#5) were answered on 2026-1
 - **#49, #50, #52–#57** (2026-10-13) Catalogue design **as recommended** (see catalog-design.md): category tree with `ltree`; prices stored net, display net or gross by shop setting (demo: gross); products draft → active → discontinued; flags `new?`/`bestseller?` plus "on sale" derived from promotion prices; stock per variant (`nil` = made to order); configurator scope as in section 4 (house configurator later); Postgres full-text search (also answers #10); customer-specific prices later.
 - **#58** (2026-10-13) Product and category images become **real uploads** (an image resource with upload and storage), not static files per brand.
 - **#11** (2026-10-13) Uploaded files are stored on **local disk**.
+- **#59** (2026-10-13) Demo images are **generated externally as photos** from the prompt list in `assets/lists/` (124 images), not as SVG illustrations. They are imported through the upload resource (#58).
 - **#25** (2026-10-13) **No security risk:** none of the old systems are deployed any more. Secrets still go only into env/`runtime.exs` in the port.
 
 ### Scope and target
@@ -245,5 +246,5 @@ Rails sources (#1–#4) and continuing the overview (#5) were answered on 2026-1
 - ~~**#48**~~ *(answered, see Decisions)* The demo as a **production release with a runtime switch** `MERCATOR_MODE=demo` (one build artifact; `Mercator.Demo.enabled?()` bundles all demo behaviour: seeding, nightly reset, account protection, login hints, demo badge), rather than a separate Mix environment `demo`?
 - ~~**#49–#57**~~ *(answered, see Decisions)* Catalogue design questions (tree storage, net/gross, tax classes, states, Neuheiten/Topseller, stock, configurator scope, search, customer prices): see [catalog-design.md](catalog-design.md#9-open-questions).
 - ~~**#58**~~ *(answered, see Decisions)* Image storage: static files per brand, or real uploads?
-- **#59** Demo images: SVG illustrations (3 samples in `priv/static/images/samples/`), or photos generated externally from a prompt list?
+- ~~**#59**~~ *(answered, see Decisions)* Demo images: SVG illustrations, or photos generated externally from a prompt list?
 
