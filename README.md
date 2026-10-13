@@ -24,15 +24,15 @@ Then open [localhost:4000](http://localhost:4000).
 
 `mix setup` also loads demo data (`mix run priv/repo/seeds.exs`, safe to repeat). The demo users all have the password `mercator-demo`:
 
-| Email | Roles |
-|---|---|
-| `admin@example.com` | administrator |
-| `sales@example.com` | sales |
-| `manager@example.com` | sales, sales_manager |
-| `content@example.com` | contentmanager |
-| `products@example.com` | productmanager |
-| `kunde@example.com` | customer (German) |
-| `customer@example.com` | customer (English) |
+| Email | Name | Roles |
+|---|---|---|
+| `admin@example.com` | Anna Specht | administrator |
+| `sales@example.com` | Sepp Fuchs | sales |
+| `manager@example.com` | Maria Hirsch | sales, sales_manager |
+| `content@example.com` | Klara Eichhorn | contentmanager |
+| `products@example.com` | Peter Dachs | productmanager |
+| `kunde@example.com` | Karl Luchs | customer (German) |
+| `customer@example.com` | Lena Igel | customer (English) |
 
 In development:
 

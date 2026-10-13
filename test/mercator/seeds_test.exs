@@ -23,6 +23,15 @@ defmodule Mercator.SeedsTest do
     assert length(Ash.read!(User, authorize?: false)) == length(Seeds.demo_users())
   end
 
+  test "brings the names of existing demo users up to date" do
+    [admin | _] = Seeds.run()
+    Ash.Seed.update!(admin, %{name: "Old Name"})
+
+    [admin | _] = Seeds.run()
+
+    assert admin.name == "Anna Specht"
+  end
+
   test "demo users can sign in with the demo password" do
     Seeds.run()
 

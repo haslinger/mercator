@@ -2,8 +2,9 @@ defmodule Mercator.Seeds do
   @moduledoc """
   Demo and development data, loaded by `priv/repo/seeds.exs`.
 
-  Seeding is idempotent: records that already exist (matched by email) are
-  left untouched, so `mix run priv/repo/seeds.exs` can run any number of times.
+  Seeding is idempotent: users that already exist (matched by email) are not
+  created again, only their demo name is brought up to date, so
+  `mix run priv/repo/seeds.exs` can run any number of times.
 
   All demo users share the password `demo_password/0` and are confirmed.
   """
@@ -14,14 +15,15 @@ defmodule Mercator.Seeds do
 
   @demo_password "mercator-demo"
 
+  # Surnames of animals living in the woods (Biber Holz demo)
   @demo_users [
-    %{email: "admin@example.com", name: "Anna Admin", roles: [:administrator]},
-    %{email: "sales@example.com", name: "Sam Sales", roles: [:sales]},
-    %{email: "manager@example.com", name: "Mira Manager", roles: [:sales, :sales_manager]},
-    %{email: "content@example.com", name: "Conrad Content", roles: [:contentmanager]},
-    %{email: "products@example.com", name: "Petra Product", roles: [:productmanager]},
-    %{email: "kunde@example.com", name: "Karl Kunde", roles: [], locale: :de},
-    %{email: "customer@example.com", name: "Cathy Customer", roles: [], locale: :en}
+    %{email: "admin@example.com", name: "Anna Specht", roles: [:administrator]},
+    %{email: "sales@example.com", name: "Sepp Fuchs", roles: [:sales]},
+    %{email: "manager@example.com", name: "Maria Hirsch", roles: [:sales, :sales_manager]},
+    %{email: "content@example.com", name: "Klara Eichhorn", roles: [:contentmanager]},
+    %{email: "products@example.com", name: "Peter Dachs", roles: [:productmanager]},
+    %{email: "kunde@example.com", name: "Karl Luchs", roles: [], locale: :de},
+    %{email: "customer@example.com", name: "Lena Igel", roles: [], locale: :en}
   ]
 
   @doc "The password of all demo users."
@@ -41,7 +43,8 @@ defmodule Mercator.Seeds do
     |> Ash.read_one!(authorize?: false)
     |> case do
       nil -> create_user(attrs)
-      user -> user
+      %{name: name} = user when name == attrs.name -> user
+      user -> Ash.Seed.update!(user, %{name: attrs.name})
     end
   end
 

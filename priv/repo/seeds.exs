@@ -13,6 +13,9 @@ else
 
   for user <- users do
     roles = Enum.map_join(user.roles, ", ", &to_string/1)
-    IO.puts("  #{user.email}  #{roles}")
+
+    IO.puts(
+      "  #{String.pad_trailing(to_string(user.email), 22)} #{String.pad_trailing(user.name, 16)} #{roles}"
+    )
   end
 end
