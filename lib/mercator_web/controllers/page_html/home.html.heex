@@ -6,7 +6,8 @@
         <h1 class="text-4xl font-bold" id="brand-name">{Mercator.Brand.name()}</h1>
         <p
           :if={tagline = Mercator.Brand.tagline(@locale)}
-          class="pt-2 text-lg text-base-content/80"
+          class="pt-2 text-lg text-base-content/80 whitespace-pre-line"
+          id="brand-tagline"
         >
           {tagline}
         </p>

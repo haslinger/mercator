@@ -43,7 +43,10 @@ defmodule Mercator.Brand do
 
   def name, do: get(:name)
 
-  @doc "The tagline in the given locale, falling back to German, then nil."
+  @doc """
+  The tagline in the given locale, falling back to German, then nil.
+  Line breaks (`\\n`) are kept; templates render them with `whitespace-pre-line`.
+  """
   def tagline(locale) do
     tagline = get(:tagline)
     Map.get(tagline, to_string(locale)) || Map.get(tagline, "de")

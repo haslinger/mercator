@@ -58,8 +58,8 @@ config :mercator, MercatorWeb.Endpoint,
 config :mercator, :brand,
   name: "Biber Holz",
   tagline: %{
-    "de" => "Österreichische Alpen-Forstwirtschaft · Qualitäts-Bau- und Edelholz seit 1928",
-    "en" => "Austrian alpine forestry · Quality construction and fine timber since 1928"
+    "de" => "Österreichische Alpen-Forstwirtschaft\nQualitäts-Bau- und Edelholz seit 1928",
+    "en" => "Austrian alpine forestry\nQuality construction and fine timber since 1928"
   },
   email: "service@biberholz.example",
   phone: "+43 1 234 56 78",
