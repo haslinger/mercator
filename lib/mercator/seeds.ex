@@ -7,9 +7,11 @@ defmodule Mercator.Seeds do
   `mix run priv/repo/seeds.exs` can run any number of times.
 
   All demo users share the password `demo_password/0` and are confirmed.
+  The demo catalogue comes from `Mercator.Seeds.BiberHolz`.
   """
 
   alias Mercator.Accounts.User
+  alias Mercator.Seeds.BiberHolz
 
   require Ash.Query
 
@@ -53,7 +55,9 @@ defmodule Mercator.Seeds do
   @doc "Seeds all demo data. Returns the demo users."
   def run do
     Enum.each(@tax_classes, &ensure_tax_class/1)
-    Enum.map(@demo_users, &ensure_user/1)
+    users = Enum.map(@demo_users, &ensure_user/1)
+    BiberHolz.run()
+    users
   end
 
   defp ensure_tax_class(%{key: key} = attrs) do
