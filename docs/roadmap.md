@@ -165,6 +165,7 @@ Rails sources (#1–#4) and continuing the overview (#5) were answered on 2026-1
 - **#18 (analytics part)** (2026-10-13) General traffic stats live **outside the app** (proxy logs or Plausible/Umami/Matomo, chosen per customer). **Shop funnel events** (visit → basket → checkout → order) come later as an anonymous in-app event table (no personal data, no IPs). Still open: which other features are needed (blog, podcasts, comments, Twitter, contact form, Gravatar).
 - **#32** (2026-10-13) **Roles as one list attribute** (`roles: [:sales, :contentmanager]`) using the enum `Mercator.Accounts.Role`. Only administrators may change roles. Implemented in c85e2e8.
 - **#33** (2026-10-13) **User profile:** an optional `name` (one field, no first/last split, no salutation or academic title), an optional `phone`, and `locale` (de/en, default de). Structured address data (company, recipient) belongs to billing and delivery addresses (phase 3).
+- **#34** (2026-10-13) License: **GPL v3**, as in the Rails version (`LICENSE` copied from the Rails repository).
 - **#25** (2026-10-13) **No security risk:** none of the old systems are deployed any more. Secrets still go only into env/`runtime.exs` in the port.
 
 ### Scope and target
@@ -199,4 +200,4 @@ Rails sources (#1–#4) and continuing the overview (#5) were answered on 2026-1
 - ~~**#31**~~ *(answered, see Decisions)* Should I add the `usage_rules` dev dependency? It syncs the official usage rules of Ash, AshPostgres, AshPhoenix, AshAuthentication, Oban and others into `AGENTS.md`. The generated `AGENTS.md` currently covers only Phoenix/Elixir, and the Ash rules help keep generated code idiomatic.
 - ~~**#32**~~ *(answered, see Decisions)* Roles: replace the five Rails role booleans with one `roles` list attribute (e.g. `[:sales, :contentmanager]`)?
 - ~~**#33**~~ *(answered, see Decisions)* Profile fields: first name, last name, phone, preferred language, plus salutation (Herr / Frau / divers / keine Angabe) and an optional academic title?
-- **#34** License of the port: GPL v3 like the Rails version, another open-source license, or proprietary?
+- ~~**#34**~~ *(answered, see Decisions)* License of the port: GPL v3 like the Rails version, another open-source license, or proprietary?

@@ -87,4 +87,4 @@ Still open for production:
 
 ## License
 
-Mercator (Rails) was licensed under the GPL v3. The license of this port is not decided yet (roadmap question #34).
+Mercator is free software, licensed under the **GNU General Public License v3**, like the original Rails version. See [LICENSE](LICENSE).
