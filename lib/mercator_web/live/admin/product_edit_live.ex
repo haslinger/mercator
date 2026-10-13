@@ -14,7 +14,7 @@ defmodule MercatorWeb.Admin.ProductEditLive do
 
   on_mount {MercatorWeb.LiveUserAuth, {:require_any_role, [:productmanager, :administrator]}}
 
-  @tabs ~w(general)
+  @tabs ~w(general variants)
 
   @impl true
   def mount(%{"id" => id}, _session, socket) do
@@ -141,6 +141,11 @@ defmodule MercatorWeb.Admin.ProductEditLive do
     end
   end
 
+  # flash messages from the tab components
+  @impl true
+  def handle_info({:flash, kind, message}, socket),
+    do: {:noreply, put_flash(socket, kind, message)}
+
   # --- rendering ---
 
   @impl true
@@ -211,11 +216,20 @@ defmodule MercatorWeb.Admin.ProductEditLive do
         tax_classes={@tax_classes}
         locale={@locale}
       />
+
+      <.live_component
+        :if={@tab == "variants"}
+        module={MercatorWeb.Admin.ProductVariantsTab}
+        id="variants-tab"
+        product_id={@product.id}
+        current_user={@current_user}
+        locale={@locale}
+      />
     </Layouts.admin>
     """
   end
 
-  defp tabs, do: [{"general", gettext("General")}]
+  defp tabs, do: [{"general", gettext("General")}, {"variants", gettext("Variants & prices")}]
 
   attr :form, :any, required: true
   attr :highlights, :map, required: true

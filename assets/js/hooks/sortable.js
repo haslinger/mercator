@@ -5,7 +5,7 @@
 // same data-group can exchange items (nested trees). Items need data-id,
 // lists may carry data-parent-id. After a drop, the hook pushes the event
 // named in the container's data-event (default "reorder") with
-// {id, parent_id, index}.
+// {id, parent_id, index} to the LiveComponent (or LiveView) it lives in.
 import Sortable from "../../vendor/sortable.esm.js"
 
 export const SortableHook = {
@@ -27,7 +27,8 @@ export const SortableHook = {
         ghostClass: "opacity-40",
         onEnd: (evt) => {
           if (evt.from === evt.to && evt.oldIndex === evt.newIndex) return
-          this.pushEvent(event, {
+          // pushEventTo(this.el): handled by the LiveComponent the list is in, or the LiveView
+          this.pushEventTo(this.el, event, {
             id: evt.item.dataset.id,
             parent_id: evt.to.dataset.parentId || null,
             index: evt.newIndex,
