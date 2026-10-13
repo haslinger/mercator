@@ -25,6 +25,6 @@ For **categories**, a slightly wider scene is better:
 
 ## Technical requirements
 
-- Square, at least **1200 × 1200 px**, JPEG, PNG or WebP. They are converted to WebP and scaled during import.
+- Square, at least **1024 × 1024 px**, JPEG, PNG or WebP. They are converted to WebP and scaled during import.
 - File names as in the `file` column. The folder structure (`products/`, `categories/`) helps with the import, but isn't required.
 - Images for individual variants (e.g. cutting board in stone pine / oak / walnut) are optional; without them the variants share the product image.
