@@ -146,6 +146,16 @@ Customer systems and the modules they mount (the last commit date of each system
 8. **Contracting** module.
 9. **Seed/dummy data** (built up alongside every phase), and go-live.
 
+## 5b. Backlog
+
+Smaller improvements noted along the way, not tied to a phase step.
+
+- **Product editor: tabs by product kind** (2026-10-13). The tabs shown should follow the kind chosen on the "General" tab, and react as soon as it is changed, not only after saving (today only the "Configurator" tab is hidden, for non-configurable products, based on the saved kind).
+  - *simple:* "Variants & prices" reduced to the one variant (no adding variants), e.g. as "Price & stock".
+  - *configurable:* no prices in the variants tab (the price comes from the configurator); only number, unit, delivery time and active remain, or the tab is hidden and those fields move to "General" / "Configurator".
+  - Changing the kind of an existing product needs a rule for data that no longer fits (extra variants, prices, options): warn, keep or delete.
+- **Variants combined with a configurator** (not possible today, see #39/#55): e.g. a panel in stock in three species that can also be cut to size. Workaround: two related products. Only if a customer needs it.
+
 ## 5a. Demo customer: Biber Holz
 
 The demo, built from seed/dummy data, shows the fictional company **Biber Holz**: "Österreichische Alpen-Forstwirtschaft · Seit 1928 · Qualitäts-Bau- und Edelholz". The company makes nearly everything out of wood and owns its own forests. Its range goes from **complete wooden houses down to sawdust**.
