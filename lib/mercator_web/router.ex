@@ -15,6 +15,7 @@ defmodule MercatorWeb.Router do
     plug :load_from_session
     plug MercatorWeb.Locale
     plug MercatorWeb.Navigation
+    plug MercatorWeb.BasketSession
   end
 
   pipeline :api do
@@ -39,7 +40,8 @@ defmodule MercatorWeb.Router do
     pipe_through :browser
 
     ash_authentication_live_session :authenticated_routes,
-      on_mount_prepend: [{MercatorWeb.Locale, :default}, {MercatorWeb.Navigation, :default}] do
+      on_mount_prepend: [{MercatorWeb.Locale, :default}, {MercatorWeb.Navigation, :default}],
+      on_mount: [{MercatorWeb.BasketSession, :default}] do
       # in each liveview, add one of the following at the top of the module:
       #
       # If an authenticated user must be present:
@@ -54,6 +56,7 @@ defmodule MercatorWeb.Router do
       live "/kategorien/:slug", CategoryLive
       live "/produkte/:slug", ProductLive
       live "/suche", SearchLive
+      live "/warenkorb", BasketLive
 
       live "/account", AccountLive
 

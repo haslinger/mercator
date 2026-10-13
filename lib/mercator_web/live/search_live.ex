@@ -57,6 +57,7 @@ defmodule MercatorWeb.SearchLive do
       current_user={@current_user}
       locale={@locale}
       nav_categories={@nav_categories}
+      basket_count={@basket_count}
     >
       <h1 class="text-3xl font-bold">{gettext("Search")}</h1>
 

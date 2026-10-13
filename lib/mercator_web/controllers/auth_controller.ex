@@ -2,6 +2,9 @@ defmodule MercatorWeb.AuthController do
   use MercatorWeb, :controller
   use AshAuthentication.Phoenix.Controller
 
+  alias Mercator.Sales.Baskets
+  alias MercatorWeb.BasketSession
+
   def success(conn, activity, user, _token) do
     return_to = get_session(conn, :return_to) || ~p"/"
 
@@ -11,6 +14,9 @@ defmodule MercatorWeb.AuthController do
         {:password, :reset} -> gettext("Your password has been reset.")
         _ -> gettext("You are now signed in.")
       end
+
+    # move the visitor basket into the user's basket (#8)
+    Baskets.merge(get_session(conn, BasketSession.key()), user)
 
     conn
     |> delete_session(:return_to)

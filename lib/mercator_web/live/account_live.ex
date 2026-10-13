@@ -28,6 +28,7 @@ defmodule MercatorWeb.AccountLive do
       current_user={@current_user}
       locale={@locale}
       nav_categories={@nav_categories}
+      basket_count={@basket_count}
     >
       <h1 class="text-3xl font-bold">{gettext("My account")}</h1>
       <p class="text-base-content/70" id="account-email">{@current_user.email}</p>

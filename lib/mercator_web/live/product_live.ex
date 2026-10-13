@@ -10,6 +10,7 @@ defmodule MercatorWeb.ProductLive do
 
   alias Mercator.Catalog
   alias Mercator.Catalog.{Listing, Unit}
+  alias Mercator.Sales.Baskets
   alias Mercator.Translated
   alias MercatorWeb.Format
 
@@ -71,6 +72,36 @@ defmodule MercatorWeb.ProductLive do
      |> assign(:selections, selections)
      |> assign(:config_quantity, quantity)
      |> recalculate()}
+  end
+
+  def handle_event("add_to_basket", _params, socket) do
+    %{product: product, basket_owner: owner} = socket.assigns
+
+    result =
+      if product.kind == :configurable do
+        Baskets.add(
+          owner,
+          hd(product.variants).id,
+          socket.assigns.config_quantity,
+          socket.assigns.selections
+        )
+      else
+        Baskets.add(owner, socket.assigns.variant.id, socket.assigns.quantity)
+      end
+
+    case result do
+      {:ok, _item} ->
+        {:noreply,
+         socket
+         |> assign(:basket_count, Baskets.count(owner))
+         |> put_flash(:info, gettext("Added to the basket."))}
+
+      {:error, message} when is_binary(message) ->
+        {:noreply, put_flash(socket, :error, message)}
+
+      {:error, _} ->
+        {:noreply, put_flash(socket, :error, gettext("The item could not be added."))}
+    end
   end
 
   def handle_event("quantity", %{"quantity" => quantity}, socket) do
@@ -136,6 +167,12 @@ defmodule MercatorWeb.ProductLive do
 
   defp trail(_product, _actor), do: []
 
+  defp can_add?(%{product: %{kind: :configurable}} = assigns),
+    do: assigns.quote != nil and assigns.config_errors == %{}
+
+  defp can_add?(assigns),
+    do: assigns.variant != nil and assigns.price != nil and assigns.quantity_error == nil
+
   defp relations(product, kind), do: Enum.filter(product.relations, &(&1.kind == kind))
 
   defp from_price(product) do
@@ -160,6 +197,7 @@ defmodule MercatorWeb.ProductLive do
       current_user={@current_user}
       locale={@locale}
       nav_categories={@nav_categories}
+      basket_count={@basket_count}
     >
       <.breadcrumb items={
         Enum.map(@trail, &{Translated.t(&1.name, @locale), ~p"/kategorien/#{&1.slug}"}) ++
@@ -265,11 +303,15 @@ defmodule MercatorWeb.ProductLive do
             <.graduated_prices :if={@variant} variant={@variant} product={@product} locale={@locale} />
           <% end %>
 
-          <div class="tooltip" data-tip={gettext("The basket follows soon.")}>
-            <button type="button" class="btn btn-primary btn-lg" disabled id="add-to-basket">
-              <.icon name="hero-shopping-cart" class="size-5" /> {gettext("Add to basket")}
-            </button>
-          </div>
+          <button
+            type="button"
+            phx-click="add_to_basket"
+            class="btn btn-primary btn-lg"
+            disabled={not can_add?(assigns)}
+            id="add-to-basket"
+          >
+            <.icon name="hero-shopping-cart" class="size-5" /> {gettext("Add to basket")}
+          </button>
 
           <ul :if={@product.highlights != []} class="list-disc pl-5" id="highlights">
             <li :for={highlight <- @product.highlights}>{Translated.t(highlight, @locale)}</li>

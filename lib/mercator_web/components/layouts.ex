@@ -29,6 +29,7 @@ defmodule MercatorWeb.Layouts do
   attr :current_user, :map, default: nil, doc: "the signed-in user, if any"
   attr :locale, :string, default: nil, doc: "the current UI language"
   attr :nav_categories, :list, default: [], doc: "top-level categories for the main navigation"
+  attr :basket_count, :integer, default: 0, doc: "number of items in the basket"
 
   slot :inner_block, required: true
 
@@ -61,6 +62,23 @@ defmodule MercatorWeb.Layouts do
           <.icon name="hero-magnifying-glass" class="size-5" />
         </.link>
         <.catalog_menu :if={@nav_categories != []} categories={@nav_categories} locale={@locale} />
+        <.link
+          navigate={~p"/warenkorb"}
+          class="btn btn-ghost btn-sm"
+          id="basket-link"
+          aria-label={gettext("Basket")}
+        >
+          <div class="indicator">
+            <.icon name="hero-shopping-cart" class="size-5" />
+            <span
+              :if={@basket_count > 0}
+              class="badge badge-primary badge-xs indicator-item"
+              id="basket-count"
+            >
+              {@basket_count}
+            </span>
+          </div>
+        </.link>
         <.locale_switch locale={@locale} />
         <.theme_toggle />
         <%= if @current_user do %>

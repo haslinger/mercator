@@ -100,6 +100,7 @@ defmodule MercatorWeb.CategoryLive do
       current_user={@current_user}
       locale={@locale}
       nav_categories={@nav_categories}
+      basket_count={@basket_count}
     >
       <.breadcrumb items={
         Enum.map(@ancestors, &{Translated.t(&1.name, @locale), ~p"/kategorien/#{&1.slug}"}) ++

@@ -116,7 +116,7 @@ defmodule MercatorWeb.CatalogLiveTest do
       assert has_element?(view, "#price-box", "inkl. 20 % MwSt.")
       assert has_element?(view, "#graduated-prices")
       assert has_element?(view, "#relations-accessory")
-      assert has_element?(view, "#add-to-basket[disabled]")
+      assert has_element?(view, "#add-to-basket:not([disabled])")
     end
 
     test "switching the variant updates number and price", ctx do

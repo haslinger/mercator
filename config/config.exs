@@ -13,6 +13,8 @@ config :mercator, Oban,
   queues: [default: 10],
   lifeline: [rescue_after: {2, :hours}],
   pruner: [max_age: {1, :day}],
+  # times in UTC
+  crontab: [{"30 2 * * *", Mercator.Sales.Workers.DeleteAbandonedBaskets}],
   repo: Mercator.Repo
 
 # These enable behaviors that will become the default in the next major
@@ -78,7 +80,7 @@ config :mercator, Mercator.Repo, parameters: [lc_messages: "C"]
 config :mercator,
   ecto_repos: [Mercator.Repo],
   generators: [timestamp_type: :utc_datetime],
-  ash_domains: [Mercator.Accounts, Mercator.Catalog],
+  ash_domains: [Mercator.Accounts, Mercator.Catalog, Mercator.Sales],
   ash_authentication: [return_error_on_invalid_magic_link_token?: true]
 
 # Configure the endpoint
