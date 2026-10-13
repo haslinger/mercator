@@ -56,6 +56,7 @@ Translate concepts into idiomatic Ash rather than copying Rails patterns one-to-
 
 ## Working agreements
 
+- The user runs the dev server (`mix phx.server`, port 4000) themselves. Don't start your own; ask the user to start or restart it when needed.
 - Ask before installing software, adding infrastructure or creating long-lived setups.
 - Questions and suggestions are welcome; number open questions (`#N`) and keep `docs/roadmap.md` up to date when decisions are made.
 - Commit only when asked or when that's the agreed workflow.
