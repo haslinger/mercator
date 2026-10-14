@@ -69,4 +69,65 @@ defmodule MercatorWeb.PageLiveTest do
     {:ok, view, _html} = live(log_in_user(conn, editor), ~p"/pages/skizze?preview=1")
     assert has_element?(view, "#page-title", "Entwurf")
   end
+
+  describe "subpages" do
+    setup %{editor: editor, about: about} do
+      about = Content.publish_page!(about, actor: editor)
+
+      child =
+        %{
+          title: %{"de" => "Unser Team"},
+          parent_id: about.id,
+          icon: "hero-user-group",
+          seo_description: %{"de" => "Die Menschen hinter Biber Holz."},
+          menu: :main
+        }
+        |> Content.create_page!(actor: editor)
+        |> Content.publish_page!(actor: editor)
+
+      %{about: about, child: child}
+    end
+
+    test "the parent links to its published subpages", %{
+      conn: conn,
+      editor: editor,
+      about: about,
+      child: child
+    } do
+      hidden =
+        %{title: %{"de" => "Intern"}, parent_id: about.id}
+        |> Content.create_page!(actor: editor)
+        |> Content.publish_page!(actor: editor)
+        |> Content.hide_page!(actor: editor)
+
+      {:ok, view, _html} = live(conn, ~p"/pages/wir")
+
+      assert has_element?(
+               view,
+               ~s(#subpage-#{child.id}[href="/pages/wir/unser-team"]),
+               "Unser Team"
+             )
+
+      assert has_element?(view, "#subpage-#{child.id}", "Die Menschen hinter Biber Holz.")
+      assert has_element?(view, "#subpage-#{child.id} .hero-user-group")
+      refute has_element?(view, "#subpage-#{hidden.id}")
+    end
+
+    test "subpages show breadcrumbs", %{conn: conn} do
+      {:ok, view, _html} = live(conn, ~p"/pages/wir/unser-team")
+
+      assert has_element?(view, ~s(.breadcrumbs a[href="/pages/wir"]), "Über uns")
+      assert has_element?(view, ".breadcrumbs", "Unser Team")
+    end
+
+    test "subpages of an archived page are offline and leave the menu",
+         %{conn: conn, editor: editor, about: about, child: child} do
+      Content.archive_page!(about, actor: editor)
+
+      assert {:error, {:live_redirect, %{to: "/"}}} = live(conn, ~p"/pages/wir/unser-team")
+
+      {:ok, view, _html} = live(conn, ~p"/")
+      refute has_element?(view, "#nav-page-#{child.id}")
+    end
+  end
 end

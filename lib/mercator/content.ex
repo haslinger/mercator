@@ -56,7 +56,7 @@ defmodule Mercator.Content do
 
   require Ash.Query
 
-  alias Mercator.Content.Blocks
+  alias Mercator.Content.{Blocks, Page}
 
   @doc """
   Moves a page below `parent_id` (nil = top level) at `index` among its
@@ -103,6 +103,58 @@ defmodule Mercator.Content do
   def update_page_blocks(page, fun, actor) do
     blocks = page.blocks |> Enum.map(&Blocks.to_input/1) |> fun.()
     update_page(page, %{blocks: blocks}, actor: actor)
+  end
+
+  @doc """
+  The paths above a page path, root first:
+
+      iex> Mercator.Content.ancestor_paths("kontakt/anfahrt/parken")
+      ["kontakt", "kontakt/anfahrt"]
+  """
+  def ancestor_paths(path) do
+    path
+    |> String.split("/")
+    |> Enum.drop(-1)
+    |> Enum.scan(&(&2 <> "/" <> &1))
+  end
+
+  @doc """
+  Paths of pages that are offline (draft or archived). Their subpages are
+  offline too: see `reachable?/2`.
+  """
+  def offline_paths do
+    Page
+    |> Ash.Query.filter(kind == :page and state in [:draft, :archived])
+    |> Ash.Query.select([:path])
+    |> Ash.read!(authorize?: false)
+    |> MapSet.new(& &1.path)
+  end
+
+  @doc "Whether no ancestor of the page is offline (`offline_paths/0`)."
+  def reachable?(%{path: path}, offline \\ offline_paths()) do
+    not Enum.any?(ancestor_paths(path), &MapSet.member?(offline, &1))
+  end
+
+  @doc "The visible ancestors of a page (published or hidden), root first."
+  def published_ancestors(%{path: path}) do
+    case ancestor_paths(path) do
+      [] ->
+        []
+
+      paths ->
+        Page
+        |> Ash.Query.filter(path in ^paths and kind == :page and state in [:published, :hidden])
+        |> Ash.read!(authorize?: false)
+        |> Enum.sort_by(&String.length(&1.path))
+    end
+  end
+
+  @doc "The published subpages of a page (hidden ones are not listed), in order."
+  def published_children(%{id: id}) do
+    Page
+    |> Ash.Query.filter(parent_id == ^id and kind == :page and state == :published)
+    |> Ash.Query.sort(position: :asc, path: :asc)
+    |> Ash.read!(authorize?: false)
   end
 
   @doc "The media library files the blocks refer to, as a map id => asset."

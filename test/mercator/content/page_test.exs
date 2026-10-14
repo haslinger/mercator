@@ -6,6 +6,8 @@ defmodule Mercator.Content.PageTest do
   alias Mercator.Content
   alias Mercator.Content.Blocks
 
+  doctest Mercator.Content
+
   setup do
     %{editor: user_fixture(roles: [:contentmanager])}
   end

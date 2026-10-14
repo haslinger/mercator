@@ -28,6 +28,8 @@ defmodule MercatorWeb.SitemapController do
   end
 
   defp entries do
+    offline = Mercator.Content.offline_paths()
+
     pages =
       Page
       |> Ash.Query.filter(
@@ -35,6 +37,7 @@ defmodule MercatorWeb.SitemapController do
       )
       |> Ash.Query.sort(path: :asc)
       |> Ash.read!()
+      |> Enum.filter(&Mercator.Content.reachable?(&1, offline))
       |> Enum.map(&{Layouts.page_path(&1), &1.published_at})
 
     categories =

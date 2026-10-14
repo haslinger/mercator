@@ -25,12 +25,15 @@ defmodule MercatorWeb.Navigation do
 
   @doc "The navigation map, see the module doc."
   def load do
+    offline = Content.offline_paths()
+    reachable = &Content.reachable?(&1, offline)
+
     %{
       # hidden categories are reachable by link but not listed (#52)
       categories:
         Enum.filter(Catalog.list_root_categories!(load: :images), &(&1.state == :active)),
-      main: Content.list_menu_pages!(:main),
-      footer: Content.list_menu_pages!(:footer)
+      main: Enum.filter(Content.list_menu_pages!(:main), reachable),
+      footer: Enum.filter(Content.list_menu_pages!(:footer), reachable)
     }
   end
 

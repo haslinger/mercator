@@ -12,6 +12,7 @@ defmodule MercatorWeb.PageLive do
   use MercatorWeb, :live_view
 
   import MercatorWeb.ContentComponents, only: [block: 1]
+  import MercatorWeb.CatalogComponents, only: [breadcrumb: 1]
 
   alias Mercator.Content
   alias Mercator.Content.{Asset, Blocks}
@@ -38,6 +39,8 @@ defmodule MercatorWeb.PageLive do
            |> Map.merge(%{page_id: page.id, client_ip: MercatorWeb.ClientIp.from_socket(socket)})
          )
          |> assign(:preview?, preview?)
+         |> assign(:ancestors, Content.published_ancestors(page))
+         |> assign(:children, Content.published_children(page))
          |> assign(:page_title, Translated.t(content.title, socket.assigns.locale))
          |> assign_page_meta(page, content)}
 
@@ -110,8 +113,12 @@ defmodule MercatorWeb.PageLive do
       end
 
     case result do
-      {:ok, %{published: %{} = published} = page} -> {:ok, page, published}
-      _ -> :error
+      # subpages of an offline page (draft, archived) are offline too
+      {:ok, %{published: %{} = published} = page} ->
+        if Content.reachable?(page), do: {:ok, page, published}, else: :error
+
+      _ ->
+        :error
     end
   end
 
@@ -144,6 +151,14 @@ defmodule MercatorWeb.PageLive do
         <span>{gettext("Preview of the working copy – visitors see the published version.")}</span>
       </div>
 
+      <.breadcrumb
+        :if={@ancestors != []}
+        items={
+          Enum.map(@ancestors, &{Translated.t(&1.published.title, @locale), Layouts.page_path(&1)}) ++
+            [{Translated.t(@content.title, @locale), nil}]
+        }
+      />
+
       <article class="space-y-8" id="page">
         <h1
           class={["text-3xl font-bold", starts_with_hero?(@content.blocks) && "sr-only"]}
@@ -152,6 +167,25 @@ defmodule MercatorWeb.PageLive do
           {Translated.t(@content.title, @locale)}
         </h1>
         <.block :for={block <- @content.blocks} block={block} locale={@locale} data={@block_data} />
+
+        <section :if={@children != []} class="grid gap-4 sm:grid-cols-2" id="subpages">
+          <.link
+            :for={child <- @children}
+            navigate={Layouts.page_path(child)}
+            class="card bg-base-100 shadow-sm transition hover:shadow-md"
+            id={"subpage-#{child.id}"}
+          >
+            <div class="card-body flex-row items-start gap-4">
+              <.icon name={child.icon || "hero-document-text"} class="size-8 shrink-0 text-primary" />
+              <div class="space-y-1">
+                <h2 class="card-title">{Translated.t(child.published.title, @locale)}</h2>
+                <p :if={child.published.seo_description} class="text-sm text-base-content/70">
+                  {Translated.t(child.published.seo_description, @locale)}
+                </p>
+              </div>
+            </div>
+          </.link>
+        </section>
       </article>
     </Layouts.app>
     """
