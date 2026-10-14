@@ -4,8 +4,9 @@ defmodule Mercator.Content.Changes.SetPagePath do
   `ueber-uns/team` (shown at `/pages/ueber-uns/team`, #80).
 
   When the path of an existing page changes (new slug or new parent), the
-  paths of its descendants follow. Moving a page below itself or one of its
-  descendants is rejected.
+  paths of its descendants follow, and the old paths are kept as redirects
+  (`Mercator.Content.PageRedirect`). Moving a page below itself or one of
+  its descendants is rejected.
   """
   use Ash.Resource.Change
 
@@ -48,9 +49,27 @@ defmodule Mercator.Content.Changes.SetPagePath do
       changeset
       |> Ash.Changeset.force_change_attribute(:path, new_path)
       |> Ash.Changeset.after_action(fn _changeset, page ->
+        # the old paths of the page and its descendants keep working (redirects)
+        %{rows: moved} =
+          Mercator.Repo.query!(
+            "UPDATE pages SET path = $2 || substr(path, length($1) + 1) WHERE path LIKE $3 RETURNING id",
+            [old_path, new_path, escape_like(old_path) <> "/%"]
+          )
+
         Mercator.Repo.query!(
-          "UPDATE pages SET path = $2 || substr(path, length($1) + 1) WHERE path LIKE $3",
-          [old_path, new_path, escape_like(old_path) <> "/%"]
+          """
+          INSERT INTO page_redirects (id, old_path, page_id, inserted_at)
+          SELECT gen_random_uuid(), $1 || substr(path, length($2) + 1), id, now() AT TIME ZONE 'utc'
+          FROM pages WHERE id = ANY($3)
+          ON CONFLICT (old_path) DO UPDATE SET page_id = EXCLUDED.page_id
+          """,
+          [old_path, new_path, [Ecto.UUID.dump!(page.id) | Enum.map(moved, &hd/1)]]
+        )
+
+        # a path that is in use again belongs to its page, not to a redirect
+        Mercator.Repo.query!(
+          "DELETE FROM page_redirects WHERE old_path IN (SELECT path FROM pages)",
+          []
         )
 
         {:ok, page}

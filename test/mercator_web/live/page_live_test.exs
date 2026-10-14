@@ -130,4 +130,46 @@ defmodule MercatorWeb.PageLiveTest do
       refute has_element?(view, "#nav-page-#{child.id}")
     end
   end
+
+  describe "old addresses" do
+    test "a renamed or moved page is still found at its old path (301)", %{
+      conn: conn,
+      editor: editor,
+      about: about
+    } do
+      about = Content.publish_page!(about, actor: editor)
+
+      child =
+        %{title: %{"de" => "Anfahrt"}, parent_id: about.id}
+        |> Content.create_page!(actor: editor)
+        |> Content.publish_page!(actor: editor)
+
+      Content.update_page!(about, %{slug: "wir-neu"}, actor: editor)
+
+      conn1 = get(conn, "/pages/wir?locale=en")
+      assert redirected_to(conn1, 301) == "/pages/wir-neu?locale=en"
+
+      assert redirected_to(get(build_conn(), "/pages/wir/anfahrt"), 301) ==
+               "/pages/wir-neu/anfahrt"
+
+      # moved again: still one hop to the current address
+      Content.move_page!(Content.get_page!(child.id, actor: editor), %{parent_id: nil},
+        actor: editor
+      )
+
+      assert redirected_to(get(build_conn(), "/pages/wir/anfahrt"), 301) == "/pages/anfahrt"
+      assert redirected_to(get(build_conn(), "/pages/wir-neu/anfahrt"), 301) == "/pages/anfahrt"
+    end
+
+    test "a new page at an old path takes it over", %{conn: conn, editor: editor, about: about} do
+      Content.update_page!(about, %{slug: "wir-alt"}, actor: editor)
+
+      %{title: %{"de" => "Wir"}, slug: "wir"}
+      |> Content.create_page!(actor: editor)
+      |> Content.publish_page!(actor: editor)
+
+      {:ok, view, _html} = live(conn, ~p"/pages/wir")
+      assert has_element?(view, "#page-title", "Wir")
+    end
+  end
 end

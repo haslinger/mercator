@@ -37,6 +37,10 @@ defmodule Mercator.Content do
       define :destroy_page, action: :destroy
     end
 
+    resource Mercator.Content.PageRedirect do
+      define :get_page_redirect, action: :by_old_path, args: [:old_path], not_found_error?: false
+    end
+
     resource Mercator.Content.Submission do
       define :submit_contact_form, action: :submit
       define :list_submissions, action: :read

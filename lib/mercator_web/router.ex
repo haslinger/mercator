@@ -7,6 +7,8 @@ defmodule MercatorWeb.Router do
 
   pipeline :browser do
     plug :accepts, ["html"]
+    # old page paths redirect permanently, before any session work
+    plug MercatorWeb.Plugs.PageRedirect
     plug :fetch_session
     plug :fetch_live_flash
     plug :put_root_layout, html: {MercatorWeb.Layouts, :root}
