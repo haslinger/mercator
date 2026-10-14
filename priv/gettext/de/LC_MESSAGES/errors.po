@@ -181,7 +181,7 @@ msgstr "ist kein lesbares Bild"
 msgid "is not a valid postcode for this country"
 msgstr "ist keine gültige Postleitzahl für dieses Land"
 
-#: lib/mercator/content/changes/store_asset.ex:52
+#: lib/mercator/content/changes/store_asset.ex:63
 #, elixir-autogen, elixir-format
 msgid "is neither an image nor a PDF"
 msgstr "ist weder ein Bild noch ein PDF"

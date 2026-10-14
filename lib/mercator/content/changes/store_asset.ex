@@ -2,27 +2,38 @@ defmodule Mercator.Content.Changes.StoreAsset do
   @moduledoc """
   Stores the uploaded file of an asset before the record is written: images
   (detected by content, not by name) become WebP in the media library's
-  sizes, PDFs are copied. Other files are rejected.
+  sizes, PDFs are copied. With `office: true` (files shared in a
+  conversation) also the office and CAD files of
+  `Mercator.Content.FileTypes` are copied. Other files are rejected.
   """
   use Ash.Resource.Change
   use Gettext, backend: MercatorWeb.Gettext
 
   alias Mercator.Catalog.{ImageProcessing, Slug}
+  alias Mercator.Content.FileTypes
   alias Mercator.Uploads
 
   @sizes [wide: {1920, 80}, large: {1024, 82}, thumb: {400, 78}]
 
   @impl true
-  def change(changeset, _opts, _context) do
+  def change(changeset, opts, _context) do
     Ash.Changeset.before_action(changeset, fn changeset ->
       id = Ash.Changeset.get_attribute(changeset, :id) || Ash.UUID.generate()
       source = Ash.Changeset.get_argument(changeset, :source_path)
       name = Ash.Changeset.get_attribute(changeset, :original_filename) || "file"
       changeset = Ash.Changeset.force_change_attribute(changeset, :id, id)
 
-      if pdf?(source),
-        do: store_document(changeset, source, id, name),
-        else: store_image(changeset, source, id)
+      cond do
+        pdf?(source) ->
+          store_document(changeset, source, id, name, ".pdf", "application/pdf")
+
+        opts[:office] && FileTypes.detect(source, name) != :error ->
+          {:ok, extension, type} = FileTypes.detect(source, name)
+          store_document(changeset, source, id, name, extension, type)
+
+        true ->
+          store_image(changeset, source, id)
+      end
     end)
   end
 
@@ -54,8 +65,8 @@ defmodule Mercator.Content.Changes.StoreAsset do
     end
   end
 
-  defp store_document(changeset, source, id, name) do
-    file_name = safe_name(name)
+  defp store_document(changeset, source, id, name, extension, content_type) do
+    file_name = safe_name(name, extension)
     dir = Uploads.path("assets/#{id}")
     File.mkdir_p!(dir)
     File.cp!(source, Path.join(dir, file_name))
@@ -63,14 +74,14 @@ defmodule Mercator.Content.Changes.StoreAsset do
     Ash.Changeset.force_change_attributes(changeset,
       kind: :document,
       file_name: file_name,
-      content_type: "application/pdf",
+      content_type: content_type,
       byte_size: File.stat!(source).size
     )
   end
 
   # keeps the name readable for downloads, without path parts or odd characters
-  defp safe_name(name) do
+  defp safe_name(name, extension) do
     base = name |> Path.basename() |> Path.rootname() |> Slug.slugify()
-    if(base in [nil, ""], do: "document", else: base) <> ".pdf"
+    if(base in [nil, ""], do: "document", else: base) <> extension
   end
 end

@@ -12,6 +12,7 @@ defmodule MercatorWeb.Admin.DeskLive do
 
   alias Mercator.{Catalog, Content}
   alias Mercator.Consulting.{Desk, Offer, Offers}
+  alias Mercator.Content.FileTypes
   alias Mercator.Sales.Baskets
   alias MercatorWeb.{Format, Presence}
 
@@ -53,7 +54,7 @@ defmodule MercatorWeb.Admin.DeskLive do
        sent: 0
      )
      |> allow_upload(:chat_file,
-       accept: ~w(.jpg .jpeg .png .webp .pdf),
+       accept: ~w(.jpg .jpeg .png .webp .pdf) ++ FileTypes.extensions(),
        max_entries: 1,
        max_file_size: 20_000_000
      )
@@ -276,7 +277,7 @@ defmodule MercatorWeb.Admin.DeskLive do
   defp share_title(:upload), do: gettext("File from my computer")
 
   defp upload_error(:too_large), do: gettext("The file is larger than 20 MB.")
-  defp upload_error(:not_accepted), do: gettext("Only images (JPG, PNG, WebP) and PDFs.")
+  defp upload_error(:not_accepted), do: gettext("This file type cannot be shared.")
   defp upload_error(:too_many_files), do: gettext("One file at a time.")
   defp upload_error(_error), do: gettext("The file could not be uploaded.")
 
@@ -717,7 +718,9 @@ defmodule MercatorWeb.Admin.DeskLive do
                 <.icon name="hero-arrow-up-tray" class="size-8 text-primary" />
                 <span>{gettext("Drop a file here or click to choose one")}</span>
                 <span class="text-xs text-base-content/60">
-                  {gettext("Images (JPG, PNG, WebP) or PDF, up to 20 MB")}
+                  {gettext(
+                    "Images, PDF, Word, Excel, LibreOffice (ODT, ODS) or AutoCAD (DWG, DXF), up to 20 MB"
+                  )}
                 </span>
                 <.live_file_input upload={@uploads.chat_file} class="hidden" />
               </label>

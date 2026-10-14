@@ -97,7 +97,7 @@ defmodule Mercator.Content.Asset do
         )
       end
 
-      change StoreAsset
+      change {StoreAsset, office: true}
     end
 
     update :update do

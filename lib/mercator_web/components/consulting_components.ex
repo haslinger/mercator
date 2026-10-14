@@ -158,12 +158,14 @@ defmodule MercatorWeb.ConsultingComponents do
       class="mt-1 flex w-72 max-w-full items-center gap-2 rounded-box bg-base-100 p-2 text-sm text-base-content shadow-sm hover:shadow"
       id={"attachment-#{@message.id}"}
     >
-      <.icon name="hero-document-text" class="size-6 shrink-0 text-primary" />
+      <.icon name={file_icon(@asset.file_name)} class="size-6 shrink-0 text-primary" />
       <span class="min-w-0">
         <span class="block truncate font-semibold">
           {Translated.t(@asset.title, @locale) || @asset.original_filename}
         </span>
-        <span class="text-xs text-base-content/60">PDF · {file_size(@asset.byte_size)}</span>
+        <span class="text-xs text-base-content/60">
+          {file_label(@asset.file_name)} · {file_size(@asset.byte_size)}
+        </span>
       </span>
     </a>
     """
@@ -188,6 +190,16 @@ defmodule MercatorWeb.ConsultingComponents do
     ~H"""
     <.link navigate={@path} class={@class} id={@id}>{render_slot(@inner_block)}</.link>
     """
+  end
+
+  defp file_label(name), do: name |> Path.extname() |> String.trim_leading(".") |> String.upcase()
+
+  defp file_icon(name) do
+    case Path.extname(name) do
+      ext when ext in [".xls", ".xlsx", ".ods"] -> "hero-table-cells"
+      ext when ext in [".dwg", ".dxf"] -> "hero-cube-transparent"
+      _ -> "hero-document-text"
+    end
   end
 
   defp file_size(nil), do: ""

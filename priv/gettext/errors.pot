@@ -188,7 +188,7 @@ msgstr ""
 msgid "is not a valid postcode for this country"
 msgstr ""
 
-#: lib/mercator/content/changes/store_asset.ex:52
+#: lib/mercator/content/changes/store_asset.ex:63
 #, elixir-autogen, elixir-format
 msgid "is neither an image nor a PDF"
 msgstr ""

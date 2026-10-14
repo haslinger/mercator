@@ -142,6 +142,13 @@ config :mercator, :rate_limits,
 # callback form appears (immediately when nobody is at the sales desk)
 config :mercator, :consulting_wait_seconds, 120
 
+# AutoCAD drawings may be shared in conversations (Mercator.Content.FileTypes);
+# the mime package does not know them (needs `mix deps.compile mime --force`)
+config :mime, :types, %{
+  "image/vnd.dwg" => ["dwg"],
+  "image/vnd.dxf" => ["dxf"]
+}
+
 # Offers: default validity in days, and the discount in percent above which
 # a sales manager approves an offer (#98)
 config :mercator, :offer_validity_days, 30
