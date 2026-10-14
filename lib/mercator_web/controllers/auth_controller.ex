@@ -2,6 +2,7 @@ defmodule MercatorWeb.AuthController do
   use MercatorWeb, :controller
   use AshAuthentication.Phoenix.Controller
 
+  alias Mercator.Consulting.Conversations
   alias Mercator.Sales.Baskets
   alias MercatorWeb.BasketSession
 
@@ -17,6 +18,7 @@ defmodule MercatorWeb.AuthController do
 
     # move the visitor basket into the user's basket (#8)
     Baskets.merge(get_session(conn, BasketSession.key()), user)
+    Conversations.merge(get_session(conn, BasketSession.key()), user)
 
     conn
     |> delete_session(:return_to)

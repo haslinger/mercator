@@ -321,6 +321,20 @@ defmodule MercatorWeb.ProductLive do
             <.icon name="hero-shopping-cart" class="size-5" /> {gettext("Add to basket")}
           </button>
 
+          <%!-- opens the chat with a consultant about this product (MercatorWeb.ChatLive) --%>
+          <button
+            type="button"
+            phx-click={
+              JS.dispatch("mercator:open-chat",
+                detail: %{subject: Translated.t(@product.title, @locale), product_id: @product.id}
+              )
+            }
+            class="btn btn-outline"
+            id="ask-consultant"
+          >
+            <.icon name="hero-chat-bubble-left-right" class="size-5" /> {gettext("Get advice")}
+          </button>
+
           <ul :if={@product.highlights != []} class="list-disc pl-5" id="highlights">
             <li :for={highlight <- @product.highlights}>{Translated.t(highlight, @locale)}</li>
           </ul>
