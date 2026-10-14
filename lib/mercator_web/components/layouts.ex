@@ -35,12 +35,14 @@ defmodule MercatorWeb.Layouts do
 
   def app(assigns) do
     ~H"""
-    <header class="navbar bg-base-100 shadow-sm px-4 sm:px-6 lg:px-8">
-      <div class="flex-1 gap-1">
+    <header class="navbar bg-base-100 shadow-sm px-2 min-[360px]:px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-1 items-center gap-1">
         <.back_button />
-        <.link navigate={~p"/"} class="flex items-center gap-3" id="brand">
-          <img src={~p"/brand/pin"} alt="" class="h-10 w-auto" id="brand-pin" />
-          <span class="text-xl font-bold text-primary">{Mercator.Brand.name()}</span>
+        <.link navigate={~p"/"} class="flex shrink-0 items-center gap-3" id="brand">
+          <img src={~p"/brand/pin"} alt="" class="h-10 w-auto shrink-0" id="brand-pin" />
+          <span class="hidden text-xl font-bold whitespace-nowrap text-primary sm:inline">
+            {Mercator.Brand.name()}
+          </span>
         </.link>
       </div>
       <div class="flex-none flex items-center gap-0.5 md:gap-2">
@@ -146,7 +148,7 @@ defmodule MercatorWeb.Layouts do
       <input id="admin-drawer" type="checkbox" class="drawer-toggle" />
       <div class="drawer-content flex min-h-screen flex-col">
         <header class="navbar bg-base-100 shadow-sm px-4">
-          <div class="flex-1 gap-2">
+          <div class="flex flex-1 items-center gap-2">
             <label
               for="admin-drawer"
               class="btn btn-ghost btn-sm lg:hidden"
@@ -156,9 +158,13 @@ defmodule MercatorWeb.Layouts do
             </label>
             <.back_button />
             <.link navigate={~p"/admin"} class="flex items-center gap-2" id="admin-brand">
-              <img src={~p"/brand/pin"} alt="" class="h-8 w-auto" />
-              <span class="font-bold text-primary">{Mercator.Brand.name()}</span>
-              <span class="badge badge-neutral badge-sm">{gettext("Admin")}</span>
+              <img src={~p"/brand/pin"} alt="" class="h-8 w-auto shrink-0" />
+              <span class="hidden font-bold whitespace-nowrap text-primary sm:inline">
+                {Mercator.Brand.name()}
+              </span>
+              <span class="badge badge-neutral badge-sm hidden min-[360px]:inline-flex">
+                {gettext("Admin")}
+              </span>
             </.link>
           </div>
           <div class="flex-none flex items-center gap-0.5 md:gap-2">
