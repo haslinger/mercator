@@ -293,6 +293,11 @@ defmodule MercatorWeb.Admin.CategoryTreeLive do
             type="textarea"
             rows="2"
           />
+          <.translated_input
+            field={@form[:long_description]}
+            label={gettext("Text below the products")}
+            type="markdown"
+          />
           <.input
             field={@form[:slug]}
             label={gettext("URL name (slug), generated from the German name if empty")}

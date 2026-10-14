@@ -57,7 +57,8 @@ Block types for a start:
 - Stored as Markdown in the translated maps; rendered to HTML on display, **sanitized** (no raw HTML from content, no scripts), with Tailwind Typography-like styles from the theme.
 - Library (#77): **MDEx** (CommonMark + GitHub extensions such as tables, built-in sanitizing, fast, precompiled Rust NIF) — or **Earmark** (pure Elixir, simpler, slower, no built-in sanitizing).
 - Editor (#78): a textarea with a small toolbar (bold, italic, heading, list, link, image from the media library) and a live preview next to it (side by side on wide screens, tabs on phones). One component, used everywhere.
-- Fields that switch to Markdown (#79): product description and long description, category description, GTC text (today a minimal parser for headings and paragraphs), and later offers and messages.
+- *Implemented (step 1, 2026-10-14):* the editor is **OverType** (MIT, self-hosted in `priv/static/overtype`, as in the pan project): it shows the formatting inline while typing and has a toolbar, so no separate preview pane is needed. Rendering in `MercatorWeb.Markdown` (raw HTML escaped, unsafe links dropped, sanitized; single line breaks kept).
+- Fields that switch to Markdown (#79): product description and long description, category **long** description (shown below the products; the short description stays plain text for tiles), GTC text (today a minimal parser for headings and paragraphs), and later offers and messages.
 
 ## 6. URLs and navigation (#80, #81)
 

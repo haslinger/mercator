@@ -4,6 +4,8 @@ defmodule MercatorWeb.GtcLive do
   """
   use MercatorWeb, :live_view
 
+  import MercatorWeb.MarkdownComponents, only: [markdown: 1]
+
   alias Mercator.Sales
   alias Mercator.Translated
   alias MercatorWeb.Format
@@ -35,51 +37,12 @@ defmodule MercatorWeb.GtcLive do
           <p class="text-sm text-base-content/70" id="gtc-version">
             {gettext("Valid from %{date}", date: Format.date(@gtc.version))}
           </p>
-          <.gtc_text text={Translated.t(@gtc.text, @locale)} />
+          <.markdown text={Translated.t(@gtc.text, @locale)} id="gtc-text" />
         <% else %>
           <p id="no-gtc">{gettext("The terms and conditions have not been published yet.")}</p>
         <% end %>
       </article>
     </Layouts.app>
     """
-  end
-
-  attr :text, :string, required: true
-
-  @doc """
-  Renders GTC plain text: blank lines separate paragraphs, a line starting
-  with `## ` is a heading (the following lines are its first paragraph).
-  """
-  def gtc_text(assigns) do
-    assigns = assign(assigns, :blocks, blocks(assigns.text))
-
-    ~H"""
-    <div class="space-y-3 leading-relaxed">
-      <%= for block <- @blocks do %>
-        <%= case block do %>
-          <% {:heading, text} -> %>
-            <h2 class="text-xl font-semibold pt-2">{text}</h2>
-          <% {:paragraph, text} -> %>
-            <p class="whitespace-pre-line">{text}</p>
-        <% end %>
-      <% end %>
-    </div>
-    """
-  end
-
-  defp blocks(text) do
-    text
-    |> String.split(~r/\n\s*\n/, trim: true)
-    |> Enum.map(&String.trim/1)
-    |> Enum.flat_map(fn
-      "## " <> heading ->
-        case String.split(heading, "\n", parts: 2) do
-          [heading, paragraph] -> [{:heading, heading}, {:paragraph, String.trim(paragraph)}]
-          [heading] -> [{:heading, heading}]
-        end
-
-      paragraph ->
-        [{:paragraph, paragraph}]
-    end)
   end
 end

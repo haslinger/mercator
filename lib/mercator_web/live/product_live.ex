@@ -6,6 +6,8 @@ defmodule MercatorWeb.ProductLive do
   """
   use MercatorWeb, :live_view
 
+  import MercatorWeb.MarkdownComponents, only: [markdown: 1]
+
   import MercatorWeb.CatalogComponents
 
   alias Mercator.Catalog
@@ -321,12 +323,12 @@ defmodule MercatorWeb.ProductLive do
 
       <section
         :if={@product.description || @product.long_description}
-        class="prose max-w-none"
+        class="max-w-3xl space-y-3"
         id="description"
       >
-        <h2>{gettext("Description")}</h2>
-        <p :if={@product.description}>{Translated.t(@product.description, @locale)}</p>
-        <p :if={@product.long_description}>{Translated.t(@product.long_description, @locale)}</p>
+        <h2 class="text-2xl font-bold">{gettext("Description")}</h2>
+        <.markdown text={Translated.t(@product.description, @locale)} heading_offset={2} />
+        <.markdown text={Translated.t(@product.long_description, @locale)} heading_offset={2} />
       </section>
 
       <section :if={@product.product_properties != []} id="properties">

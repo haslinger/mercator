@@ -307,14 +307,12 @@ defmodule MercatorWeb.Admin.ProductEditLive do
             <.translated_input
               field={@form[:description]}
               label={gettext("Description")}
-              type="textarea"
-              rows="3"
+              type="markdown"
             />
             <.translated_input
               field={@form[:long_description]}
               label={gettext("Long description")}
-              type="textarea"
-              rows="5"
+              type="markdown"
             />
             <.translated_input
               field={@form[:warranty]}

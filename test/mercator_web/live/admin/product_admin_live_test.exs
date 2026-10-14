@@ -146,6 +146,19 @@ defmodule MercatorWeb.Admin.ProductAdminLiveTest do
       assert Enum.map(product.categories, & &1.id) == [ctx.energy.id]
     end
 
+    test "descriptions are edited with the Markdown editor", ctx do
+      {:ok, view, _html} = live(ctx.conn, ~p"/admin/products/#{ctx.larch.id}")
+
+      assert has_element?(view, ~s(#form_long_description_de-editor[phx-hook="MarkdownEditor"]))
+
+      view
+      |> form("#product-form", form: %{long_description: %{de: "**Sägerau**\n\n- Lärche"}})
+      |> render_submit()
+
+      product = Catalog.get_product!(ctx.larch.id, authorize?: false)
+      assert product.long_description["de"] == "**Sägerau**\n\n- Lärche"
+    end
+
     test "ignores the _unused_ keys LiveView sends for untouched highlights", ctx do
       {:ok, view, _html} = live(ctx.conn, ~p"/admin/products/#{ctx.larch.id}")
 

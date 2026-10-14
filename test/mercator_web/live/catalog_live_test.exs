@@ -106,6 +106,28 @@ defmodule MercatorWeb.CatalogLiveTest do
     end
   end
 
+  describe "Markdown texts" do
+    test "product descriptions are rendered as Markdown", ctx do
+      Ash.Seed.update!(ctx.batten, %{
+        long_description: %{"de" => "## Verarbeitung\nSägerau, **imprägniert**."}
+      })
+
+      {:ok, view, _html} = live(ctx.conn, ~p"/products/#{ctx.batten.slug}")
+
+      assert has_element?(view, "#description .markdown h4", "Verarbeitung")
+      assert has_element?(view, "#description strong", "imprägniert")
+    end
+
+    test "the category text below the products is Markdown", ctx do
+      Ash.Seed.update!(ctx.root, %{long_description: %{"de" => "## Über Bauholz\n- trocken"}})
+
+      {:ok, view, _html} = live(ctx.conn, ~p"/categories/bauholz")
+
+      assert has_element?(view, "#category-text h3", "Über Bauholz")
+      assert has_element?(view, "#category-text li", "trocken")
+    end
+  end
+
   describe "product page" do
     test "shows title, price of the first variant, properties and accessories", ctx do
       {:ok, view, _html} = live(ctx.conn, ~p"/products/#{ctx.batten.slug}")

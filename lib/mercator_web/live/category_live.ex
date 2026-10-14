@@ -5,6 +5,8 @@ defmodule MercatorWeb.CategoryLive do
   """
   use MercatorWeb, :live_view
 
+  import MercatorWeb.MarkdownComponents, only: [markdown: 1]
+
   import MercatorWeb.CatalogComponents
 
   alias Mercator.Catalog
@@ -138,6 +140,10 @@ defmodule MercatorWeb.CategoryLive do
             </div>
           </div>
         </section>
+      </div>
+
+      <div :if={@category.long_description} class="max-w-3xl" id="category-text">
+        <.markdown text={Translated.t(@category.long_description, @locale)} heading_offset={1} />
       </div>
     </Layouts.app>
     """

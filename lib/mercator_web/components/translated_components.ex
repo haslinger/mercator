@@ -5,17 +5,19 @@ defmodule MercatorWeb.TranslatedComponents do
   use Phoenix.Component
 
   import MercatorWeb.CoreComponents, only: [input: 1, translate_error: 1]
+  import MercatorWeb.MarkdownComponents, only: [markdown_input: 1]
 
   alias Mercator.Translated
 
   attr :field, Phoenix.HTML.FormField, required: true
   attr :label, :string, required: true
-  attr :type, :string, default: "text", values: ~w(text textarea)
+  attr :type, :string, default: "text", values: ~w(text textarea markdown)
   attr :rest, :global, include: ~w(required rows maxlength placeholder)
 
   @doc """
   One input per content locale for a `Mercator.Translated` form field, sent as
   `field[de]`, `field[en]`, … Errors of the field are shown below the inputs.
+  `type="markdown"` gives Markdown editors.
 
       <.translated_input field={@form[:name]} label={gettext("Name")} />
   """
@@ -32,8 +34,18 @@ defmodule MercatorWeb.TranslatedComponents do
 
     ~H"""
     <div id={@field.id} class="translated-input">
+      <.markdown_input
+        :for={locale <- Translated.locales()}
+        :if={@type == "markdown"}
+        id={"#{@field.id}_#{locale}"}
+        name={"#{@field.name}[#{locale}]"}
+        value={value_for(@value, locale)}
+        label={"#{@label} (#{String.upcase(locale)})"}
+        placeholder={@rest[:placeholder]}
+      />
       <.input
         :for={locale <- Translated.locales()}
+        :if={@type != "markdown"}
         type={@type}
         id={"#{@field.id}_#{locale}"}
         name={"#{@field.name}[#{locale}]"}
