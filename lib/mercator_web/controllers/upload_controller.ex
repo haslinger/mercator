@@ -12,7 +12,8 @@ defmodule MercatorWeb.UploadController do
     ".webp" => "image/webp",
     ".png" => "image/png",
     ".jpg" => "image/jpeg",
-    ".jpeg" => "image/jpeg"
+    ".jpeg" => "image/jpeg",
+    ".pdf" => "application/pdf"
   }
 
   def show(conn, %{"path" => segments}) do

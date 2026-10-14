@@ -5,6 +5,8 @@ defmodule MercatorWeb.UploadControllerTest do
 
   alias Mercator.Catalog
   alias Mercator.Catalog.Image
+  alias Mercator.Content
+  alias Mercator.Content.Asset
 
   setup do
     {:ok, image} =
@@ -22,6 +24,23 @@ defmodule MercatorWeb.UploadControllerTest do
     assert response(conn, 200)
     assert response_content_type(conn, :webp) =~ "image/webp"
     assert get_resp_header(conn, "cache-control") == ["public, max-age=31536000, immutable"]
+  end
+
+  test "serves PDFs and images of the media library", %{conn: conn} do
+    upload = fn source, name ->
+      Content.upload_asset!(
+        %{source_path: source, original_filename: name, tags: ["test"]},
+        authorize?: false
+      )
+    end
+
+    pdf = upload.("test/fixtures/sample.pdf", "Preisliste.pdf")
+    conn = get(conn, Asset.url(pdf))
+    assert response(conn, 200) =~ "%PDF-"
+    assert response_content_type(conn, :pdf) =~ "application/pdf"
+
+    image = upload.("test/fixtures/wood.jpg", "wood.jpg")
+    assert build_conn() |> get(Asset.url(image, :wide)) |> response(200)
   end
 
   test "does not leave the upload directory", %{conn: conn} do
