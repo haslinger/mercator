@@ -60,7 +60,10 @@ defmodule MercatorWeb.Admin.OrderShowLive do
         &(&1 in AshStateMachine.possible_next_states(order))
       )
     )
-    |> assign(:form, to_form(%{"note" => "", "shipping_gross" => ""}, as: :change))
+    |> assign(
+      :form,
+      to_form(%{"note" => "", "shipping_gross" => "", "notify" => "true"}, as: :change)
+    )
   end
 
   @impl true
@@ -96,6 +99,7 @@ defmodule MercatorWeb.Admin.OrderShowLive do
 
   defp transition_args(state, order, input) do
     note = blank_to_nil(input["note"])
+    notify = input["notify"] != "false"
 
     cond do
       state == :cancelled and is_nil(note) ->
@@ -103,12 +107,12 @@ defmodule MercatorWeb.Admin.OrderShowLive do
 
       state == :confirmed and order.shipping_estimate ->
         case Decimal.parse(String.replace(input["shipping_gross"] || "", ",", ".")) do
-          {amount, ""} -> {:ok, %{note: note, shipping_gross: amount}}
+          {amount, ""} -> {:ok, %{note: note, notify: notify, shipping_gross: amount}}
           _ -> {:error, gettext("Please enter the final shipping costs.")}
         end
 
       true ->
-        {:ok, %{note: note}}
+        {:ok, %{note: note, notify: notify}}
     end
   end
 
@@ -188,6 +192,16 @@ defmodule MercatorWeb.Admin.OrderShowLive do
                   type="textarea"
                   label={gettext("Note (required for cancellation)")}
                 />
+                <p class="text-xs text-base-content/60">
+                  {gettext(
+                    "Notes are internal; only the reason for a cancellation is sent to the customer."
+                  )}
+                </p>
+                <.input
+                  field={@form[:notify]}
+                  type="checkbox"
+                  label={gettext("Inform the customer by email")}
+                />
                 <div class="mt-2 flex flex-wrap gap-2">
                   <button
                     :for={state <- @next_states}
@@ -231,6 +245,9 @@ defmodule MercatorWeb.Admin.OrderShowLive do
                       <span :if={event.user}>· {event.user.name || event.user.email}</span>
                     </p>
                     <p :if={event.note} class="text-sm">{event.note}</p>
+                    <p :if={event.customer_notified} class="text-xs text-base-content/60">
+                      <.icon name="hero-envelope" class="size-3" /> {gettext("Customer informed")}
+                    </p>
                   </div>
                   <hr :if={index < length(@order.events) - 1} />
                 </li>

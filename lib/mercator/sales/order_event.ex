@@ -27,7 +27,7 @@ defmodule Mercator.Sales.OrderEvent do
 
     create :create do
       primary? true
-      accept [:from_state, :to_state, :note, :order_id, :user_id]
+      accept [:from_state, :to_state, :note, :customer_notified, :order_id, :user_id]
     end
   end
 
@@ -51,6 +51,13 @@ defmodule Mercator.Sales.OrderEvent do
     attribute :note, :string do
       public? true
       constraints max_length: 2000
+    end
+
+    attribute :customer_notified, :boolean do
+      description "Whether the customer was emailed about this change (#74)."
+      allow_nil? false
+      default false
+      public? true
     end
 
     create_timestamp :inserted_at

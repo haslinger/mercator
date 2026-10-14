@@ -79,6 +79,22 @@ defmodule MercatorWeb.Admin.OrderAdminLiveTest do
       refute has_element?(view, "#to-confirmed")
     end
 
+    test "staff can skip the customer email", %{conn: conn, board: board, sales: sales} do
+      order = order_fixture(customer_fixture(), board)
+      {:ok, view, _html} = live(conn, ~p"/admin/orders/#{order.number}")
+
+      view
+      |> form("#transition-form", change: %{notify: "false"})
+      |> render_submit(%{"to" => "confirmed"})
+
+      refute has_element?(view, "#order-history", "Kunde informiert")
+      [event] = Ash.load!(order, :events, actor: sales).events
+      refute event.customer_notified
+
+      view |> form("#transition-form") |> render_submit(%{"to" => "shipped"})
+      assert has_element?(view, "#order-history", "Kunde informiert")
+    end
+
     test "cancelling needs a reason and restores stock", %{conn: conn, board: board} do
       order = order_fixture(customer_fixture(), [{board, 4}])
       {:ok, view, _html} = live(conn, ~p"/admin/orders/#{order.number}")

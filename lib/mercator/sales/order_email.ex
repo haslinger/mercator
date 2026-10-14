@@ -1,7 +1,8 @@
 defmodule Mercator.Sales.OrderEmail do
   @moduledoc """
-  The order confirmation email (#70: text and HTML, no PDF), in the
-  customer's language.
+  Emails to the customer about an order, in the customer's language (text
+  and HTML, no PDF): the order confirmation (#70) and state changes by staff
+  (#74).
   """
 
   use Gettext, backend: MercatorWeb.Gettext
@@ -28,6 +29,65 @@ defmodule Mercator.Sales.OrderEmail do
       |> text_body(Enum.join(lines, "\n"))
       |> html_body(html(lines))
     end)
+  end
+
+  @doc """
+  Builds the email about a state change (`:confirmed`, `:shipped` or
+  `:cancelled`); `note` is the reason of a cancellation.
+  """
+  def status_change(order, state, note \\ nil) do
+    Gettext.with_locale(MercatorWeb.Gettext, order.locale, fn ->
+      lines =
+        status_lines(order, state, note) ++
+          [
+            "",
+            gettext("You can see your order at any time in your account:"),
+            url(~p"/account/orders/#{order.number}"),
+            "",
+            Brand.name()
+          ]
+
+      new()
+      |> from(Mercator.Mailer.default_from())
+      |> to(order.email)
+      |> subject(status_subject(order, state))
+      |> text_body(Enum.join(lines, "\n"))
+      |> html_body(html(lines))
+    end)
+  end
+
+  defp status_subject(order, :confirmed),
+    do: gettext("Your order %{number} is confirmed", number: order.number)
+
+  defp status_subject(order, :shipped),
+    do: gettext("Your order %{number} is on its way", number: order.number)
+
+  defp status_subject(order, :cancelled),
+    do: gettext("Your order %{number} has been cancelled", number: order.number)
+
+  defp status_lines(order, :confirmed, _note) do
+    [
+      gettext("We have checked your order %{number} and confirm it.", number: order.number),
+      "",
+      "#{Shipping.label(order.shipping_method)}: #{shipping(order, order.locale)}",
+      "#{gettext("Total")}: #{Format.money(order.gross, order.locale)}",
+      "",
+      "#{gettext("Payment")}: #{Payment.label(order.payment_method)}"
+    ] ++ Payment.instructions(order)
+  end
+
+  defp status_lines(order, :shipped, _note) do
+    [
+      gettext("Your order %{number} has been shipped.", number: order.number),
+      "",
+      delivery(order)
+    ]
+  end
+
+  defp status_lines(order, :cancelled, note) do
+    [gettext("We have cancelled your order %{number}.", number: order.number)] ++
+      if(note, do: ["", "#{gettext("Reason")}: #{note}"], else: []) ++
+      ["", gettext("If you have already paid, we will refund the amount.")]
   end
 
   defp lines(order) do

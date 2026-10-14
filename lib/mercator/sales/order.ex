@@ -99,6 +99,7 @@ defmodule Mercator.Sales.Order do
     update :confirm do
       require_atomic? false
       argument :note, :string
+      argument :notify, :boolean, default: true, description: "Email the customer (#74)."
 
       argument :shipping_gross, :decimal,
         description: "Final costs when they were estimated (freight)."
@@ -112,6 +113,7 @@ defmodule Mercator.Sales.Order do
       update name do
         require_atomic? false
         argument :note, :string
+        argument :notify, :boolean, default: true, description: "Email the customer (#74)."
         change transition_state(state)
         change Mercator.Sales.Changes.RecordStateChange
       end
@@ -120,6 +122,7 @@ defmodule Mercator.Sales.Order do
     update :cancel do
       require_atomic? false
       argument :note, :string, allow_nil?: false, description: "Reason for the cancellation."
+      argument :notify, :boolean, default: true, description: "Email the customer (#74)."
       change transition_state(:cancelled)
       change Mercator.Sales.Changes.RestoreStock
       change Mercator.Sales.Changes.RecordStateChange

@@ -1,11 +1,13 @@
 defmodule Mercator.Sales.OrderManagementTest do
   use Mercator.DataCase, async: true
+  use Oban.Testing, repo: Mercator.Repo
 
   import Mercator.AccountsFixtures
   import Mercator.CatalogFixtures
   import Mercator.SalesFixtures
 
   alias Mercator.{Catalog, Sales}
+  alias Mercator.Sales.Workers.SendOrderStatusEmail
 
   setup do
     gtc_fixture()
@@ -160,6 +162,80 @@ defmodule Mercator.Sales.OrderManagementTest do
       assert Decimal.equal?(order.gross, 1320)
       assert Decimal.equal?(order.vat, 220)
       assert [%{"rate" => "20", "net" => "1100.00", "vat" => "220.00"}] = order.vat_lines
+    end
+  end
+
+  describe "emails about state changes (#74)" do
+    defp emails do
+      receive do
+        {:email, email} -> [email | emails()]
+      after
+        0 -> []
+      end
+    end
+
+    defp event(order, sales, state) do
+      order
+      |> Ash.load!(:events, actor: sales)
+      |> Map.fetch!(:events)
+      |> Enum.find(&(&1.to_state == state))
+    end
+
+    test "confirmation, shipping and cancellation are emailed", %{
+      board: board,
+      sales: sales,
+      customer: customer
+    } do
+      order = order_fixture(customer, board)
+      # drop the account confirmation emails of the fixtures
+      _ = emails()
+      order = Sales.confirm_order!(order, %{note: "intern: Stammkunde"}, actor: sales)
+      confirmed = event(order, sales, :confirmed)
+      assert confirmed.customer_notified
+
+      assert_enqueued worker: SendOrderStatusEmail, args: %{event_id: confirmed.id}
+      assert :ok = perform_job(SendOrderStatusEmail, %{event_id: confirmed.id})
+      [email] = emails()
+      assert email.subject =~ "#{order.number} ist bestätigt"
+      assert email.to == [{"", to_string(customer.email)}]
+      refute email.text_body =~ "Stammkunde"
+
+      order = Sales.mark_order_paid!(order, actor: sales)
+      refute event(order, sales, :paid).customer_notified
+
+      order = Sales.ship_order!(order, actor: sales)
+
+      assert :ok =
+               perform_job(SendOrderStatusEmail, %{event_id: event(order, sales, :shipped).id})
+
+      assert [%{subject: subject}] = emails()
+      assert subject =~ "unterwegs"
+
+      other = order_fixture(customer, board)
+      other = Sales.cancel_order!(other, %{note: "Nicht lieferbar"}, actor: sales)
+      cancelled = event(other, sales, :cancelled)
+      assert :ok = perform_job(SendOrderStatusEmail, %{event_id: cancelled.id})
+      [email] = emails()
+      assert email.subject =~ "storniert"
+      assert email.text_body =~ "Nicht lieferbar"
+    end
+
+    test "no email when staff opt out or a pickup order is picked up", %{
+      board: board,
+      sales: sales,
+      customer: customer
+    } do
+      order = order_fixture(customer, board)
+      order = Sales.confirm_order!(order, %{notify: false}, actor: sales)
+      refute event(order, sales, :confirmed).customer_notified
+
+      pickup =
+        customer
+        |> order_fixture(board, %{"shipping_method" => "pickup", "payment_method" => "on_pickup"})
+        |> Sales.ship_order!(actor: sales)
+
+      refute event(pickup, sales, :shipped).customer_notified
+      refute_enqueued worker: SendOrderStatusEmail
     end
   end
 end
