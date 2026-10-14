@@ -146,6 +146,12 @@ Customer systems and the modules they mount (the last commit date of each system
 8. **Contracting** module.
 9. **Seed/dummy data** (built up alongside every phase), and go-live.
 
+### Progress (as of 2026-10-14)
+
+- **Done:** 1 Foundation, 2 Catalogue, 3 Basket and checkout (steps 1–7 of [checkout-design.md](checkout-design.md), incl. back office orders, status emails #74, pickup = "ready for pickup" #75, local times #73), 4 Back office (catalogue, orders).
+- **5 CMS, in progress** ([cms-design.md](cms-design.md), section 8): steps 1–6 done – Markdown with the OverType editor, pages with working copy, publishing and history, page tree and editor, media library, 12 block types incl. shared blocks, start page from the CMS, navigation row and footer (#93), SEO basics (#91). Open: step 7 contact form with rate limiting (Hammer, #87), step 8 Biber Holz demo content, GTC editor (#92).
+- Also done along the way: header for phones (#72), back button, English routes (#88).
+
 ## 5b. Backlog
 
 Smaller improvements noted along the way, not tied to a phase step.
@@ -155,6 +161,8 @@ Smaller improvements noted along the way, not tied to a phase step.
   - *configurable:* no prices in the variants tab (the price comes from the configurator); only number, unit, delivery time and active remain, or the tab is hidden and those fields move to "General" / "Configurator".
   - Changing the kind of an existing product needs a rule for data that no longer fits (extra variants, prices, options): warn, keep or delete.
 - ~~**Sign-out confirmation page**~~ *(done 2026-10-14)*: the user menu signs out directly with `DELETE /sign-out`; the confirmation page for `GET /sign-out` is our own translated `MercatorWeb.SignOutLive`.
+- **Start page key for content managers** (2026-10-14): only administrators can set a page's key (e.g. `home`). Content managers may need a simple "use as start page" action.
+- **Category names in the navigation row** (2026-10-14): between 768 and 1280 px the eight Biber Holz categories don't fit and the row scrolls; shorter names (or a "more" entry) would avoid that.
 - **Variants combined with a configurator** (not possible today, see #39/#55): e.g. a panel in stock in three species that can also be cut to size. Workaround: two related products. Only if a customer needs it.
 
 ## 5a. Demo customer: Biber Holz
