@@ -75,7 +75,7 @@ Block types for a start:
 
 ## 8. Implementation order (one commit each, with tests)
 
-*Status 2026-10-14: steps 1–6 done; 7 and 8 open. Additional block types beyond the list in section 3 were not needed. Shared blocks are pages of kind `shared` (same working copy, publishing and history).*
+*Status 2026-10-14: steps 1–7 done; 8 open. Additional block types beyond the list in section 3 were not needed. Shared blocks are pages of kind `shared` (same working copy, publishing and history).*
 
 
 1. Markdown rendering component and editor component; switch product, category and GTC texts to Markdown.

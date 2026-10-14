@@ -27,6 +27,12 @@ if time_zone = System.get_env("SHOP_TIME_ZONE") do
   config :mercator, :time_zone, time_zone
 end
 
+if proxies = System.get_env("TRUSTED_PROXIES") do
+  config :mercator,
+         :trusted_proxies,
+         proxies |> String.split(",", trim: true) |> Enum.map(&String.trim/1)
+end
+
 if config_env() == :dev do
   # Reload browser tabs when matching files change.
   config :mercator, MercatorWeb.Endpoint,

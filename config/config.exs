@@ -121,6 +121,18 @@ config :mercator, :content_locales, ~w(de en)
 config :elixir, :time_zone_database, Tz.TimeZoneDatabase
 config :mercator, :time_zone, "Europe/Vienna"
 
+# Rate limits (#87) as {count, period in ms}: sign-ins per email address,
+# password reset / magic link emails per address, contact form messages per
+# client IP. See Mercator.RateLimit.
+config :mercator, :rate_limits,
+  sign_in: {10, :timer.minutes(15)},
+  auth_email: {3, :timer.minutes(15)},
+  contact: {5, :timer.hours(1)}
+
+# Reverse proxies whose X-Forwarded-For header is believed (MercatorWeb.ClientIp);
+# override with TRUSTED_PROXIES (comma-separated) at runtime.
+config :mercator, :trusted_proxies, ["127.0.0.1", "::1"]
+
 # Countries the shop delivers to (#67); billing addresses may be in any EU country
 config :mercator, :delivery_countries, ~w(AT DE IT)
 
