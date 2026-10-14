@@ -31,6 +31,7 @@ defmodule MercatorWeb.Admin.PageEditLive do
          socket
          |> assign(:block_form, nil)
          |> assign(:editing_block, nil)
+         |> assign(:icon_query, "")
          |> assign(:categories, categories())
          |> assign(:shared_pages, shared_pages(socket.assigns.current_user))
          |> assign_page(page)}
@@ -79,9 +80,9 @@ defmodule MercatorWeb.Admin.PageEditLive do
   # --- page settings and state ---
 
   @impl true
-  def handle_event("validate", %{"form" => params}, socket) do
+  def handle_event("validate", %{"form" => params} = all, socket) do
     form = AshPhoenix.Form.validate(socket.assigns.settings_form, settings_params(params))
-    {:noreply, assign(socket, :settings_form, form)}
+    {:noreply, assign(socket, settings_form: form, icon_query: all["icon_q"] || "")}
   end
 
   def handle_event("save", %{"form" => params}, socket) do
@@ -462,7 +463,11 @@ defmodule MercatorWeb.Admin.PageEditLive do
                   label={gettext("Menu")}
                   options={menu_options()}
                 />
-                <.icon_picker :if={@page.kind == :page} field={@settings_form[:icon]} />
+                <.icon_picker
+                  :if={@page.kind == :page}
+                  field={@settings_form[:icon]}
+                  query={@icon_query}
+                />
                 <.translated_input
                   :if={@page.kind == :page}
                   field={@settings_form[:seo_description]}

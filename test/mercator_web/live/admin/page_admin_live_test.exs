@@ -340,6 +340,11 @@ defmodule MercatorWeb.Admin.PageAdminLiveTest do
       assert %{menu: :main, icon: "hero-truck"} = Content.get_page!(page.id, actor: editor)
       assert has_element?(view, "#icon-hero-truck.btn-primary")
 
+      view |> form("#settings-form", %{"icon_q" => "envelope"}) |> render_change()
+      assert has_element?(view, "#icon-hero-envelope")
+      assert has_element?(view, "#icon-hero-truck")
+      refute has_element?(view, "#icon-hero-home")
+
       view |> element("#publish") |> render_click()
       assert has_element?(view, "#page-state", "Veröffentlicht")
       refute has_element?(view, "#publish")
