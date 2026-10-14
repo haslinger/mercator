@@ -83,6 +83,7 @@ This makes it the test case for **configurable material**: wood species, dimensi
 - **#72** (2026-10-14) **Header on phones:** below `md` (768 px) language and theme move into a "⋯" menu (shop and admin header), "Register" is hidden (the sign-in page links to it) and "Sign in" is an icon below `sm`; the search box shows from `lg`, an icon below.
 - **#13** (2026-10-14) **Markdown instead of rich text** everywhere it applies (CMS content, product and category descriptions, GTC, later offers and messages): stored as Markdown in the translated JSONB maps, edited in a textarea with preview, rendered to sanitized HTML. No WYSIWYG editor. No CKEditor HTML needs to stay renderable (no data migration, #21).
 - **#25** (2026-10-13) **No security risk:** none of the old systems are deployed any more. Secrets still go only into env/`runtime.exs` in the port.
+- **#19** (2026-10-14) **No contracting module.** The printer and consumables leasing contracts were specific to one customer and are not needed; the phase is dropped.
 
 ## Answered questions
 
@@ -101,6 +102,8 @@ The questions as they were asked, kept for the record (the decisions above are t
 - ~~**#15**~~ *(answered, see Decisions)* Integrations: which are still in use? Is Mesonic ERP still the ERP, with MSSQL access still available? Are the Icecat and Bechlem accounts still active? (Their APIs/feeds have likely changed since 2016.)
 - ~~**#16**~~ *(answered, see Decisions)* Back office UI: one unified admin area with role-based menus, or the five separate subsites as in Rails? Is AshAdmin acceptable for low-traffic CRUD screens?
 - ~~**#20**~~ *(answered 2026-10-14 by #86: one domain)* Multi-domain setup (separate CMS, shop and podcast domains with session handover): still needed, or one domain?
+
+- ~~**#19**~~ *(answered 2026-10-14: dropped, see Decisions)* Contracting module (printer/consumable leasing contracts): still needed? Who uses it? Should it stay a separate area?
 
 ### Data and operations
 - ~~**#21**~~ *(answered, see Decisions)* Do we migrate existing production data from MySQL (users, orders, catalogue, CMS content), or start fresh? Is a recent DB dump available to develop against?

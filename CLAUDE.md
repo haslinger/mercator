@@ -46,7 +46,7 @@ Translate concepts into idiomatic Ash rather than copying Rails patterns one-to-
 | traco `name_de`/`name_en` (content) | **One JSONB map attribute** per translatable field (`%{"de" => …, "en" => …}`), plus a locale calculation with `de` fallback; per-language full-text indexes (#7) |
 | `Constant` key/value table | Typed runtime config where possible; a DB settings resource only for settings editable at runtime |
 
-- Domains are planned roughly as Accounts, Catalog, Sales (orders/basket), Consulting (conversations/offers), Content (CMS) and Contracting. Agree on any new domain before adding it.
+- Domains: Accounts, Catalog, Sales (orders/basket), Consulting (conversations/offers) and Content (CMS); no Contracting (#19). Agree on any new domain before adding it.
 - Money and VAT: use `Decimal` (`:decimal` attributes), never floats.
 - Generate migrations with `mix ash.codegen <name>` and review them. Never hand-edit resource snapshots.
 
