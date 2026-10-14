@@ -86,6 +86,7 @@ This makes it the test case for **configurable material**: wood species, dimensi
 - **#19** (2026-10-14) **No contracting module.** The printer and consumables leasing contracts were specific to one customer and are not needed; the phase is dropped.
 - **#24** (2026-10-14) **Deployment with Docker**: Mercator runs as a Docker container (a Mix release in the image), set up in the deployment phase. The database connection sets `lc_messages=C`; on managed Postgres configure English server messages instead (see README).
 - **#22** (2026-10-14) **Version history only where it is needed**, decided per resource: CMS pages keep every published version (AshPaperTrail, #84), the GTC are versioned by date (#92), orders keep their state changes with notes (OrderEvent), and offers will keep their revised versions. No history for the rest.
+- **#18** (2026-10-14) **No Twitter integration, no podcasts and no blog** – ever. News go on a normal CMS page that editors keep up to date. Comments (they belonged to blog and podcasts) and Gravatar (no profile pictures are shown) are not needed either. Visitor tracking: see the analytics part of #18 above.
 
 ## Answered questions
 
@@ -105,6 +106,7 @@ The questions as they were asked, kept for the record (the decisions above are t
 - ~~**#16**~~ *(answered, see Decisions)* Back office UI: one unified admin area with role-based menus, or the five separate subsites as in Rails? Is AshAdmin acceptable for low-traffic CRUD screens?
 - ~~**#20**~~ *(answered 2026-10-14 by #86: one domain)* Multi-domain setup (separate CMS, shop and podcast domains with session handover): still needed, or one domain?
 
+- ~~**#18**~~ *(answered 2026-10-14, see Decisions)* Which of these features are still needed: blog, podcasts, comments, Twitter integration, Ahoy visitor tracking, the contact form with its captcha question, Gravatar?
 - ~~**#19**~~ *(answered 2026-10-14: dropped, see Decisions)* Contracting module (printer/consumable leasing contracts): still needed? Who uses it? Should it stay a separate area?
 
 ### Data and operations
