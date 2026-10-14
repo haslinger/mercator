@@ -68,43 +68,37 @@ defmodule Mercator.Consulting.Desk do
     end
   end
 
-  @doc "The consultant writes in a conversation."
-  def post(conversation, actor, body) do
-    Conversations.create_message(conversation, %{
-      sender_kind: :consultant,
-      sender_id: actor.id,
-      body: body
-    })
-  end
+  @doc """
+  The consultant writes in a conversation. Answering takes the conversation
+  (from the queue, or over from a colleague), like `take/2`.
+  """
+  def post(conversation, actor, body), do: consultant_message(conversation, actor, %{body: body})
 
   @doc "The consultant recommends a product, with an optional note."
-  def recommend(conversation, actor, product_id, note \\ nil) do
-    Conversations.create_message(conversation, %{
-      sender_kind: :consultant,
-      sender_id: actor.id,
-      product_id: product_id,
-      body: note
-    })
-  end
+  def recommend(conversation, actor, product_id, note \\ nil),
+    do: consultant_message(conversation, actor, %{product_id: product_id, body: note})
 
   @doc "The consultant shares a link (a shop page or a website) with an optional title."
-  def share_link(conversation, actor, url, title \\ nil) do
-    Conversations.create_message(conversation, %{
-      sender_kind: :consultant,
-      sender_id: actor.id,
-      link_url: String.trim(url),
-      link_title: title
-    })
-  end
+  def share_link(conversation, actor, url, title \\ nil),
+    do: consultant_message(conversation, actor, %{link_url: String.trim(url), link_title: title})
 
   @doc "The consultant shares a file of the media library (an image or a PDF)."
-  def share_file(conversation, actor, asset_id) do
-    Conversations.create_message(conversation, %{
-      sender_kind: :consultant,
-      sender_id: actor.id,
-      asset_id: asset_id
-    })
+  def share_file(conversation, actor, asset_id),
+    do: consultant_message(conversation, actor, %{asset_id: asset_id})
+
+  defp consultant_message(conversation, actor, attrs) do
+    with {:ok, conversation} <- ensure_taken(conversation, actor) do
+      Conversations.create_message(
+        conversation,
+        Map.merge(attrs, %{sender_kind: :consultant, sender_id: actor.id})
+      )
+    end
   end
+
+  defp ensure_taken(%{state: :active, consultant_id: id} = conversation, %{id: id}),
+    do: {:ok, conversation}
+
+  defp ensure_taken(conversation, actor), do: take(conversation, actor)
 
   @doc "The consultant closes a conversation."
   def close(conversation, actor) do

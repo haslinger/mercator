@@ -803,7 +803,7 @@ defmodule MercatorWeb.Admin.DeskLive do
                 class="link"
                 id={"earlier-#{earlier.id}"}
               >
-                {Format.date(earlier.closed_at || earlier.inserted_at)}
+                {Format.datetime(earlier.closed_at || earlier.inserted_at)}
               </.link>
               <span :if={earlier.consultant} class="text-base-content/60">
                 · {Desk.display_name(earlier.consultant)}

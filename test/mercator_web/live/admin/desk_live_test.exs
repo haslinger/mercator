@@ -85,6 +85,22 @@ defmodule MercatorWeb.Admin.DeskLiveTest do
     assert Conversations.current(owner) == nil
   end
 
+  test "answering takes the conversation; the customer stops waiting", %{conn: conn} do
+    {customer_conn, owner} = visitor_conn()
+    {:ok, conversation} = Conversations.start(owner, "Ist jemand da?")
+    {:ok, chat, _html} = live_isolated(customer_conn, ChatLive)
+    assert has_element?(chat, "#chat-waiting")
+
+    {:ok, desk, _html} = live(conn, ~p"/admin/desk/#{conversation.id}")
+    desk |> form("#reply-form", reply: %{body: "Ja, gerne!"}) |> render_submit()
+
+    assert has_element?(desk, "#mine-list #desk-conversation-#{conversation.id}")
+    refute has_element?(desk, "#take")
+    assert has_element?(chat, "#chat-status", "Sepp Fuchs")
+    refute has_element?(chat, "#chat-waiting")
+    assert has_element?(chat, "#chat-messages", "Ja, gerne!")
+  end
+
   test "callback requests are marked on the desk", %{conn: conn} do
     {_customer_conn, owner} = visitor_conn()
     {:ok, conversation} = Conversations.start(owner, "Bitte zurückrufen")
