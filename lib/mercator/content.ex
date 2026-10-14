@@ -53,6 +53,7 @@ defmodule Mercator.Content do
       define :list_assets, action: :read
       define :search_assets, action: :search
       define :upload_asset, action: :upload
+      define :upload_chat_file, action: :upload_for_chat
       define :update_asset, action: :update
       define :destroy_asset, action: :destroy
     end

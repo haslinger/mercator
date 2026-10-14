@@ -52,6 +52,11 @@ defmodule MercatorWeb.Admin.DeskLive do
        form: new_form(),
        sent: 0
      )
+     |> allow_upload(:chat_file,
+       accept: ~w(.jpg .jpeg .png .webp .pdf),
+       max_entries: 1,
+       max_file_size: 20_000_000
+     )
      |> stream(:messages, [])
      |> load_lists()}
   end
@@ -154,14 +159,52 @@ defmodule MercatorWeb.Admin.DeskLive do
     end
   end
 
-  def handle_event("share_open", %{"kind" => kind}, socket) when kind in ~w(product link file) do
+  def handle_event("share_open", %{"kind" => kind}, socket)
+      when kind in ~w(product link file upload) do
     kind = String.to_existing_atom(kind)
 
     {:noreply,
      socket |> assign(share: kind, share_query: "", share_error: nil) |> load_share_results()}
   end
 
-  def handle_event("share_close", _params, socket), do: {:noreply, assign(socket, :share, nil)}
+  def handle_event("share_close", _params, socket) do
+    socket =
+      Enum.reduce(socket.assigns.uploads.chat_file.entries, socket, fn entry, socket ->
+        cancel_upload(socket, :chat_file, entry.ref)
+      end)
+
+    {:noreply, assign(socket, :share, nil)}
+  end
+
+  # a file from the consultant's computer: stored outside the media library
+  def handle_event("upload_validate", _params, socket), do: {:noreply, socket}
+
+  def handle_event("upload_cancel", %{"ref" => ref}, socket),
+    do: {:noreply, cancel_upload(socket, :chat_file, ref)}
+
+  def handle_event("upload_share", _params, socket) do
+    %{selected: conversation, current_user: user} = socket.assigns
+
+    results =
+      consume_uploaded_entries(socket, :chat_file, fn %{path: path}, entry ->
+        {:ok,
+         Content.upload_chat_file(%{source_path: path, original_filename: entry.client_name},
+           actor: user
+         )}
+      end)
+
+    case results do
+      [{:ok, asset}] ->
+        shared(socket, Desk.share_file(conversation, user, asset.id))
+
+      [{:error, _error}] ->
+        {:noreply,
+         assign(socket, :share_error, gettext("The file could not be read. Please try another."))}
+
+      [] ->
+        {:noreply, assign(socket, :share_error, gettext("Please choose a file."))}
+    end
+  end
 
   def handle_event("share_search", %{"q" => query}, socket) do
     {:noreply, socket |> assign(:share_query, query) |> load_share_results()}
@@ -229,7 +272,13 @@ defmodule MercatorWeb.Admin.DeskLive do
 
   defp share_title(:product), do: gettext("Recommend a product")
   defp share_title(:link), do: gettext("Share a link")
-  defp share_title(:file), do: gettext("Share a file")
+  defp share_title(:file), do: gettext("File from the media library")
+  defp share_title(:upload), do: gettext("File from my computer")
+
+  defp upload_error(:too_large), do: gettext("The file is larger than 20 MB.")
+  defp upload_error(:not_accepted), do: gettext("Only images (JPG, PNG, WebP) and PDFs.")
+  defp upload_error(:too_many_files), do: gettext("One file at a time.")
+  defp upload_error(_error), do: gettext("The file could not be uploaded.")
 
   # --- updates ---
 
@@ -519,7 +568,21 @@ defmodule MercatorWeb.Admin.DeskLive do
                   </li>
                   <li>
                     <button type="button" phx-click="share_open" phx-value-kind="file" id="share-file">
-                      <.icon name="hero-document" class="size-4" /> {gettext("Share a file")}
+                      <.icon name="hero-document" class="size-4" /> {gettext(
+                        "File from the media library"
+                      )}
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      type="button"
+                      phx-click="share_open"
+                      phx-value-kind="upload"
+                      id="share-upload"
+                    >
+                      <.icon name="hero-arrow-up-tray" class="size-4" /> {gettext(
+                        "File from my computer"
+                      )}
                     </button>
                   </li>
                 </ul>
@@ -637,6 +700,71 @@ defmodule MercatorWeb.Admin.DeskLive do
               />
               <p :if={@share_error} class="text-sm text-error" id="share-error">{@share_error}</p>
               <button type="submit" class="btn btn-primary" id="share-link-send">{gettext("Send link")}</button>
+            </form>
+
+            <form
+              :if={@share == :upload}
+              id="upload-form"
+              phx-change="upload_validate"
+              phx-submit="upload_share"
+              class="mt-4 space-y-3"
+            >
+              <label
+                class="flex cursor-pointer flex-col items-center gap-2 rounded-box border-2 border-dashed border-base-300 p-8 text-center transition hover:border-primary"
+                phx-drop-target={@uploads.chat_file.ref}
+                for={@uploads.chat_file.ref}
+              >
+                <.icon name="hero-arrow-up-tray" class="size-8 text-primary" />
+                <span>{gettext("Drop a file here or click to choose one")}</span>
+                <span class="text-xs text-base-content/60">
+                  {gettext("Images (JPG, PNG, WebP) or PDF, up to 20 MB")}
+                </span>
+                <.live_file_input upload={@uploads.chat_file} class="hidden" />
+              </label>
+              <div
+                :for={entry <- @uploads.chat_file.entries}
+                class="flex items-center gap-3"
+                id={"upload-entry-#{entry.ref}"}
+              >
+                <.live_img_preview
+                  :if={String.starts_with?(entry.client_type, "image/")}
+                  entry={entry}
+                  class="size-14 rounded object-cover"
+                />
+                <.icon
+                  :if={!String.starts_with?(entry.client_type, "image/")}
+                  name="hero-document-text"
+                  class="size-10 text-primary"
+                />
+                <div class="min-w-0 flex-1">
+                  <p class="truncate text-sm">{entry.client_name}</p>
+                  <progress class="progress progress-primary w-full" value={entry.progress} max="100"></progress>
+                  <p
+                    :for={error <- upload_errors(@uploads.chat_file, entry)}
+                    class="text-sm text-error"
+                  >
+                    {upload_error(error)}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  phx-click="upload_cancel"
+                  phx-value-ref={entry.ref}
+                  class="btn btn-ghost btn-sm btn-square"
+                  aria-label={gettext("Remove")}
+                >
+                  <.icon name="hero-x-mark" class="size-4" />
+                </button>
+              </div>
+              <p :if={@share_error} class="text-sm text-error" id="upload-error">{@share_error}</p>
+              <button
+                type="submit"
+                class="btn btn-primary"
+                disabled={@uploads.chat_file.entries == []}
+                id="upload-send"
+              >
+                <.icon name="hero-paper-airplane" class="size-4" /> {gettext("Send")}
+              </button>
             </form>
 
             <p

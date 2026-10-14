@@ -231,6 +231,29 @@ defmodule MercatorWeb.Admin.DeskLiveTest do
              )
     end
 
+    test "a file from the consultant's computer, not in the media library", %{
+      chat: chat,
+      desk: desk
+    } do
+      desk |> element("#share-upload") |> render_click()
+
+      desk
+      |> file_input("#upload-form", :chat_file, [
+        %{
+          name: "Verlegeplan Terrasse.pdf",
+          content: File.read!("test/fixtures/sample.pdf"),
+          type: "application/pdf"
+        }
+      ])
+      |> render_upload("Verlegeplan Terrasse.pdf")
+
+      desk |> form("#upload-form") |> render_submit()
+      refute has_element?(desk, "#share-modal")
+
+      assert has_element?(chat, "#chat-messages a[href$='.pdf']", "Verlegeplan Terrasse")
+      assert Mercator.Content.search_assets!(%{query: "Verlegeplan"}) == []
+    end
+
     test "files of the media library", %{chat: chat, desk: desk} do
       pdf =
         Mercator.Content.upload_asset!(

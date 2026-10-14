@@ -4,6 +4,10 @@ defmodule Mercator.Content.Asset do
   document, used by page blocks. Organised with tags (at least one) and
   found by search.
 
+  Files a consultant shares from their computer in a conversation are
+  stored the same way, but with `library: false`: they do not appear in
+  the media library or its search.
+
   Files live below `Mercator.Uploads.root/0` in `assets/<id>/`: images as
   WebP in the sizes `wide` (1920 px, for hero images), `large` and `thumb`;
   documents as uploaded, under a cleaned-up file name.
@@ -38,6 +42,7 @@ defmodule Mercator.Content.Asset do
       argument :tag, :string
       argument :kind, :atom, constraints: [one_of: [:image, :document]]
 
+      filter expr(library == true)
       filter expr(is_nil(^arg(:kind)) or kind == ^arg(:kind))
       filter expr(is_nil(^arg(:tag)) or ^arg(:tag) in tags)
 
@@ -77,6 +82,24 @@ defmodule Mercator.Content.Asset do
       change StoreAsset
     end
 
+    create :upload_for_chat do
+      description "A file a consultant shares from their computer in a conversation."
+      accept [:original_filename]
+      argument :source_path, :string, allow_nil?: false
+
+      change fn changeset, _context ->
+        title = Path.rootname(Ash.Changeset.get_attribute(changeset, :original_filename) || "")
+
+        Ash.Changeset.force_change_attributes(changeset,
+          library: false,
+          tags: ["chat"],
+          title: if(title != "", do: %{"de" => title})
+        )
+      end
+
+      change StoreAsset
+    end
+
     update :update do
       primary? true
       require_atomic? false
@@ -109,6 +132,11 @@ defmodule Mercator.Content.Asset do
       # assets are shown on public pages
       authorize_if always()
     end
+
+    policy action(:upload_for_chat) do
+      authorize_if {ActorHasRole, role: :sales}
+      authorize_if {ActorHasRole, role: :sales_manager}
+    end
   end
 
   attributes do
@@ -139,6 +167,13 @@ defmodule Mercator.Content.Asset do
     end
 
     attribute :original_filename, :string, public?: true, constraints: [max_length: 255]
+
+    attribute :library, :boolean do
+      description "Part of the media library; false for files shared in a conversation."
+      allow_nil? false
+      default true
+      public? true
+    end
 
     attribute :file_name, :string do
       description "Stored name of a document."
