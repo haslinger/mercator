@@ -192,6 +192,10 @@ defmodule Mercator.Sales.Order do
     end
   end
 
+  aggregates do
+    count :item_count, :items, public?: true
+  end
+
   identities do
     identity :unique_number, [:number]
     identity :unique_sequence, [:year, :sequence]

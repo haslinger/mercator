@@ -27,7 +27,7 @@ defmodule MercatorWeb.OrderLive do
         {:ok,
          socket
          |> put_flash(:error, gettext("Order not found."))
-         |> push_navigate(to: ~p"/account")}
+         |> push_navigate(to: ~p"/account/orders")}
     end
   end
 
@@ -41,6 +41,9 @@ defmodule MercatorWeb.OrderLive do
       nav_categories={@nav_categories}
       basket_count={@basket_count}
     >
+      <.link navigate={~p"/account/orders"} class="link link-hover text-sm w-fit" id="back-to-orders">
+        <.icon name="hero-arrow-left" class="size-4" /> {gettext("My orders")}
+      </.link>
       <div class="flex flex-wrap items-baseline justify-between gap-2">
         <h1 class="text-3xl font-bold" id="order-number">
           {gettext("Order %{number}", number: @order.number)}

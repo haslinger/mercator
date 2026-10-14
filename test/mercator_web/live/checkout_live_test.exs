@@ -84,7 +84,7 @@ defmodule MercatorWeb.CheckoutLiveTest do
 
     other = log_in_user(build_conn(), user_fixture())
 
-    assert {:error, {:live_redirect, %{to: "/account"}}} =
+    assert {:error, {:live_redirect, %{to: "/account/orders"}}} =
              live(other, ~p"/account/orders/#{order.number}")
   end
 end

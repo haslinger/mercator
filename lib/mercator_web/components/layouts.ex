@@ -218,6 +218,9 @@ defmodule MercatorWeb.Layouts do
       </div>
       <ul tabindex="0" class="menu dropdown-content bg-base-100 rounded-box z-10 mt-2 w-56 p-2 shadow">
         <li><.link navigate={~p"/account"} id="account-link">{gettext("My account")}</.link></li>
+        <li>
+          <.link navigate={~p"/account/orders"} id="my-orders-link">{gettext("My orders")}</.link>
+        </li>
         <li :if={MercatorWeb.AdminNav.staff?(@current_user)}>
           <.link navigate={~p"/admin"} id="admin-link">{gettext("Administration")}</.link>
         </li>
