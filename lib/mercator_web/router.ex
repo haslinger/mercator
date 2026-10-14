@@ -30,6 +30,8 @@ defmodule MercatorWeb.Router do
 
   scope "/", MercatorWeb do
     get "/manifest.webmanifest", ManifestController, :show
+    get "/sitemap.xml", SitemapController, :index
+    get "/robots.txt", SitemapController, :robots
   end
 
   scope "/uploads", MercatorWeb do

@@ -37,6 +37,12 @@ defmodule MercatorWeb.ProductLive do
         {:ok,
          socket
          |> assign(:page_title, Translated.t(product.title, socket.assigns.locale))
+         |> MercatorWeb.Seo.assign_meta(
+           description:
+             Translated.t(product.description || product.long_description, socket.assigns.locale),
+           image: product.images |> List.first() |> then(&(&1 && Catalog.Image.url(&1, :large))),
+           canonical: ~p"/products/#{product.slug}"
+         )
          |> assign(:product, product)
          |> assign(:trail, trail(product, actor))
          |> assign(:quantity, "1")

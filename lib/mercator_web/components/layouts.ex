@@ -319,6 +319,33 @@ defmodule MercatorWeb.Layouts do
     """
   end
 
+  attr :meta, :map, default: nil, doc: "from MercatorWeb.Seo.assign_meta/2"
+  attr :title, :string, default: nil
+
+  @doc "Meta description, canonical URL and Open Graph tags in the root layout (#91)."
+  def seo_tags(assigns) do
+    assigns = assign(assigns, :meta, assigns.meta || %{})
+
+    ~H"""
+    <meta :if={@meta[:description]} name="description" content={@meta[:description]} />
+    <link
+      :if={@meta[:canonical]}
+      rel="canonical"
+      href={MercatorWeb.Seo.absolute(@meta[:canonical])}
+    />
+    <meta property="og:site_name" content={Mercator.Brand.name()} />
+    <meta property="og:title" content={@title || Mercator.Brand.name()} />
+    <meta :if={@meta[:description]} property="og:description" content={@meta[:description]} />
+    <meta
+      :if={@meta[:canonical]}
+      property="og:url"
+      content={MercatorWeb.Seo.absolute(@meta[:canonical])}
+    />
+    <meta :if={@meta[:image]} property="og:image" content={MercatorWeb.Seo.absolute(@meta[:image])} />
+    <meta property="og:type" content="website" />
+    """
+  end
+
   @doc "The URL of a CMS page: `/` for the start page, otherwise `/pages/…`."
   def page_path(%{key: "home"}), do: ~p"/"
   def page_path(page), do: ~p"/pages/#{String.split(page.path, "/")}"

@@ -44,4 +44,30 @@ defmodule MercatorWeb.Markdown do
       node -> node
     end)
   end
+
+  @block_nodes [MDEx.Heading, MDEx.Paragraph, MDEx.ListItem, MDEx.BlockQuote, MDEx.TableCell]
+
+  @doc ~S"""
+  The plain text of Markdown, e.g. for meta descriptions: formatting
+  removed, blocks separated by spaces.
+
+      iex> MercatorWeb.Markdown.to_text("## Pflege\nNur **geölt**.\n\n- innen")
+      "Pflege Nur geölt. innen"
+  """
+  def to_text(nil), do: ""
+
+  def to_text(text) when is_binary(text) do
+    text
+    |> MDEx.parse_document!(@options)
+    |> Enum.map_join(fn
+      %{__struct__: struct} when struct in @block_nodes -> " "
+      %MDEx.Text{literal: literal} -> literal
+      %MDEx.Code{literal: literal} -> literal
+      %MDEx.SoftBreak{} -> " "
+      %MDEx.LineBreak{} -> " "
+      _node -> ""
+    end)
+    |> String.replace(~r/\s+/u, " ")
+    |> String.trim()
+  end
 end

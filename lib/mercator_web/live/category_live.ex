@@ -21,7 +21,7 @@ defmodule MercatorWeb.CategoryLive do
   def mount(%{"slug" => slug}, _session, socket) do
     actor = socket.assigns.current_user
 
-    case Catalog.get_category_by_slug(slug, actor: actor) do
+    case Catalog.get_category_by_slug(slug, actor: actor, load: :images) do
       {:ok, category} ->
         subtree_ids = Enum.map(Catalog.list_category_subtree!(category.id, actor: actor), & &1.id)
 
@@ -31,6 +31,15 @@ defmodule MercatorWeb.CategoryLive do
         {:ok,
          socket
          |> assign(:page_title, Translated.t(category.name, socket.assigns.locale))
+         |> MercatorWeb.Seo.assign_meta(
+           description:
+             Translated.t(
+               category.description || category.long_description,
+               socket.assigns.locale
+             ),
+           image: category.images |> List.first() |> then(&(&1 && Catalog.Image.url(&1, :large))),
+           canonical: ~p"/categories/#{category.slug}"
+         )
          |> assign(:category, category)
          |> assign(:ancestors, Catalog.list_category_ancestors!(category.id, actor: actor))
          |> assign(:children, active_children(category, actor))

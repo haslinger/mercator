@@ -15,6 +15,7 @@
     >
       {assigns[:page_title]}
     </.live_title>
+    <.seo_tags meta={assigns[:meta]} title={assigns[:page_title]} />
     <link rel="icon" href={~p"/brand/favicon"} />
     <link rel="apple-touch-icon" href={~p"/brand/apple-touch-icon"} />
     <link rel="manifest" href={~p"/manifest.webmanifest"} />

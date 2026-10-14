@@ -14,7 +14,7 @@ defmodule MercatorWeb.PageLive do
   import MercatorWeb.ContentComponents, only: [block: 1]
 
   alias Mercator.Content
-  alias Mercator.Content.Blocks
+  alias Mercator.Content.{Asset, Blocks}
   alias Mercator.Translated
 
   on_mount {MercatorWeb.LiveUserAuth, :live_user_optional}
@@ -33,10 +33,18 @@ defmodule MercatorWeb.PageLive do
          |> assign(:content, content)
          |> assign(:block_data, MercatorWeb.BlockData.load(content.blocks))
          |> assign(:preview?, preview?)
-         |> assign(:page_title, Translated.t(content.title, socket.assigns.locale))}
+         |> assign(:page_title, Translated.t(content.title, socket.assigns.locale))
+         |> assign_page_meta(page, content)}
 
       :error when socket.assigns.live_action == :home ->
-        {:ok, socket |> assign(:page, nil) |> assign(:preview?, false)}
+        {:ok,
+         socket
+         |> assign(:page, nil)
+         |> assign(:preview?, false)
+         |> MercatorWeb.Seo.assign_meta(
+           description: Mercator.Brand.tagline(socket.assigns.locale),
+           canonical: ~p"/"
+         )}
 
       :error ->
         {:ok,
@@ -44,6 +52,28 @@ defmodule MercatorWeb.PageLive do
          |> put_flash(:error, gettext("Page not found."))
          |> push_navigate(to: ~p"/")}
     end
+  end
+
+  # description: the SEO text, else the first text of the page; image: the first one
+  defp assign_page_meta(socket, page, content) do
+    locale = socket.assigns.locale
+    assets = socket.assigns.block_data.assets
+    values = Enum.map(content.blocks, & &1.value)
+
+    first_text =
+      Enum.find_value(values, &(Map.get(&1, :text) && Translated.t(&1.text, locale)))
+
+    image =
+      Enum.find_value(values, fn value ->
+        asset = assets[Map.get(value, :image_id)]
+        asset && Asset.url(asset, :large)
+      end)
+
+    MercatorWeb.Seo.assign_meta(socket,
+      description: Translated.t(content.seo_description, locale) || first_text,
+      image: image,
+      canonical: MercatorWeb.Layouts.page_path(page)
+    )
   end
 
   defp lookup(_params, :home), do: {:key, "home"}
