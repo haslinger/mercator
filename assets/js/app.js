@@ -48,9 +48,16 @@ window.addEventListener("mercator:back", () => {
   }
 })
 
-// Print buttons (e.g. the printable offer, a page without LiveView)
+// Print buttons (e.g. the printable offer, a page without LiveView). Inside
+// an embedding frame (e.g. a dev tool) browsers may block the print dialog,
+// so the page opens in its own tab there.
 document.addEventListener("click", e => {
-  if (e.target.closest("[data-print]")) window.print()
+  if (!e.target.closest("[data-print]")) return
+  if (window.self !== window.top) {
+    window.open(window.location.href, "_blank", "noopener")
+  } else {
+    window.print()
+  }
 })
 
 // connect if there are any LiveViews on the page
