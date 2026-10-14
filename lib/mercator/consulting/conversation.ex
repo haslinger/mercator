@@ -28,6 +28,7 @@ defmodule Mercator.Consulting.Conversation do
     custom_indexes do
       index [:session_token]
       index [:state]
+      index [:customer_id]
     end
   end
 
@@ -59,6 +60,7 @@ defmodule Mercator.Consulting.Conversation do
     update :close do
       accept []
       change transition_state(:closed)
+      change set_attribute(:closed_at, &DateTime.utc_now/0)
     end
 
     update :touch do
@@ -134,6 +136,7 @@ defmodule Mercator.Consulting.Conversation do
       constraints: [max_length: 200, trim?: true]
 
     attribute :callback_requested_at, :utc_datetime_usec, public?: true
+    attribute :closed_at, :utc_datetime_usec, public?: true
     timestamps()
   end
 

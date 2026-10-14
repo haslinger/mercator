@@ -80,6 +80,7 @@ defmodule MercatorWeb.Router do
       live "/admin/categories/:id/edit", Admin.CategoryTreeLive, :edit
       live "/admin/desk", Admin.DeskLive
       live "/admin/desk/:id", Admin.DeskLive
+      live "/admin/conversations", Admin.ConversationArchiveLive
       live "/admin/orders", Admin.OrderIndexLive
       live "/admin/orders/:number", Admin.OrderShowLive
       live "/admin/offers", Admin.OfferIndexLive

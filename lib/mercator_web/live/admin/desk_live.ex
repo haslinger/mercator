@@ -245,14 +245,17 @@ defmodule MercatorWeb.Admin.DeskLive do
             :selected,
             Map.merge(
               socket.assigns.selected,
-              Map.take(conversation, [
+              conversation
+              |> Map.take([
                 :state,
                 :consultant_id,
                 :consultant,
                 :callback_kind,
                 :callback_contact,
-                :callback_requested_at
+                :callback_requested_at,
+                :closed_at
               ])
+              |> Map.reject(fn {_key, value} -> match?(%Ash.NotLoaded{}, value) end)
             )
           ),
         else: socket
@@ -313,6 +316,9 @@ defmodule MercatorWeb.Admin.DeskLive do
     <Layouts.admin flash={@flash} current_user={@current_user} locale={@locale} active="desk" wide>
       <div class="flex flex-wrap items-center justify-between gap-2" id="desk" phx-hook=".DeskNotify">
         <h1 class="text-3xl font-bold">{gettext("Sales desk")}</h1>
+        <.link navigate={~p"/admin/conversations"} class="btn btn-ghost ml-auto" id="to-archive">
+          <.icon name="hero-archive-box" class="size-5" /> {gettext("Archive")}
+        </.link>
         <button
           type="button"
           phx-click="availability"
@@ -403,8 +409,19 @@ defmodule MercatorWeb.Admin.DeskLive do
             <span :if={@selected.consultant} class="badge badge-ghost" id="conversation-consultant">
               {Desk.display_name(@selected.consultant)}
             </span>
+            <span
+              :if={@selected.state == :closed}
+              class="badge badge-neutral"
+              id="conversation-closed"
+            >
+              {gettext("Ended")}
+              <span :if={@selected.closed_at}>{Format.datetime(@selected.closed_at)}</span>
+            </span>
             <button
-              :if={@selected.state == :waiting or @selected.consultant_id != @current_user.id}
+              :if={
+                @selected.state == :waiting or
+                  (@selected.state == :active and @selected.consultant_id != @current_user.id)
+              }
               type="button"
               phx-click="take"
               class="btn btn-primary btn-sm"
@@ -413,6 +430,7 @@ defmodule MercatorWeb.Admin.DeskLive do
               {if @selected.state == :waiting, do: gettext("Take"), else: gettext("Take over")}
             </button>
             <button
+              :if={@selected.state != :closed}
               type="button"
               phx-click="close"
               data-confirm={gettext("End the conversation?")}
@@ -453,7 +471,15 @@ defmodule MercatorWeb.Admin.DeskLive do
             </div>
           </div>
 
+          <p
+            :if={@selected.state == :closed}
+            class="border-t border-base-200 p-3 text-sm text-base-content/60"
+            id="conversation-ended"
+          >
+            {gettext("This conversation has ended; it can only be read.")}
+          </p>
           <.form
+            :if={@selected.state != :closed}
             for={@form}
             id="reply-form"
             phx-submit="send"
@@ -761,6 +787,30 @@ defmodule MercatorWeb.Admin.DeskLive do
               </.link>
               <.state_badge state={offer.state} />
               <span class="whitespace-nowrap">{Format.money(offer.gross, @locale)}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card bg-base-100 shadow-sm" id="customer-earlier">
+        <div class="card-body gap-2 p-4 text-sm">
+          <h2 class="font-semibold">{gettext("Earlier conversations")}</h2>
+          <p :if={@context.earlier == []} class="text-base-content/60">{gettext("None.")}</p>
+          <ul class="space-y-1">
+            <li :for={earlier <- @context.earlier}>
+              <.link
+                patch={~p"/admin/desk/#{earlier.id}"}
+                class="link"
+                id={"earlier-#{earlier.id}"}
+              >
+                {Format.date(earlier.closed_at || earlier.inserted_at)}
+              </.link>
+              <span :if={earlier.consultant} class="text-base-content/60">
+                · {Desk.display_name(earlier.consultant)}
+              </span>
+              <span :if={earlier.subject} class="block truncate text-base-content/60">
+                {earlier.subject}
+              </span>
             </li>
           </ul>
         </div>
