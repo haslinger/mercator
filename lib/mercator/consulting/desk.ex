@@ -37,7 +37,7 @@ defmodule Mercator.Consulting.Desk do
   def get(id, actor) do
     Conversation
     |> Ash.Query.filter(id == ^id)
-    |> Ash.Query.load(@loads ++ [messages: [:sender]])
+    |> Ash.Query.load(@loads ++ [messages: Conversations.message_loads()])
     |> Ash.read_one(actor: actor)
   end
 
@@ -62,6 +62,35 @@ defmodule Mercator.Consulting.Desk do
       sender_kind: :consultant,
       sender_id: actor.id,
       body: body
+    })
+  end
+
+  @doc "The consultant recommends a product, with an optional note."
+  def recommend(conversation, actor, product_id, note \\ nil) do
+    Conversations.create_message(conversation, %{
+      sender_kind: :consultant,
+      sender_id: actor.id,
+      product_id: product_id,
+      body: note
+    })
+  end
+
+  @doc "The consultant shares a link (a shop page or a website) with an optional title."
+  def share_link(conversation, actor, url, title \\ nil) do
+    Conversations.create_message(conversation, %{
+      sender_kind: :consultant,
+      sender_id: actor.id,
+      link_url: String.trim(url),
+      link_title: title
+    })
+  end
+
+  @doc "The consultant shares a file of the media library (an image or a PDF)."
+  def share_file(conversation, actor, asset_id) do
+    Conversations.create_message(conversation, %{
+      sender_kind: :consultant,
+      sender_id: actor.id,
+      asset_id: asset_id
     })
   end
 

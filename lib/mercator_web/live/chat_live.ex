@@ -10,6 +10,8 @@ defmodule MercatorWeb.ChatLive do
   """
   use MercatorWeb, :live_view
 
+  import MercatorWeb.ConsultingComponents, only: [attachment: 1]
+
   alias Mercator.Consulting.Conversations
 
   on_mount {MercatorWeb.Locale, :default}
@@ -218,13 +220,17 @@ defmodule MercatorWeb.ChatLive do
               <div :if={message.sender_kind == :consultant} class="chat-header text-xs opacity-70">
                 {message.sender && (message.sender.name || gettext("Consultant"))}
               </div>
-              <div class={[
-                "chat-bubble whitespace-pre-line text-sm",
-                message.sender_kind == :customer && "chat-bubble-primary",
-                message.sender_kind == :system && "chat-bubble-neutral"
-              ]}>
+              <div
+                :if={message.body}
+                class={[
+                  "chat-bubble whitespace-pre-line text-sm",
+                  message.sender_kind == :customer && "chat-bubble-primary",
+                  message.sender_kind == :system && "chat-bubble-neutral"
+                ]}
+              >
                 {message.body}
               </div>
+              <.attachment message={message} locale={@locale} />
             </div>
           </div>
           <.waiting

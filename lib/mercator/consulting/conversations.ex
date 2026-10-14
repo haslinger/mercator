@@ -14,6 +14,7 @@ defmodule Mercator.Consulting.Conversations do
   """
   require Ash.Query
 
+  alias Mercator.Catalog.Listing
   alias Mercator.Consulting.{Conversation, Message}
   alias Mercator.Consulting.Workers.SendCallbackRequest
 
@@ -26,7 +27,7 @@ defmodule Mercator.Consulting.Conversations do
     |> Ash.Query.filter(state in [:waiting, :active])
     |> Ash.Query.sort(inserted_at: :desc)
     |> Ash.Query.limit(1)
-    |> Ash.Query.load([:consultant, messages: [:sender]])
+    |> Ash.Query.load([:consultant, messages: message_loads()])
     |> Ash.read_one!(authorize?: false)
   end
 
@@ -153,11 +154,14 @@ defmodule Mercator.Consulting.Conversations do
              authorize?: false
            ) do
       Ash.update!(conversation, %{}, action: :touch, authorize?: false)
-      message = Ash.load!(message, :sender, authorize?: false)
+      message = Ash.load!(message, message_loads(), authorize?: false)
       broadcast("conversation:#{conversation.id}", {:message, message})
       {:ok, message}
     end
   end
+
+  @doc "What is loaded with messages: sender and attachments (product as on listings, file)."
+  def message_loads, do: [:sender, :asset, product: Listing.loads()]
 
   @doc "Receive the updates of a conversation."
   def subscribe(conversation_id),

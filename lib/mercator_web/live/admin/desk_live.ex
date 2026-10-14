@@ -7,6 +7,9 @@ defmodule MercatorWeb.Admin.DeskLive do
   """
   use MercatorWeb, :live_view
 
+  import MercatorWeb.ConsultingComponents, only: [attachment: 1]
+
+  alias Mercator.{Catalog, Content}
   alias Mercator.Consulting.Desk
   alias MercatorWeb.{Format, Presence}
 
@@ -38,6 +41,10 @@ defmodule MercatorWeb.Admin.DeskLive do
        available?: false,
        selected: nil,
        context: nil,
+       share: nil,
+       share_query: "",
+       share_results: [],
+       share_error: nil,
        form: new_form()
      )
      |> stream(:messages, [])
@@ -120,6 +127,38 @@ defmodule MercatorWeb.Admin.DeskLive do
     {:noreply, socket |> load_lists() |> push_patch(to: ~p"/admin/desk")}
   end
 
+  # sharing (step 3, #96): products, links, files of the media library
+  def handle_event("share_open", %{"kind" => kind}, socket) when kind in ~w(product link file) do
+    kind = String.to_existing_atom(kind)
+
+    {:noreply,
+     socket |> assign(share: kind, share_query: "", share_error: nil) |> load_share_results()}
+  end
+
+  def handle_event("share_close", _params, socket), do: {:noreply, assign(socket, :share, nil)}
+
+  def handle_event("share_search", %{"q" => query}, socket) do
+    {:noreply, socket |> assign(:share_query, query) |> load_share_results()}
+  end
+
+  def handle_event("share_product", %{"id" => id}, socket) do
+    shared(socket, Desk.recommend(socket.assigns.selected, socket.assigns.current_user, id))
+  end
+
+  def handle_event("share_file", %{"id" => id}, socket) do
+    shared(socket, Desk.share_file(socket.assigns.selected, socket.assigns.current_user, id))
+  end
+
+  def handle_event("share_link", %{"url" => url} = params, socket) do
+    title = params |> Map.get("title", "") |> String.trim()
+    title = if title == "", do: nil, else: title
+
+    shared(
+      socket,
+      Desk.share_link(socket.assigns.selected, socket.assigns.current_user, url, title)
+    )
+  end
+
   def handle_event("send", %{"reply" => %{"body" => body}}, socket) do
     case String.trim(body) do
       "" ->
@@ -130,6 +169,40 @@ defmodule MercatorWeb.Admin.DeskLive do
         {:noreply, assign(socket, :form, new_form())}
     end
   end
+
+  defp shared(socket, {:ok, _message}), do: {:noreply, assign(socket, :share, nil)}
+
+  defp shared(socket, {:error, _error}) do
+    {:noreply,
+     assign(
+       socket,
+       :share_error,
+       gettext("Please enter a shop page (starting with /) or a web address.")
+     )}
+  end
+
+  defp load_share_results(%{assigns: %{share: :product, share_query: query}} = socket) do
+    results =
+      case String.trim(query) do
+        "" ->
+          []
+
+        query ->
+          query |> Catalog.search_products!(actor: socket.assigns.current_user) |> Enum.take(10)
+      end
+
+    assign(socket, :share_results, results)
+  end
+
+  defp load_share_results(%{assigns: %{share: :file, share_query: query}} = socket) do
+    assign(socket, :share_results, Content.search_assets!(%{query: query}) |> Enum.take(24))
+  end
+
+  defp load_share_results(socket), do: assign(socket, :share_results, [])
+
+  defp share_title(:product), do: gettext("Recommend a product")
+  defp share_title(:link), do: gettext("Share a link")
+  defp share_title(:file), do: gettext("Share a file")
 
   # --- updates ---
 
@@ -327,13 +400,17 @@ defmodule MercatorWeb.Admin.DeskLive do
                 <div class="chat-header text-xs opacity-70">
                   {sender(message)} · {Format.datetime(message.inserted_at)}
                 </div>
-                <div class={[
-                  "chat-bubble whitespace-pre-line text-sm",
-                  message.sender_kind == :consultant && "chat-bubble-primary",
-                  message.sender_kind == :system && "chat-bubble-neutral"
-                ]}>
+                <div
+                  :if={message.body}
+                  class={[
+                    "chat-bubble whitespace-pre-line text-sm",
+                    message.sender_kind == :consultant && "chat-bubble-primary",
+                    message.sender_kind == :system && "chat-bubble-neutral"
+                  ]}
+                >
                   {message.body}
                 </div>
+                <.attachment message={message} locale={@locale} desk />
               </div>
             </div>
           </div>
@@ -351,11 +428,164 @@ defmodule MercatorWeb.Admin.DeskLive do
               placeholder={gettext("Your answer")}
               id="reply-input"
             >{@form[:body].value}</textarea>
-            <button type="submit" class="btn btn-primary self-end" id="reply-send">
-              <.icon name="hero-paper-airplane" class="size-5" /> {gettext("Send")}
-            </button>
+            <div class="flex flex-col gap-1 self-end">
+              <div class="dropdown dropdown-top dropdown-end" id="share-menu">
+                <div tabindex="0" role="button" class="btn btn-ghost btn-sm w-full">
+                  <.icon name="hero-paper-clip" class="size-4" /> {gettext("Share")}
+                </div>
+                <ul
+                  tabindex="0"
+                  class="menu dropdown-content z-10 mb-1 w-56 rounded-box bg-base-100 p-2 shadow"
+                >
+                  <li>
+                    <button
+                      type="button"
+                      phx-click="share_open"
+                      phx-value-kind="product"
+                      id="share-product"
+                    >
+                      <.icon name="hero-cube" class="size-4" /> {gettext("Recommend a product")}
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" phx-click="share_open" phx-value-kind="link" id="share-link">
+                      <.icon name="hero-link" class="size-4" /> {gettext("Share a link")}
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" phx-click="share_open" phx-value-kind="file" id="share-file">
+                      <.icon name="hero-document" class="size-4" /> {gettext("Share a file")}
+                    </button>
+                  </li>
+                </ul>
+              </div>
+              <button type="submit" class="btn btn-primary" id="reply-send">
+                <.icon name="hero-paper-airplane" class="size-5" /> {gettext("Send")}
+              </button>
+            </div>
           </.form>
         </section>
+
+        <div :if={@share} class="modal modal-open" id="share-modal">
+          <div class="modal-box max-w-2xl">
+            <h2 class="text-xl font-bold">{share_title(@share)}</h2>
+
+            <form
+              :if={@share in [:product, :file]}
+              id="share-search"
+              phx-change="share_search"
+              phx-submit="share_search"
+              class="mt-4"
+            >
+              <input
+                type="search"
+                name="q"
+                value={@share_query}
+                placeholder={
+                  if @share == :product,
+                    do: gettext("Search products or article numbers"),
+                    else: gettext("Search the media library")
+                }
+                phx-debounce="300"
+                class="input w-full"
+                id="share-query"
+                autofocus
+              />
+            </form>
+
+            <ul
+              :if={@share == :product}
+              class="mt-3 max-h-80 divide-y divide-base-200 overflow-y-auto"
+              id="share-products"
+            >
+              <li :for={product <- @share_results} class="flex items-center gap-3 py-2">
+                <span class="min-w-0 flex-1">
+                  <span class="block truncate font-medium">{Mercator.Translated.t(
+                    product.title,
+                    @locale
+                  )}</span>
+                  <span class="text-xs text-base-content/60">{product.number}</span>
+                </span>
+                <button
+                  type="button"
+                  phx-click="share_product"
+                  phx-value-id={product.id}
+                  class="btn btn-primary btn-sm"
+                  id={"recommend-#{product.id}"}
+                >
+                  {gettext("Recommend")}
+                </button>
+              </li>
+            </ul>
+
+            <div
+              :if={@share == :file}
+              class="mt-3 grid max-h-80 grid-cols-3 gap-2 overflow-y-auto sm:grid-cols-4"
+              id="share-files"
+            >
+              <button
+                :for={asset <- @share_results}
+                type="button"
+                phx-click="share_file"
+                phx-value-id={asset.id}
+                class="rounded-box border border-base-300 p-1 text-left hover:border-primary"
+                id={"share-file-#{asset.id}"}
+                title={Mercator.Translated.t(asset.title, @locale) || asset.original_filename}
+              >
+                <img
+                  :if={asset.kind == :image}
+                  src={Mercator.Content.Asset.url(asset, :thumb)}
+                  alt=""
+                  class="aspect-square w-full rounded object-cover"
+                />
+                <span
+                  :if={asset.kind == :document}
+                  class="flex aspect-square flex-col items-center justify-center gap-1 bg-base-200 p-1 text-center text-xs"
+                >
+                  <.icon name="hero-document-text" class="size-6" />
+                  <span class="line-clamp-2">{Mercator.Translated.t(asset.title, @locale) ||
+                    asset.original_filename}</span>
+                </span>
+              </button>
+            </div>
+
+            <form
+              :if={@share == :link}
+              id="share-link-form"
+              phx-submit="share_link"
+              class="mt-4 space-y-2"
+            >
+              <input
+                type="text"
+                name="url"
+                placeholder={gettext("Shop page (/pages/faq) or web address (https://…)")}
+                class="input w-full"
+                id="share-url"
+                required
+              />
+              <input
+                type="text"
+                name="title"
+                placeholder={gettext("Title (optional)")}
+                class="input w-full"
+                id="share-link-title"
+              />
+              <p :if={@share_error} class="text-sm text-error" id="share-error">{@share_error}</p>
+              <button type="submit" class="btn btn-primary" id="share-link-send">{gettext("Send link")}</button>
+            </form>
+
+            <p
+              :if={@share in [:product, :file] and @share_results == []}
+              class="mt-3 text-sm text-base-content/60"
+            >
+              {gettext("Nothing found.")}
+            </p>
+
+            <div class="modal-action">
+              <button type="button" phx-click="share_close" class="btn btn-ghost">{gettext("Close")}</button>
+            </div>
+          </div>
+        </div>
 
         <.customer_context
           :if={@selected}

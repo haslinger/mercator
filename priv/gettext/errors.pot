@@ -218,3 +218,13 @@ msgstr ""
 #, elixir-autogen, elixir-format
 msgid "is not a valid phone number"
 msgstr ""
+
+#: lib/mercator/consulting/validations/message_content.ex:16
+#, elixir-autogen, elixir-format
+msgid "is required"
+msgstr ""
+
+#: lib/mercator/consulting/validations/message_content.ex:19
+#, elixir-autogen, elixir-format
+msgid "must be a shop page or an http(s) address"
+msgstr ""

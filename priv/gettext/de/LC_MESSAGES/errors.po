@@ -211,3 +211,13 @@ msgstr "muss heute oder später sein"
 #, elixir-autogen, elixir-format
 msgid "is not a valid phone number"
 msgstr "ist keine gültige Telefonnummer"
+
+#: lib/mercator/consulting/validations/message_content.ex:16
+#, elixir-autogen, elixir-format
+msgid "is required"
+msgstr "muss ausgefüllt werden"
+
+#: lib/mercator/consulting/validations/message_content.ex:19
+#, elixir-autogen, elixir-format
+msgid "must be a shop page or an http(s) address"
+msgstr "muss eine Shop-Seite oder eine http(s)-Adresse sein"

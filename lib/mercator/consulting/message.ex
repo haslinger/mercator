@@ -1,5 +1,10 @@
 defmodule Mercator.Consulting.Message do
-  @moduledoc "A message in a conversation, from the customer, a consultant or the system."
+  @moduledoc """
+  A message in a conversation, from the customer, a consultant or the system.
+  Besides its text it may carry one attachment (guided selling step 3, #96):
+  a recommended product, a link (shop page or website) or a file from the
+  media library.
+  """
   use Ash.Resource,
     otp_app: :mercator,
     domain: Mercator.Consulting,
@@ -15,6 +20,8 @@ defmodule Mercator.Consulting.Message do
     references do
       reference :conversation, on_delete: :delete
       reference :sender, on_delete: :nilify
+      reference :product, on_delete: :nilify
+      reference :asset, on_delete: :nilify
     end
   end
 
@@ -22,7 +29,18 @@ defmodule Mercator.Consulting.Message do
     defaults [:read]
 
     create :post do
-      accept [:conversation_id, :sender_kind, :sender_id, :body]
+      accept [
+        :conversation_id,
+        :sender_kind,
+        :sender_id,
+        :body,
+        :product_id,
+        :asset_id,
+        :link_url,
+        :link_title
+      ]
+
+      validate Mercator.Consulting.Validations.MessageContent
     end
   end
 
@@ -47,10 +65,18 @@ defmodule Mercator.Consulting.Message do
     end
 
     attribute :body, :string do
-      allow_nil? false
+      description "The text; may be empty when the message carries an attachment."
       public? true
       constraints max_length: 5000, trim?: true
     end
+
+    attribute :link_url, :string do
+      description "A shared link: a shop path (`/…`) or an http(s) URL."
+      public? true
+      constraints max_length: 1000
+    end
+
+    attribute :link_title, :string, public?: true, constraints: [max_length: 200]
 
     create_timestamp :inserted_at
   end
@@ -58,5 +84,7 @@ defmodule Mercator.Consulting.Message do
   relationships do
     belongs_to :conversation, Mercator.Consulting.Conversation, allow_nil?: false, public?: true
     belongs_to :sender, Mercator.Accounts.User, public?: true
+    belongs_to :product, Mercator.Catalog.Product, public?: true
+    belongs_to :asset, Mercator.Content.Asset, public?: true
   end
 end

@@ -127,4 +127,85 @@ defmodule MercatorWeb.Admin.DeskLiveTest do
       assert has_element?(desk, ~s(#customer-orders a[href="/admin/orders/#{order.number}"]))
     end
   end
+
+  describe "sharing (step 3, #96)" do
+    setup %{conn: conn, consultant: consultant} do
+      {customer_conn, owner} = visitor_conn()
+      {:ok, conversation} = Conversations.start(owner, "Was passt zu meiner Terrasse?")
+      {:ok, chat, _html} = live_isolated(customer_conn, ChatLive)
+      {:ok, desk, _html} = live(conn, ~p"/admin/desk/#{conversation.id}")
+      desk |> element("#take") |> render_click()
+      %{chat: chat, desk: desk, consultant: consultant}
+    end
+
+    test "a recommended product appears as a card in the customer's chat", %{
+      chat: chat,
+      desk: desk
+    } do
+      product = product_fixture(title: %{"de" => "Terrassenöl Lärche"}, number: "OEL-1")
+
+      desk |> element("#share-product") |> render_click()
+      desk |> form("#share-search", %{"q" => "OEL-1"}) |> render_change()
+      desk |> element("#recommend-#{product.id}") |> render_click()
+      refute has_element?(desk, "#share-modal")
+
+      assert has_element?(
+               chat,
+               ~s(#chat-messages a[href="/products/#{product.slug}"]),
+               "Terrassenöl Lärche"
+             )
+
+      # on the desk the card opens a new tab
+      assert has_element?(
+               desk,
+               ~s(#desk-messages a[target="_blank"][href="/products/#{product.slug}"])
+             )
+    end
+
+    test "links: shop pages and websites, nothing else", %{chat: chat, desk: desk} do
+      desk |> element("#share-link") |> render_click()
+      desk |> form("#share-link-form", %{"url" => "javascript:alert(1)"}) |> render_submit()
+      assert has_element?(desk, "#share-error")
+
+      desk
+      |> form("#share-link-form", %{"url" => "/pages/faq", "title" => "Häufige Fragen"})
+      |> render_submit()
+
+      assert has_element?(chat, ~s(#chat-messages a[href="/pages/faq"]), "Häufige Fragen")
+
+      desk |> element("#share-link") |> render_click()
+
+      desk
+      |> form("#share-link-form", %{"url" => "https://example.com/anleitung.html"})
+      |> render_submit()
+
+      assert has_element?(
+               chat,
+               ~s(#chat-messages a[target="_blank"][rel="noopener noreferrer"][href="https://example.com/anleitung.html"])
+             )
+    end
+
+    test "files of the media library", %{chat: chat, desk: desk} do
+      pdf =
+        Mercator.Content.upload_asset!(
+          %{
+            source_path: "test/fixtures/sample.pdf",
+            original_filename: "Pflegeanleitung.pdf",
+            tags: ["pflege"],
+            title: %{"de" => "Pflegeanleitung"}
+          },
+          actor: user_fixture(roles: [:contentmanager])
+        )
+
+      desk |> element("#share-file") |> render_click()
+      desk |> form("#share-search", %{"q" => "pflege"}) |> render_change()
+      desk |> element("#share-file-#{pdf.id}") |> render_click()
+
+      assert has_element?(
+               chat,
+               ~s(#chat-messages a[href="/uploads/assets/#{pdf.id}/pflegeanleitung.pdf"]),
+               "Pflegeanleitung"
+             )
+    end
+  end
 end
