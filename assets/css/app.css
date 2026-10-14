@@ -235,3 +235,23 @@
   text-align: left;
 }
 .markdown th { background: var(--color-base-200); font-weight: 600; }
+
+/* Markdown editor (OverType): colours of the preview mode from the theme
+   (OverType's default is dark blue) and the shop's font instead of Georgia */
+.markdown-editor .overtype-container {
+  --preview-text: var(--color-base-content);
+  --preview-h1: inherit;
+  --preview-h2: inherit;
+  --preview-h3: inherit;
+  --preview-strong: inherit;
+  --preview-em: inherit;
+  --preview-link: var(--color-primary);
+  --preview-code: var(--color-base-content);
+  --preview-code-bg: var(--color-base-200);
+  --preview-blockquote: color-mix(in oklab, var(--color-base-content) 75%, transparent);
+  --preview-hr: var(--color-base-300);
+  --preview-bg: transparent;
+}
+.markdown-editor .overtype-container[data-mode="preview"] .overtype-wrapper .overtype-preview {
+  font-family: var(--font-sans) !important;
+}

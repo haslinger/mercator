@@ -19,7 +19,9 @@ function loadOverType() {
   return overTypeLoading
 }
 
-// Colours from the active DaisyUI theme, so the editor follows light/dark mode
+// Colours from the active DaisyUI theme, so the editor follows light/dark mode.
+// The preview mode's colours are set in app.css (OverType applies only
+// `colors` per editor).
 const theme = {
   name: "mercator",
   colors: {
