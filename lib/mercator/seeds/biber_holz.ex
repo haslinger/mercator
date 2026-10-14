@@ -47,7 +47,7 @@ defmodule Mercator.Seeds.BiberHolz do
           Dies sind Platzhalter-AGB des Demo-Shops Biber Holz. Sie haben keine rechtliche Wirkung; Bestellungen im Demo-Shop werden nicht ausgeführt.
 
           ## 1. Geltungsbereich
-          Diese Bedingungen gelten für alle Bestellungen im Online-Shop der Biber Holz GmbH, Waldweg 1, 6020 Innsbruck.
+          Diese Bedingungen gelten für alle Bestellungen im Online-Shop der Biber Holz GmbH, Waldweg 1, 3914 Waldhausen.
 
           ## 2. Vertragsabschluss
           Mit dem Klick auf „Zahlungspflichtig bestellen“ geben Sie ein verbindliches Angebot ab. Der Vertrag kommt mit unserer Auftragsbestätigung zustande.
@@ -71,7 +71,7 @@ defmodule Mercator.Seeds.BiberHolz do
           These are placeholder terms of the Biber Holz demo shop. They have no legal effect; orders in the demo shop are not carried out.
 
           ## 1. Scope
-          These terms apply to all orders in the online shop of Biber Holz GmbH, Waldweg 1, 6020 Innsbruck, Austria.
+          These terms apply to all orders in the online shop of Biber Holz GmbH, Waldweg 1, 3914 Waldhausen, Austria.
 
           ## 2. Conclusion of contract
           By clicking "Place binding order" you make a binding offer. The contract is concluded with our order confirmation.
