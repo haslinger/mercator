@@ -4,7 +4,7 @@ Mercator is a guided-selling web shop with a CMS. Customers can shop on their ow
 
 It is a port of the Rails/Hobo application of the same name to **Elixir, Phoenix 1.8, Ash 3, LiveView and DaisyUI 5** on PostgreSQL. Mercator is a generic product: each customer gets its own deployment (single tenant), customised through configuration, a DaisyUI theme and optional modules.
 
-- Plan, decisions and open questions: [docs/roadmap.md](docs/roadmap.md)
+- Plan and open questions: [docs/roadmap-future.md](docs/roadmap-future.md); done and decided: [docs/roadmap-history.md](docs/roadmap-history.md)
 - Conventions for development (including AI agents): [CLAUDE.md](CLAUDE.md) and [AGENTS.md](AGENTS.md)
 
 ## Requirements

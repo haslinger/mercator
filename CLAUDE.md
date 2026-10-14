@@ -2,8 +2,8 @@
 
 Guided-selling web shop with a CMS: a port of the Rails/Hobo app "Mercator" to **Elixir / Phoenix 1.8 / Ash 3 / LiveView / DaisyUI 5 (Tailwind 4)** on PostgreSQL.
 
-- Goal: a **generic product**, deployed as **one deployment per customer** (single tenant). Customer specifics come from runtime config, a DaisyUI theme and optional modules. See `docs/roadmap.md`.
-- The plan, decisions and open questions live in [docs/roadmap.md](docs/roadmap.md). Questions are numbered globally (`#N`) and the numbering is never restarted.
+- Goal: a **generic product**, deployed as **one deployment per customer** (single tenant). Customer specifics come from runtime config, a DaisyUI theme and optional modules. See `docs/roadmap-future.md`.
+- The plan lives in [docs/roadmap-future.md](docs/roadmap-future.md) (what is to be done and decided) and [docs/roadmap-history.md](docs/roadmap-history.md) (what is done and decided). Questions are numbered globally (`#N`) and the numbering is never restarted.
 
 @AGENTS.md
 
@@ -65,5 +65,5 @@ Translate concepts into idiomatic Ash rather than copying Rails patterns one-to-
 
 - The user runs the dev server (`mix phx.server`, port 4000) themselves. Don't start your own; ask the user to start or restart it when needed.
 - Ask before installing software, adding infrastructure or creating long-lived setups.
-- Questions and suggestions are welcome; number open questions (`#N`) and keep `docs/roadmap.md` up to date when decisions are made.
+- Questions and suggestions are welcome; number open questions (`#N`) and keep the roadmap up to date when decisions are made.
 - **Commit often:** after each coherent, green step (`mix precommit` passes), with a descriptive message. Don't let changes pile up.
