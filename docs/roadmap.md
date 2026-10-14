@@ -123,7 +123,7 @@ Customer systems and the modules they mount (the last commit date of each system
 | acts_as_list | `position` attribute plus reorder actions |
 | traco `_de`/`_en` columns | Columns kept as they are, or a map/JSONB with a calculation (see #7) |
 | Paperclip | Local or S3 storage plus image processing (see #11) |
-| CKEditor | A WYSIWYG editor as a LiveView hook, e.g. TipTap or Trix (see #13) |
+| CKEditor | **Markdown** with a textarea editor and preview, no WYSIWYG (#13) |
 | DRYML page templates in DB | A safe template language, e.g. Solid (Liquid), or fixed HEEx layouts (see #9) |
 | w2ui / jQuery / fancytree admin UIs | LiveView + DaisyUI; AshAdmin for raw CRUD (see #16) |
 | private_pub / Faye | Phoenix PubSub + LiveView |
@@ -222,6 +222,7 @@ Rails sources (#1–#4) and continuing the overview (#5) were answered on 2026-1
   - order email without PDF
 - **#71** (2026-10-13) **Postcode formats** are checked for all billing countries (EU + CH, LI), defined in `Mercator.Countries.postcode_format/1`.
 - **#72** (2026-10-14) **Header on phones:** below `md` (768 px) language and theme move into a "⋯" menu (shop and admin header), "Register" is hidden (the sign-in page links to it) and "Sign in" is an icon below `sm`; the search box shows from `lg`, an icon below.
+- **#13** (2026-10-14) **Markdown instead of rich text** everywhere it applies (CMS content, product and category descriptions, GTC, later offers and messages): stored as Markdown in the translated JSONB maps, edited in a textarea with preview, rendered to sanitized HTML. No WYSIWYG editor. No CKEditor HTML needs to stay renderable (no data migration, #21).
 - **#25** (2026-10-13) **No security risk:** none of the old systems are deployed any more. Secrets still go only into env/`runtime.exs` in the port.
 
 ### Scope and target
@@ -232,7 +233,7 @@ Rails sources (#1–#4) and continuing the overview (#5) were answered on 2026-1
 - ~~**#10**~~ *(answered by #56: Postgres full-text search)* Search: Postgres full-text search (simplest, no extra service), or a dedicated engine (Meilisearch/Typesense/Elasticsearch)? How large is the catalogue (number of products/categories)?
 - ~~**#11**~~ *(answered, see Decisions)* File storage: local disk or S3-compatible? ~~Do the existing Paperclip files have to be migrated?~~ (no, see #21)
 - **#12** Audio/video chat and cobrowsing: still wanted? If so, should WebRTC signalling run over Phoenix Channels? Cobrowsing in Rails worked by sending events to the customer's page. Is that still needed in the same form?
-- **#13** Which rich-text editor for content elements and descriptions (TipTap, Trix, or something else)? Must existing CKEditor HTML stay renderable as-is?
+- ~~**#13**~~ *(answered 2026-10-14, see Decisions)* Which rich-text editor for content elements and descriptions (TipTap, Trix, or something else)? Must existing CKEditor HTML stay renderable as-is?
 - ~~**#14**~~ *(answered, see Decisions)* Payment: is mPAY24 still the provider? (I couldn't confirm whether the SOAP API used in 2015 still exists.) Are other providers wanted (e.g. Stripe, PayPal)?
 - ~~**#15**~~ *(answered, see Decisions)* Integrations: which are still in use? Is Mesonic ERP still the ERP, with MSSQL access still available? Are the Icecat and Bechlem accounts still active? (Their APIs/feeds have likely changed since 2016.)
 - ~~**#16**~~ *(answered, see Decisions)* Back office UI: one unified admin area with role-based menus, or the five separate subsites as in Rails? Is AshAdmin acceptable for low-traffic CRUD screens?
@@ -277,4 +278,5 @@ Rails sources (#1–#4) and continuing the overview (#5) were answered on 2026-1
 - ~~**#58**~~ *(answered, see Decisions)* Image storage: static files per brand, or real uploads?
 - ~~**#59**~~ *(answered, see Decisions)* Demo images: SVG illustrations, or photos generated externally from a prompt list?
 - ~~**#64–#70**~~ *(answered, see Decisions)* Basket and checkout questions (payment methods, shipping costs, signed-in checkout, delivery countries, order numbers, B2B reverse charge, order email): see [checkout-design.md](checkout-design.md#9-open-questions).
+- **#76–#86** CMS design questions (blocks instead of templates, Markdown library and editor, URLs, start page, blog, contact form, history, media library, one domain): see [cms-design.md](cms-design.md#9-open-questions).
 
