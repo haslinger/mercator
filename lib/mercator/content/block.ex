@@ -21,6 +21,8 @@ defmodule Mercator.Content.Block do
           tag: :type,
           tag_value: "categories"
         ],
+        columns: [type: Mercator.Content.Blocks.Columns, tag: :type, tag_value: "columns"],
+        faq: [type: Mercator.Content.Blocks.Faq, tag: :type, tag_value: "faq"],
         call_to_action: [
           type: Mercator.Content.Blocks.CallToAction,
           tag: :type,

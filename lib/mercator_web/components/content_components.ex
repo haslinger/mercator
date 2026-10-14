@@ -159,6 +159,43 @@ defmodule MercatorWeb.ContentComponents do
     """
   end
 
+  defp render_block(%{b: %Blocks.Columns{}} = assigns) do
+    ~H"""
+    <section
+      class={[
+        "grid gap-6",
+        length(@b.items) == 2 && "md:grid-cols-2",
+        length(@b.items) == 3 && "md:grid-cols-3",
+        length(@b.items) >= 4 && "md:grid-cols-2 lg:grid-cols-4"
+      ]}
+      id={"block-#{@b.id}"}
+    >
+      <div :for={item <- @b.items} class="space-y-2">
+        <h3 :if={t(item.title, @locale)} class="text-lg font-semibold">{t(item.title, @locale)}</h3>
+        <.markdown text={t(item.text, @locale)} />
+      </div>
+    </section>
+    """
+  end
+
+  defp render_block(%{b: %Blocks.Faq{}} = assigns) do
+    ~H"""
+    <section class="max-w-3xl space-y-3" id={"block-#{@b.id}"}>
+      <h2 :if={t(@b.heading, @locale)} class="text-2xl font-bold">{t(@b.heading, @locale)}</h2>
+      <details
+        :for={item <- @b.items}
+        class="collapse collapse-arrow bg-base-100 shadow-sm"
+        id={"faq-#{item.id}"}
+      >
+        <summary class="collapse-title font-semibold">{t(item.question, @locale)}</summary>
+        <div class="collapse-content">
+          <.markdown text={t(item.answer, @locale)} />
+        </div>
+      </details>
+    </section>
+    """
+  end
+
   defp render_block(%{b: %Blocks.CallToAction{}} = assigns) do
     ~H"""
     <section

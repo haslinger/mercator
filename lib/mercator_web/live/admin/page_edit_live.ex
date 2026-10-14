@@ -113,7 +113,15 @@ defmodule MercatorWeb.Admin.PageEditLive do
   # --- blocks ---
 
   def handle_event("add_block", %{"type" => type}, socket) do
-    {:noreply, edit_block(socket, Blocks.new(type))}
+    block = Blocks.new(type)
+
+    # list blocks start with a few empty entries
+    block =
+      if type in ["columns", "faq"],
+        do: Map.put(block, "items", Enum.map(1..3, fn _ -> new_item() end)),
+        else: block
+
+    {:noreply, edit_block(socket, block)}
   end
 
   def handle_event("edit_block", %{"id" => id}, socket) do
@@ -122,6 +130,11 @@ defmodule MercatorWeb.Admin.PageEditLive do
       |> Enum.map(&Blocks.to_input/1)
       |> Enum.find(&(&1["id"] == id))
 
+    {:noreply, edit_block(socket, block)}
+  end
+
+  def handle_event("add_item", _params, socket) do
+    block = Map.update(socket.assigns.editing_block, "items", [new_item()], &(&1 ++ [new_item()]))
     {:noreply, edit_block(socket, block)}
   end
 
@@ -148,7 +161,9 @@ defmodule MercatorWeb.Admin.PageEditLive do
     params = params["block"] || %{}
 
     block =
-      Map.merge(socket.assigns.editing_block, block_params(socket.assigns.editing_block, params))
+      socket.assigns.editing_block
+      |> Map.merge(block_params(socket.assigns.editing_block, params))
+      |> drop_empty_items()
 
     case update_blocks(socket, &Blocks.put(&1, block)) do
       {:ok, socket} ->
@@ -197,7 +212,40 @@ defmodule MercatorWeb.Admin.PageEditLive do
   defp block_params(%{"type" => type}, params) do
     {_type, module} = Enum.find(Blocks.types(), fn {t, _module} -> t == type end)
     fields = module |> Info.attributes() |> Enum.map(&to_string(&1.name))
-    params |> Map.take(fields -- ["id", "type"]) |> Map.new(fn {k, v} -> {k, clean(v)} end)
+
+    params
+    |> Map.take(fields -- ["id", "type"])
+    |> Map.new(fn
+      {"items", items} -> {"items", item_params(items)}
+      {k, v} -> {k, clean(v)}
+    end)
+  end
+
+  # list entries (columns, FAQ) arrive as %{"0" => …, "1" => …}
+  defp item_params(items) when is_map(items) do
+    items
+    |> Enum.sort_by(fn {index, _item} -> String.to_integer(index) end)
+    |> Enum.map(fn {_index, item} -> Map.new(item, fn {k, v} -> {k, clean(v)} end) end)
+  end
+
+  defp item_params(_items), do: []
+
+  defp new_item, do: %{"id" => Ash.UUID.generate()}
+
+  # entries without any text are left out when the block is saved
+  defp drop_empty_items(%{"items" => items} = block) when is_list(items) do
+    %{block | "items" => Enum.filter(items, &filled_item?/1)}
+  end
+
+  defp drop_empty_items(block), do: block
+
+  defp filled_item?(item) do
+    item
+    |> Map.delete("id")
+    |> Map.values()
+    |> Enum.any?(
+      &(is_map(&1) and Enum.any?(Map.values(&1), fn text -> text not in [nil, ""] end))
+    )
   end
 
   defp clean(value) when is_map(value),
@@ -630,6 +678,71 @@ defmodule MercatorWeb.Admin.PageEditLive do
     """
   end
 
+  defp block_fields(%{type: "columns"} = assigns) do
+    ~H"""
+    <.list_items
+      block={@block}
+      fields={[{"title", gettext("Title"), "text"}, {"text", gettext("Text"), "markdown"}]}
+      label={gettext("Column")}
+    />
+    """
+  end
+
+  defp block_fields(%{type: "faq"} = assigns) do
+    ~H"""
+    <.translated_input field={@form[:heading]} label={gettext("Heading")} />
+    <.list_items
+      block={@block}
+      fields={[{"question", gettext("Question"), "text"}, {"answer", gettext("Answer"), "markdown"}]}
+      label={gettext("Question")}
+    />
+    """
+  end
+
+  attr :block, :map, required: true
+  attr :fields, :list, required: true, doc: "[{key, label, type}]"
+  attr :label, :string, required: true
+
+  # The entries of a list block; new ones are appended (field names stay
+  # stable for the Markdown editors), empty ones are dropped on save.
+  defp list_items(assigns) do
+    assigns = assign(assigns, :items, Enum.with_index(assigns.block["items"] || []))
+
+    ~H"""
+    <div
+      :for={{item, index} <- @items}
+      class="space-y-1 rounded-box border border-base-300 p-3"
+      id={"item-#{item["id"]}"}
+    >
+      <p class="text-sm font-semibold">{@label} {index + 1}</p>
+      <input type="hidden" name={"block[items][#{index}][id]"} value={item["id"]} />
+      <.translated_input
+        :for={{key, label, type} <- @fields}
+        field={item_field(@block, index, key, item[key])}
+        label={label}
+        type={type}
+      />
+    </div>
+    <button type="button" phx-click="add_item" class="btn btn-sm" id="add-item">
+      <.icon name="hero-plus" class="size-4" /> {gettext("Add entry")}
+    </button>
+    <p class="text-xs text-base-content/60">
+      {gettext("Entries without text are removed when saving.")}
+    </p>
+    """
+  end
+
+  defp item_field(block, index, key, value) do
+    %Phoenix.HTML.FormField{
+      id: "block-#{block["id"]}_items_#{index}_#{key}",
+      name: "block[items][#{index}][#{key}]",
+      value: value,
+      errors: [],
+      field: String.to_existing_atom(key),
+      form: to_form(%{}, as: :block)
+    }
+  end
+
   defp category_options(categories, locale) do
     Enum.map(categories, fn category ->
       {String.duplicate("– ", length(category.path) - 1) <> Translated.t(category.name, locale),
@@ -725,4 +838,6 @@ defmodule MercatorWeb.Admin.PageEditLive do
   defp block_type_label("products"), do: gettext("Products")
   defp block_type_label("categories"), do: gettext("Categories")
   defp block_type_label("call_to_action"), do: gettext("Call to action")
+  defp block_type_label("columns"), do: gettext("Columns")
+  defp block_type_label("faq"), do: gettext("FAQ")
 end

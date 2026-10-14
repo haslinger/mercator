@@ -17,11 +17,23 @@ defmodule Mercator.Content.Blocks do
 
   @doc "A stored block (`Ash.Union`) as an input map with string keys."
   def to_input(%Ash.Union{type: type, value: value}) do
-    value.__struct__
-    |> Info.attributes()
-    |> Map.new(&{to_string(&1.name), Map.get(value, &1.name)})
-    |> Map.put("type", to_string(type))
+    value |> embedded_to_map() |> Map.put("type", to_string(type))
   end
+
+  # nested embedded values (e.g. the items of an FAQ) become maps as well
+  defp embedded_to_map(%module{} = value) do
+    module
+    |> Info.attributes()
+    |> Map.new(&{to_string(&1.name), plain(Map.get(value, &1.name))})
+  end
+
+  defp plain(list) when is_list(list), do: Enum.map(list, &plain/1)
+
+  defp plain(%module{} = value) do
+    if Info.resource?(module), do: embedded_to_map(value), else: value
+  end
+
+  defp plain(value), do: value
 
   @doc "A new, empty block of a type, as an input map."
   def new(type) when is_binary(type), do: %{"type" => type, "id" => Ash.UUID.generate()}

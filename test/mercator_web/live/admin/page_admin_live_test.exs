@@ -219,6 +219,63 @@ defmodule MercatorWeb.Admin.PageAdminLiveTest do
       assert has_element?(view, ~s(#blocks a[href="/pages/kontakt"]), "Kontakt")
     end
 
+    test "columns and FAQ have a list of entries", %{conn: conn, editor: editor} do
+      page = page!(editor)
+      {:ok, view, _html} = live(conn, ~p"/admin/pages/#{page.id}")
+
+      view |> element("#add-block-faq") |> render_click()
+      view |> element("#add-item") |> render_click()
+
+      assert view
+             |> element("#block-form")
+             |> render()
+             |> String.contains?("block[items][3][question][de]")
+
+      view
+      |> form("#block-form", %{
+        "block" => %{
+          "heading" => %{"de" => "Häufige Fragen"},
+          "items" => %{
+            "0" => %{
+              "question" => %{"de" => "Liefern Sie auch?"},
+              "answer" => %{"de" => "Ja, **österreichweit**."}
+            },
+            "1" => %{"question" => %{"de" => ""}, "answer" => %{"de" => ""}},
+            "2" => %{
+              "question" => %{"de" => "Kann ich abholen?"},
+              "answer" => %{"de" => "Im Sägewerk."}
+            }
+          }
+        }
+      })
+      |> render_submit()
+
+      assert has_element?(view, "#blocks details summary", "Liefern Sie auch?")
+      assert has_element?(view, "#blocks details strong", "österreichweit")
+      [%{value: faq}] = Content.get_page!(page.id, actor: editor).blocks
+      assert length(faq.items) == 2
+
+      # editing keeps the entries
+      view |> element("#edit-#{faq.id}") |> render_click()
+      assert view |> element("#block-form") |> render() |> String.contains?("Kann ich abholen?")
+      view |> element("#block-modal button[phx-click=cancel_block]") |> render_click()
+
+      view |> element("#add-block-columns") |> render_click()
+
+      view
+      |> form("#block-form", %{
+        "block" => %{
+          "items" => %{
+            "0" => %{"title" => %{"de" => "Regional"}, "text" => %{"de" => "Aus dem Waldviertel"}},
+            "1" => %{"title" => %{"de" => "Nachhaltig"}, "text" => %{"de" => "PEFC-zertifiziert"}}
+          }
+        }
+      })
+      |> render_submit()
+
+      assert has_element?(view, "#blocks .md\\:grid-cols-2 h3", "Nachhaltig")
+    end
+
     test "saves settings, publishes, archives; history and restore", %{conn: conn, editor: editor} do
       page = page!(editor, blocks: [%{type: "text", text: %{"de" => "Erste Fassung"}}])
       {:ok, view, _html} = live(conn, ~p"/admin/pages/#{page.id}")
