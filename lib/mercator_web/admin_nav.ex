@@ -42,6 +42,13 @@ defmodule MercatorWeb.AdminNav do
            :administrator
          ])
        ]},
+      {gettext("Content"),
+       [
+         item(gettext("Pages"), ~p"/admin/pages", "hero-document-text", "pages", [
+           :contentmanager,
+           :administrator
+         ])
+       ]},
       {gettext("Administration"),
        [
          item(gettext("Users"), ~p"/admin/users", "hero-users", "users", [:administrator]),

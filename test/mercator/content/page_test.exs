@@ -4,6 +4,7 @@ defmodule Mercator.Content.PageTest do
   import Mercator.AccountsFixtures
 
   alias Mercator.Content
+  alias Mercator.Content.Blocks
 
   setup do
     %{editor: user_fixture(roles: [:contentmanager])}
@@ -126,6 +127,55 @@ defmodule Mercator.Content.PageTest do
       assert page.changes_pending
       # still live: version 2 until the next publish
       assert [%Ash.Union{value: %{text: %{"de" => "Version 2"}}}] = page.published.blocks
+    end
+  end
+
+  describe "editing helpers" do
+    test "blocks are added, changed, moved and deleted in the working copy", %{editor: editor} do
+      page = page!(%{blocks: [text("Eins")]}, editor)
+      [%{"id" => first_id}] = Enum.map(page.blocks, &Blocks.to_input/1)
+      second = Blocks.new("text") |> Map.put("text", %{"de" => "Zwei"})
+
+      {:ok, page} =
+        Content.update_page_blocks(page, &Blocks.put(&1, second), editor)
+
+      {:ok, page} =
+        Content.update_page_blocks(
+          page,
+          &Blocks.move(&1, second["id"], 0),
+          editor
+        )
+
+      assert Enum.map(page.blocks, & &1.value.text["de"]) == ["Zwei", "Eins"]
+      assert page.changes_pending
+
+      {:ok, page} =
+        Content.update_page_blocks(
+          page,
+          &Blocks.put(&1, %{"id" => first_id, "text" => %{"de" => "Eins!"}}),
+          editor
+        )
+
+      {:ok, page} =
+        Content.update_page_blocks(
+          page,
+          &Blocks.delete(&1, second["id"]),
+          editor
+        )
+
+      assert Enum.map(page.blocks, & &1.value.text["de"]) == ["Eins!"]
+    end
+
+    test "pages are placed in the tree", %{editor: editor} do
+      a = page!(%{title: %{"de" => "A"}}, editor)
+      b = page!(%{title: %{"de" => "B"}}, editor)
+
+      {:ok, b} = Content.place_page(b, nil, 0, editor)
+      assert b.position == 1
+      assert Content.get_page!(a.id, actor: editor).position == 2
+
+      {:ok, b} = Content.place_page(b, a.id, 0, editor)
+      assert b.path == "a/b"
     end
   end
 

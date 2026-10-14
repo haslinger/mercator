@@ -34,4 +34,55 @@ defmodule Mercator.Content do
       define :destroy_page, action: :destroy
     end
   end
+
+  require Ash.Query
+
+  alias Mercator.Content.Blocks
+
+  @doc """
+  Moves a page below `parent_id` (nil = top level) at `index` among its
+  siblings and renumbers the siblings' positions. Runs as `actor`.
+  """
+  def place_page(page, parent_id, index, actor) do
+    with {:ok, page} <- maybe_move(page, parent_id, actor) do
+      page.parent_id
+      |> siblings(actor)
+      |> Enum.reject(&(&1.id == page.id))
+      |> List.insert_at(index, page)
+      |> Enum.with_index(1)
+      |> Enum.each(fn {sibling, position} -> set_position(sibling, position, actor) end)
+
+      get_page(page.id, actor: actor)
+    end
+  end
+
+  defp maybe_move(%{parent_id: parent_id} = page, parent_id, _actor), do: {:ok, page}
+
+  defp maybe_move(page, parent_id, actor),
+    do: move_page(page, %{parent_id: parent_id}, actor: actor)
+
+  defp siblings(parent_id, actor) do
+    Mercator.Content.Page
+    |> then(fn query ->
+      if parent_id,
+        do: Ash.Query.filter(query, parent_id == ^parent_id),
+        else: Ash.Query.filter(query, is_nil(parent_id))
+    end)
+    |> Ash.Query.sort(position: :asc, path: :asc)
+    |> Ash.read!(actor: actor)
+  end
+
+  defp set_position(%{position: position}, position, _actor), do: :ok
+
+  defp set_position(page, position, actor),
+    do: update_page!(page, %{position: position}, actor: actor)
+
+  @doc """
+  Changes the block list of a page's working copy with `fun`, which gets
+  and returns the blocks as input maps (see `Mercator.Content.Blocks`).
+  """
+  def update_page_blocks(page, fun, actor) do
+    blocks = page.blocks |> Enum.map(&Blocks.to_input/1) |> fun.()
+    update_page(page, %{blocks: blocks}, actor: actor)
+  end
 end
