@@ -7,6 +7,7 @@ defmodule MercatorWeb.ChatLive do
   navigation between shop pages and keeps the conversation open. The
   "Beraten lassen" button on product pages dispatches the browser event
   `mercator:open-chat` with a subject and product, which opens the panel.
+  A link with `?chat=open` (from the reply email, #97) opens it on load.
   """
   use MercatorWeb, :live_view
 
@@ -26,13 +27,13 @@ defmodule MercatorWeb.ChatLive do
   def show?(_conn), do: false
 
   @impl true
-  def mount(_params, _session, socket) do
+  def mount(_params, session, socket) do
     conversation = Conversations.current(socket.assigns.basket_owner)
     if conversation && connected?(socket), do: follow(conversation)
 
     {:ok,
      socket
-     |> assign(open?: false, unread: 0, context: %{}, form: new_form(), sent: 0)
+     |> assign(open?: session["open"] == true, unread: 0, context: %{}, form: new_form(), sent: 0)
      |> assign_conversation(conversation), layout: false}
   end
 

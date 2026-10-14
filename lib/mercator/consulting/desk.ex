@@ -11,6 +11,7 @@ defmodule Mercator.Consulting.Desk do
   require Ash.Query
 
   alias Mercator.Consulting.{Conversation, Conversations, Offers}
+  alias Mercator.Consulting.Workers.SendReplyNotice
   alias Mercator.Sales.{BasketPricing, Baskets, Order}
 
   @loads [:customer, :consultant, :product]
@@ -87,11 +88,17 @@ defmodule Mercator.Consulting.Desk do
     do: consultant_message(conversation, actor, %{asset_id: asset_id})
 
   defp consultant_message(conversation, actor, attrs) do
-    with {:ok, conversation} <- ensure_taken(conversation, actor) do
-      Conversations.create_message(
-        conversation,
-        Map.merge(attrs, %{sender_kind: :consultant, sender_id: actor.id})
-      )
+    with {:ok, conversation} <- ensure_taken(conversation, actor),
+         {:ok, message} <-
+           Conversations.create_message(
+             conversation,
+             Map.merge(attrs, %{sender_kind: :consultant, sender_id: actor.id})
+           ) do
+      # the customer is not in the shop: an email (#97)
+      unless MercatorWeb.Presence.customer_online?(conversation.id),
+        do: SendReplyNotice.enqueue(conversation.id)
+
+      {:ok, message}
     end
   end
 

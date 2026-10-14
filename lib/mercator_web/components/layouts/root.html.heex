@@ -63,6 +63,10 @@
     {@inner_content}
     <%!-- the chat with a consultant survives live navigation (guided selling) --%>
     {if MercatorWeb.ChatLive.show?(assigns[:conn]),
-      do: live_render(@conn, MercatorWeb.ChatLive, id: "chat")}
+      do:
+        live_render(@conn, MercatorWeb.ChatLive,
+          id: "chat",
+          session: %{"open" => @conn.params["chat"] == "open"}
+        )}
   </body>
 </html>

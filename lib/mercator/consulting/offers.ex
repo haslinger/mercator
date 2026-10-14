@@ -14,6 +14,7 @@ defmodule Mercator.Consulting.Offers do
   alias Mercator.{Catalog, Translated}
   alias Mercator.Catalog.{Configurator, Variant}
   alias Mercator.Consulting.{Conversation, Conversations, Offer, OfferItem, OfferTotals}
+  alias Mercator.Consulting.Workers.SendOfferEmail
   alias Mercator.Sales.{BasketPricing, Baskets}
 
   @loads [:customer, :consultant, :approved_by, :conversation, :order, items: [:product]]
@@ -176,9 +177,21 @@ defmodule Mercator.Consulting.Offers do
   @doc "A sales manager approves; the offer is sent."
   def approve(offer, actor), do: offer |> transition(:approve, %{}, actor) |> announce()
 
-  # a sent offer of a conversation that is still open: a card in the chat
-  defp announce({:ok, %Offer{state: :sent, conversation_id: id} = offer} = result)
-       when not is_nil(id) do
+  # a sent offer: an email, and a card in its conversation if that is still
+  # open; an offer awaiting approval: an email to the sales managers
+  defp announce({:ok, %Offer{state: :pending_approval} = offer} = result) do
+    SendOfferEmail.enqueue(offer.id, :approval)
+    result
+  end
+
+  defp announce({:ok, %Offer{state: :sent, conversation_id: nil} = offer} = result) do
+    SendOfferEmail.enqueue(offer.id, :sent)
+    result
+  end
+
+  defp announce({:ok, %Offer{state: :sent, conversation_id: id} = offer} = result) do
+    SendOfferEmail.enqueue(offer.id, :sent)
+
     case Ash.get(Conversation, id, authorize?: false) do
       {:ok, %{state: state} = conversation} when state in [:waiting, :active] ->
         Conversations.create_message(conversation, %{

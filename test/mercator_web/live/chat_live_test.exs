@@ -51,6 +51,18 @@ defmodule MercatorWeb.ChatLiveTest do
     assert has_element?(view, "#chat-messages .chat-start", "Rund 1,1")
   end
 
+  test "a link with ?chat=open (reply email) opens the panel", %{conn: conn} do
+    {conn, _owner} = visitor_conn(conn)
+    {:ok, closed, _html} = live_isolated(conn, ChatLive)
+    refute has_element?(closed, "#chat-panel.flex")
+
+    {:ok, open, _html} = live_isolated(conn, ChatLive, session: %{"open" => true})
+    assert has_element?(open, "#chat-panel.flex")
+
+    html = conn |> get(~p"/?chat=open") |> html_response(200)
+    assert html =~ ~s(id="chat-panel")
+  end
+
   test "unread answers are counted while the panel is closed", %{conn: conn} do
     {conn, owner} = visitor_conn(conn)
     {:ok, conversation} = Conversations.start(owner, "Hallo")

@@ -16,7 +16,7 @@ defmodule Mercator.Consulting.Conversations do
 
   alias Mercator.Catalog.Listing
   alias Mercator.Consulting.{Conversation, Message}
-  alias Mercator.Consulting.Workers.SendCallbackRequest
+  alias Mercator.Consulting.Workers.{SendCallbackRequest, SendNewConversationNotice}
 
   @pubsub Mercator.PubSub
 
@@ -46,6 +46,11 @@ defmodule Mercator.Consulting.Conversations do
          {:ok, _message} <- post(owner, conversation.id, body) do
       conversation = current(owner)
       broadcast("desk", {:conversation, conversation})
+
+      if MercatorWeb.Presence.available_count() == 0,
+        do:
+          %{conversation_id: conversation.id} |> SendNewConversationNotice.new() |> Oban.insert!()
+
       {:ok, conversation}
     end
   end
