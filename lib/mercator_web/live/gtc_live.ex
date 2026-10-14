@@ -1,6 +1,6 @@
 defmodule MercatorWeb.GtcLive do
   @moduledoc """
-  The current general terms and conditions (`/agb`).
+  The current general terms and conditions (`/terms`).
   """
   use MercatorWeb, :live_view
 

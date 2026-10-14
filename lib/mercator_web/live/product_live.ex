@@ -60,7 +60,7 @@ defmodule MercatorWeb.ProductLive do
   @impl true
   def handle_event("select_variant", %{"variant" => number}, socket) do
     {:noreply,
-     push_patch(socket, to: ~p"/produkte/#{socket.assigns.product.slug}?variant=#{number}")}
+     push_patch(socket, to: ~p"/products/#{socket.assigns.product.slug}?variant=#{number}")}
   end
 
   def handle_event("configure", params, socket) do
@@ -200,7 +200,7 @@ defmodule MercatorWeb.ProductLive do
       basket_count={@basket_count}
     >
       <.breadcrumb items={
-        Enum.map(@trail, &{Translated.t(&1.name, @locale), ~p"/kategorien/#{&1.slug}"}) ++
+        Enum.map(@trail, &{Translated.t(&1.name, @locale), ~p"/categories/#{&1.slug}"}) ++
           [{Translated.t(@product.title, @locale), nil}]
       } />
 

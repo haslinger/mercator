@@ -41,7 +41,7 @@ defmodule MercatorWeb.CatalogComponents do
   def category_tile(assigns) do
     ~H"""
     <.link
-      navigate={~p"/kategorien/#{@category.slug}"}
+      navigate={~p"/categories/#{@category.slug}"}
       class="card bg-base-100 shadow-sm hover:shadow-md transition-shadow"
       id={"category-tile-#{@category.slug}"}
     >
@@ -67,7 +67,7 @@ defmodule MercatorWeb.CatalogComponents do
   def product_card(assigns) do
     ~H"""
     <.link
-      navigate={~p"/produkte/#{@product.slug}"}
+      navigate={~p"/products/#{@product.slug}"}
       class="card bg-base-100 shadow-sm hover:shadow-md transition-shadow"
       id={"product-card-#{@product.slug}"}
     >

@@ -7,7 +7,7 @@ defmodule MercatorWeb.GtcLiveTest do
   alias Mercator.Seeds.BiberHolz
 
   test "shows a notice without terms", %{conn: conn} do
-    {:ok, view, _html} = live(conn, ~p"/agb")
+    {:ok, view, _html} = live(conn, ~p"/terms")
 
     assert has_element?(view, "#no-gtc")
   end
@@ -15,7 +15,7 @@ defmodule MercatorWeb.GtcLiveTest do
   test "shows the current terms with headings and paragraphs", %{conn: conn} do
     Ash.Seed.seed!(Sales.Gtc, BiberHolz.gtc())
 
-    {:ok, view, _html} = live(conn, ~p"/agb")
+    {:ok, view, _html} = live(conn, ~p"/terms")
 
     assert has_element?(view, "#gtc-version", "01.10.2026")
     assert has_element?(view, "#gtc h2", "1. Geltungsbereich")
@@ -23,7 +23,7 @@ defmodule MercatorWeb.GtcLiveTest do
   end
 
   test "the footer links to the terms", %{conn: conn} do
-    {:ok, view, _html} = live(conn, ~p"/warenkorb")
+    {:ok, view, _html} = live(conn, ~p"/basket")
 
     assert has_element?(view, "#gtc-link")
   end

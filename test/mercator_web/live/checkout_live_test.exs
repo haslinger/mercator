@@ -29,27 +29,27 @@ defmodule MercatorWeb.CheckoutLiveTest do
   end
 
   test "visitors are sent to sign in and come back to the checkout" do
-    conn = get(build_conn(), ~p"/kasse/anmelden")
+    conn = get(build_conn(), ~p"/checkout/sign-in")
 
     assert redirected_to(conn) == ~p"/sign-in"
-    assert get_session(conn, :return_to) == ~p"/kasse"
-    assert {:error, {:redirect, %{to: "/sign-in"}}} = live(build_conn(), ~p"/kasse")
+    assert get_session(conn, :return_to) == ~p"/checkout"
+    assert {:error, {:redirect, %{to: "/sign-in"}}} = live(build_conn(), ~p"/checkout")
   end
 
   test "an empty basket leads back to the basket", %{conn: conn} do
-    assert {:error, {:live_redirect, %{to: "/warenkorb"}}} = live(conn, ~p"/kasse")
+    assert {:error, {:live_redirect, %{to: "/basket"}}} = live(conn, ~p"/checkout")
   end
 
   test "the basket links to the checkout", %{conn: conn, user: user, variant: variant} do
     Baskets.add({:user, user}, variant.id, 1)
-    {:ok, view, _html} = live(conn, ~p"/warenkorb")
+    {:ok, view, _html} = live(conn, ~p"/basket")
 
-    assert has_element?(view, ~s(#to-checkout[href="/kasse"]))
+    assert has_element?(view, ~s(#to-checkout[href="/checkout"]))
   end
 
   test "places an order and shows the confirmation", %{conn: conn, user: user, variant: variant} do
     Baskets.add({:user, user}, variant.id, 1)
-    {:ok, view, _html} = live(conn, ~p"/kasse")
+    {:ok, view, _html} = live(conn, ~p"/checkout")
 
     assert has_element?(view, "#shipping-parcel[checked]")
     assert has_element?(view, "#checkout-total", "129,90")

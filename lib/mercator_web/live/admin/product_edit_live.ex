@@ -196,7 +196,7 @@ defmodule MercatorWeb.Admin.ProductEditLive do
           </button>
           <.link
             :if={@product.state == :active}
-            navigate={~p"/produkte/#{@product.slug}"}
+            navigate={~p"/products/#{@product.slug}"}
             class="btn btn-ghost btn-sm"
             id="view-in-shop"
           >

@@ -58,7 +58,7 @@ defmodule MercatorWeb.CatalogLiveTest do
 
   describe "category page" do
     test "shows breadcrumb, active subcategories and the products of the subtree", ctx do
-      {:ok, view, _html} = live(ctx.conn, ~p"/kategorien/bauholz")
+      {:ok, view, _html} = live(ctx.conn, ~p"/categories/bauholz")
 
       assert has_element?(view, "#category-name", "Bauholz")
       assert has_element?(view, "#category-tile-latten")
@@ -70,29 +70,29 @@ defmodule MercatorWeb.CatalogLiveTest do
     end
 
     test "a subcategory page has the parent in the breadcrumb", ctx do
-      {:ok, view, _html} = live(ctx.conn, ~p"/kategorien/latten")
+      {:ok, view, _html} = live(ctx.conn, ~p"/categories/latten")
 
-      assert has_element?(view, "#breadcrumb a[href='/kategorien/bauholz']")
+      assert has_element?(view, "#breadcrumb a[href='/categories/bauholz']")
       assert has_element?(view, "#product-#{ctx.batten.id}")
       refute has_element?(view, "#product-#{ctx.beam.id}")
     end
 
     test "filters are applied and kept in the URL", ctx do
-      {:ok, view, _html} = live(ctx.conn, ~p"/kategorien/bauholz")
+      {:ok, view, _html} = live(ctx.conn, ~p"/categories/bauholz")
 
       view |> element("#filter-form") |> render_change(%{"new" => "1", "sort" => "position"})
 
-      assert_patch(view, ~p"/kategorien/bauholz?new=1")
+      assert_patch(view, ~p"/categories/bauholz?new=1")
       assert has_element?(view, "#product-#{ctx.batten.id}")
       refute has_element?(view, "#product-#{ctx.beam.id}")
 
       view |> element("#reset-filters") |> render_click()
-      assert_patch(view, ~p"/kategorien/bauholz")
+      assert_patch(view, ~p"/categories/bauholz")
       assert has_element?(view, "#product-#{ctx.beam.id}")
     end
 
     test "shows the from price of products with several variants", ctx do
-      {:ok, view, _html} = live(ctx.conn, ~p"/kategorien/latten")
+      {:ok, view, _html} = live(ctx.conn, ~p"/categories/latten")
 
       # 3.40 net + 20 % = 4.08 gross
       assert has_element?(view, "#product-#{ctx.batten.id} [data-role=price]", "4,08 €")
@@ -100,15 +100,15 @@ defmodule MercatorWeb.CatalogLiveTest do
 
     test "unknown and draft categories lead to the start page", ctx do
       assert {:error, {:live_redirect, %{to: "/"}}} =
-               live(ctx.conn, ~p"/kategorien/gibt-es-nicht")
+               live(ctx.conn, ~p"/categories/gibt-es-nicht")
 
-      assert {:error, {:live_redirect, %{to: "/"}}} = live(ctx.conn, ~p"/kategorien/geheim")
+      assert {:error, {:live_redirect, %{to: "/"}}} = live(ctx.conn, ~p"/categories/geheim")
     end
   end
 
   describe "product page" do
     test "shows title, price of the first variant, properties and accessories", ctx do
-      {:ok, view, _html} = live(ctx.conn, ~p"/produkte/#{ctx.batten.slug}")
+      {:ok, view, _html} = live(ctx.conn, ~p"/products/#{ctx.batten.slug}")
 
       assert has_element?(view, "#product-title", "Dachlatte")
       assert has_element?(view, "#article-number", "LATTE-4M")
@@ -120,18 +120,18 @@ defmodule MercatorWeb.CatalogLiveTest do
     end
 
     test "switching the variant updates number and price", ctx do
-      {:ok, view, _html} = live(ctx.conn, ~p"/produkte/#{ctx.batten.slug}")
+      {:ok, view, _html} = live(ctx.conn, ~p"/products/#{ctx.batten.slug}")
 
       view |> element("#variant-LATTE-5M") |> render_click()
 
-      assert_patch(view, ~p"/produkte/#{ctx.batten.slug}?variant=LATTE-5M")
+      assert_patch(view, ~p"/products/#{ctx.batten.slug}?variant=LATTE-5M")
       assert has_element?(view, "#article-number", "LATTE-5M")
       # 4.25 net + 20 % = 5.10 gross
       assert has_element?(view, "#price-box", "5,10 €")
     end
 
     test "the total follows the quantity and graduated prices", ctx do
-      {:ok, view, _html} = live(ctx.conn, ~p"/produkte/#{ctx.batten.slug}")
+      {:ok, view, _html} = live(ctx.conn, ~p"/products/#{ctx.batten.slug}")
 
       view |> element("#quantity-form") |> render_change(%{"quantity" => "100"})
 
@@ -140,11 +140,11 @@ defmodule MercatorWeb.CatalogLiveTest do
     end
 
     test "rejects decimal quantities for pieces but accepts them for m³", ctx do
-      {:ok, view, _html} = live(ctx.conn, ~p"/produkte/#{ctx.batten.slug}")
+      {:ok, view, _html} = live(ctx.conn, ~p"/products/#{ctx.batten.slug}")
       view |> element("#quantity-form") |> render_change(%{"quantity" => "2,5"})
       assert has_element?(view, "#quantity-error")
 
-      {:ok, view, _html} = live(ctx.conn, ~p"/produkte/#{ctx.beam.slug}")
+      {:ok, view, _html} = live(ctx.conn, ~p"/products/#{ctx.beam.slug}")
       view |> element("#quantity-form") |> render_change(%{"quantity" => "2,5"})
       refute has_element?(view, "#quantity-error")
       # 2.5 × 500 net = 1250 net, 1500 gross
@@ -152,7 +152,7 @@ defmodule MercatorWeb.CatalogLiveTest do
     end
 
     test "is shown in English", ctx do
-      {:ok, view, _html} = live(ctx.conn, ~p"/produkte/#{ctx.batten.slug}?locale=en")
+      {:ok, view, _html} = live(ctx.conn, ~p"/products/#{ctx.batten.slug}?locale=en")
 
       assert has_element?(view, "#product-title", "Roof batten")
       assert view |> element("#price-box") |> render() =~ "€4.08"
@@ -160,7 +160,7 @@ defmodule MercatorWeb.CatalogLiveTest do
 
     test "draft products are not shown", ctx do
       assert {:error, {:live_redirect, %{to: "/"}}} =
-               live(ctx.conn, ~p"/produkte/#{ctx.draft.slug}")
+               live(ctx.conn, ~p"/products/#{ctx.draft.slug}")
     end
   end
 

@@ -7,7 +7,7 @@ defmodule MercatorWeb.CheckoutController do
 
   def sign_in(conn, _params) do
     conn
-    |> put_session(:return_to, ~p"/kasse")
+    |> put_session(:return_to, ~p"/checkout")
     |> redirect(to: ~p"/sign-in")
   end
 end

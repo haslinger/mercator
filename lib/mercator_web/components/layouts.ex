@@ -46,7 +46,7 @@ defmodule MercatorWeb.Layouts do
         </.link>
       </div>
       <div class="flex-none flex items-center gap-0.5 md:gap-2">
-        <form action={~p"/suche"} method="get" class="hidden lg:block" id="navbar-search">
+        <form action={~p"/search"} method="get" class="hidden lg:block" id="navbar-search">
           <label class="input input-sm w-48 xl:w-64">
             <.icon name="hero-magnifying-glass" class="size-4 opacity-50" />
             <input
@@ -58,7 +58,7 @@ defmodule MercatorWeb.Layouts do
           </label>
         </form>
         <.link
-          navigate={~p"/suche"}
+          navigate={~p"/search"}
           class="btn btn-ghost btn-sm lg:hidden"
           aria-label={gettext("Search")}
         >
@@ -66,7 +66,7 @@ defmodule MercatorWeb.Layouts do
         </.link>
         <.catalog_menu :if={@nav_categories != []} categories={@nav_categories} locale={@locale} />
         <.link
-          navigate={~p"/warenkorb"}
+          navigate={~p"/basket"}
           class="btn btn-ghost btn-sm"
           id="basket-link"
           aria-label={gettext("Basket")}
@@ -123,7 +123,7 @@ defmodule MercatorWeb.Layouts do
         <p :if={Mercator.Brand.get(:email)}>{Mercator.Brand.get(:email)}</p>
       </aside>
       <nav>
-        <.link navigate={~p"/agb"} class="link link-hover" id="gtc-link">
+        <.link navigate={~p"/terms"} class="link link-hover" id="gtc-link">
           {gettext("Terms and conditions")}
         </.link>
       </nav>
@@ -222,7 +222,7 @@ defmodule MercatorWeb.Layouts do
       </div>
       <ul tabindex="0" class="menu dropdown-content bg-base-100 rounded-box z-10 mt-2 w-64 p-2 shadow">
         <li :for={category <- @categories}>
-          <.link navigate={~p"/kategorien/#{category.slug}"} id={"nav-#{category.slug}"}>
+          <.link navigate={~p"/categories/#{category.slug}"} id={"nav-#{category.slug}"}>
             {Mercator.Translated.t(category.name, @locale || "de")}
           </.link>
         </li>

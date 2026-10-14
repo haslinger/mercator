@@ -17,7 +17,7 @@ defmodule MercatorWeb.ConfiguratorLiveTest do
     conn: conn,
     product: product
   } do
-    {:ok, view, _html} = live(conn, ~p"/produkte/#{product.slug}")
+    {:ok, view, _html} = live(conn, ~p"/products/#{product.slug}")
 
     assert has_element?(view, "#configurator")
     assert has_element?(view, "#config-species option[selected][value=spruce]")
@@ -31,7 +31,7 @@ defmodule MercatorWeb.ConfiguratorLiveTest do
   end
 
   test "choices show their base price or surcharge (gross)", %{conn: conn, product: product} do
-    {:ok, view, _html} = live(conn, ~p"/produkte/#{product.slug}")
+    {:ok, view, _html} = live(conn, ~p"/products/#{product.slug}")
 
     # oak 1650 €/m³ net = 1980 € gross; oiled 8 € net = 9.60 € gross
     assert has_element?(view, "#config-species option[value=oak]", "1.980,00 €/m³")
@@ -40,7 +40,7 @@ defmodule MercatorWeb.ConfiguratorLiveTest do
   end
 
   test "changing the configuration recalculates the price live", %{conn: conn, product: product} do
-    {:ok, view, _html} = live(conn, ~p"/produkte/#{product.slug}")
+    {:ok, view, _html} = live(conn, ~p"/products/#{product.slug}")
 
     view
     |> element("#configurator")
@@ -64,7 +64,7 @@ defmodule MercatorWeb.ConfiguratorLiveTest do
   end
 
   test "invalid dimensions show an error at the field", %{conn: conn, product: product} do
-    {:ok, view, _html} = live(conn, ~p"/produkte/#{product.slug}")
+    {:ok, view, _html} = live(conn, ~p"/products/#{product.slug}")
 
     html = view |> element("#configurator") |> render_change(%{"config" => %{"length" => "9000"}})
 
@@ -79,7 +79,7 @@ defmodule MercatorWeb.ConfiguratorLiveTest do
     category = category_fixture(slug: "nach-mass")
     Mercator.Catalog.categorize!(category.id, product.id, authorize?: false)
 
-    {:ok, view, _html} = live(conn, ~p"/kategorien/nach-mass")
+    {:ok, view, _html} = live(conn, ~p"/categories/nach-mass")
 
     price = view |> element("#product-#{product.id} [data-role=price]") |> render()
     assert price =~ "ab"

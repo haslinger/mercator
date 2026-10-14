@@ -35,7 +35,7 @@ Status: agreed (2026-10-13): all questions in section 9 answered as recommended.
 | Attribute | Type | Notes |
 |---|---|---|
 | `name`, `description`, `long_description` | translated | |
-| `slug` | string, unique | from the German name; used in URLs `/kategorien/bauholz` |
+| `slug` | string, unique | from the German name; used in URLs `/categories/bauholz` |
 | `parent_id`, `path` | tree (#49) | |
 | `position` | integer | order among siblings |
 | `state` | `:draft` / `:active` / `:hidden` | `hidden`: reachable by link, not in the navigation |
@@ -50,7 +50,7 @@ Many-to-many with products through `Categorization` (`position` = order of produ
 | `number` | string, unique | article number, e.g. `BH-KVH-001` |
 | `title`, `subtitle`, `description`, `long_description`, `warranty` | translated | |
 | `highlights` | list of translated strings | bullet points (Rails `Feature`) |
-| `slug` | string, unique | `/produkte/kvh-fichte` |
+| `slug` | string, unique | `/products/kvh-fichte` |
 | `kind` | `:simple` / `:variants` / `:configurable` (#39) | |
 | `state` | `:draft` → `:active` → `:discontinued` (#52) | only `active` is visible to customers |
 | `tax_class` | reference (#51) | |
@@ -164,18 +164,18 @@ Out of scope for now: the **house configurator** (floor plan, wall structure, bi
 ## 6. Public UI (LiveView, DaisyUI)
 
 - **Navigation:** top categories in the navbar (dropdown), subcategories on the category page.
-- **Category page** `/kategorien/:slug`:
+- **Category page** `/categories/:slug`:
   - breadcrumb and subcategory tiles
   - product grid with price "ab …", badges (new, bestseller, sale)
   - filters (price range, filterable properties, species) and sorting
   - filters live in the URL, so filtered views can be bookmarked
-- **Product page** `/produkte/:slug`:
+- **Product page** `/products/:slug`:
   - placeholder images, highlights, description, property table
   - accessories and related products
   - variant selector (only valid combinations selectable)
   - configurator with live price and breakdown
   - graduated prices table and delivery time
-- **Search** `/suche?q=…`: full text over title, number, description (de/en), plus prefix search on article numbers.
+- **Search** `/search?q=…`: full text over title, number, description (de/en), plus prefix search on article numbers.
 
 ## 7. Biber Holz demo catalogue (#41)
 

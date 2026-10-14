@@ -1,6 +1,6 @@
 # CMS design (phase 5) — draft
 
-Status: **agreed 2026-10-14** (#76–#86 answered); follow-up questions #87–#92 in section 9.
+Status: **agreed 2026-10-14** (#76–#92 answered).
 
 ## 1. Goal
 
@@ -99,11 +99,11 @@ Answered 2026-10-14:
 - ~~**#85**~~ *(tags)* Media library with tags and search; at least one tag per asset.
 - ~~**#86**~~ *(yes)* One domain; #20 is dropped.
 
-Open:
+Follow-ups, answered 2026-10-14:
 
-- **#87 Rate limiting in the app:** with **Hammer** (a counter per key and time window in ETS, i.e. in the app's memory; a Redis backend exists for several nodes) and the client IP taken from the proxy's `X-Forwarded-For` header (Plug's `Plug.RewriteOn`, only from the trusted proxy). Contact form e.g. 5 per hour per IP. Apply the same to sign-in, registration, password reset and magic-link requests (today only the proxy could do that)?
-- **#88 English shop routes too:** following #80, rename the German routes: `/kategorien` → `/categories`, `/produkte` → `/products`, `/suche` → `/search`, `/warenkorb` → `/basket`, `/kasse` → `/checkout`, `/kasse/anmelden` → `/checkout/sign-in`, `/agb` → `/terms`. Now, before CMS content starts linking to them?
-- **#89 Blocks stored inside the page:** the block list as one embedded list on the page (JSONB) instead of a separate table. Then one saved version is the whole page, and history and restore (#84) are simple and exact. Shared blocks stay a resource of their own, with their own history, and are referenced by id.
-- **#90 Working copy and publish:** edits to a published page go into a working copy; visitors keep seeing the published version until "Veröffentlichen". The history records every published version (and lets you restore one into the working copy). Or edit live?
-- **#91 SEO basics now:** `sitemap.xml` (pages, categories, products), meta description and Open Graph image per page, canonical URLs — as part of step 6?
-- **#92 GTC and legal pages:** imprint and privacy policy become normal CMS pages (with keys, linked in the footer). The GTC stay versioned in Sales (orders store the accepted version) and get a back-office editor: new version with a valid-from date, Markdown text. In this phase?
+- ~~**#87 Rate limiting in the app:**~~ *(yes, 2026-10-14)* Hammer plus `Plug.RewriteOn`; also for sign-in, registration, password reset and magic links. Proposal: with **Hammer** (a counter per key and time window in ETS, i.e. in the app's memory; a Redis backend exists for several nodes) and the client IP taken from the proxy's `X-Forwarded-For` header (Plug's `Plug.RewriteOn`, only from the trusted proxy). Contact form e.g. 5 per hour per IP. Apply the same to sign-in, registration, password reset and magic-link requests (today only the proxy could do that)?
+- ~~**#88 English shop routes too:**~~ *(yes, 2026-10-14)* All shop routes in English. Proposal: following #80, rename the German routes: `/kategorien` → `/categories`, `/produkte` → `/products`, `/suche` → `/search`, `/warenkorb` → `/basket`, `/kasse` → `/checkout`, `/kasse/anmelden` → `/checkout/sign-in`, `/agb` → `/terms`. Now, before CMS content starts linking to them?
+- ~~**#89 Blocks stored inside the page:**~~ *(yes, 2026-10-14)* Blocks embedded in the page. Proposal: the block list as one embedded list on the page (JSONB) instead of a separate table. Then one saved version is the whole page, and history and restore (#84) are simple and exact. Shared blocks stay a resource of their own, with their own history, and are referenced by id.
+- ~~**#90 Working copy and publish:**~~ *(yes, 2026-10-14)* Working copy plus publish; history of published versions. Proposal: edits to a published page go into a working copy; visitors keep seeing the published version until "Veröffentlichen". The history records every published version (and lets you restore one into the working copy). Or edit live?
+- ~~**#91 SEO basics now:**~~ *(yes, 2026-10-14)* SEO basics as recommended. Proposal: `sitemap.xml` (pages, categories, products), meta description and Open Graph image per page, canonical URLs — as part of step 6?
+- ~~**#92 GTC and legal pages:**~~ *(yes, 2026-10-14)* Imprint and privacy as CMS pages; GTC editor with versions in the back office. Proposal: imprint and privacy policy become normal CMS pages (with keys, linked in the footer). The GTC stay versioned in Sales (orders store the accepted version) and get a back-office editor: new version with a valid-from date, Markdown text. In this phase?

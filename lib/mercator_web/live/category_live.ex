@@ -64,11 +64,11 @@ defmodule MercatorWeb.CategoryLive do
       |> Map.take(["min", "max", "p", "new", "bestseller", "sale", "sort"])
       |> clean()
 
-    {:noreply, push_patch(socket, to: ~p"/kategorien/#{socket.assigns.category.slug}?#{query}")}
+    {:noreply, push_patch(socket, to: ~p"/categories/#{socket.assigns.category.slug}?#{query}")}
   end
 
   def handle_event("reset_filters", _params, socket) do
-    {:noreply, push_patch(socket, to: ~p"/kategorien/#{socket.assigns.category.slug}")}
+    {:noreply, push_patch(socket, to: ~p"/categories/#{socket.assigns.category.slug}")}
   end
 
   # drop empty values, so URLs stay short
@@ -103,7 +103,7 @@ defmodule MercatorWeb.CategoryLive do
       basket_count={@basket_count}
     >
       <.breadcrumb items={
-        Enum.map(@ancestors, &{Translated.t(&1.name, @locale), ~p"/kategorien/#{&1.slug}"}) ++
+        Enum.map(@ancestors, &{Translated.t(&1.name, @locale), ~p"/categories/#{&1.slug}"}) ++
           [{Translated.t(@category.name, @locale), nil}]
       } />
 

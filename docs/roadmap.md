@@ -278,5 +278,5 @@ Rails sources (#1–#4) and continuing the overview (#5) were answered on 2026-1
 - ~~**#58**~~ *(answered, see Decisions)* Image storage: static files per brand, or real uploads?
 - ~~**#59**~~ *(answered, see Decisions)* Demo images: SVG illustrations, or photos generated externally from a prompt list?
 - ~~**#64–#70**~~ *(answered, see Decisions)* Basket and checkout questions (payment methods, shipping costs, signed-in checkout, delivery countries, order numbers, B2B reverse charge, order email): see [checkout-design.md](checkout-design.md#9-open-questions).
-- ~~**#76–#86**~~ *(answered 2026-10-14)* CMS design questions: see [cms-design.md](cms-design.md#9-questions). Follow-ups #87–#92 there.
+- ~~**#76–#92**~~ *(answered 2026-10-14)* CMS design questions: see [cms-design.md](cms-design.md#9-questions), including the follow-ups #87–#92.
 

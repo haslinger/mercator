@@ -1,6 +1,6 @@
 defmodule MercatorWeb.BasketLive do
   @moduledoc """
-  The basket (`/warenkorb`): items with live prices, quantities, removal,
+  The basket (`/basket`): items with live prices, quantities, removal,
   totals with VAT per rate, and the way to the checkout.
   """
   use MercatorWeb, :live_view
@@ -88,7 +88,7 @@ defmodule MercatorWeb.BasketLive do
               <div class="flex flex-wrap items-start justify-between gap-2">
                 <div>
                   <.link
-                    navigate={~p"/produkte/#{line.product.slug}"}
+                    navigate={~p"/products/#{line.product.slug}"}
                     class="font-semibold link link-hover"
                   >
                     {Translated.t(line.product.title, @locale)}
@@ -167,8 +167,8 @@ defmodule MercatorWeb.BasketLive do
               {gettext("Plus shipping costs, calculated at checkout.")}
             </p>
             <.link
-              navigate={if @current_user, do: ~p"/kasse"}
-              href={if !@current_user, do: ~p"/kasse/anmelden"}
+              navigate={if @current_user, do: ~p"/checkout"}
+              href={if !@current_user, do: ~p"/checkout/sign-in"}
               class={["btn btn-primary mt-2", !@checkout? && "btn-disabled"]}
               id="to-checkout"
             >

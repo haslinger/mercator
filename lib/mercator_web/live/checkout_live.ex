@@ -1,6 +1,6 @@
 defmodule MercatorWeb.CheckoutLive do
   @moduledoc """
-  The checkout (`/kasse`, checkout-design.md section 5): addresses, shipping
+  The checkout (`/checkout`, checkout-design.md section 5): addresses, shipping
   and payment method, review with totals, GTC and "Zahlungspflichtig
   bestellen" on one page. Signed-in customers only (#66).
   """
@@ -27,7 +27,7 @@ defmodule MercatorWeb.CheckoutLive do
       |> load()
 
     if socket.assigns.checkout.pricing.lines == [] do
-      {:ok, push_navigate(socket, to: ~p"/warenkorb")}
+      {:ok, push_navigate(socket, to: ~p"/basket")}
     else
       {:ok, socket}
     end
@@ -264,7 +264,7 @@ defmodule MercatorWeb.CheckoutLive do
               />
               <span>
                 {gettext("I accept the")}
-                <.link href={~p"/agb"} target="_blank" class="link link-primary">
+                <.link href={~p"/terms"} target="_blank" class="link link-primary">
                   {gettext("terms and conditions")}
                 </.link>.
               </span>
@@ -283,7 +283,7 @@ defmodule MercatorWeb.CheckoutLive do
               {gettext("Place binding order")}
             </button>
             <.link
-              navigate={~p"/warenkorb"}
+              navigate={~p"/basket"}
               class="link link-hover text-center text-sm"
               id="back-to-basket"
             >

@@ -33,7 +33,7 @@ defmodule MercatorWeb.UploadControllerTest do
   test "the product page and cards show the image", %{conn: conn, image: image} do
     product = Catalog.get_product!(image.product_id)
 
-    html = conn |> get(~p"/produkte/#{product.slug}") |> html_response(200)
+    html = conn |> get(~p"/products/#{product.slug}") |> html_response(200)
     assert html =~ "/uploads/images/#{image.id}/large.webp"
   end
 end

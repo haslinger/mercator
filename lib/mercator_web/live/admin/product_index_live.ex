@@ -272,7 +272,7 @@ defmodule MercatorWeb.Admin.ProductIndexLive do
                 </button>
                 <.link
                   :if={product.state == :active}
-                  navigate={~p"/produkte/#{product.slug}"}
+                  navigate={~p"/products/#{product.slug}"}
                   class="btn btn-ghost btn-xs"
                   title={gettext("View in shop")}
                 >

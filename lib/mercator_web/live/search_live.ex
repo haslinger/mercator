@@ -1,5 +1,5 @@
 defmodule MercatorWeb.SearchLive do
-  @moduledoc "Product search page: `/suche?q=…` (decision #56)."
+  @moduledoc "Product search page: `/search?q=…` (decision #56)."
   use MercatorWeb, :live_view
 
   import MercatorWeb.CatalogComponents
@@ -39,7 +39,7 @@ defmodule MercatorWeb.SearchLive do
 
   @impl true
   def handle_event("search", %{"q" => query}, socket) do
-    {:noreply, push_patch(socket, to: ~p"/suche?#{[q: query]}")}
+    {:noreply, push_patch(socket, to: ~p"/search?#{[q: query]}")}
   end
 
   defp from_price(product) do
