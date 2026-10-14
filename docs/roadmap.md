@@ -149,7 +149,7 @@ Customer systems and the modules they mount (the last commit date of each system
 ### Progress (as of 2026-10-14)
 
 - **Done:** 1 Foundation, 2 Catalogue, 3 Basket and checkout (steps 1–7 of [checkout-design.md](checkout-design.md), incl. back office orders, status emails #74, pickup = "ready for pickup" #75, local times #73), 4 Back office (catalogue, orders).
-- **5 CMS, in progress** ([cms-design.md](cms-design.md), section 8): steps 1–6 done – Markdown with the OverType editor, pages with working copy, publishing and history, page tree and editor, media library, 12 block types incl. shared blocks, start page from the CMS, navigation row and footer (#93), SEO basics (#91). Open: step 7 contact form with rate limiting (Hammer, #87), step 8 Biber Holz demo content, GTC editor (#92).
+- **5 CMS, done except the GTC editor** ([cms-design.md](cms-design.md)): Markdown with the OverType editor, pages with working copy, publishing and history, page tree and editor, media library, 13 block types incl. shared blocks and the contact form, start page from the CMS, navigation row and footer (#93), SEO basics (#91), rate limiting with Hammer (#87, proxy recommendations in the README), Biber Holz demo pages. Open: GTC editor (#92).
 - Also done along the way: header for phones (#72), back button, English routes (#88).
 
 ## 5b. Backlog
