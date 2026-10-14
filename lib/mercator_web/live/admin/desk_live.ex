@@ -317,7 +317,7 @@ defmodule MercatorWeb.Admin.DeskLive do
       <div class="flex flex-wrap items-center justify-between gap-2" id="desk" phx-hook=".DeskNotify">
         <h1 class="text-3xl font-bold">{gettext("Sales desk")}</h1>
         <.link navigate={~p"/admin/conversations"} class="btn btn-ghost ml-auto" id="to-archive">
-          <.icon name="hero-archive-box" class="size-5" /> {gettext("Archive")}
+          <.icon name="hero-archive-box" class="size-5" /> {pgettext("conversations", "Archive")}
         </.link>
         <button
           type="button"
