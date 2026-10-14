@@ -14,7 +14,10 @@ config :mercator, Oban,
   lifeline: [rescue_after: {2, :hours}],
   pruner: [max_age: {1, :day}],
   # times in UTC
-  crontab: [{"30 2 * * *", Mercator.Sales.Workers.DeleteAbandonedBaskets}],
+  crontab: [
+    {"30 2 * * *", Mercator.Sales.Workers.DeleteAbandonedBaskets},
+    {"5 0 * * *", Mercator.Consulting.Workers.ExpireOffers}
+  ],
   repo: Mercator.Repo
 
 # These enable behaviors that will become the default in the next major
@@ -138,6 +141,11 @@ config :mercator, :rate_limits,
 # Guided selling (#95): seconds a customer waits for a consultant before the
 # callback form appears (immediately when nobody is at the sales desk)
 config :mercator, :consulting_wait_seconds, 120
+
+# Offers: default validity in days, and the discount in percent above which
+# a sales manager approves an offer (#98)
+config :mercator, :offer_validity_days, 30
+config :mercator, :offer_approval_limit, 10
 
 # Reverse proxies whose X-Forwarded-For header is believed (MercatorWeb.ClientIp);
 # override with TRUSTED_PROXIES (comma-separated) at runtime.

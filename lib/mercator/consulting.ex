@@ -18,5 +18,7 @@ defmodule Mercator.Consulting do
   resources do
     resource Mercator.Consulting.Conversation
     resource Mercator.Consulting.Message
+    resource Mercator.Consulting.Offer
+    resource Mercator.Consulting.OfferItem
   end
 end

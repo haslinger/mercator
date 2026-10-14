@@ -227,7 +227,7 @@ msgstr ""
 msgid "is required"
 msgstr ""
 
-#: lib/mercator/consulting/validations/message_content.ex:19
+#: lib/mercator/consulting/validations/message_content.ex:21
 #, elixir-autogen, elixir-format
 msgid "must be a shop page or an http(s) address"
 msgstr ""
