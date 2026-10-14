@@ -43,6 +43,10 @@ defmodule MercatorWeb.Router do
   scope "/", MercatorWeb do
     pipe_through :browser
 
+    # printable offers (#99)
+    get "/account/offers/:id/print", OfferPrintController, :customer
+    get "/admin/offers/:id/print", OfferPrintController, :staff
+
     ash_authentication_live_session :authenticated_routes,
       on_mount_prepend: [{MercatorWeb.Locale, :default}, {MercatorWeb.Navigation, :default}],
       on_mount: [{MercatorWeb.BasketSession, :default}] do

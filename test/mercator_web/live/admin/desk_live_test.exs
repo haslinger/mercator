@@ -1,5 +1,7 @@
 defmodule MercatorWeb.Admin.DeskLiveTest do
-  use MercatorWeb.ConnCase, async: true
+  # the desk follows the global "desk" topic and Presence: conversations of
+  # other async tests would make it reload and compete for the connection
+  use MercatorWeb.ConnCase, async: false
 
   import Phoenix.LiveViewTest
   import Mercator.AccountsFixtures

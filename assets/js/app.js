@@ -48,6 +48,11 @@ window.addEventListener("mercator:back", () => {
   }
 })
 
+// Print buttons (e.g. the printable offer, a page without LiveView)
+document.addEventListener("click", e => {
+  if (e.target.closest("[data-print]")) window.print()
+})
+
 // connect if there are any LiveViews on the page
 liveSocket.connect()
 

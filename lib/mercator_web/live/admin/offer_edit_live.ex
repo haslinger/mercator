@@ -418,6 +418,14 @@ defmodule MercatorWeb.Admin.OfferEditLive do
                 {gettext("Conversation")}
               </.link>
               <.link
+                href={~p"/admin/offers/#{@offer.id}/print"}
+                target="_blank"
+                class="link"
+                id="print-link"
+              >
+                <.icon name="hero-printer" class="size-4" /> {gettext("Print or save as PDF")}
+              </.link>
+              <.link
                 :if={@offer.order}
                 navigate={~p"/admin/orders/#{@offer.order.number}"}
                 class="link font-semibold"

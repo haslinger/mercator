@@ -93,6 +93,14 @@ defmodule MercatorWeb.OfferLive do
               <.icon name="hero-check" class="size-5" /> {gettext("Accept offer")}
             </.link>
             <.link
+              href={~p"/account/offers/#{@offer.id}/print"}
+              target="_blank"
+              class="btn btn-ghost btn-sm"
+              id="print-link"
+            >
+              <.icon name="hero-printer" class="size-4" /> {gettext("Print or save as PDF")}
+            </.link>
+            <.link
               :if={@offer.order}
               navigate={~p"/account/orders/#{@offer.order.number}"}
               class="btn btn-outline"
