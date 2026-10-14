@@ -71,6 +71,13 @@ defmodule Mercator.Content.Page do
       filter expr(path == ^arg(:path) and kind == :page and state in [:published, :hidden])
     end
 
+    read :published_by_key do
+      description "A visible page by its key, e.g. `home` for the start page."
+      argument :key, :string, allow_nil?: false
+      get? true
+      filter expr(key == ^arg(:key) and kind == :page and state in [:published, :hidden])
+    end
+
     read :menu do
       description "Published pages in a menu (`:main` or `:footer`), in tree order."
       argument :menu, :atom, allow_nil?: false

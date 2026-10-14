@@ -228,7 +228,10 @@ defmodule MercatorWeb.Admin.PageTreeLive do
           <.link navigate={~p"/admin/pages/#{page.id}"} class="font-medium link link-hover">
             {Translated.t(page.title, @locale)}
           </.link>
-          <span class="text-xs text-base-content/50">/pages/{page.path}</span>
+          <span :if={page.key == "home"} class="badge badge-sm badge-primary" id="home-badge">
+            {gettext("Start page")}
+          </span>
+          <span :if={page.key != "home"} class="text-xs text-base-content/50">/pages/{page.path}</span>
           <.page_state_badge state={page.state} />
           <span :if={page.changes_pending} class="badge badge-sm badge-info badge-outline">
             {gettext("Unpublished changes")}

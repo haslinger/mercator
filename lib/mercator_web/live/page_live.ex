@@ -1,14 +1,20 @@
 defmodule MercatorWeb.PageLive do
   @moduledoc """
-  A CMS page at `/pages/…` (#80): the published version for visitors.
-  Content managers and administrators can add `?preview=1` to see the
-  working copy, also of pages that were never published.
+  A CMS page: at `/pages/…` (#80), or the start page `/`, which is the page
+  with the key `home` (#81); without one the start page shows the brand and
+  the main categories.
+
+  Visitors see the published version. Content managers and administrators
+  can add `?preview=1` to see the working copy, also of pages that were
+  never published. A page that starts with a hero shows its title only to
+  screen readers: the hero is the headline.
   """
   use MercatorWeb, :live_view
 
   import MercatorWeb.ContentComponents, only: [block: 1]
 
   alias Mercator.Content
+  alias Mercator.Content.Blocks
   alias Mercator.Translated
 
   on_mount {MercatorWeb.LiveUserAuth, :live_user_optional}
@@ -16,11 +22,11 @@ defmodule MercatorWeb.PageLive do
   @editor_roles [:contentmanager, :administrator]
 
   @impl true
-  def mount(%{"path" => segments} = params, _session, socket) do
-    path = Enum.join(segments, "/")
+  def mount(params, _session, socket) do
+    preview? = params["preview"] == "1" and editor?(socket.assigns.current_user)
 
-    case load(path, params["preview"] == "1" and editor?(socket.assigns.current_user), socket) do
-      {:ok, page, content, preview?} ->
+    case load(lookup(params, socket.assigns.live_action), preview?, socket) do
+      {:ok, page, content} ->
         {:ok,
          socket
          |> assign(:page, page)
@@ -28,6 +34,9 @@ defmodule MercatorWeb.PageLive do
          |> assign(:block_data, MercatorWeb.BlockData.load(content.blocks))
          |> assign(:preview?, preview?)
          |> assign(:page_title, Translated.t(content.title, socket.assigns.locale))}
+
+      :error when socket.assigns.live_action == :home ->
+        {:ok, socket |> assign(:page, nil) |> assign(:preview?, false)}
 
       :error ->
         {:ok,
@@ -37,24 +46,55 @@ defmodule MercatorWeb.PageLive do
     end
   end
 
+  defp lookup(_params, :home), do: {:key, "home"}
+  defp lookup(%{"path" => segments}, _action), do: {:path, Enum.join(segments, "/")}
+
   defp editor?(%{roles: roles}), do: Enum.any?(@editor_roles, &(&1 in roles))
   defp editor?(_user), do: false
 
-  defp load(path, true = _preview, socket) do
-    case Content.get_page_by_path(path, actor: socket.assigns.current_user) do
-      {:ok, page} -> {:ok, page, Map.take(page, [:title, :seo_description, :blocks]), true}
+  defp load(lookup, true = _preview, socket) do
+    actor = socket.assigns.current_user
+
+    result =
+      case lookup do
+        {:key, key} -> Content.get_page_by_key(key, actor: actor)
+        {:path, path} -> Content.get_page_by_path(path, actor: actor)
+      end
+
+    case result do
+      {:ok, page} -> {:ok, page, Map.take(page, [:title, :seo_description, :blocks])}
       {:error, _} -> :error
     end
   end
 
-  defp load(path, false, _socket) do
-    case Content.get_published_page(path) do
-      {:ok, %{published: %{} = published} = page} -> {:ok, page, published, false}
+  defp load(lookup, false, _socket) do
+    result =
+      case lookup do
+        {:key, key} -> Content.get_published_page_by_key(key)
+        {:path, path} -> Content.get_published_page(path)
+      end
+
+    case result do
+      {:ok, %{published: %{} = published} = page} -> {:ok, page, published}
       _ -> :error
     end
   end
 
   @impl true
+  def render(%{page: nil} = assigns) do
+    ~H"""
+    <Layouts.app
+      flash={@flash}
+      current_user={@current_user}
+      locale={@locale}
+      nav_categories={@nav_categories}
+      basket_count={@basket_count}
+    >
+      <.default_home nav_categories={@nav_categories} locale={@locale} />
+    </Layouts.app>
+    """
+  end
+
   def render(assigns) do
     ~H"""
     <Layouts.app
@@ -70,10 +110,56 @@ defmodule MercatorWeb.PageLive do
       </div>
 
       <article class="space-y-8" id="page">
-        <h1 class="text-3xl font-bold" id="page-title">{Translated.t(@content.title, @locale)}</h1>
+        <h1
+          class={["text-3xl font-bold", starts_with_hero?(@content.blocks) && "sr-only"]}
+          id="page-title"
+        >
+          {Translated.t(@content.title, @locale)}
+        </h1>
         <.block :for={block <- @content.blocks} block={block} locale={@locale} data={@block_data} />
       </article>
     </Layouts.app>
+    """
+  end
+
+  defp starts_with_hero?([%Ash.Union{value: %Blocks.Hero{}} | _]), do: true
+  defp starts_with_hero?(_blocks), do: false
+
+  attr :nav_categories, :list, required: true
+  attr :locale, :string, required: true
+
+  # the start page until a CMS page with the key "home" is published
+  defp default_home(assigns) do
+    ~H"""
+    <div class="hero bg-base-200 rounded-box py-12" id="home-hero">
+      <div class="hero-content flex-col gap-8 lg:flex-row">
+        <img src={~p"/brand/logo"} alt={Mercator.Brand.name()} class="w-56 lg:w-72" id="brand-logo" />
+        <div class="max-w-xl text-center lg:text-left">
+          <h1 class="text-4xl font-bold" id="brand-name">{Mercator.Brand.name()}</h1>
+          <p
+            :if={tagline = Mercator.Brand.tagline(@locale)}
+            class="pt-2 text-lg text-base-content/80 whitespace-pre-line"
+            id="brand-tagline"
+          >
+            {tagline}
+          </p>
+          <p class="py-6">
+            {gettext("Shop on your own or get advice from our consultants.")}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <section :if={@nav_categories != []} id="home-categories">
+      <h2 class="mb-4 text-2xl font-bold">{gettext("Our range")}</h2>
+      <div class="grid grid-cols-2 gap-4 md:grid-cols-4">
+        <MercatorWeb.CatalogComponents.category_tile
+          :for={category <- @nav_categories}
+          category={category}
+          locale={@locale}
+        />
+      </div>
+    </section>
     """
   end
 end

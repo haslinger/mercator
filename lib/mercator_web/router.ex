@@ -53,6 +53,7 @@ defmodule MercatorWeb.Router do
       # If an authenticated user must *not* be present:
       # on_mount {MercatorWeb.LiveUserAuth, :live_no_user}
 
+      live "/", PageLive, :home
       live "/categories/:slug", CategoryLive
       live "/products/:slug", ProductLive
       live "/search", SearchLive
@@ -88,7 +89,6 @@ defmodule MercatorWeb.Router do
   scope "/", MercatorWeb do
     pipe_through :browser
 
-    get "/", PageController, :home
     get "/checkout/sign-in", CheckoutController, :sign_in
     auth_routes AuthController, Mercator.Accounts.User, path: "/auth"
 
