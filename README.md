@@ -99,6 +99,19 @@ Production is configured through environment variables, read in `config/runtime.
 | `ECTO_IPV6` | no | Set to `true` to connect to the database over IPv6 |
 | `PHX_SERVER` | no | Set to `true` to start the web server when running a release |
 | `DNS_CLUSTER_QUERY` | no | DNS query for clustering several nodes |
+| `SHOP_TIME_ZONE` | no | Time zone for displayed times and "today" (default `Europe/Vienna`) |
+| `TRUSTED_PROXIES` | no | Comma-separated IPs of reverse proxies whose `X-Forwarded-For` header is believed (default `127.0.0.1,::1`) |
+
+### Reverse proxy and rate limiting
+
+The app limits what it can tell apart itself (`Mercator.RateLimit`, limits in `config/config.exs`): sign-ins per email address, password reset and magic link emails per address, and contact form messages per client IP. Everything that is about the volume of traffic from one IP address belongs at the reverse proxy (e.g. nginx). Recommended there (details to be worked out per deployment):
+
+- **A general request rate per client IP** for all routes, with some burst, against floods and scrapers.
+- **A stricter rate per client IP for the authentication pages and endpoints:** `/sign-in`, `/register`, `/reset`, `/auth/…` and `/sign-out`. Registration in particular is only limited here.
+- **A limit on new LiveView connections per client IP** (`/live/websocket`, `/live/longpoll`): sign-in, registration and the contact form send their data through the LiveView connection, so the proxy sees connections rather than individual attempts.
+- **A limit on concurrent connections per client IP.**
+- **A request body size** that allows uploads (images and PDFs up to 20 MB each) but not more.
+- The proxy must set `X-Forwarded-For` (and pass WebSocket upgrades); add its address to `TRUSTED_PROXIES` so the app sees the visitor's IP.
 
 Still open for production:
 
