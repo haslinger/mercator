@@ -36,4 +36,62 @@ defmodule MercatorWeb.Admin.PageComponents do
 
   @doc "Options for the menu select."
   def menu_options, do: Enum.map([:none, :main, :footer], &{menu_label(&1), &1})
+
+  @icons ~w(
+    hero-home hero-information-circle hero-building-storefront hero-building-office
+    hero-wrench-screwdriver hero-cog-6-tooth hero-question-mark-circle hero-envelope
+    hero-phone hero-map-pin hero-clock hero-truck hero-sparkles hero-star hero-heart
+    hero-light-bulb hero-fire hero-sun hero-gift hero-camera hero-newspaper
+    hero-document-text hero-scale hero-shield-check hero-users hero-user-group
+  )
+
+  @doc "The icons pages can have in the navigation (Heroicons)."
+  def page_icons, do: @icons
+
+  attr :field, Phoenix.HTML.FormField, required: true
+
+  @doc "Choose a page's icon: a grid of icons as radio buttons, or none."
+  def icon_picker(assigns) do
+    ~H"""
+    <fieldset class="fieldset" id="icon-picker">
+      <legend class="fieldset-legend">{gettext("Icon in the navigation")}</legend>
+      <div class="grid grid-cols-7 gap-1">
+        <label
+          class={[
+            "btn btn-square btn-sm",
+            if(@field.value in [nil, ""], do: "btn-primary", else: "btn-ghost")
+          ]}
+          title={gettext("No icon")}
+        >
+          <input
+            type="radio"
+            name={@field.name}
+            value=""
+            checked={@field.value in [nil, ""]}
+            class="sr-only"
+          />
+          <MercatorWeb.CoreComponents.icon name="hero-minus" class="size-4" />
+        </label>
+        <label
+          :for={icon <- page_icons()}
+          class={[
+            "btn btn-square btn-sm",
+            if(@field.value == icon, do: "btn-primary", else: "btn-ghost")
+          ]}
+          title={String.replace_prefix(icon, "hero-", "")}
+          id={"icon-#{icon}"}
+        >
+          <input
+            type="radio"
+            name={@field.name}
+            value={icon}
+            checked={@field.value == icon}
+            class="sr-only"
+          />
+          <MercatorWeb.CoreComponents.icon name={icon} class="size-5" />
+        </label>
+      </div>
+    </fieldset>
+    """
+  end
 end

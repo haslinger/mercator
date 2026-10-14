@@ -64,7 +64,7 @@ Block types for a start:
 
 - Pages live under **`/pages/`** with paths from the tree, e.g. `/pages/ueber-uns/team` (#80). Routes are intentionally English (German visitors are used to English URLs, English visitors would be puzzled by German ones); the slugs themselves are content.
 - The start page `/` becomes a CMS page (key `home`) built from blocks (hero, bestseller products, categories, text). The fixed home template goes away (#81).
-- Main navigation (#93, 2026-10-14): on wide screens a **second row below the header** with the published pages marked for the main navigation and the main categories; on phones in the "⋯" menu. Footer: pages marked for the footer (imprint, privacy, GTC, contact).
+- Main navigation (#93, changed 2026-10-14): a **sidebar** like in the back office – on wide screens always visible, on smaller ones a drawer behind a menu button – with the main categories (their photo as icon) and the published pages marked for the main navigation (each with an icon chosen in the page settings). The second row below the header was replaced by it. Footer: pages marked for the footer (imprint, privacy, GTC, contact).
 
 ## 7. Back office
 
@@ -110,5 +110,5 @@ Follow-ups, answered 2026-10-14:
 - ~~**#89 Blocks stored inside the page:**~~ *(yes, 2026-10-14)* Blocks embedded in the page. Proposal: the block list as one embedded list on the page (JSONB) instead of a separate table. Then one saved version is the whole page, and history and restore (#84) are simple and exact. Shared blocks stay a resource of their own, with their own history, and are referenced by id.
 - ~~**#90 Working copy and publish:**~~ *(yes, 2026-10-14)* Working copy plus publish; history of published versions. Proposal: edits to a published page go into a working copy; visitors keep seeing the published version until "Veröffentlichen". The history records every published version (and lets you restore one into the working copy). Or edit live?
 - ~~**#91 SEO basics now:**~~ *(yes, 2026-10-14)* SEO basics as recommended. Proposal: `sitemap.xml` (pages, categories, products), meta description and Open Graph image per page, canonical URLs — as part of step 6?
-- ~~**#93 Main navigation:**~~ *(b, 2026-10-14)* A second row below the header on wide screens (pages and main categories), the "⋯" menu on phones. (A left sidebar was considered.)
+- ~~**#93 Main navigation:**~~ *(2026-10-14: first b, a second row below the header; then changed to c, a sidebar like in the back office, after seeing both)* Pages get an icon.
 - ~~**#92 GTC and legal pages:**~~ *(yes, 2026-10-14)* Imprint and privacy as CMS pages; GTC editor with versions in the back office. Proposal: imprint and privacy policy become normal CMS pages (with keys, linked in the footer). The GTC stay versioned in Sales (orders store the accepted version) and get a back-office editor: new version with a valid-from date, Markdown text. In this phase?

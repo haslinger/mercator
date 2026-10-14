@@ -38,141 +38,128 @@ defmodule MercatorWeb.Layouts do
   slot :inner_block, required: true
 
   def app(assigns) do
+    assigns = assign(assigns, :sidebar?, assigns.nav.categories != [] or assigns.nav.main != [])
+
     ~H"""
-    <header class="navbar bg-base-100 shadow-sm px-2 min-[360px]:px-4 sm:px-6 lg:px-8">
-      <div class="flex flex-1 items-center gap-1">
-        <.back_button />
-        <.link navigate={~p"/"} class="flex shrink-0 items-center gap-3" id="brand">
-          <img src={~p"/brand/pin"} alt="" class="h-10 w-auto shrink-0" id="brand-pin" />
-          <span class="hidden text-xl font-bold whitespace-nowrap text-primary sm:inline">
-            {Mercator.Brand.name()}
-          </span>
-        </.link>
-      </div>
-      <div class="flex-none flex items-center gap-0.5 md:gap-2">
-        <form action={~p"/search"} method="get" class="hidden lg:block" id="navbar-search">
-          <label class="input input-sm w-48 xl:w-64">
-            <.icon name="hero-magnifying-glass" class="size-4 opacity-50" />
-            <input
-              type="search"
-              name="q"
-              placeholder={gettext("Search")}
-              aria-label={gettext("Search")}
-            />
-          </label>
-        </form>
-        <.link
-          navigate={~p"/search"}
-          class="btn btn-ghost btn-sm lg:hidden"
-          aria-label={gettext("Search")}
-        >
-          <.icon name="hero-magnifying-glass" class="size-5" />
-        </.link>
-        <div :if={@nav.categories != []} class="md:hidden">
-          <.catalog_menu categories={@nav.categories} locale={@locale} />
-        </div>
-        <.link
-          navigate={~p"/basket"}
-          class="btn btn-ghost btn-sm"
-          id="basket-link"
-          aria-label={gettext("Basket")}
-        >
-          <div class="indicator">
-            <.icon name="hero-shopping-cart" class="size-5" />
-            <span
-              :if={@basket_count > 0}
-              class="badge badge-primary badge-xs indicator-item"
-              id="basket-count"
+    <div class={["drawer", @sidebar? && "lg:drawer-open"]}>
+      <input id="shop-drawer" type="checkbox" class="drawer-toggle" />
+      <div class="drawer-content flex min-h-screen flex-col">
+        <header class="navbar bg-base-100 shadow-sm px-2 min-[360px]:px-4 sm:px-6 lg:px-8">
+          <div class="flex flex-1 items-center gap-1">
+            <label
+              :if={@sidebar?}
+              for="shop-drawer"
+              class="btn btn-ghost btn-sm btn-square lg:hidden"
+              aria-label={gettext("Menu")}
+              id="shop-menu-button"
             >
-              {@basket_count}
-            </span>
+              <.icon name="hero-bars-3" class="size-5" />
+            </label>
+            <.back_button />
+            <.link navigate={~p"/"} class="flex shrink-0 items-center gap-3" id="brand">
+              <img src={~p"/brand/pin"} alt="" class="h-10 w-auto shrink-0" id="brand-pin" />
+              <span class="hidden text-xl font-bold whitespace-nowrap text-primary sm:inline">
+                {Mercator.Brand.name()}
+              </span>
+            </.link>
           </div>
-        </.link>
-        <div class="hidden items-center gap-2 md:flex">
-          <.locale_switch locale={@locale} />
-          <.theme_toggle />
-        </div>
-        <.more_menu locale={@locale} pages={@nav.main} />
-        <%= if @current_user do %>
-          <.user_menu current_user={@current_user} />
-        <% else %>
-          <.link
-            navigate={~p"/sign-in"}
-            class="btn btn-ghost btn-sm"
-            id="sign-in-link"
-            aria-label={gettext("Sign in")}
-          >
-            <.icon name="hero-user-circle" class="size-5 sm:hidden" />
-            <span class="hidden sm:inline">{gettext("Sign in")}</span>
-          </.link>
-          <.link
-            navigate={~p"/register"}
-            class="btn btn-primary btn-sm hidden md:inline-flex"
-            id="register-link"
-          >
-            {gettext("Register")}
-          </.link>
-        <% end %>
+          <div class="flex-none flex items-center gap-0.5 md:gap-2">
+            <form action={~p"/search"} method="get" class="hidden lg:block" id="navbar-search">
+              <label class="input input-sm w-48 xl:w-64">
+                <.icon name="hero-magnifying-glass" class="size-4 opacity-50" />
+                <input
+                  type="search"
+                  name="q"
+                  placeholder={gettext("Search")}
+                  aria-label={gettext("Search")}
+                />
+              </label>
+            </form>
+            <.link
+              navigate={~p"/search"}
+              class="btn btn-ghost btn-sm lg:hidden"
+              aria-label={gettext("Search")}
+            >
+              <.icon name="hero-magnifying-glass" class="size-5" />
+            </.link>
+            <.link
+              navigate={~p"/basket"}
+              class="btn btn-ghost btn-sm"
+              id="basket-link"
+              aria-label={gettext("Basket")}
+            >
+              <div class="indicator">
+                <.icon name="hero-shopping-cart" class="size-5" />
+                <span
+                  :if={@basket_count > 0}
+                  class="badge badge-primary badge-xs indicator-item"
+                  id="basket-count"
+                >
+                  {@basket_count}
+                </span>
+              </div>
+            </.link>
+            <div class="hidden items-center gap-2 md:flex">
+              <.locale_switch locale={@locale} />
+              <.theme_toggle />
+            </div>
+            <.more_menu locale={@locale} />
+            <%= if @current_user do %>
+              <.user_menu current_user={@current_user} />
+            <% else %>
+              <.link
+                navigate={~p"/sign-in"}
+                class="btn btn-ghost btn-sm"
+                id="sign-in-link"
+                aria-label={gettext("Sign in")}
+              >
+                <.icon name="hero-user-circle" class="size-5 sm:hidden" />
+                <span class="hidden sm:inline">{gettext("Sign in")}</span>
+              </.link>
+              <.link
+                navigate={~p"/register"}
+                class="btn btn-primary btn-sm hidden md:inline-flex"
+                id="register-link"
+              >
+                {gettext("Register")}
+              </.link>
+            <% end %>
+          </div>
+        </header>
+
+        <main class="px-4 py-10 sm:px-6 lg:px-8">
+          <div class="mx-auto max-w-5xl space-y-4">
+            {render_slot(@inner_block)}
+          </div>
+        </main>
+
+        <footer class="footer sm:footer-horizontal bg-base-200 text-base-content/70 px-4 py-6 sm:px-6 lg:px-8">
+          <aside>
+            <p class="font-semibold text-base-content">{Mercator.Brand.name()}</p>
+            <p :if={Mercator.Brand.get(:address)}>{Mercator.Brand.get(:address)}</p>
+            <p :if={Mercator.Brand.get(:email)}>{Mercator.Brand.get(:email)}</p>
+          </aside>
+          <nav>
+            <.link navigate={~p"/terms"} class="link link-hover" id="gtc-link">
+              {gettext("Terms and conditions")}
+            </.link>
+            <.link
+              :for={page <- @nav.footer}
+              navigate={page_path(page)}
+              class="link link-hover"
+              id={"footer-page-#{page.id}"}
+            >
+              {page_title(page, @locale)}
+            </.link>
+          </nav>
+        </footer>
       </div>
-    </header>
 
-    <%!-- second row (#93): main categories and pages; scrolls on its own if too long --%>
-    <nav
-      :if={@nav.categories != [] or @nav.main != []}
-      class="hidden border-t border-base-200 bg-base-100 shadow-sm md:block"
-      id="main-nav"
-    >
-      <ul class="flex gap-1 overflow-x-auto px-4 py-1 text-sm whitespace-nowrap sm:px-6 lg:px-8">
-        <li :for={category <- @nav.categories}>
-          <.link
-            navigate={~p"/categories/#{category.slug}"}
-            class="btn btn-ghost btn-sm font-normal"
-            id={"main-nav-#{category.slug}"}
-          >
-            {Mercator.Translated.t(category.name, @locale || "de")}
-          </.link>
-        </li>
-        <li :if={@nav.categories != [] and @nav.main != []} class="divider divider-horizontal mx-1">
-        </li>
-        <li :for={page <- @nav.main}>
-          <.link
-            navigate={page_path(page)}
-            class="btn btn-ghost btn-sm font-normal"
-            id={"main-nav-page-#{page.id}"}
-          >
-            {page_title(page, @locale)}
-          </.link>
-        </li>
-      </ul>
-    </nav>
-
-    <main class="px-4 py-10 sm:px-6 lg:px-8">
-      <div class="mx-auto max-w-5xl space-y-4">
-        {render_slot(@inner_block)}
+      <div :if={@sidebar?} class="drawer-side z-20">
+        <label for="shop-drawer" class="drawer-overlay" aria-label={gettext("Close menu")}></label>
+        <.shop_sidebar nav={@nav} locale={@locale} />
       </div>
-    </main>
-
-    <footer class="footer sm:footer-horizontal bg-base-200 text-base-content/70 px-4 py-6 sm:px-6 lg:px-8">
-      <aside>
-        <p class="font-semibold text-base-content">{Mercator.Brand.name()}</p>
-        <p :if={Mercator.Brand.get(:address)}>{Mercator.Brand.get(:address)}</p>
-        <p :if={Mercator.Brand.get(:email)}>{Mercator.Brand.get(:email)}</p>
-      </aside>
-      <nav>
-        <.link navigate={~p"/terms"} class="link link-hover" id="gtc-link">
-          {gettext("Terms and conditions")}
-        </.link>
-        <.link
-          :for={page <- @nav.footer}
-          navigate={page_path(page)}
-          class="link link-hover"
-          id={"footer-page-#{page.id}"}
-        >
-          {page_title(page, @locale)}
-        </.link>
-      </nav>
-    </footer>
-
+    </div>
     <.flash_group flash={@flash} />
     """
   end
@@ -254,27 +241,6 @@ defmodule MercatorWeb.Layouts do
     """
   end
 
-  attr :categories, :list, required: true
-  attr :locale, :string, default: nil
-
-  defp catalog_menu(assigns) do
-    ~H"""
-    <div class="dropdown dropdown-end" id="catalog-menu">
-      <div tabindex="0" role="button" class="btn btn-ghost btn-sm">
-        <.icon name="hero-squares-2x2" class="size-5" />
-        <span class="hidden sm:inline">{pgettext("shop navigation", "Products")}</span>
-      </div>
-      <ul tabindex="0" class="menu dropdown-content bg-base-100 rounded-box z-10 mt-2 w-64 p-2 shadow">
-        <li :for={category <- @categories}>
-          <.link navigate={~p"/categories/#{category.slug}"} id={"nav-#{category.slug}"}>
-            {Mercator.Translated.t(category.name, @locale || "de")}
-          </.link>
-        </li>
-      </ul>
-    </div>
-    """
-  end
-
   attr :current_user, :map, required: true
 
   defp user_menu(assigns) do
@@ -346,6 +312,52 @@ defmodule MercatorWeb.Layouts do
     """
   end
 
+  attr :nav, :map, required: true
+  attr :locale, :string, default: nil
+
+  # The shop navigation (#93): main categories with their photo as icon and
+  # the pages of the main navigation with their icon.
+  defp shop_sidebar(assigns) do
+    ~H"""
+    <%!-- vertically centred; my-auto (not justify-center) keeps the top reachable when it is taller than the screen --%>
+    <nav class="flex min-h-full w-64 flex-col bg-base-100 p-4" id="shop-nav">
+      <div class="my-auto">
+        <div :if={@nav.categories != []} class="mb-4">
+          <p class="menu-title px-2">{pgettext("shop navigation", "Products")}</p>
+          <ul class="menu w-full">
+            <li :for={category <- @nav.categories}>
+              <.link navigate={~p"/categories/#{category.slug}"} id={"nav-#{category.slug}"}>
+                <%= case MercatorWeb.CatalogComponents.first_image(category) do %>
+                  <% nil -> %>
+                    <.icon name="hero-squares-2x2" class="size-5" />
+                  <% image -> %>
+                    <img
+                      src={Mercator.Catalog.Image.url(image, :thumb)}
+                      alt=""
+                      class="size-6 rounded-full object-cover"
+                    />
+                <% end %>
+                {Mercator.Translated.t(category.name, @locale || "de")}
+              </.link>
+            </li>
+          </ul>
+        </div>
+        <div :if={@nav.main != []}>
+          <p class="menu-title px-2">{gettext("Information")}</p>
+          <ul class="menu w-full">
+            <li :for={page <- @nav.main}>
+              <.link navigate={page_path(page)} id={"nav-page-#{page.id}"}>
+                <.icon name={page.icon || "hero-document-text"} class="size-5" />
+                {page_title(page, @locale)}
+              </.link>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    """
+  end
+
   @doc "The URL of a CMS page: `/` for the start page, otherwise `/pages/…`."
   def page_path(%{key: "home"}), do: ~p"/"
   def page_path(page), do: ~p"/pages/#{String.split(page.path, "/")}"
@@ -357,10 +369,9 @@ defmodule MercatorWeb.Layouts do
   defp page_title(page, locale), do: Mercator.Translated.t(page.title, locale || "de")
 
   attr :locale, :string, default: nil
-  attr :pages, :list, default: [], doc: "main navigation pages, shown here on phones"
 
-  # Phones and small tablets (#72): menu pages, language and theme move from
-  # the header into this menu.
+  # Phones and small tablets (#72): language and theme move from the header
+  # into this menu.
   defp more_menu(assigns) do
     ~H"""
     <div class="dropdown dropdown-end md:hidden" id="more-menu">
@@ -371,13 +382,6 @@ defmodule MercatorWeb.Layouts do
         tabindex="0"
         class="dropdown-content bg-base-100 rounded-box z-10 mt-2 flex w-56 flex-col gap-3 p-4 shadow"
       >
-        <ul :if={@pages != []} class="menu -mx-2 -mt-2 border-b border-base-200 p-0 pb-2">
-          <li :for={page <- @pages}>
-            <.link navigate={page_path(page)} id={"more-page-#{page.id}"}>
-              {page_title(page, @locale)}
-            </.link>
-          </li>
-        </ul>
         <div class="flex items-center justify-between gap-2">
           <span class="text-sm">{gettext("Language")}</span>
           <.locale_switch locale={@locale} id="more-locale-switch" />

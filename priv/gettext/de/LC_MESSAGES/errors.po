@@ -196,12 +196,12 @@ msgstr "zu viele Versuche, bitte später erneut versuchen"
 msgid "is not a valid email address"
 msgstr "ist keine gültige E-Mail-Adresse"
 
-#: lib/mercator/sales/validations/gtc_not_in_force.ex:18
+#: lib/mercator/sales/validations/gtc_not_in_force.ex:20
 #, elixir-autogen, elixir-format
 msgid "is already in force and cannot be changed"
 msgstr "ist bereits in Kraft und kann nicht geändert werden"
 
-#: lib/mercator/sales/validations/gtc_not_in_force.ex:21
+#: lib/mercator/sales/validations/gtc_not_in_force.ex:23
 #, elixir-autogen, elixir-format
 msgid "must be today or later"
 msgstr "muss heute oder später sein"

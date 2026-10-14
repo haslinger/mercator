@@ -24,7 +24,7 @@ defmodule Mercator.Seeds.PagesTest do
 
     {:ok, view, _html} = live(conn, ~p"/")
     assert has_element?(view, "#page .hero h2", "Holz aus dem Waldviertel")
-    assert has_element?(view, ~s(#main-nav a[href="/pages/kontakt"]))
+    assert has_element?(view, ~s(#shop-nav a[href="/pages/kontakt"]))
 
     {:ok, view, _html} = live(conn, ~p"/pages/kontakt")
     assert has_element?(view, "#page", "Montag bis Freitag")

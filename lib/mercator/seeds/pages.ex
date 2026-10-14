@@ -72,6 +72,10 @@ defmodule Mercator.Seeds.Pages do
         |> Content.create_page!(authorize?: false)
         |> Content.publish_page!(authorize?: false)
 
+      # pages created before icons existed get theirs; nothing else changes
+      %{icon: nil} = page when is_map_key(attrs, :icon) ->
+        Content.update_page!(page, %{icon: attrs.icon}, authorize?: false)
+
       page ->
         page
     end
@@ -182,6 +186,7 @@ defmodule Mercator.Seeds.Pages do
       },
       %{
         slug: "ueber-uns",
+        icon: "hero-information-circle",
         menu: :main,
         position: 1,
         title: t("Über uns", "About us"),
@@ -221,6 +226,7 @@ defmodule Mercator.Seeds.Pages do
       },
       %{
         slug: "saegewerk",
+        icon: "hero-wrench-screwdriver",
         menu: :main,
         position: 2,
         title: t("Unser Sägewerk", "Our sawmill"),
@@ -270,6 +276,7 @@ defmodule Mercator.Seeds.Pages do
       },
       %{
         slug: "faq",
+        icon: "hero-question-mark-circle",
         menu: :main,
         position: 3,
         title: t("Häufige Fragen", "Frequently asked questions"),
@@ -323,6 +330,7 @@ defmodule Mercator.Seeds.Pages do
       },
       %{
         slug: "kontakt",
+        icon: "hero-envelope",
         key: "contact",
         menu: :main,
         position: 4,
@@ -341,6 +349,7 @@ defmodule Mercator.Seeds.Pages do
       },
       %{
         slug: "impressum",
+        icon: "hero-scale",
         key: "imprint",
         menu: :footer,
         position: 10,
@@ -372,6 +381,7 @@ defmodule Mercator.Seeds.Pages do
       },
       %{
         slug: "datenschutz",
+        icon: "hero-shield-check",
         key: "privacy",
         menu: :footer,
         position: 11,

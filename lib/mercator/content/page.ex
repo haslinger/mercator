@@ -87,7 +87,7 @@ defmodule Mercator.Content.Page do
 
     create :create do
       primary? true
-      accept @content ++ [:slug, :key, :menu, :position, :parent_id, :kind]
+      accept @content ++ [:slug, :key, :menu, :position, :parent_id, :kind, :icon]
       change {SetSlug, from: :title}
       change SetPagePath
     end
@@ -96,7 +96,7 @@ defmodule Mercator.Content.Page do
       description "Edits the working copy and the page settings."
       primary? true
       require_atomic? false
-      accept @content ++ [:slug, :key, :menu, :position]
+      accept @content ++ [:slug, :key, :menu, :position, :icon]
       change {SetSlug, from: :title}
       change SetPagePath
       change set_attribute(:changes_pending, true), where: [changing(:title)]
@@ -225,6 +225,12 @@ defmodule Mercator.Content.Page do
       allow_nil? false
       default 0
       public? true
+    end
+
+    attribute :icon, :string do
+      description "Heroicon shown in the navigation, e.g. `hero-envelope`."
+      public? true
+      constraints match: ~r/^hero-[a-z0-9-]+$/, max_length: 60
     end
 
     attribute :kind, :atom do

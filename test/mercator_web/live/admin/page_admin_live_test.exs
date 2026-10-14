@@ -334,10 +334,11 @@ defmodule MercatorWeb.Admin.PageAdminLiveTest do
       {:ok, view, _html} = live(conn, ~p"/admin/pages/#{page.id}")
 
       view
-      |> form("#settings-form", form: %{slug: "saegewerk", menu: "main"})
+      |> form("#settings-form", form: %{slug: "saegewerk", menu: "main", icon: "hero-truck"})
       |> render_submit()
 
-      assert Content.get_page!(page.id, actor: editor).menu == :main
+      assert %{menu: :main, icon: "hero-truck"} = Content.get_page!(page.id, actor: editor)
+      assert has_element?(view, "#icon-hero-truck.btn-primary")
 
       view |> element("#publish") |> render_click()
       assert has_element?(view, "#page-state", "Veröffentlicht")

@@ -21,8 +21,8 @@ msgstr "Aktionen"
 msgid "An account with this email already exists. We've sent a link to that address - confirm it to finish linking this provider to your account."
 msgstr "Ein Konto mit dieser E-Mail-Adresse existiert bereits. Wir haben einen Link an diese Adresse gesendet – bestätigen Sie ihn, um die Verknüpfung abzuschließen."
 
-#: lib/mercator_web/components/layouts.ex:440
-#: lib/mercator_web/components/layouts.ex:455
+#: lib/mercator_web/components/layouts.ex:441
+#: lib/mercator_web/components/layouts.ex:456
 #, elixir-autogen, elixir-format
 msgid "Attempting to reconnect"
 msgstr "Verbindung wird wiederhergestellt"
@@ -32,7 +32,7 @@ msgstr "Verbindung wird wiederhergestellt"
 msgid "Incorrect email or password."
 msgstr "E-Mail oder Passwort ist falsch."
 
-#: lib/mercator_web/components/layouts.ex:113
+#: lib/mercator_web/components/layouts.ex:124
 #, elixir-autogen, elixir-format
 msgid "Register"
 msgstr "Registrieren"
@@ -42,25 +42,25 @@ msgstr "Registrieren"
 msgid "Shop on your own or get advice from our consultants."
 msgstr "Kaufen Sie selbständig ein oder lassen Sie sich von unseren Beraterinnen und Beratern unterstützen."
 
-#: lib/mercator_web/components/layouts.ex:103
-#: lib/mercator_web/components/layouts.ex:106
+#: lib/mercator_web/components/layouts.ex:114
+#: lib/mercator_web/components/layouts.ex:117
 #, elixir-autogen, elixir-format
 msgid "Sign in"
 msgstr "Anmelden"
 
-#: lib/mercator_web/components/layouts.ex:297
+#: lib/mercator_web/components/layouts.ex:263
 #: lib/mercator_web/live/sign_out_live.ex:18
 #: lib/mercator_web/live/sign_out_live.ex:21
 #, elixir-autogen, elixir-format
 msgid "Sign out"
 msgstr "Abmelden"
 
-#: lib/mercator_web/components/layouts.ex:447
+#: lib/mercator_web/components/layouts.ex:448
 #, elixir-autogen, elixir-format
 msgid "Something went wrong!"
 msgstr "Etwas ist schiefgelaufen!"
 
-#: lib/mercator_web/components/layouts.ex:432
+#: lib/mercator_web/components/layouts.ex:433
 #, elixir-autogen, elixir-format
 msgid "We can't find the internet"
 msgstr "Keine Internetverbindung"
@@ -111,14 +111,14 @@ msgstr "Passwort ändern"
 msgid "Current password"
 msgstr "Aktuelles Passwort"
 
-#: lib/mercator_web/components/layouts.ex:382
+#: lib/mercator_web/components/layouts.ex:383
 #: lib/mercator_web/live/account_live.ex:59
 #: lib/mercator_web/live/admin/user_index_live.ex:42
 #, elixir-autogen, elixir-format
 msgid "Language"
 msgstr "Sprache"
 
-#: lib/mercator_web/components/layouts.ex:288
+#: lib/mercator_web/components/layouts.ex:254
 #: lib/mercator_web/live/account_live.ex:18
 #: lib/mercator_web/live/account_live.ex:33
 #: lib/mercator_web/live/addresses_live.ex:100
@@ -165,9 +165,9 @@ msgstr "Neues Passwort wiederholen"
 #: lib/mercator_web/live/account_live.ex:63
 #: lib/mercator_web/live/addresses_live.ex:209
 #: lib/mercator_web/live/admin/category_tree_live.ex:309
-#: lib/mercator_web/live/admin/gtc_live.ex:193
+#: lib/mercator_web/live/admin/gtc_live.ex:203
 #: lib/mercator_web/live/admin/media_live.ex:347
-#: lib/mercator_web/live/admin/page_edit_live.ex:478
+#: lib/mercator_web/live/admin/page_edit_live.ex:479
 #: lib/mercator_web/live/admin/product_configurator_tab.ex:225
 #: lib/mercator_web/live/admin/product_configurator_tab.ex:422
 #: lib/mercator_web/live/admin/product_configurator_tab.ex:481
@@ -220,7 +220,7 @@ msgstr "Kundinnen und Kunden haben keine Rolle. Mitarbeitende können mehrere Ro
 
 #: lib/mercator_web/live/addresses_live.ex:159
 #: lib/mercator_web/live/admin/category_tree_live.ex:198
-#: lib/mercator_web/live/admin/gtc_live.ex:151
+#: lib/mercator_web/live/admin/gtc_live.ex:161
 #: lib/mercator_web/live/admin/page_edit_live.ex:428
 #: lib/mercator_web/live/admin/page_tree_live.ex:254
 #: lib/mercator_web/live/admin/product_variants_tab.ex:224
@@ -452,8 +452,8 @@ msgstr "Produkt nicht gefunden."
 
 #: lib/mercator_web/admin_nav.ex:43
 #: lib/mercator_web/live/admin/dashboard_live.ex:37
-#: lib/mercator_web/live/admin/page_edit_live.ex:625
-#: lib/mercator_web/live/admin/page_edit_live.ex:888
+#: lib/mercator_web/live/admin/page_edit_live.ex:626
+#: lib/mercator_web/live/admin/page_edit_live.ex:889
 #: lib/mercator_web/live/admin/product_edit_live.ex:166
 #: lib/mercator_web/live/admin/product_index_live.ex:28
 #: lib/mercator_web/live/admin/product_index_live.ex:158
@@ -575,9 +575,9 @@ msgstr[1] "%{count} Treffer für „%{query}“"
 msgid "No products found."
 msgstr "Keine Produkte gefunden."
 
-#: lib/mercator_web/components/layouts.ex:59
-#: lib/mercator_web/components/layouts.ex:60
-#: lib/mercator_web/components/layouts.ex:67
+#: lib/mercator_web/components/layouts.ex:73
+#: lib/mercator_web/components/layouts.ex:74
+#: lib/mercator_web/components/layouts.ex:81
 #: lib/mercator_web/live/search_live.ex:16
 #: lib/mercator_web/live/search_live.ex:62
 #, elixir-autogen, elixir-format
@@ -650,13 +650,13 @@ msgstr "netto"
 msgid "%{active} active, %{drafts} drafts"
 msgstr "%{active} aktiv, %{drafts} Entwürfe"
 
-#: lib/mercator_web/components/layouts.ex:210
+#: lib/mercator_web/components/layouts.ex:197
 #, elixir-autogen, elixir-format
 msgid "Admin"
 msgstr "Verwaltung"
 
 #: lib/mercator_web/admin_nav.ex:67
-#: lib/mercator_web/components/layouts.ex:293
+#: lib/mercator_web/components/layouts.ex:259
 #, elixir-autogen, elixir-format
 msgid "Administration"
 msgstr "Verwaltung"
@@ -665,13 +665,14 @@ msgstr "Verwaltung"
 #: lib/mercator_web/live/admin/category_tree_live.ex:17
 #: lib/mercator_web/live/admin/category_tree_live.ex:137
 #: lib/mercator_web/live/admin/dashboard_live.ex:47
-#: lib/mercator_web/live/admin/page_edit_live.ex:889
+#: lib/mercator_web/live/admin/page_edit_live.ex:890
 #: lib/mercator_web/live/admin/product_edit_live.ex:373
 #, elixir-autogen, elixir-format
 msgid "Categories"
 msgstr "Kategorien"
 
-#: lib/mercator_web/components/layouts.ex:234
+#: lib/mercator_web/components/layouts.ex:159
+#: lib/mercator_web/components/layouts.ex:221
 #, elixir-autogen, elixir-format
 msgid "Close menu"
 msgstr "Menü schließen"
@@ -683,7 +684,8 @@ msgstr "Menü schließen"
 msgid "Dashboard"
 msgstr "Übersicht"
 
-#: lib/mercator_web/components/layouts.ex:199
+#: lib/mercator_web/components/layouts.ex:53
+#: lib/mercator_web/components/layouts.ex:186
 #: lib/mercator_web/live/admin/page_edit_live.ex:462
 #, elixir-autogen, elixir-format
 msgid "Menu"
@@ -694,7 +696,7 @@ msgstr "Menü"
 msgid "Overview"
 msgstr "Übersicht"
 
-#: lib/mercator_web/components/layouts.ex:217
+#: lib/mercator_web/components/layouts.ex:204
 #, elixir-autogen, elixir-format
 msgid "Shop"
 msgstr "Shop"
@@ -739,10 +741,10 @@ msgstr "Unterkategorie anlegen"
 
 #: lib/mercator_web/live/addresses_live.ex:208
 #: lib/mercator_web/live/admin/category_tree_live.ex:307
-#: lib/mercator_web/live/admin/gtc_live.ex:192
+#: lib/mercator_web/live/admin/gtc_live.ex:202
 #: lib/mercator_web/live/admin/media_live.ex:203
 #: lib/mercator_web/live/admin/media_live.ex:346
-#: lib/mercator_web/live/admin/page_edit_live.ex:540
+#: lib/mercator_web/live/admin/page_edit_live.ex:541
 #: lib/mercator_web/live/admin/page_tree_live.ex:198
 #: lib/mercator_web/live/admin/product_configurator_tab.ex:419
 #: lib/mercator_web/live/admin/product_configurator_tab.ex:478
@@ -776,7 +778,7 @@ msgid "Category saved."
 msgstr "Kategorie gespeichert."
 
 #: lib/mercator_web/live/admin/category_tree_live.ex:313
-#: lib/mercator_web/live/admin/gtc_live.ex:175
+#: lib/mercator_web/live/admin/gtc_live.ex:185
 #: lib/mercator_web/live/admin/page_tree_live.ex:203
 #: lib/mercator_web/live/admin/product_index_live.ex:344
 #, elixir-autogen, elixir-format
@@ -1035,7 +1037,7 @@ msgstr "Texte"
 
 #: lib/mercator_web/live/admin/media_live.ex:321
 #: lib/mercator_web/live/admin/page_edit_live.ex:456
-#: lib/mercator_web/live/admin/page_edit_live.ex:704
+#: lib/mercator_web/live/admin/page_edit_live.ex:705
 #: lib/mercator_web/live/admin/page_tree_live.ex:192
 #: lib/mercator_web/live/admin/product_edit_live.ex:305
 #: lib/mercator_web/live/admin/product_index_live.ex:316
@@ -1151,7 +1153,7 @@ msgstr "Lagerstand (leer = auf Bestellung)"
 msgid "Unit"
 msgstr "Einheit"
 
-#: lib/mercator_web/live/admin/gtc_live.ex:188
+#: lib/mercator_web/live/admin/gtc_live.ex:198
 #: lib/mercator_web/live/admin/product_variants_tab.ex:382
 #, elixir-autogen, elixir-format
 msgid "Valid from"
@@ -1235,7 +1237,7 @@ msgid "Drop images here or click to choose"
 msgstr "Bilder hierher ziehen oder klicken zum Auswählen"
 
 #: lib/mercator_web/live/admin/media_live.ex:249
-#: lib/mercator_web/live/admin/page_edit_live.ex:821
+#: lib/mercator_web/live/admin/page_edit_live.ex:822
 #: lib/mercator_web/live/admin/product_edit_live.ex:285
 #, elixir-autogen, elixir-format
 msgid "Images"
@@ -1355,13 +1357,13 @@ msgstr "Bitte den Wert prüfen."
 msgid "Shown as filter on category pages"
 msgstr "Wird auf Kategorieseiten als Filter angezeigt"
 
-#: lib/mercator_web/live/admin/gtc_live.ex:190
-#: lib/mercator_web/live/admin/page_edit_live.ex:561
-#: lib/mercator_web/live/admin/page_edit_live.ex:569
-#: lib/mercator_web/live/admin/page_edit_live.ex:580
-#: lib/mercator_web/live/admin/page_edit_live.ex:691
-#: lib/mercator_web/live/admin/page_edit_live.ex:704
-#: lib/mercator_web/live/admin/page_edit_live.ex:882
+#: lib/mercator_web/live/admin/gtc_live.ex:200
+#: lib/mercator_web/live/admin/page_edit_live.ex:562
+#: lib/mercator_web/live/admin/page_edit_live.ex:570
+#: lib/mercator_web/live/admin/page_edit_live.ex:581
+#: lib/mercator_web/live/admin/page_edit_live.ex:692
+#: lib/mercator_web/live/admin/page_edit_live.ex:705
+#: lib/mercator_web/live/admin/page_edit_live.ex:883
 #: lib/mercator_web/live/admin/product_properties_tab.ex:330
 #: lib/mercator_web/live/admin/product_properties_tab.ex:363
 #, elixir-autogen, elixir-format
@@ -1643,7 +1645,7 @@ msgstr "Steuerklassen"
 msgid "This tax class is still used by products."
 msgstr "Diese Steuerklasse wird noch von Produkten verwendet."
 
-#: lib/mercator_web/components/layouts.ex:265
+#: lib/mercator_web/components/layouts.ex:324
 #, elixir-autogen, elixir-format
 msgctxt "shop navigation"
 msgid "Products"
@@ -1659,7 +1661,7 @@ msgstr "je %{price} netto"
 msgid "Added to the basket."
 msgstr "In den Warenkorb gelegt."
 
-#: lib/mercator_web/components/layouts.ex:78
+#: lib/mercator_web/components/layouts.ex:89
 #: lib/mercator_web/live/basket_live.ex:19
 #: lib/mercator_web/live/basket_live.ex:63
 #, elixir-autogen, elixir-format
@@ -2022,10 +2024,10 @@ msgid "Payment settings saved."
 msgstr "Zahlungseinstellungen gespeichert."
 
 #: lib/mercator_web/admin_nav.ex:62
-#: lib/mercator_web/components/layouts.ex:163
+#: lib/mercator_web/components/layouts.ex:144
 #: lib/mercator_web/live/admin/gtc_live.ex:23
-#: lib/mercator_web/live/admin/gtc_live.ex:118
-#: lib/mercator_web/live/admin/gtc_live.ex:182
+#: lib/mercator_web/live/admin/gtc_live.ex:120
+#: lib/mercator_web/live/admin/gtc_live.ex:192
 #: lib/mercator_web/live/gtc_live.ex:19
 #: lib/mercator_web/live/gtc_live.ex:34
 #, elixir-autogen, elixir-format
@@ -2037,8 +2039,8 @@ msgstr "AGB"
 msgid "The terms and conditions have not been published yet."
 msgstr "Die AGB wurden noch nicht veröffentlicht."
 
-#: lib/mercator_web/live/admin/gtc_live.ex:130
-#: lib/mercator_web/live/admin/gtc_live.ex:171
+#: lib/mercator_web/live/admin/gtc_live.ex:134
+#: lib/mercator_web/live/admin/gtc_live.ex:181
 #: lib/mercator_web/live/gtc_live.ex:38
 #, elixir-autogen, elixir-format
 msgid "Valid from %{date}"
@@ -2374,7 +2376,7 @@ msgid_plural "%{count} items"
 msgstr[0] "1 Artikel"
 msgstr[1] "%{count} Artikel"
 
-#: lib/mercator_web/components/layouts.ex:290
+#: lib/mercator_web/components/layouts.ex:256
 #: lib/mercator_web/live/account_live.ex:37
 #: lib/mercator_web/live/order_live.ex:42
 #: lib/mercator_web/live/orders_live.ex:20
@@ -2393,27 +2395,27 @@ msgstr "Zum Sortiment"
 msgid "You have not placed any orders yet."
 msgstr "Sie haben noch keine Bestellungen aufgegeben."
 
-#: lib/mercator_web/components/layouts.ex:494
+#: lib/mercator_web/components/layouts.ex:495
 #, elixir-autogen, elixir-format
 msgid "Dark theme"
 msgstr "Dunkles Farbschema"
 
-#: lib/mercator_web/components/layouts.ex:485
+#: lib/mercator_web/components/layouts.ex:486
 #, elixir-autogen, elixir-format
 msgid "Light theme"
 msgstr "Helles Farbschema"
 
-#: lib/mercator_web/components/layouts.ex:367
+#: lib/mercator_web/components/layouts.ex:375
 #, elixir-autogen, elixir-format
 msgid "More"
 msgstr "Mehr"
 
-#: lib/mercator_web/components/layouts.ex:476
+#: lib/mercator_web/components/layouts.ex:477
 #, elixir-autogen, elixir-format
 msgid "System theme"
 msgstr "Farbschema des Systems"
 
-#: lib/mercator_web/components/layouts.ex:386
+#: lib/mercator_web/components/layouts.ex:387
 #, elixir-autogen, elixir-format
 msgid "Theme"
 msgstr "Farbschema"
@@ -2467,7 +2469,7 @@ msgid "Final shipping costs (gross, €)"
 msgstr "Endgültige Versandkosten (brutto, €)"
 
 #: lib/mercator_web/live/admin/order_show_live.ex:237
-#: lib/mercator_web/live/admin/page_edit_live.ex:486
+#: lib/mercator_web/live/admin/page_edit_live.ex:487
 #, elixir-autogen, elixir-format
 msgid "History"
 msgstr "Verlauf"
@@ -2624,8 +2626,8 @@ msgctxt "order state"
 msgid "Ready for pickup"
 msgstr "Abholbereit"
 
-#: lib/mercator_web/components/layouts.ex:313
-#: lib/mercator_web/components/layouts.ex:314
+#: lib/mercator_web/components/layouts.ex:279
+#: lib/mercator_web/components/layouts.ex:280
 #, elixir-autogen, elixir-format
 msgid "Back"
 msgstr "Zurück"
@@ -2651,7 +2653,7 @@ msgstr "Vorschau der Arbeitskopie – Besucher sehen die veröffentlichte Fassun
 msgid "Add subpage"
 msgstr "Unterseite hinzufügen"
 
-#: lib/mercator_web/live/admin/page_edit_live.ex:541
+#: lib/mercator_web/live/admin/page_edit_live.ex:542
 #, elixir-autogen, elixir-format
 msgid "Apply"
 msgstr "Übernehmen"
@@ -2672,7 +2674,7 @@ msgstr "Änderungen verworfen."
 msgid "Content"
 msgstr "Inhalte"
 
-#: lib/mercator_web/live/admin/page_edit_live.ex:506
+#: lib/mercator_web/live/admin/page_edit_live.ex:507
 #, elixir-autogen, elixir-format
 msgid "Copy this version into the working copy?"
 msgstr "Diese Fassung in die Arbeitskopie übernehmen?"
@@ -2693,7 +2695,7 @@ msgstr "Diesen Block löschen?"
 msgid "Delete this page?"
 msgstr "Diese Seite löschen?"
 
-#: lib/mercator_web/live/admin/page_edit_live.ex:468
+#: lib/mercator_web/live/admin/page_edit_live.ex:469
 #, elixir-autogen, elixir-format
 msgid "Description for search engines"
 msgstr "Beschreibung für Suchmaschinen"
@@ -2723,7 +2725,7 @@ msgstr "Fußzeile"
 msgid "Hide from menus"
 msgstr "Aus Menüs ausblenden"
 
-#: lib/mercator_web/live/admin/page_edit_live.ex:475
+#: lib/mercator_web/live/admin/page_edit_live.ex:476
 #, elixir-autogen, elixir-format
 msgid "Key for links from the code (e.g. imprint)"
 msgstr "Schlüssel für Links aus dem Code (z. B. imprint)"
@@ -2759,7 +2761,7 @@ msgstr "Noch keine Seiten."
 msgid "Not in a menu"
 msgstr "In keinem Menü"
 
-#: lib/mercator_web/live/admin/page_edit_live.ex:488
+#: lib/mercator_web/live/admin/page_edit_live.ex:489
 #, elixir-autogen, elixir-format
 msgid "Not published yet."
 msgstr "Noch nicht veröffentlicht."
@@ -2822,7 +2824,7 @@ msgstr "Veröffentlichen"
 msgid "Published pages cannot be deleted; archive them."
 msgstr "Veröffentlichte Seiten können nicht gelöscht werden; bitte archivieren."
 
-#: lib/mercator_web/live/admin/page_edit_live.ex:510
+#: lib/mercator_web/live/admin/page_edit_live.ex:511
 #, elixir-autogen, elixir-format
 msgid "Restore"
 msgstr "Wiederherstellen"
@@ -2955,7 +2957,7 @@ msgid "Media"
 msgstr "Medien"
 
 #: lib/mercator_web/live/admin/media_live.ex:257
-#: lib/mercator_web/live/admin/page_edit_live.ex:838
+#: lib/mercator_web/live/admin/page_edit_live.ex:839
 #, elixir-autogen, elixir-format
 msgid "No files found."
 msgstr "Keine Dateien gefunden."
@@ -3001,178 +3003,178 @@ msgstr "Die Datei wird auf einer Seite verwendet und kann nicht gelöscht werden
 msgid "Title, file name or tag"
 msgstr "Titel, Dateiname oder Tag"
 
-#: lib/mercator_web/live/admin/page_edit_live.ex:570
-#: lib/mercator_web/live/admin/page_edit_live.ex:692
+#: lib/mercator_web/live/admin/page_edit_live.ex:571
+#: lib/mercator_web/live/admin/page_edit_live.ex:693
 #, elixir-autogen, elixir-format
 msgid "Button label"
 msgstr "Button-Beschriftung"
 
-#: lib/mercator_web/live/admin/page_edit_live.ex:573
-#: lib/mercator_web/live/admin/page_edit_live.ex:695
+#: lib/mercator_web/live/admin/page_edit_live.ex:574
+#: lib/mercator_web/live/admin/page_edit_live.ex:696
 #, elixir-autogen, elixir-format
 msgid "Button link, e.g. /categories/bauholz or /pages/kontakt"
 msgstr "Button-Link, z. B. /categories/bauholz oder /pages/kontakt"
 
-#: lib/mercator_web/live/admin/page_edit_live.ex:594
+#: lib/mercator_web/live/admin/page_edit_live.ex:595
 #, elixir-autogen, elixir-format
 msgid "Caption"
 msgstr "Bildunterschrift"
 
-#: lib/mercator_web/live/admin/page_edit_live.ex:887
+#: lib/mercator_web/live/admin/page_edit_live.ex:888
 #, elixir-autogen, elixir-format
 msgid "Download"
 msgstr "Download"
 
-#: lib/mercator_web/live/admin/page_edit_live.ex:821
+#: lib/mercator_web/live/admin/page_edit_live.ex:822
 #, elixir-autogen, elixir-format
 msgid "File from the media library"
 msgstr "Datei aus der Medienbibliothek"
 
-#: lib/mercator_web/live/admin/page_edit_live.ex:886
+#: lib/mercator_web/live/admin/page_edit_live.ex:887
 #, elixir-autogen, elixir-format
 msgid "Gallery"
 msgstr "Galerie"
 
-#: lib/mercator_web/live/admin/page_edit_live.ex:568
-#: lib/mercator_web/live/admin/page_edit_live.ex:690
+#: lib/mercator_web/live/admin/page_edit_live.ex:569
+#: lib/mercator_web/live/admin/page_edit_live.ex:691
 #, elixir-autogen, elixir-format
 msgid "Headline"
 msgstr "Überschrift"
 
-#: lib/mercator_web/live/admin/page_edit_live.ex:883
+#: lib/mercator_web/live/admin/page_edit_live.ex:884
 #, elixir-autogen, elixir-format
 msgid "Hero"
 msgstr "Titelbild"
 
-#: lib/mercator_web/live/admin/page_edit_live.ex:885
+#: lib/mercator_web/live/admin/page_edit_live.ex:886
 #, elixir-autogen, elixir-format
 msgid "Image"
 msgstr "Bild"
 
-#: lib/mercator_web/live/admin/page_edit_live.ex:585
+#: lib/mercator_web/live/admin/page_edit_live.ex:586
 #, elixir-autogen, elixir-format
 msgid "Image position"
 msgstr "Bildposition"
 
-#: lib/mercator_web/live/admin/page_edit_live.ex:614
+#: lib/mercator_web/live/admin/page_edit_live.ex:615
 #, elixir-autogen, elixir-format
 msgid "Link text (default: the file's title)"
 msgstr "Linktext (sonst der Titel der Datei)"
 
-#: lib/mercator_web/live/admin/page_edit_live.ex:828
+#: lib/mercator_web/live/admin/page_edit_live.ex:829
 #, elixir-autogen, elixir-format
 msgid "Search the media library"
 msgstr "Medienbibliothek durchsuchen"
 
-#: lib/mercator_web/live/admin/page_edit_live.ex:884
+#: lib/mercator_web/live/admin/page_edit_live.ex:885
 #, elixir-autogen, elixir-format
 msgid "Text with image"
 msgstr "Text mit Bild"
 
-#: lib/mercator_web/live/admin/page_edit_live.ex:834
+#: lib/mercator_web/live/admin/page_edit_live.ex:835
 #, elixir-autogen, elixir-format
 msgid "Upload in the media library"
 msgstr "In der Medienbibliothek hochladen"
 
-#: lib/mercator_web/live/admin/page_edit_live.ex:586
+#: lib/mercator_web/live/admin/page_edit_live.ex:587
 #, elixir-autogen, elixir-format
 msgid "left of the text"
 msgstr "links vom Text"
 
-#: lib/mercator_web/live/admin/page_edit_live.ex:586
+#: lib/mercator_web/live/admin/page_edit_live.ex:587
 #, elixir-autogen, elixir-format
 msgid "right of the text"
 msgstr "rechts vom Text"
 
-#: lib/mercator_web/live/admin/page_edit_live.ex:644
+#: lib/mercator_web/live/admin/page_edit_live.ex:645
 #, elixir-autogen, elixir-format
 msgid "Article numbers of the products, separated by commas"
 msgstr "Artikelnummern der Produkte, durch Komma getrennt"
 
-#: lib/mercator_web/live/admin/page_edit_live.ex:627
+#: lib/mercator_web/live/admin/page_edit_live.ex:628
 #, elixir-autogen, elixir-format
 msgid "Bestsellers"
 msgstr "Topseller"
 
-#: lib/mercator_web/live/admin/page_edit_live.ex:890
+#: lib/mercator_web/live/admin/page_edit_live.ex:891
 #, elixir-autogen, elixir-format
 msgid "Call to action"
 msgstr "Handlungsaufforderung"
 
-#: lib/mercator_web/live/admin/page_edit_live.ex:664
+#: lib/mercator_web/live/admin/page_edit_live.ex:665
 #, elixir-autogen, elixir-format
 msgid "Categories (none chosen: the main categories)"
 msgstr "Kategorien (keine gewählt: die Hauptkategorien)"
 
-#: lib/mercator_web/live/admin/page_edit_live.ex:637
+#: lib/mercator_web/live/admin/page_edit_live.ex:638
 #, elixir-autogen, elixir-format
 msgid "Category (with subcategories)"
 msgstr "Kategorie (mit Unterkategorien)"
 
-#: lib/mercator_web/live/admin/page_edit_live.ex:639
+#: lib/mercator_web/live/admin/page_edit_live.ex:640
 #, elixir-autogen, elixir-format
 msgid "Choose a category"
 msgstr "Kategorie wählen"
 
-#: lib/mercator_web/live/admin/page_edit_live.ex:630
+#: lib/mercator_web/live/admin/page_edit_live.ex:631
 #, elixir-autogen, elixir-format
 msgid "Chosen article numbers"
 msgstr "Gewählte Artikelnummern"
 
-#: lib/mercator_web/live/admin/page_edit_live.ex:629
+#: lib/mercator_web/live/admin/page_edit_live.ex:630
 #, elixir-autogen, elixir-format
 msgid "From a category"
 msgstr "Aus einer Kategorie"
 
-#: lib/mercator_web/live/admin/page_edit_live.ex:621
-#: lib/mercator_web/live/admin/page_edit_live.ex:661
-#: lib/mercator_web/live/admin/page_edit_live.ex:712
+#: lib/mercator_web/live/admin/page_edit_live.ex:622
+#: lib/mercator_web/live/admin/page_edit_live.ex:662
+#: lib/mercator_web/live/admin/page_edit_live.ex:713
 #, elixir-autogen, elixir-format
 msgid "Heading"
 msgstr "Überschrift"
 
-#: lib/mercator_web/live/admin/page_edit_live.ex:651
+#: lib/mercator_web/live/admin/page_edit_live.ex:652
 #, elixir-autogen, elixir-format
 msgid "Maximum number"
 msgstr "Höchstens"
 
-#: lib/mercator_web/live/admin/page_edit_live.ex:628
+#: lib/mercator_web/live/admin/page_edit_live.ex:629
 #, elixir-autogen, elixir-format
 msgid "New arrivals"
 msgstr "Neuheiten"
 
-#: lib/mercator_web/live/admin/page_edit_live.ex:772
+#: lib/mercator_web/live/admin/page_edit_live.ex:773
 #, elixir-autogen, elixir-format
 msgid "Add entry"
 msgstr "Eintrag hinzufügen"
 
-#: lib/mercator_web/live/admin/page_edit_live.ex:715
+#: lib/mercator_web/live/admin/page_edit_live.ex:716
 #, elixir-autogen, elixir-format
 msgid "Answer"
 msgstr "Antwort"
 
-#: lib/mercator_web/live/admin/page_edit_live.ex:705
+#: lib/mercator_web/live/admin/page_edit_live.ex:706
 #, elixir-autogen, elixir-format
 msgid "Column"
 msgstr "Spalte"
 
-#: lib/mercator_web/live/admin/page_edit_live.ex:891
+#: lib/mercator_web/live/admin/page_edit_live.ex:892
 #, elixir-autogen, elixir-format
 msgid "Columns"
 msgstr "Spalten"
 
-#: lib/mercator_web/live/admin/page_edit_live.ex:775
+#: lib/mercator_web/live/admin/page_edit_live.ex:776
 #, elixir-autogen, elixir-format
 msgid "Entries without text are removed when saving."
 msgstr "Einträge ohne Text werden beim Speichern entfernt."
 
-#: lib/mercator_web/live/admin/page_edit_live.ex:892
+#: lib/mercator_web/live/admin/page_edit_live.ex:893
 #, elixir-autogen, elixir-format
 msgid "FAQ"
 msgstr "FAQ"
 
-#: lib/mercator_web/live/admin/page_edit_live.ex:715
 #: lib/mercator_web/live/admin/page_edit_live.ex:716
+#: lib/mercator_web/live/admin/page_edit_live.ex:717
 #, elixir-autogen, elixir-format
 msgid "Question"
 msgstr "Frage"
@@ -3182,7 +3184,7 @@ msgstr "Frage"
 msgid "Add block"
 msgstr "Block hinzufügen"
 
-#: lib/mercator_web/live/admin/page_edit_live.ex:737
+#: lib/mercator_web/live/admin/page_edit_live.ex:738
 #, elixir-autogen, elixir-format
 msgid "Choose a shared block"
 msgstr "Gemeinsamen Block wählen"
@@ -3203,8 +3205,8 @@ msgstr "Neuer gemeinsamer Block"
 msgid "None yet."
 msgstr "Noch keine."
 
-#: lib/mercator_web/live/admin/page_edit_live.ex:735
-#: lib/mercator_web/live/admin/page_edit_live.ex:893
+#: lib/mercator_web/live/admin/page_edit_live.ex:736
+#: lib/mercator_web/live/admin/page_edit_live.ex:894
 #, elixir-autogen, elixir-format
 msgid "Shared block"
 msgstr "Gemeinsamer Block"
@@ -3214,7 +3216,7 @@ msgstr "Gemeinsamer Block"
 msgid "Shared blocks"
 msgstr "Gemeinsame Blöcke"
 
-#: lib/mercator_web/live/admin/page_edit_live.ex:740
+#: lib/mercator_web/live/admin/page_edit_live.ex:741
 #, elixir-autogen, elixir-format
 msgid "Shows the published version of the shared block. Edit it under Pages → Shared blocks."
 msgstr "Zeigt die veröffentlichte Fassung des gemeinsamen Blocks. Bearbeiten unter Seiten → Gemeinsame Blöcke."
@@ -3229,7 +3231,7 @@ msgstr "Startseite"
 msgid "All"
 msgstr "Alle"
 
-#: lib/mercator_web/live/admin/page_edit_live.ex:894
+#: lib/mercator_web/live/admin/page_edit_live.ex:895
 #, elixir-autogen, elixir-format
 msgid "Contact form"
 msgstr "Kontaktformular"
@@ -3241,7 +3243,7 @@ msgstr "Kontaktformular"
 msgid "Contact requests"
 msgstr "Kontaktanfragen"
 
-#: lib/mercator_web/live/admin/page_edit_live.ex:723
+#: lib/mercator_web/live/admin/page_edit_live.ex:724
 #, elixir-autogen, elixir-format
 msgid "Introduction"
 msgstr "Einleitung"
@@ -3256,7 +3258,7 @@ msgstr "Als erledigt markieren"
 msgid "Message"
 msgstr "Nachricht"
 
-#: lib/mercator_web/live/admin/page_edit_live.ex:725
+#: lib/mercator_web/live/admin/page_edit_live.ex:726
 #, elixir-autogen, elixir-format
 msgid "Messages are stored under Contact requests and emailed to the shop address."
 msgstr "Nachrichten werden unter Kontaktanfragen gespeichert und an die Shop-Adresse gemailt."
@@ -3296,57 +3298,72 @@ msgstr "Danke! Wir haben Ihre Nachricht erhalten und melden uns bei Ihnen."
 msgid "Too many messages. Please try again later or call us."
 msgstr "Zu viele Nachrichten. Bitte versuchen Sie es später noch einmal oder rufen Sie uns an."
 
-#: lib/mercator_web/live/admin/gtc_live.ex:158
+#: lib/mercator_web/live/admin/gtc_live.ex:168
 #, elixir-autogen, elixir-format
 msgid "Delete this version?"
 msgstr "Diese Fassung löschen?"
 
-#: lib/mercator_web/live/admin/gtc_live.ex:120
+#: lib/mercator_web/live/admin/gtc_live.ex:122
 #, elixir-autogen, elixir-format
 msgid "New version"
 msgstr "Neue Fassung"
 
-#: lib/mercator_web/live/admin/gtc_live.ex:127
+#: lib/mercator_web/live/admin/gtc_live.ex:131
 #, elixir-autogen, elixir-format
 msgid "No terms yet."
 msgstr "Noch keine AGB."
 
-#: lib/mercator_web/live/admin/gtc_live.ex:77
+#: lib/mercator_web/live/admin/gtc_live.ex:79
 #, elixir-autogen, elixir-format
 msgid "Terms and conditions saved."
 msgstr "AGB gespeichert."
 
-#: lib/mercator_web/live/admin/gtc_live.ex:89
+#: lib/mercator_web/live/admin/gtc_live.ex:91
 #, elixir-autogen, elixir-format
 msgid "Version deleted."
 msgstr "Fassung gelöscht."
 
-#: lib/mercator_web/live/admin/gtc_live.ex:124
+#: lib/mercator_web/live/admin/gtc_live.ex:126
 #, elixir-autogen, elixir-format
 msgid "Versions in force cannot be changed, because orders refer to them. A new version applies from its date; until then it can still be edited."
 msgstr "Fassungen in Kraft sind unveränderlich, weil Bestellungen auf sie verweisen. Eine neue Fassung gilt ab ihrem Datum; bis dahin kann sie noch bearbeitet werden."
 
-#: lib/mercator_web/live/admin/gtc_live.ex:92
+#: lib/mercator_web/live/admin/gtc_live.ex:94
 #, elixir-autogen, elixir-format
 msgid "Versions in force cannot be deleted."
 msgstr "Fassungen in Kraft können nicht gelöscht werden."
 
-#: lib/mercator_web/live/admin/gtc_live.ex:141
+#: lib/mercator_web/live/admin/gtc_live.ex:151
 #, elixir-autogen, elixir-format
 msgid "View"
 msgstr "Ansehen"
 
-#: lib/mercator_web/live/admin/gtc_live.ex:133
+#: lib/mercator_web/live/admin/gtc_live.ex:137
 #, elixir-autogen, elixir-format
 msgid "in force"
 msgstr "in Kraft"
 
-#: lib/mercator_web/live/admin/gtc_live.ex:137
+#: lib/mercator_web/live/admin/gtc_live.ex:141
 #, elixir-autogen, elixir-format
 msgid "replaced"
 msgstr "abgelöst"
 
-#: lib/mercator_web/live/admin/gtc_live.ex:135
+#: lib/mercator_web/live/admin/gtc_live.ex:139
 #, elixir-autogen, elixir-format
 msgid "upcoming"
 msgstr "künftig"
+
+#: lib/mercator_web/live/admin/page_components.ex:57
+#, elixir-autogen, elixir-format
+msgid "Icon in the navigation"
+msgstr "Icon in der Navigation"
+
+#: lib/mercator_web/components/layouts.ex:344
+#, elixir-autogen, elixir-format
+msgid "Information"
+msgstr "Informationen"
+
+#: lib/mercator_web/live/admin/page_components.ex:64
+#, elixir-autogen, elixir-format
+msgid "No icon"
+msgstr "Kein Icon"

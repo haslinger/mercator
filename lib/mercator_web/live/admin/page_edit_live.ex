@@ -263,7 +263,7 @@ defmodule MercatorWeb.Admin.PageEditLive do
   defp clean(value), do: value
 
   defp settings_params(params) do
-    Map.take(params, ~w(title seo_description slug menu key))
+    Map.take(params, ~w(title seo_description slug menu key icon))
     |> Map.new(fn {k, v} -> {k, clean(v)} end)
   end
 
@@ -462,6 +462,7 @@ defmodule MercatorWeb.Admin.PageEditLive do
                   label={gettext("Menu")}
                   options={menu_options()}
                 />
+                <.icon_picker :if={@page.kind == :page} field={@settings_form[:icon]} />
                 <.translated_input
                   :if={@page.kind == :page}
                   field={@settings_form[:seo_description]}
