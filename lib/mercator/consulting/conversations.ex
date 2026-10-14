@@ -38,6 +38,7 @@ defmodule Mercator.Consulting.Conversations do
     attrs =
       context
       |> Map.take([:subject, :page, :product_id])
+      |> Map.put(:current_page, context[:page])
       |> Map.merge(owner_attrs(owner))
 
     with {:ok, conversation} <- Ash.create(Conversation, attrs, action: :start, authorize?: false),
@@ -112,6 +113,24 @@ defmodule Mercator.Consulting.Conversations do
 
   @doc "How long a customer waits for a consultant before being offered a callback (#95)."
   def wait_seconds, do: Application.get_env(:mercator, :consulting_wait_seconds, 120)
+
+  @doc "The customer is now on `path`; the consultant sees it live."
+  def visit(owner, conversation_id, path) when is_binary(path) do
+    with %Conversation{} = conversation <- get(owner, conversation_id),
+         true <- conversation.current_page != path,
+         {:ok, conversation} <-
+           Ash.update(conversation, %{current_page: String.slice(path, 0, 500)},
+             action: :visit,
+             authorize?: false
+           ) do
+      broadcast("conversation:#{conversation.id}", {:visit, conversation.current_page})
+      {:ok, conversation}
+    else
+      false -> :unchanged
+      nil -> {:error, :not_found}
+      error -> error
+    end
+  end
 
   @doc "The customer ends the conversation."
   def close(owner, conversation_id) do

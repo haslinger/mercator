@@ -3,8 +3,10 @@ defmodule MercatorWeb.Admin.DeskLiveTest do
 
   import Phoenix.LiveViewTest
   import Mercator.AccountsFixtures
+  import Mercator.CatalogFixtures
 
   alias Mercator.Consulting.Conversations
+  alias Mercator.Sales.Baskets
   alias MercatorWeb.{ChatLive, Presence}
 
   defp visitor_conn do
@@ -77,5 +79,52 @@ defmodule MercatorWeb.Admin.DeskLiveTest do
     {:ok, desk, _html} = live(conn, ~p"/admin/desk/#{conversation.id}")
     assert has_element?(desk, "#desk-conversation-#{conversation.id} .badge", "Rückruf")
     assert has_element?(desk, "#conversation-callback", "+43 1 2345678")
+  end
+
+  describe "customer context (step 3)" do
+    test "online status, the page the customer is on, and the basket", %{conn: conn} do
+      {customer_conn, {:session, token} = owner} = visitor_conn()
+      product = product_fixture(title: %{"de" => "Lärchendiele"})
+      [variant] = Ash.load!(product, :variants).variants
+      Baskets.add({:session, token}, variant.id, 3)
+
+      {:ok, conversation} =
+        Conversations.start(owner, "Frage zur Terrasse", %{page: "/products/x"})
+
+      {:ok, chat, _html} = live_isolated(customer_conn, ChatLive)
+
+      {:ok, desk, _html} = live(conn, ~p"/admin/desk/#{conversation.id}")
+      assert has_element?(desk, ~s(#customer-online[data-online="true"]))
+      assert has_element?(desk, "#customer-page", "/products/x")
+      assert has_element?(desk, "#customer-basket", "Lärchendiele")
+
+      # the customer moves on; the desk follows live
+      render_hook(chat, "location", %{"path" => "/categories/terrasse"})
+      assert has_element?(desk, "#customer-page", "/categories/terrasse")
+
+      # the customer leaves the shop (Presence reports it asynchronously)
+      Phoenix.PubSub.subscribe(Mercator.PubSub, Presence.chat_topic())
+      GenServer.stop(chat.pid)
+
+      assert_receive %Phoenix.Socket.Broadcast{event: "presence_diff", payload: %{leaves: leaves}}
+                     when is_map_key(leaves, conversation.id)
+
+      _ = render(desk)
+      assert has_element?(desk, ~s(#customer-online[data-online="false"]))
+    end
+
+    test "previous orders of a signed-in customer", %{conn: conn} do
+      import Mercator.SalesFixtures
+
+      gtc_fixture()
+      customer = customer_fixture()
+      [variant] = Ash.load!(product_fixture(), :variants).variants
+      order = order_fixture(customer, variant)
+
+      {:ok, conversation} = Conversations.start({:user, customer}, "Nachbestellung?")
+      {:ok, desk, _html} = live(conn, ~p"/admin/desk/#{conversation.id}")
+
+      assert has_element?(desk, ~s(#customer-orders a[href="/admin/orders/#{order.number}"]))
+    end
   end
 end

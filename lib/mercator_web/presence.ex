@@ -16,4 +16,15 @@ defmodule MercatorWeb.Presence do
     |> list()
     |> Enum.count(fn {_id, %{metas: metas}} -> Enum.any?(metas, & &1.available) end)
   end
+
+  @chat_topic "chat:presence"
+
+  @doc "Topic of customers with an open conversation in their chat widget."
+  def chat_topic, do: @chat_topic
+
+  @doc "Tracks the customer's chat widget for a conversation (online status on the desk)."
+  def track_customer(pid, conversation_id), do: track(pid, @chat_topic, conversation_id, %{})
+
+  @doc "Whether the customer of a conversation has the shop open."
+  def customer_online?(conversation_id), do: get_by_key(@chat_topic, conversation_id) != []
 end

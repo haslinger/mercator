@@ -11,6 +11,7 @@ defmodule Mercator.Consulting.Desk do
   require Ash.Query
 
   alias Mercator.Consulting.{Conversation, Conversations}
+  alias Mercator.Sales.{BasketPricing, Baskets, Order}
 
   @loads [:customer, :consultant, :product]
 
@@ -76,6 +77,40 @@ defmodule Mercator.Consulting.Desk do
       Conversations.broadcast("desk", {:conversation, conversation})
       {:ok, conversation}
     end
+  end
+
+  @doc """
+  What the consultant sees about the customer (step 3): online status,
+  the basket with live prices (`Mercator.Sales.BasketPricing`) and the
+  last orders of a signed-in customer.
+  """
+  def context(conversation, actor) do
+    owner =
+      if conversation.customer_id,
+        do: {:user, %{id: conversation.customer_id}},
+        else: {:session, conversation.session_token}
+
+    basket =
+      owner
+      |> Baskets.get()
+      |> then(&(&1 && BasketPricing.calculate(&1)))
+
+    orders =
+      if conversation.customer_id do
+        Order
+        |> Ash.Query.filter(user_id == ^conversation.customer_id)
+        |> Ash.Query.sort(inserted_at: :desc)
+        |> Ash.Query.limit(5)
+        |> Ash.read!(actor: actor)
+      else
+        []
+      end
+
+    %{
+      online?: MercatorWeb.Presence.customer_online?(conversation.id),
+      basket: basket,
+      orders: orders
+    }
   end
 
   @doc "How staff and customers are named in the desk and the chat."

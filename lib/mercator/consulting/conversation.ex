@@ -45,7 +45,7 @@ defmodule Mercator.Consulting.Conversation do
     defaults [:read]
 
     create :start do
-      accept [:customer_id, :session_token, :subject, :page, :product_id]
+      accept [:customer_id, :session_token, :subject, :page, :current_page, :product_id]
     end
 
     update :take do
@@ -74,6 +74,11 @@ defmodule Mercator.Consulting.Conversation do
       validate present([:callback_kind, :callback_contact])
       validate Mercator.Consulting.Validations.CallbackContact
       change set_attribute(:callback_requested_at, &DateTime.utc_now/0)
+    end
+
+    update :visit do
+      description "The customer is now on this shop page (live context for the consultant)."
+      accept [:current_page]
     end
 
     update :move_to_user do
@@ -111,6 +116,12 @@ defmodule Mercator.Consulting.Conversation do
     end
 
     attribute :last_message_at, :utc_datetime_usec, public?: true
+
+    attribute :current_page, :string do
+      description "The shop page the customer is on now (reported by the chat widget)."
+      public? true
+      constraints max_length: 500
+    end
 
     attribute :callback_kind, :atom do
       description "How the customer wants to be contacted when nobody answered (#95)."

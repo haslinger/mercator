@@ -26,7 +26,7 @@ defmodule MercatorWeb.ChatLive do
   @impl true
   def mount(_params, _session, socket) do
     conversation = Conversations.current(socket.assigns.basket_owner)
-    if conversation && connected?(socket), do: Conversations.subscribe(conversation.id)
+    if conversation && connected?(socket), do: follow(conversation)
 
     {:ok,
      socket
@@ -57,6 +57,12 @@ defmodule MercatorWeb.ChatLive do
   defp waited_long_enough?(_conversation), do: false
 
   defp new_form, do: to_form(%{"body" => ""}, as: :chat)
+
+  # receive the conversation's messages and appear online on the sales desk
+  defp follow(conversation) do
+    Conversations.subscribe(conversation.id)
+    MercatorWeb.Presence.track_customer(self(), conversation.id)
+  end
 
   @impl true
   def handle_event("toggle", _params, socket) do
@@ -89,9 +95,17 @@ defmodule MercatorWeb.ChatLive do
       true ->
         context = Map.put_new(socket.assigns.context, :page, params["page"])
         {:ok, conversation} = Conversations.start(owner, body, context)
-        Conversations.subscribe(conversation.id)
+        follow(conversation)
         {:noreply, socket |> assign_conversation(conversation) |> assign(:form, new_form())}
     end
+  end
+
+  # the customer moved to another shop page (reported by the hook)
+  def handle_event("location", %{"path" => path}, socket) do
+    if conversation = socket.assigns.conversation,
+      do: Conversations.visit(socket.assigns.basket_owner, conversation.id, path)
+
+    {:noreply, socket}
   end
 
   # the countdown in the browser has run out
@@ -131,6 +145,8 @@ defmodule MercatorWeb.ChatLive do
     unread = if socket.assigns.open?, do: 0, else: socket.assigns.unread + 1
     {:noreply, socket |> stream_insert(:messages, message) |> assign(:unread, unread)}
   end
+
+  def handle_info({:visit, _path}, socket), do: {:noreply, socket}
 
   def handle_info({:conversation, %{state: :closed}}, socket) do
     {:noreply, assign_conversation(socket, nil)}
@@ -277,13 +293,20 @@ defmodule MercatorWeb.ChatLive do
           // "Beraten lassen" buttons dispatch this event (with subject and product)
           this.onOpen = (e) => this.pushEvent("open", {...(e.detail || {}), page: window.location.pathname})
           window.addEventListener("mercator:open-chat", this.onOpen)
+          // tell the consultant which page the customer is on (also after live navigation)
+          this.onPage = () => this.pushEvent("location", {path: window.location.pathname})
+          window.addEventListener("phx:page-loading-stop", this.onPage)
+          this.onPage()
           // the page the question is asked on
           this.el.addEventListener("submit", () => {
             const page = this.el.querySelector("#chat-page")
             if (page) page.value = window.location.pathname
           }, true)
         },
-        destroyed() { window.removeEventListener("mercator:open-chat", this.onOpen) }
+        destroyed() {
+          window.removeEventListener("mercator:open-chat", this.onOpen)
+          window.removeEventListener("phx:page-loading-stop", this.onPage)
+        }
       }
     </script>
     <script :type={Phoenix.LiveView.ColocatedHook} name=".Countdown">

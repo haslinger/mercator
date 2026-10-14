@@ -19,6 +19,8 @@ defmodule MercatorWeb.Admin.DeskLive do
 
     if connected?(socket) do
       Phoenix.PubSub.subscribe(Mercator.PubSub, "desk")
+      # customers coming online or leaving (their chat widget)
+      Phoenix.PubSub.subscribe(Mercator.PubSub, Presence.chat_topic())
 
       Presence.track(self(), Presence.topic(), user.id, %{
         available: false,
@@ -35,6 +37,7 @@ defmodule MercatorWeb.Admin.DeskLive do
        page_title: gettext("Sales desk"),
        available?: false,
        selected: nil,
+       context: nil,
        form: new_form()
      )
      |> stream(:messages, [])
@@ -66,6 +69,7 @@ defmodule MercatorWeb.Admin.DeskLive do
 
     socket
     |> assign(:selected, Map.delete(conversation, :messages))
+    |> assign(:context, Desk.context(conversation, socket.assigns.current_user))
     |> assign(:page_title, conversation.subject || gettext("Sales desk"))
     |> stream(:messages, conversation.messages, reset: true)
   end
@@ -74,7 +78,7 @@ defmodule MercatorWeb.Admin.DeskLive do
     if previous = socket.assigns.selected,
       do: Phoenix.PubSub.unsubscribe(Mercator.PubSub, "conversation:#{previous.id}")
 
-    socket |> assign(:selected, nil) |> stream(:messages, [], reset: true)
+    socket |> assign(selected: nil, context: nil) |> stream(:messages, [], reset: true)
   end
 
   defp load_lists(socket) do
@@ -168,6 +172,25 @@ defmodule MercatorWeb.Admin.DeskLive do
   def handle_info({:message, message}, socket),
     do: {:noreply, stream_insert(socket, :messages, message)}
 
+  # the customer moved to another page: show it and refresh the basket etc.
+  def handle_info({:visit, path}, %{assigns: %{selected: %{} = selected}} = socket) do
+    selected = %{selected | current_page: path}
+    context = Desk.context(selected, socket.assigns.current_user)
+    {:noreply, assign(socket, selected: selected, context: context)}
+  end
+
+  def handle_info({:visit, _path}, socket), do: {:noreply, socket}
+
+  def handle_info(%Phoenix.Socket.Broadcast{event: "presence_diff"}, socket) do
+    case socket.assigns.selected do
+      nil ->
+        {:noreply, socket}
+
+      selected ->
+        {:noreply, assign(socket, :context, Desk.context(selected, socket.assigns.current_user))}
+    end
+  end
+
   def handle_info(:tick, socket), do: {:noreply, load_lists(socket)}
 
   # a conversation that was just started (not one that changed later)
@@ -195,7 +218,7 @@ defmodule MercatorWeb.Admin.DeskLive do
         </button>
       </div>
 
-      <div class="grid gap-6 lg:grid-cols-[20rem_1fr]">
+      <div class="grid gap-6 lg:grid-cols-[18rem_1fr] 2xl:grid-cols-[18rem_1fr_20rem]">
         <aside class="space-y-4">
           <.conversation_list
             id="waiting"
@@ -235,7 +258,16 @@ defmodule MercatorWeb.Admin.DeskLive do
         >
           <header class="flex flex-wrap items-center gap-2 border-b border-base-200 p-4">
             <div class="min-w-0 flex-1">
-              <p class="font-semibold" id="conversation-customer">
+              <p class="flex items-center gap-2 font-semibold" id="conversation-customer">
+                <span
+                  class={[
+                    "inline-block size-2.5 rounded-full",
+                    if(@context.online?, do: "bg-success", else: "bg-base-300")
+                  ]}
+                  title={if @context.online?, do: gettext("online"), else: gettext("offline")}
+                  data-online={to_string(@context.online?)}
+                  id="customer-online"
+                ></span>
                 {Desk.display_name(@selected.customer)}
               </p>
               <p
@@ -324,6 +356,13 @@ defmodule MercatorWeb.Admin.DeskLive do
             </button>
           </.form>
         </section>
+
+        <.customer_context
+          :if={@selected}
+          conversation={@selected}
+          context={@context}
+          locale={@locale}
+        />
       </div>
     </Layouts.admin>
 
@@ -357,6 +396,75 @@ defmodule MercatorWeb.Admin.DeskLive do
         updated() { this.el.scrollTop = this.el.scrollHeight }
       }
     </script>
+    """
+  end
+
+  attr :conversation, :map, required: true
+  attr :context, :map, required: true
+  attr :locale, :string, required: true
+
+  # what the consultant knows about the customer (guided selling step 3)
+  defp customer_context(assigns) do
+    ~H"""
+    <aside class="space-y-4 lg:col-span-2 2xl:col-span-1" id="customer-context">
+      <div class="card bg-base-100 shadow-sm">
+        <div class="card-body gap-1 p-4 text-sm">
+          <h2 class="font-semibold">{gettext("Now on")}</h2>
+          <a
+            :if={@conversation.current_page}
+            href={@conversation.current_page}
+            target="_blank"
+            class="link break-all"
+            id="customer-page"
+          >
+            {@conversation.current_page}
+          </a>
+          <p :if={!@context.online?} class="text-base-content/60">
+            {gettext("The customer is not in the shop right now.")}
+          </p>
+        </div>
+      </div>
+
+      <div class="card bg-base-100 shadow-sm" id="customer-basket">
+        <div class="card-body gap-2 p-4 text-sm">
+          <h2 class="font-semibold">{gettext("Basket")}</h2>
+          <p :if={!@context.basket or @context.basket.lines == []} class="text-base-content/60">
+            {gettext("Empty.")}
+          </p>
+          <ul :if={@context.basket} class="space-y-1">
+            <li :for={line <- @context.basket.lines} class="flex justify-between gap-2">
+              <span class="min-w-0">
+                {Format.quantity(line.item.quantity, line.variant.unit, @locale)}
+                {Mercator.Catalog.Unit.symbol(line.variant.unit)}
+                {Mercator.Translated.t(line.product.title, @locale)}
+              </span>
+              <span class="whitespace-nowrap">{line.gross && Format.money(line.gross, @locale)}</span>
+            </li>
+          </ul>
+          <p
+            :if={@context.basket && @context.basket.lines != []}
+            class="flex justify-between border-t border-base-200 pt-1 font-semibold"
+          >
+            <span>{gettext("Total")}</span>
+            <span>{Format.money(@context.basket.gross, @locale)}</span>
+          </p>
+        </div>
+      </div>
+
+      <div class="card bg-base-100 shadow-sm" id="customer-orders">
+        <div class="card-body gap-2 p-4 text-sm">
+          <h2 class="font-semibold">{gettext("Orders")}</h2>
+          <p :if={@context.orders == []} class="text-base-content/60">{gettext("None.")}</p>
+          <ul class="space-y-1">
+            <li :for={order <- @context.orders} class="flex justify-between gap-2">
+              <.link navigate={~p"/admin/orders/#{order.number}"} class="link">{order.number}</.link>
+              <span class="text-base-content/60">{Format.date(order.inserted_at)}</span>
+              <span class="whitespace-nowrap">{Format.money(order.gross, @locale)}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </aside>
     """
   end
 
