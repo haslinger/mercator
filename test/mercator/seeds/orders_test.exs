@@ -1,8 +1,8 @@
 defmodule Mercator.Seeds.OrdersTest do
   use Mercator.DataCase, async: true
 
-  alias Mercator.{Sales, Seeds}
   alias Mercator.Accounts.User
+  alias Mercator.{Sales, Seeds}
 
   require Ash.Query
 

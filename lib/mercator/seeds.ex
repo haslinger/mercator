@@ -12,7 +12,7 @@ defmodule Mercator.Seeds do
   """
 
   alias Mercator.Accounts.User
-  alias Mercator.Seeds.BiberHolz
+  alias Mercator.Seeds.{BiberHolz, Orders}
 
   require Ash.Query
 
@@ -65,7 +65,7 @@ defmodule Mercator.Seeds do
     users = Enum.map(@demo_users, &ensure_user/1)
     BiberHolz.run()
     ensure_gtc()
-    Mercator.Seeds.Orders.run()
+    Orders.run()
     users
   end
 
