@@ -37,6 +37,9 @@ defmodule Mercator.Sales do
     resource Mercator.Sales.Gtc do
       define :current_gtc, action: :current, not_found_error?: false
       define :create_gtc, action: :create
+      define :update_gtc, action: :update
+      define :destroy_gtc, action: :destroy
+      define :list_gtcs, action: :read, default_options: [query: [sort: [version: :desc]]]
     end
   end
 end

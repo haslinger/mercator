@@ -1,9 +1,10 @@
 defmodule Mercator.Sales.Gtc do
   @moduledoc """
-  General terms and conditions (AGB). Each version is valid from its date;
-  the newest version is the current one. Orders store the version the
-  customer accepted. The text is plain text: paragraphs are separated by a
-  blank line, lines starting with `## ` are headings.
+  General terms and conditions (AGB, #92). Each version is valid from its
+  date; the current one is the newest whose date has come (shop time zone).
+  Orders store the version the customer accepted, so a version in force is
+  never changed: new versions are dated today or later, and only versions
+  not yet in force can be edited or deleted. The text is Markdown.
   """
   use Ash.Resource,
     otp_app: :mercator,
@@ -11,7 +12,10 @@ defmodule Mercator.Sales.Gtc do
     data_layer: AshPostgres.DataLayer,
     authorizers: [Ash.Policy.Authorizer]
 
+  require Ash.Query
+
   alias Mercator.Accounts.Checks.ActorHasRole
+  alias Mercator.Clock
 
   postgres do
     table "gtcs"
@@ -19,22 +23,40 @@ defmodule Mercator.Sales.Gtc do
   end
 
   actions do
-    defaults [:read, :destroy]
+    defaults [:read]
 
     create :create do
       primary? true
       accept [:version, :text]
+      validate {Mercator.Sales.Validations.GtcNotInForce, field: :version}
     end
 
     update :update do
       primary? true
-      accept [:text]
+      require_atomic? false
+      accept [:version, :text]
+      validate {Mercator.Sales.Validations.GtcNotInForce, field: :version}
+      validate {Mercator.Sales.Validations.GtcNotInForce, data: true}
+    end
+
+    destroy :destroy do
+      primary? true
+      require_atomic? false
+      validate {Mercator.Sales.Validations.GtcNotInForce, data: true}
     end
 
     read :current do
-      description "The newest version."
+      description "The version in force: the newest whose date has come."
       get? true
-      prepare build(sort: [version: :desc], limit: 1)
+
+      prepare fn query, _context ->
+        today = Clock.today()
+
+        query
+        |> Ash.Query.filter(version <= ^today)
+        |> Ash.Query.sort(version: :desc)
+        |> Ash.Query.limit(1)
+      end
     end
   end
 

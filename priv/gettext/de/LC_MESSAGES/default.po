@@ -137,7 +137,7 @@ msgstr "Mein Konto"
 #: lib/mercator_web/live/admin/tax_class_live.ex:151
 #: lib/mercator_web/live/admin/user_index_live.ex:40
 #: lib/mercator_web/live/category_live.ex:258
-#: lib/mercator_web/live/contact_form_component.ex:82
+#: lib/mercator_web/live/contact_form_component.ex:91
 #, elixir-autogen, elixir-format
 msgid "Name"
 msgstr "Name"
@@ -165,6 +165,7 @@ msgstr "Neues Passwort wiederholen"
 #: lib/mercator_web/live/account_live.ex:63
 #: lib/mercator_web/live/addresses_live.ex:209
 #: lib/mercator_web/live/admin/category_tree_live.ex:309
+#: lib/mercator_web/live/admin/gtc_live.ex:193
 #: lib/mercator_web/live/admin/media_live.ex:347
 #: lib/mercator_web/live/admin/page_edit_live.ex:478
 #: lib/mercator_web/live/admin/product_configurator_tab.ex:225
@@ -219,6 +220,7 @@ msgstr "Kundinnen und Kunden haben keine Rolle. Mitarbeitende können mehrere Ro
 
 #: lib/mercator_web/live/addresses_live.ex:159
 #: lib/mercator_web/live/admin/category_tree_live.ex:198
+#: lib/mercator_web/live/admin/gtc_live.ex:151
 #: lib/mercator_web/live/admin/page_edit_live.ex:428
 #: lib/mercator_web/live/admin/page_tree_live.ex:254
 #: lib/mercator_web/live/admin/product_variants_tab.ex:224
@@ -228,7 +230,7 @@ msgid "Edit"
 msgstr "Bearbeiten"
 
 #: lib/mercator_web/live/admin/user_index_live.ex:39
-#: lib/mercator_web/live/contact_form_component.ex:83
+#: lib/mercator_web/live/contact_form_component.ex:92
 #, elixir-autogen, elixir-format
 msgid "Email"
 msgstr "E-Mail"
@@ -265,7 +267,7 @@ msgstr "Vertriebsleitung"
 msgid "User not found."
 msgstr "Benutzer nicht gefunden."
 
-#: lib/mercator_web/admin_nav.ex:65
+#: lib/mercator_web/admin_nav.ex:69
 #: lib/mercator_web/live/admin/user_edit_live.ex:41
 #: lib/mercator_web/live/admin/user_index_live.ex:19
 #: lib/mercator_web/live/admin/user_index_live.ex:29
@@ -653,7 +655,7 @@ msgstr "%{active} aktiv, %{drafts} Entwürfe"
 msgid "Admin"
 msgstr "Verwaltung"
 
-#: lib/mercator_web/admin_nav.ex:63
+#: lib/mercator_web/admin_nav.ex:67
 #: lib/mercator_web/components/layouts.ex:293
 #, elixir-autogen, elixir-format
 msgid "Administration"
@@ -737,6 +739,7 @@ msgstr "Unterkategorie anlegen"
 
 #: lib/mercator_web/live/addresses_live.ex:208
 #: lib/mercator_web/live/admin/category_tree_live.ex:307
+#: lib/mercator_web/live/admin/gtc_live.ex:192
 #: lib/mercator_web/live/admin/media_live.ex:203
 #: lib/mercator_web/live/admin/media_live.ex:346
 #: lib/mercator_web/live/admin/page_edit_live.ex:540
@@ -773,6 +776,7 @@ msgid "Category saved."
 msgstr "Kategorie gespeichert."
 
 #: lib/mercator_web/live/admin/category_tree_live.ex:313
+#: lib/mercator_web/live/admin/gtc_live.ex:175
 #: lib/mercator_web/live/admin/page_tree_live.ex:203
 #: lib/mercator_web/live/admin/product_index_live.ex:344
 #, elixir-autogen, elixir-format
@@ -1147,6 +1151,7 @@ msgstr "Lagerstand (leer = auf Bestellung)"
 msgid "Unit"
 msgstr "Einheit"
 
+#: lib/mercator_web/live/admin/gtc_live.ex:188
 #: lib/mercator_web/live/admin/product_variants_tab.ex:382
 #, elixir-autogen, elixir-format
 msgid "Valid from"
@@ -1350,6 +1355,7 @@ msgstr "Bitte den Wert prüfen."
 msgid "Shown as filter on category pages"
 msgstr "Wird auf Kategorieseiten als Filter angezeigt"
 
+#: lib/mercator_web/live/admin/gtc_live.ex:190
 #: lib/mercator_web/live/admin/page_edit_live.ex:561
 #: lib/mercator_web/live/admin/page_edit_live.ex:569
 #: lib/mercator_web/live/admin/page_edit_live.ex:580
@@ -1625,7 +1631,7 @@ msgstr "Steuerklasse gelöscht."
 msgid "Tax class saved."
 msgstr "Steuerklasse gespeichert."
 
-#: lib/mercator_web/admin_nav.ex:67
+#: lib/mercator_web/admin_nav.ex:71
 #: lib/mercator_web/live/admin/tax_class_live.ex:19
 #: lib/mercator_web/live/admin/tax_class_live.ex:87
 #, elixir-autogen, elixir-format
@@ -1905,7 +1911,7 @@ msgid "New address"
 msgstr "Neue Adresse"
 
 #: lib/mercator_web/live/addresses_live.ex:194
-#: lib/mercator_web/live/contact_form_component.ex:85
+#: lib/mercator_web/live/contact_form_component.ex:94
 #, elixir-autogen, elixir-format
 msgid "Phone (optional)"
 msgstr "Telefon (optional)"
@@ -2015,7 +2021,11 @@ msgstr "Zahlung"
 msgid "Payment settings saved."
 msgstr "Zahlungseinstellungen gespeichert."
 
+#: lib/mercator_web/admin_nav.ex:62
 #: lib/mercator_web/components/layouts.ex:163
+#: lib/mercator_web/live/admin/gtc_live.ex:23
+#: lib/mercator_web/live/admin/gtc_live.ex:118
+#: lib/mercator_web/live/admin/gtc_live.ex:182
 #: lib/mercator_web/live/gtc_live.ex:19
 #: lib/mercator_web/live/gtc_live.ex:34
 #, elixir-autogen, elixir-format
@@ -2027,6 +2037,8 @@ msgstr "AGB"
 msgid "The terms and conditions have not been published yet."
 msgstr "Die AGB wurden noch nicht veröffentlicht."
 
+#: lib/mercator_web/live/admin/gtc_live.ex:130
+#: lib/mercator_web/live/admin/gtc_live.ex:171
 #: lib/mercator_web/live/gtc_live.ex:38
 #, elixir-autogen, elixir-format
 msgid "Valid from %{date}"
@@ -3212,7 +3224,7 @@ msgstr "Zeigt die veröffentlichte Fassung des gemeinsamen Blocks. Bearbeiten un
 msgid "Start page"
 msgstr "Startseite"
 
-#: lib/mercator_web/live/admin/submission_live.ex:60
+#: lib/mercator_web/live/admin/submission_live.ex:68
 #, elixir-autogen, elixir-format
 msgid "All"
 msgstr "Alle"
@@ -3234,12 +3246,12 @@ msgstr "Kontaktanfragen"
 msgid "Introduction"
 msgstr "Einleitung"
 
-#: lib/mercator_web/live/admin/submission_live.ex:92
+#: lib/mercator_web/live/admin/submission_live.ex:103
 #, elixir-autogen, elixir-format
 msgid "Mark as handled"
 msgstr "Als erledigt markieren"
 
-#: lib/mercator_web/live/contact_form_component.ex:86
+#: lib/mercator_web/live/contact_form_component.ex:99
 #, elixir-autogen, elixir-format
 msgid "Message"
 msgstr "Nachricht"
@@ -3249,37 +3261,92 @@ msgstr "Nachricht"
 msgid "Messages are stored under Contact requests and emailed to the shop address."
 msgstr "Nachrichten werden unter Kontaktanfragen gespeichert und an die Shop-Adresse gemailt."
 
-#: lib/mercator_web/live/admin/submission_live.ex:66
+#: lib/mercator_web/live/admin/submission_live.ex:74
 #, elixir-autogen, elixir-format
 msgid "No contact requests."
 msgstr "Keine Kontaktanfragen."
 
-#: lib/mercator_web/live/admin/submission_live.ex:57
+#: lib/mercator_web/live/admin/submission_live.ex:61
 #, elixir-autogen, elixir-format
 msgid "Open"
 msgstr "Offen"
 
-#: lib/mercator_web/live/admin/submission_live.ex:92
+#: lib/mercator_web/live/admin/submission_live.ex:103
 #, elixir-autogen, elixir-format
 msgid "Reopen"
 msgstr "Wieder öffnen"
 
-#: lib/mercator_web/live/contact_form_component.ex:93
+#: lib/mercator_web/live/contact_form_component.ex:113
 #, elixir-autogen, elixir-format
 msgid "Send message"
 msgstr "Nachricht senden"
 
-#: lib/mercator_web/live/contact_form_component.ex:92
+#: lib/mercator_web/live/contact_form_component.ex:111
 #, elixir-autogen, elixir-format
 msgid "Sending …"
 msgstr "Wird gesendet …"
 
-#: lib/mercator_web/live/contact_form_component.ex:68
+#: lib/mercator_web/live/contact_form_component.ex:77
 #, elixir-autogen, elixir-format
 msgid "Thank you! We have received your message and will get back to you."
 msgstr "Danke! Wir haben Ihre Nachricht erhalten und melden uns bei Ihnen."
 
-#: lib/mercator_web/live/contact_form_component.ex:54
+#: lib/mercator_web/live/contact_form_component.ex:62
 #, elixir-autogen, elixir-format
 msgid "Too many messages. Please try again later or call us."
 msgstr "Zu viele Nachrichten. Bitte versuchen Sie es später noch einmal oder rufen Sie uns an."
+
+#: lib/mercator_web/live/admin/gtc_live.ex:158
+#, elixir-autogen, elixir-format
+msgid "Delete this version?"
+msgstr "Diese Fassung löschen?"
+
+#: lib/mercator_web/live/admin/gtc_live.ex:120
+#, elixir-autogen, elixir-format
+msgid "New version"
+msgstr "Neue Fassung"
+
+#: lib/mercator_web/live/admin/gtc_live.ex:127
+#, elixir-autogen, elixir-format
+msgid "No terms yet."
+msgstr "Noch keine AGB."
+
+#: lib/mercator_web/live/admin/gtc_live.ex:77
+#, elixir-autogen, elixir-format
+msgid "Terms and conditions saved."
+msgstr "AGB gespeichert."
+
+#: lib/mercator_web/live/admin/gtc_live.ex:89
+#, elixir-autogen, elixir-format
+msgid "Version deleted."
+msgstr "Fassung gelöscht."
+
+#: lib/mercator_web/live/admin/gtc_live.ex:124
+#, elixir-autogen, elixir-format
+msgid "Versions in force cannot be changed, because orders refer to them. A new version applies from its date; until then it can still be edited."
+msgstr "Fassungen in Kraft sind unveränderlich, weil Bestellungen auf sie verweisen. Eine neue Fassung gilt ab ihrem Datum; bis dahin kann sie noch bearbeitet werden."
+
+#: lib/mercator_web/live/admin/gtc_live.ex:92
+#, elixir-autogen, elixir-format
+msgid "Versions in force cannot be deleted."
+msgstr "Fassungen in Kraft können nicht gelöscht werden."
+
+#: lib/mercator_web/live/admin/gtc_live.ex:141
+#, elixir-autogen, elixir-format
+msgid "View"
+msgstr "Ansehen"
+
+#: lib/mercator_web/live/admin/gtc_live.ex:133
+#, elixir-autogen, elixir-format
+msgid "in force"
+msgstr "in Kraft"
+
+#: lib/mercator_web/live/admin/gtc_live.ex:137
+#, elixir-autogen, elixir-format
+msgid "replaced"
+msgstr "abgelöst"
+
+#: lib/mercator_web/live/admin/gtc_live.ex:135
+#, elixir-autogen, elixir-format
+msgid "upcoming"
+msgstr "künftig"

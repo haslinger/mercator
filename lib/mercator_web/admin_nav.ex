@@ -58,6 +58,10 @@ defmodule MercatorWeb.AdminNav do
          item(gettext("Media"), ~p"/admin/media", "hero-photo", "media", [
            :contentmanager,
            :administrator
+         ]),
+         item(gettext("Terms and conditions"), ~p"/admin/terms", "hero-scale", "terms", [
+           :contentmanager,
+           :administrator
          ])
        ]},
       {gettext("Administration"),

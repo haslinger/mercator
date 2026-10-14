@@ -83,6 +83,7 @@ defmodule MercatorWeb.Router do
       live "/admin/pages/:id", Admin.PageEditLive
       live "/admin/media", Admin.MediaLive
       live "/admin/submissions", Admin.SubmissionLive
+      live "/admin/terms", Admin.GtcLive
       live "/admin/tax-classes", Admin.TaxClassLive
       live "/admin/users", Admin.UserIndexLive
       live "/admin/users/:id", Admin.UserEditLive
