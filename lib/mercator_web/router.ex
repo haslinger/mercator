@@ -82,6 +82,8 @@ defmodule MercatorWeb.Router do
       live "/admin/desk/:id", Admin.DeskLive
       live "/admin/orders", Admin.OrderIndexLive
       live "/admin/orders/:number", Admin.OrderShowLive
+      live "/admin/offers", Admin.OfferIndexLive
+      live "/admin/offers/:id", Admin.OfferEditLive
       live "/admin/pages", Admin.PageTreeLive, :index
       live "/admin/pages/new", Admin.PageTreeLive, :new
       live "/admin/pages/:id", Admin.PageEditLive

@@ -10,6 +10,7 @@ defmodule Mercator.Consulting.Offers do
   """
   require Ash.Query
 
+  alias Mercator.Accounts.User
   alias Mercator.{Catalog, Translated}
   alias Mercator.Catalog.{Configurator, Variant}
   alias Mercator.Consulting.{Offer, OfferItem, OfferTotals}
@@ -19,9 +20,12 @@ defmodule Mercator.Consulting.Offers do
 
   @doc "Offers for the back office list; `filters` may hold `:state` and `:customer_id`."
   def list(actor, filters \\ %{}, page \\ [limit: 25]) do
-    Offer
-    |> Ash.Query.for_read(:search, Map.take(filters, [:state, :customer_id]), actor: actor)
-    |> Ash.read!(page: page)
+    page =
+      Offer
+      |> Ash.Query.for_read(:search, Map.take(filters, [:state, :customer_id]), actor: actor)
+      |> Ash.read!(page: page)
+
+    %{page | results: Ash.load!(page.results, [:customer, :consultant], authorize?: false)}
   end
 
   @doc "A customer's offers, newest first (for the sales desk)."
@@ -32,17 +36,45 @@ defmodule Mercator.Consulting.Offers do
     |> Ash.read!(page: false)
   end
 
-  @doc "An offer with customer, consultant and items."
+  @doc """
+  An offer with customer, consultant and items. The offer is read with the
+  actor's policies; people and items of a readable offer are loaded
+  without (sales staff may not read user accounts).
+  """
   def get(id, actor) do
     Offer
     |> Ash.Query.filter(id == ^id)
-    |> Ash.Query.load(@loads)
     |> Ash.read_one(actor: actor)
+    |> case do
+      {:ok, %Offer{} = offer} -> Ash.load(offer, @loads, authorize?: false)
+      other -> other
+    end
+  end
+
+  @doc """
+  Customers by email or name, for starting an offer in the back office.
+  Reads without policies (sales staff may not list users), so only call it
+  for staff.
+  """
+  def find_customers(query) do
+    case String.trim(query || "") do
+      "" ->
+        []
+
+      query ->
+        pattern = "%" <> String.replace(query, ~r/[\\%_]/, "\\\\\\0") <> "%"
+
+        User
+        |> Ash.Query.filter(fragment("concat_ws(' ', ?, ?) ILIKE ?", email, name, ^pattern))
+        |> Ash.Query.sort(email: :asc)
+        |> Ash.Query.limit(10)
+        |> Ash.read!(authorize?: false)
+    end
   end
 
   @doc "A new draft offer for a customer, in the customer's language."
   def create(customer_id, actor, attrs \\ %{}) do
-    customer = Ash.get!(Mercator.Accounts.User, customer_id, authorize?: false)
+    customer = Ash.get!(User, customer_id, authorize?: false)
 
     Offer
     |> Ash.Changeset.for_create(

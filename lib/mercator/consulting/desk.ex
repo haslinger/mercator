@@ -10,7 +10,7 @@ defmodule Mercator.Consulting.Desk do
 
   require Ash.Query
 
-  alias Mercator.Consulting.{Conversation, Conversations}
+  alias Mercator.Consulting.{Conversation, Conversations, Offers}
   alias Mercator.Sales.{BasketPricing, Baskets, Order}
 
   @loads [:customer, :consultant, :product]
@@ -20,8 +20,8 @@ defmodule Mercator.Consulting.Desk do
     Conversation
     |> Ash.Query.filter(state == :waiting)
     |> Ash.Query.sort(inserted_at: :asc)
-    |> Ash.Query.load(@loads)
     |> Ash.read!(actor: actor)
+    |> Ash.load!(@loads, authorize?: false)
   end
 
   @doc "Active conversations, newest activity first."
@@ -29,16 +29,28 @@ defmodule Mercator.Consulting.Desk do
     Conversation
     |> Ash.Query.filter(state == :active)
     |> Ash.Query.sort(last_message_at: :desc_nils_last)
-    |> Ash.Query.load(@loads)
     |> Ash.read!(actor: actor)
+    |> Ash.load!(@loads, authorize?: false)
   end
 
-  @doc "A conversation with its messages, for the desk."
+  @doc """
+  A conversation with its messages, for the desk. Conversations are read
+  with the actor's policies; customer, consultant and messages of a
+  readable conversation without (sales staff may not read user accounts).
+  """
   def get(id, actor) do
     Conversation
     |> Ash.Query.filter(id == ^id)
-    |> Ash.Query.load(@loads ++ [messages: Conversations.message_loads()])
     |> Ash.read_one(actor: actor)
+    |> case do
+      {:ok, %Conversation{} = conversation} ->
+        Ash.load(conversation, @loads ++ [messages: Conversations.message_loads()],
+          authorize?: false
+        )
+
+      other ->
+        other
+    end
   end
 
   @doc "The consultant takes (or takes over) a conversation; the customer is told who."
@@ -111,7 +123,7 @@ defmodule Mercator.Consulting.Desk do
   @doc """
   What the consultant sees about the customer (step 3): online status,
   the basket with live prices (`Mercator.Sales.BasketPricing`) and the
-  last orders of a signed-in customer.
+  last orders and offers of a signed-in customer.
   """
   def context(conversation, actor) do
     owner = basket_owner(conversation)
@@ -132,10 +144,16 @@ defmodule Mercator.Consulting.Desk do
         []
       end
 
+    offers =
+      if conversation.customer_id,
+        do: Offers.for_customer(conversation.customer_id, actor),
+        else: []
+
     %{
       online?: MercatorWeb.Presence.customer_online?(conversation.id),
       basket: basket,
-      orders: orders
+      orders: orders,
+      offers: offers
     }
   end
 

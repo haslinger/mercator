@@ -95,7 +95,7 @@ defmodule Mercator.Consulting.Offer do
 
       filter expr(is_nil(^arg(:state)) or state == ^arg(:state))
       filter expr(is_nil(^arg(:customer_id)) or customer_id == ^arg(:customer_id))
-      prepare build(sort: [inserted_at: :desc], load: [:customer, :consultant])
+      prepare build(sort: [inserted_at: :desc])
       pagination offset?: true, countable: true, default_limit: 25, required?: false
     end
 

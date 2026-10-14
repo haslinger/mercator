@@ -30,6 +30,11 @@ defmodule MercatorWeb.AdminNav do
            :sales_manager,
            :administrator
          ]),
+         item(gettext("Offers"), ~p"/admin/offers", "hero-document-currency-euro", "offers", [
+           :sales,
+           :sales_manager,
+           :administrator
+         ]),
          item(gettext("Orders"), ~p"/admin/orders", "hero-shopping-bag", "orders", [
            :sales,
            :sales_manager,

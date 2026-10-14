@@ -8,9 +8,10 @@ defmodule MercatorWeb.Admin.DeskLive do
   use MercatorWeb, :live_view
 
   import MercatorWeb.ConsultingComponents, only: [attachment: 1]
+  import MercatorWeb.OfferComponents, only: [state_badge: 1]
 
   alias Mercator.{Catalog, Content}
-  alias Mercator.Consulting.Desk
+  alias Mercator.Consulting.{Desk, Offer, Offers}
   alias Mercator.Sales.Baskets
   alias MercatorWeb.{Format, Presence}
 
@@ -131,6 +132,16 @@ defmodule MercatorWeb.Admin.DeskLive do
   end
 
   # sharing (step 3, #96): products, links, files of the media library
+  def handle_event("create_offer", _params, socket) do
+    case Offers.create_for_conversation(socket.assigns.selected, socket.assigns.current_user) do
+      {:ok, offer} ->
+        {:noreply, push_navigate(socket, to: ~p"/admin/offers/#{offer.id}")}
+
+      {:error, _error} ->
+        {:noreply, put_flash(socket, :error, gettext("The offer could not be created."))}
+    end
+  end
+
   def handle_event("share_open", %{"kind" => kind}, socket) when kind in ~w(product link file) do
     kind = String.to_existing_atom(kind)
 
@@ -690,6 +701,41 @@ defmodule MercatorWeb.Admin.DeskLive do
             <span>{gettext("Total")}</span>
             <span>{Format.money(@context.basket.gross, @locale)}</span>
           </p>
+        </div>
+      </div>
+
+      <div class="card bg-base-100 shadow-sm" id="customer-offers">
+        <div class="card-body gap-2 p-4 text-sm">
+          <h2 class="flex items-center justify-between font-semibold">
+            {gettext("Offers")}
+            <button
+              :if={@conversation.customer_id}
+              type="button"
+              class="btn btn-primary btn-xs"
+              phx-click="create_offer"
+              id="create-offer"
+            >
+              <.icon name="hero-plus" class="size-3" /> {gettext("New offer")}
+            </button>
+          </h2>
+          <p :if={!@conversation.customer_id} class="text-base-content/60">
+            {gettext("Offers need an account: the customer signs in first.")}
+          </p>
+          <p
+            :if={not is_nil(@conversation.customer_id) and @context.offers == []}
+            class="text-base-content/60"
+          >
+            {gettext("None.")}
+          </p>
+          <ul class="space-y-1">
+            <li :for={offer <- @context.offers} class="flex items-center justify-between gap-2">
+              <.link navigate={~p"/admin/offers/#{offer.id}"} class="link">
+                {Offer.display_number(offer)}
+              </.link>
+              <.state_badge state={offer.state} />
+              <span class="whitespace-nowrap">{Format.money(offer.gross, @locale)}</span>
+            </li>
+          </ul>
         </div>
       </div>
 
