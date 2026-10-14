@@ -3,6 +3,7 @@ defmodule MercatorWeb.Admin.PageAdminLiveTest do
 
   import Phoenix.LiveViewTest
   import Mercator.AccountsFixtures
+  import Mercator.CatalogFixtures
 
   alias Mercator.Content
 
@@ -164,6 +165,58 @@ defmodule MercatorWeb.Admin.PageAdminLiveTest do
 
       # files in use cannot be deleted
       assert {:error, _} = Content.destroy_asset(forest, actor: editor)
+    end
+
+    test "shop blocks show products and categories", %{conn: conn, editor: editor} do
+      wood = category_fixture(name: %{"de" => "Bauholz"}, slug: "bauholz", state: :active)
+      beam = product_fixture(title: %{"de" => "Balken"}, number: "BALKEN", bestseller: true)
+      lath = product_fixture(title: %{"de" => "Latte"}, number: "LATTE")
+      Mercator.Catalog.categorize!(wood.id, lath.id, authorize?: false)
+
+      page = page!(editor)
+      {:ok, view, _html} = live(conn, ~p"/admin/pages/#{page.id}")
+
+      view |> element("#add-block-products") |> render_click()
+      refute has_element?(view, "#block-form select[name='block[category_id]']")
+
+      view |> form("#block-form", %{"block" => %{"source" => "category"}}) |> render_change()
+      assert has_element?(view, "#block-form select[name='block[category_id]']")
+
+      view
+      |> form("#block-form", %{
+        "block" => %{
+          "heading" => %{"de" => "Aus dem Bauholz"},
+          "source" => "category",
+          "category_id" => wood.id
+        }
+      })
+      |> render_submit()
+
+      assert has_element?(view, "#blocks h2", "Aus dem Bauholz")
+      assert has_element?(view, "#blocks", "Latte")
+      refute has_element?(view, "#blocks", "Balken")
+
+      view |> element("#add-block-products") |> render_click()
+      view |> form("#block-form", %{"block" => %{"source" => "bestsellers"}}) |> render_submit()
+      assert has_element?(view, "#blocks", "Balken")
+
+      view |> element("#add-block-categories") |> render_click()
+      view |> form("#block-form", %{"block" => %{"category_ids" => [wood.id]}}) |> render_submit()
+      assert has_element?(view, "#blocks #category-tile-bauholz")
+
+      view |> element("#add-block-call_to_action") |> render_click()
+
+      view
+      |> form("#block-form", %{
+        "block" => %{
+          "headline" => %{"de" => "Beratung gewünscht?"},
+          "button_label" => %{"de" => "Kontakt"},
+          "button_link" => "/pages/kontakt"
+        }
+      })
+      |> render_submit()
+
+      assert has_element?(view, ~s(#blocks a[href="/pages/kontakt"]), "Kontakt")
     end
 
     test "saves settings, publishes, archives; history and restore", %{conn: conn, editor: editor} do

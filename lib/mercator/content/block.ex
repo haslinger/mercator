@@ -14,7 +14,18 @@ defmodule Mercator.Content.Block do
         text_image: [type: Mercator.Content.Blocks.TextImage, tag: :type, tag_value: "text_image"],
         image: [type: Mercator.Content.Blocks.Image, tag: :type, tag_value: "image"],
         gallery: [type: Mercator.Content.Blocks.Gallery, tag: :type, tag_value: "gallery"],
-        download: [type: Mercator.Content.Blocks.Download, tag: :type, tag_value: "download"]
+        download: [type: Mercator.Content.Blocks.Download, tag: :type, tag_value: "download"],
+        products: [type: Mercator.Content.Blocks.Products, tag: :type, tag_value: "products"],
+        categories: [
+          type: Mercator.Content.Blocks.Categories,
+          tag: :type,
+          tag_value: "categories"
+        ],
+        call_to_action: [
+          type: Mercator.Content.Blocks.CallToAction,
+          tag: :type,
+          tag_value: "call_to_action"
+        ]
       ]
     ]
 end

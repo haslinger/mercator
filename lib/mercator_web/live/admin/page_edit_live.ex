@@ -16,7 +16,7 @@ defmodule MercatorWeb.Admin.PageEditLive do
   import MercatorWeb.Admin.PageComponents
 
   alias Ash.Resource.Info
-  alias Mercator.Content
+  alias Mercator.{Catalog, Content}
   alias Mercator.Content.{Asset, Blocks}
   alias Mercator.Translated
   alias MercatorWeb.Format
@@ -31,6 +31,7 @@ defmodule MercatorWeb.Admin.PageEditLive do
          socket
          |> assign(:block_form, nil)
          |> assign(:editing_block, nil)
+         |> assign(:categories, categories())
          |> assign_page(page)}
 
       {:error, _} ->
@@ -39,6 +40,11 @@ defmodule MercatorWeb.Admin.PageEditLive do
          |> put_flash(:error, gettext("Page not found."))
          |> push_navigate(to: ~p"/admin/pages")}
     end
+  end
+
+  defp categories do
+    Catalog.list_categories!(query: [sort: [path: :asc]])
+    |> Enum.filter(&(&1.state == :active))
   end
 
   defp assign_page(socket, page) do
@@ -54,7 +60,7 @@ defmodule MercatorWeb.Admin.PageEditLive do
 
     socket
     |> assign(:page, page)
-    |> assign(:assets, Content.assets_for_blocks(page.blocks))
+    |> assign(:block_data, MercatorWeb.BlockData.load(page.blocks))
     |> assign(:page_title, Translated.t(page.title, socket.assigns.locale))
     |> assign(:versions, versions)
     |> assign(
@@ -130,9 +136,11 @@ defmodule MercatorWeb.Admin.PageEditLive do
         block_params(socket.assigns.editing_block, params["block"] || %{})
       )
 
+    form = to_form(Map.drop(block, ["id", "type"]), as: :block, id: "block-#{block["id"]}")
+
     {:noreply,
      socket
-     |> assign(:editing_block, block)
+     |> assign(editing_block: block, block_form: form)
      |> assign_picker(params["picker_q"] || "")}
   end
 
@@ -370,7 +378,7 @@ defmodule MercatorWeb.Admin.PageEditLive do
                   </div>
                 </div>
                 <div class="p-4">
-                  <.block block={block} locale={@locale} assets={@assets} />
+                  <.block block={block} locale={@locale} data={@block_data} />
                 </div>
               </li>
             </ul>
@@ -459,6 +467,7 @@ defmodule MercatorWeb.Admin.PageEditLive do
               block={@editing_block}
               picker_assets={@picker_assets}
               picker_query={@picker_query}
+              categories={@categories}
               locale={@locale}
             />
             <div class="modal-action">
@@ -477,6 +486,7 @@ defmodule MercatorWeb.Admin.PageEditLive do
   attr :block, :map, required: true
   attr :picker_assets, :list, required: true
   attr :picker_query, :string, required: true
+  attr :categories, :list, required: true
   attr :locale, :string, required: true
 
   defp block_fields(%{type: "text"} = assigns) do
@@ -537,6 +547,94 @@ defmodule MercatorWeb.Admin.PageEditLive do
       label={gettext("Link text (default: the file's title)")}
     />
     """
+  end
+
+  defp block_fields(%{type: "products"} = assigns) do
+    ~H"""
+    <.translated_input field={@form[:heading]} label={gettext("Heading")} />
+    <.input
+      field={@form[:source]}
+      type="select"
+      label={gettext("Products")}
+      options={[
+        {gettext("Bestsellers"), "bestsellers"},
+        {gettext("New arrivals"), "new_arrivals"},
+        {gettext("From a category"), "category"},
+        {gettext("Chosen article numbers"), "numbers"}
+      ]}
+    />
+    <.input
+      :if={to_string(@block["source"]) == "category"}
+      field={@form[:category_id]}
+      type="select"
+      label={gettext("Category (with subcategories)")}
+      options={category_options(@categories, @locale)}
+      prompt={gettext("Choose a category")}
+    />
+    <.input
+      :if={to_string(@block["source"]) == "numbers"}
+      field={@form[:numbers]}
+      label={gettext("Article numbers of the products, separated by commas")}
+    />
+    <.input
+      field={@form[:limit]}
+      type="number"
+      min="1"
+      max="24"
+      label={gettext("Maximum number")}
+    />
+    """
+  end
+
+  defp block_fields(%{type: "categories"} = assigns) do
+    assigns =
+      assign(assigns, :chosen, Enum.map(assigns.block["category_ids"] || [], &to_string/1))
+
+    ~H"""
+    <.translated_input field={@form[:heading]} label={gettext("Heading")} />
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend">
+        {gettext("Categories (none chosen: the main categories)")}
+      </legend>
+      <input type="hidden" name="block[category_ids][]" value="" />
+      <div class="max-h-64 overflow-y-auto">
+        <label
+          :for={category <- @categories}
+          class="label flex text-base-content"
+          style={"padding-left: #{(length(category.path) - 1) * 1.25}rem"}
+        >
+          <input
+            type="checkbox"
+            name="block[category_ids][]"
+            value={category.id}
+            checked={category.id in @chosen}
+            class="checkbox checkbox-sm"
+            id={"block-category-#{category.id}"}
+          />
+          {Translated.t(category.name, @locale)}
+        </label>
+      </div>
+    </fieldset>
+    """
+  end
+
+  defp block_fields(%{type: "call_to_action"} = assigns) do
+    ~H"""
+    <.translated_input field={@form[:headline]} label={gettext("Headline")} />
+    <.translated_input field={@form[:text]} label={gettext("Text")} type="markdown" />
+    <.translated_input field={@form[:button_label]} label={gettext("Button label")} />
+    <.input
+      field={@form[:button_link]}
+      label={gettext("Button link, e.g. /categories/bauholz or /pages/kontakt")}
+    />
+    """
+  end
+
+  defp category_options(categories, locale) do
+    Enum.map(categories, fn category ->
+      {String.duplicate("– ", length(category.path) - 1) <> Translated.t(category.name, locale),
+       category.id}
+    end)
   end
 
   defp picker(assigns),
@@ -624,4 +722,7 @@ defmodule MercatorWeb.Admin.PageEditLive do
   defp block_type_label("image"), do: gettext("Image")
   defp block_type_label("gallery"), do: gettext("Gallery")
   defp block_type_label("download"), do: gettext("Download")
+  defp block_type_label("products"), do: gettext("Products")
+  defp block_type_label("categories"), do: gettext("Categories")
+  defp block_type_label("call_to_action"), do: gettext("Call to action")
 end

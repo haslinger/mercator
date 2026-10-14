@@ -25,7 +25,7 @@ defmodule MercatorWeb.PageLive do
          socket
          |> assign(:page, page)
          |> assign(:content, content)
-         |> assign(:assets, Content.assets_for_blocks(content.blocks))
+         |> assign(:block_data, MercatorWeb.BlockData.load(content.blocks))
          |> assign(:preview?, preview?)
          |> assign(:page_title, Translated.t(content.title, socket.assigns.locale))}
 
@@ -71,7 +71,7 @@ defmodule MercatorWeb.PageLive do
 
       <article class="space-y-8" id="page">
         <h1 class="text-3xl font-bold" id="page-title">{Translated.t(@content.title, @locale)}</h1>
-        <.block :for={block <- @content.blocks} block={block} locale={@locale} assets={@assets} />
+        <.block :for={block <- @content.blocks} block={block} locale={@locale} data={@block_data} />
       </article>
     </Layouts.app>
     """

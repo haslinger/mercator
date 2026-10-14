@@ -1,26 +1,30 @@
 defmodule MercatorWeb.ContentComponents do
   @moduledoc """
   Rendering of CMS blocks (docs/cms-design.md, section 3). Each block type
-  of `Mercator.Content.Block` has one clause of `block/1`. Blocks that show
-  media library files get them from the `assets` map (id => asset, see
-  `Mercator.Content.assets_for_blocks/1`); a missing file is left out.
+  of `Mercator.Content.Block` has one clause of `block/1`. What blocks show
+  besides their own fields (files, products, categories) comes in the
+  `data` map from `MercatorWeb.BlockData.load/1`; missing things are left
+  out.
   """
   use Phoenix.Component
   use Gettext, backend: MercatorWeb.Gettext
 
   import MercatorWeb.MarkdownComponents, only: [markdown: 1]
   import MercatorWeb.CoreComponents, only: [icon: 1]
+  import MercatorWeb.CatalogComponents, only: [product_card: 1, category_tile: 1]
 
   alias Mercator.Content.{Asset, Blocks}
   alias Mercator.Translated
 
   attr :block, Ash.Union, required: true
   attr :locale, :string, required: true
-  attr :assets, :map, default: %{}
+  attr :data, :map, default: %{}, doc: "from MercatorWeb.BlockData.load/1"
 
-  def block(%{block: %Ash.Union{value: value}} = assigns) do
-    assigns = assign(assigns, :b, value)
-    render_block(assigns)
+  def block(%{block: %Ash.Union{value: value}, data: data} = assigns) do
+    assigns
+    |> assign(:b, value)
+    |> assign(:assets, Map.get(data, :assets, %{}))
+    |> render_block()
   end
 
   defp render_block(%{b: %Blocks.Text{}} = assigns) do
@@ -123,6 +127,56 @@ defmodule MercatorWeb.ContentComponents do
         <span class="text-sm text-base-content/60">PDF · {file_size(@document.byte_size)}</span>
       </span>
     </a>
+    """
+  end
+
+  defp render_block(%{b: %Blocks.Products{}} = assigns) do
+    assigns = assign(assigns, :entries, get_in(assigns.data, [:products, assigns.b.id]) || [])
+
+    ~H"""
+    <section :if={@entries != []} class="space-y-4" id={"block-#{@b.id}"}>
+      <h2 :if={t(@b.heading, @locale)} class="text-2xl font-bold">{t(@b.heading, @locale)}</h2>
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div :for={{product, price} <- @entries} class="flex">
+          <.product_card product={product} price={price} locale={@locale} />
+        </div>
+      </div>
+    </section>
+    """
+  end
+
+  defp render_block(%{b: %Blocks.Categories{}} = assigns) do
+    assigns =
+      assign(assigns, :categories, get_in(assigns.data, [:categories, assigns.b.id]) || [])
+
+    ~H"""
+    <section :if={@categories != []} class="space-y-4" id={"block-#{@b.id}"}>
+      <h2 :if={t(@b.heading, @locale)} class="text-2xl font-bold">{t(@b.heading, @locale)}</h2>
+      <div class="grid grid-cols-2 gap-4 md:grid-cols-4">
+        <.category_tile :for={category <- @categories} category={category} locale={@locale} />
+      </div>
+    </section>
+    """
+  end
+
+  defp render_block(%{b: %Blocks.CallToAction{}} = assigns) do
+    ~H"""
+    <section
+      class="flex flex-col items-start gap-4 rounded-box bg-primary p-8 text-primary-content md:flex-row md:items-center"
+      id={"block-#{@b.id}"}
+    >
+      <div class="flex-1 space-y-2">
+        <h2 :if={t(@b.headline, @locale)} class="text-2xl font-bold">{t(@b.headline, @locale)}</h2>
+        <.markdown text={t(@b.text, @locale)} />
+      </div>
+      <a
+        :if={t(@b.button_label, @locale) && @b.button_link}
+        href={@b.button_link}
+        class="btn btn-lg"
+      >
+        {t(@b.button_label, @locale)}
+      </a>
+    </section>
     """
   end
 
