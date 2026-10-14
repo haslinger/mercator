@@ -33,6 +33,15 @@ defmodule Mercator.Content do
       define :archive_page, action: :archive
       define :destroy_page, action: :destroy
     end
+
+    resource Mercator.Content.Asset do
+      define :get_asset, action: :read, get_by: [:id]
+      define :list_assets, action: :read
+      define :search_assets, action: :search
+      define :upload_asset, action: :upload
+      define :update_asset, action: :update
+      define :destroy_asset, action: :destroy
+    end
   end
 
   require Ash.Query
@@ -84,5 +93,13 @@ defmodule Mercator.Content do
   def update_page_blocks(page, fun, actor) do
     blocks = page.blocks |> Enum.map(&Blocks.to_input/1) |> fun.()
     update_page(page, %{blocks: blocks}, actor: actor)
+  end
+
+  @doc "All tags used in the media library, alphabetically."
+  def asset_tags do
+    %{rows: rows} =
+      Mercator.Repo.query!("SELECT DISTINCT unnest(tags) AS tag FROM assets ORDER BY tag")
+
+    List.flatten(rows)
   end
 end
