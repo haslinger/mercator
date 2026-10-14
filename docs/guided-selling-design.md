@@ -1,6 +1,6 @@
 # Guided selling design (phase 6) — draft
 
-Status: **draft, 2026-10-14.** Open questions #94–#101 are in section 6.
+Status: **agreed 2026-10-14** (#94–#101 answered, section 6).
 
 ## 1. Goal
 
@@ -38,8 +38,8 @@ From the models, the sales subsite and the sales process diagram (`mercator.wiki
 - **Assignment (#95):** a new conversation notifies all available consultants (sound + browser notification while the desk is open); the first one to take it gets it. Others can still join or take over.
 - **Conversation view** for the consultant: the chat, and next to it the customer context: **current page** in the shop (live), **basket** contents, previous **orders**, earlier conversations, addresses.
 - **Recommend a product:** search, then post it into the chat as a product card with "In den Warenkorb" (for configurable products with a prepared configuration).
-- **Show a page** (#96, the Rails "cobrowsing"): the consultant sends a page; the customer sees it in the chat and opens it with one click (no remote control of the customer's browser).
-- **Share files:** images and PDFs in the chat.
+- **Share a link** (#96, the Rails "cobrowsing"): a page of the shop or any website, shown as a card in the chat and opened in a new tab.
+- **Share files:** images and PDFs (uploaded, or from the media library) in the chat, with a preview.
 
 ### 3.3 Offers
 
@@ -48,12 +48,12 @@ From the models, the sales subsite and the sales process diagram (`mercator.wiki
 - **States** (AshStateMachine): `draft` → (`pending_approval` →) `sent` → `accepted` / `expired` / `withdrawn`; a sent or expired offer can be **revised** into a new draft version (the history of versions stays).
 - **Approval (#98):** offers whose discount exceeds a limit need a sales manager's approval before they are sent.
 - **Customer side:** sent offers in the account (`/account/offers`) and as a card in the conversation; "Angebot annehmen" puts the items into the basket **at the offer's prices**, and the normal checkout (addresses, shipping, payment, GTC) follows; the order refers to the offer.
-- **PDF (#99):** a printable offer document.
+- **Offer document (#99):** a printable web page; PDF later (#17).
 
 ### 3.4 What we leave out or postpone
 
 - **Audio/video chat (#100):** later, or a link to an external video service.
-- **Feedback on conversations (#101).**
+- Feedback: 1–5 stars and a comment per conversation (#101), part of step 6.
 - Real co-browsing (the consultant sees the customer's screen) – not planned; "current page" and "show a page" cover the common case.
 
 ## 4. Resources (domain `Mercator.Consulting`)
@@ -70,13 +70,13 @@ From the models, the sales subsite and the sales process diagram (`mercator.wiki
 6. Emails: reply notifications for offline customers, offer sent, approval requests; PDF (#99).
 7. Biber Holz demo data: a few conversations and offers.
 
-## 6. Open questions
+## 6. Questions (answered 2026-10-14)
 
-- **#94 Visitors:** may visitors (not signed in) start a conversation, like they can fill a basket? My suggestion: **yes**, tied to their browser session like the basket and moved to their account when they sign in; asking for an email address only if they want an answer by email. Offers need an account.
-- **#95 Assignment:** notify all available consultants and the first one takes it (my suggestion), or assign automatically by order/priority as in Rails (with a ring sequence)? And what happens outside opening hours – a note "we answer tomorrow" with the conversation waiting?
-- **#96 "Cobrowsing":** is "show a page" (the customer opens it with one click) plus the consultant seeing the customer's current page enough?
-- **#97 Emails:** email the customer about a reply when they are not online (with a link back into the conversation)? And email consultants about new conversations when nobody is at the desk?
-- **#98 Approval:** which offers need a sales manager's approval – e.g. a discount above 10 % on an item or the total (configurable)? Or none in the first version?
-- **#99 Offer PDF:** now (with the offer) or later together with invoices (#17)?
-- **#100 Audio/video:** postpone, or a "Video-Termin" link to an external service (e.g. a Jitsi room per conversation)?
-- **#101 Feedback:** should customers be able to rate a conversation (thumbs up/down and a comment)?
+- ~~**#94 Visitors**~~ *(yes)* Visitors start conversations tied to their browser session, like the basket; moved to their account on sign-in. Offers need an account.
+- ~~**#95 Assignment**~~ *(all available consultants are notified, the first one takes it)* The customer sees a **countdown of 2 minutes**; if nobody takes the conversation by then: "Sorry, nobody is available right now – may we contact you?" with a small form for **email or phone** (a callback request). The conversation keeps waiting and can still be taken.
+- ~~**#96 Sharing**~~ It was never meant as screen sharing: the intention was to show e.g. a manual that is online, in an iframe, which was unreliable (many sites forbid being embedded). Now: **links** appear in the chat as a card and open in a new tab; **documents** (PDFs from the media library or uploaded into the chat) show with a preview in the chat. Screen sharing would be nice but goes together with #100.
+- ~~**#97 Emails**~~ *(yes)* Customers get an email about a reply when they are not online; consultants about new conversations when nobody is at the desk.
+- ~~**#98 Approval**~~ *(yes)* A sales manager approves offers with a discount above a configurable limit (default 10 %, per item or overall).
+- ~~**#99 Offer document**~~ *(web page now)* A printable offer page (print styles); a PDF later, together with invoices (#17).
+- ~~**#100 Audio/video**~~ *(postponed)* Note: Elixir WebRTC (`ex_webrtc`, Software Mansion) would allow self-hosted audio, video and screen sharing; some networks then need a TURN relay server.
+- ~~**#101 Feedback**~~ *(yes)* Customers rate a conversation with 1 to 5 stars and an optional comment.

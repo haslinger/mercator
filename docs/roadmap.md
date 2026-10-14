@@ -141,7 +141,7 @@ Customer systems and the modules they mount (the last commit date of each system
 3. **Basket and checkout:** Order/Lineitem state machine, addresses, shipping costs, GTC, prepayment, cash and ATM payment, confirmation mails, PDF.
 4. **Back office:** admin CRUD; productmanager tools (tree, price, property and relation manager).
 5. **CMS:** pages built from blocks, media library, contact form, page history (see [cms-design.md](cms-design.md)). No blog and no podcasts (#82).
-6. **Guided selling:** conversations, realtime chat, the sales desk, product recommendations, offers (see [guided-selling-design.md](guided-selling-design.md), draft with questions #94–#101).
+6. **Guided selling:** conversations, realtime chat, the sales desk, product recommendations, offers (see [guided-selling-design.md](guided-selling-design.md), agreed: #94–#101).
 7. **Integrations:** payment provider (replacing mPAY24, #14). Mesonic, Icecat and Bechlem are out of scope (#15).
 8. **Contracting** module.
 9. **Seed/dummy data** (built up alongside every phase), and go-live.
@@ -287,5 +287,5 @@ Rails sources (#1–#4) and continuing the overview (#5) were answered on 2026-1
 - ~~**#59**~~ *(answered, see Decisions)* Demo images: SVG illustrations, or photos generated externally from a prompt list?
 - ~~**#64–#70**~~ *(answered, see Decisions)* Basket and checkout questions (payment methods, shipping costs, signed-in checkout, delivery countries, order numbers, B2B reverse charge, order email): see [checkout-design.md](checkout-design.md#9-open-questions).
 - ~~**#76–#92**~~ *(answered 2026-10-14)* CMS design questions: see [cms-design.md](cms-design.md#9-questions), including the follow-ups #87–#92.
-- **#94–#101** Guided selling questions (visitors, assignment, cobrowsing, emails, approval, offer PDF, video, feedback): see [guided-selling-design.md](guided-selling-design.md#6-open-questions).
+- ~~**#94–#101**~~ *(answered 2026-10-14)* Guided selling questions: see [guided-selling-design.md](guided-selling-design.md#6-questions-answered-2026-10-14).
 
