@@ -8,7 +8,7 @@ Status: agreed (2026-10-13): all questions in section 9 answered as suggested. B
 - **Checkout:** sign-in, addresses, shipping method, payment method, acceptance of the terms (GTC), review, order.
 - **After the order:** confirmation page and email, order history under "Mein Konto".
 - **Back office:** order list and order detail for staff, with state changes (paid, shipped, cancelled).
-- **Not in phase 3:** online payment (#14, later), offers and guided selling (phase 4 of the roadmap), PDF invoices (#17), ERP connection.
+- **Not in phase 3:** online payment (#14, later), offers and guided selling (phase 4 of the roadmap), PDF order confirmations (#17; no invoices, Mercator is not an accounting system), ERP connection.
 
 ## 2. What changes compared with Rails
 

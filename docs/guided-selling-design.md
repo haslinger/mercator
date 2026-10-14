@@ -48,7 +48,7 @@ From the models, the sales subsite and the sales process diagram (`mercator.wiki
 - **States** (AshStateMachine): `draft` → (`pending_approval` →) `sent` → `accepted` / `expired` / `withdrawn`; a sent or expired offer can be **revised** into a new draft version (the history of versions stays).
 - **Approval (#98):** offers whose discount exceeds a limit need a sales manager's approval before they are sent.
 - **Customer side:** sent offers in the account (`/account/offers`) and as a card in the conversation; "Angebot annehmen" puts the items into the basket **at the offer's prices**, and the normal checkout (addresses, shipping, payment, GTC) follows; the order refers to the offer.
-- **Offer document (#99):** a printable web page; PDF later (#17).
+- **Offer document (#99):** a printable web page; PDF with Typst later (#17).
 
 ### 3.4 What we leave out or postpone
 
@@ -77,6 +77,6 @@ From the models, the sales subsite and the sales process diagram (`mercator.wiki
 - ~~**#96 Sharing**~~ It was never meant as screen sharing: the intention was to show e.g. a manual that is online, in an iframe, which was unreliable (many sites forbid being embedded). Now: **links** appear in the chat as a card and open in a new tab; **documents** (PDFs from the media library or uploaded into the chat) show with a preview in the chat. Screen sharing would be nice but goes together with #100.
 - ~~**#97 Emails**~~ *(yes)* Customers get an email about a reply when they are not online; consultants about new conversations when nobody is at the desk.
 - ~~**#98 Approval**~~ *(yes)* A sales manager approves offers with a discount above a configurable limit (default 10 %, per item or overall).
-- ~~**#99 Offer document**~~ *(web page now)* A printable offer page (print styles); a PDF later, together with invoices (#17).
+- ~~**#99 Offer document**~~ *(web page now)* A printable offer page (print styles); a PDF with Typst later, together with order confirmations (#17).
 - ~~**#100 Audio/video**~~ *(postponed)* Note: Elixir WebRTC (`ex_webrtc`, Software Mansion) would allow self-hosted audio, video and screen sharing; some networks then need a TURN relay server.
 - ~~**#101 Feedback**~~ *(yes)* Customers rate a conversation with 1 to 5 stars and an optional comment.
