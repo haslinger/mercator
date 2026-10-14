@@ -36,7 +36,8 @@ defmodule MercatorWeb.Layouts do
   def app(assigns) do
     ~H"""
     <header class="navbar bg-base-100 shadow-sm px-4 sm:px-6 lg:px-8">
-      <div class="flex-1">
+      <div class="flex-1 gap-1">
+        <.back_button />
         <.link navigate={~p"/"} class="flex items-center gap-3" id="brand">
           <img src={~p"/brand/pin"} alt="" class="h-10 w-auto" id="brand-pin" />
           <span class="text-xl font-bold text-primary">{Mercator.Brand.name()}</span>
@@ -153,6 +154,7 @@ defmodule MercatorWeb.Layouts do
             >
               <.icon name="hero-bars-3" class="size-5" />
             </label>
+            <.back_button />
             <.link navigate={~p"/admin"} class="flex items-center gap-2" id="admin-brand">
               <img src={~p"/brand/pin"} alt="" class="h-8 w-auto" />
               <span class="font-bold text-primary">{Mercator.Brand.name()}</span>
@@ -247,6 +249,23 @@ defmodule MercatorWeb.Layouts do
         </li>
       </ul>
     </div>
+    """
+  end
+
+  # Goes back in the history, or to the start page when there is none (e.g. a
+  # freshly opened PWA, which has no browser buttons). See app.js.
+  defp back_button(assigns) do
+    ~H"""
+    <button
+      type="button"
+      class="btn btn-ghost btn-sm btn-square"
+      phx-click={JS.dispatch("mercator:back")}
+      aria-label={gettext("Back")}
+      title={gettext("Back")}
+      id="back-button"
+    >
+      <.icon name="hero-arrow-left" class="size-5" />
+    </button>
     """
   end
 

@@ -34,6 +34,7 @@ defmodule MercatorWeb.Admin.OrderAdminLiveTest do
     test "the sidebar shows orders to sales staff", %{conn: conn} do
       {:ok, view, _html} = live(conn, ~p"/admin")
       assert has_element?(view, ~s(#admin-nav a[href="/admin/orders"]))
+      assert has_element?(view, "#back-button")
     end
   end
 

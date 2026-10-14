@@ -8,6 +8,7 @@ defmodule MercatorWeb.PageControllerTest do
     document = LazyHTML.from_document(html)
 
     assert has?(document, "#home-hero")
+    assert has?(document, ~s(#back-button[aria-label="Zurück"]))
     assert has?(document, "#sign-in-link")
     assert has?(document, "#register-link")
     refute has?(document, "#user-menu")
