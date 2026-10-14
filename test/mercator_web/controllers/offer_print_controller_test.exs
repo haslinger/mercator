@@ -32,6 +32,8 @@ defmodule MercatorWeb.OfferPrintControllerTest do
     assert LazyHTML.text(LazyHTML.query(document, "#offer-gross")) =~ "240,00"
     assert LazyHTML.text(LazyHTML.query(document, "#offer-note")) =~ "Wie besprochen."
     refute html =~ ~s(id="chat-widget")
+    # app.js (print button) needs the token at start
+    assert LazyHTML.query(document, "meta[name=csrf-token]") |> Enum.count() == 1
 
     # nobody else
     assert conn |> log_in_user(customer_fixture()) |> get(path) |> response(404)
