@@ -87,10 +87,10 @@ defmodule MercatorWeb.PageLive do
       flash={@flash}
       current_user={@current_user}
       locale={@locale}
-      nav_categories={@nav_categories}
+      nav={@nav}
       basket_count={@basket_count}
     >
-      <.default_home nav_categories={@nav_categories} locale={@locale} />
+      <.default_home categories={@nav.categories} locale={@locale} />
     </Layouts.app>
     """
   end
@@ -101,7 +101,7 @@ defmodule MercatorWeb.PageLive do
       flash={@flash}
       current_user={@current_user}
       locale={@locale}
-      nav_categories={@nav_categories}
+      nav={@nav}
       basket_count={@basket_count}
     >
       <div :if={@preview?} role="alert" class="alert alert-warning" id="preview-banner">
@@ -125,7 +125,7 @@ defmodule MercatorWeb.PageLive do
   defp starts_with_hero?([%Ash.Union{value: %Blocks.Hero{}} | _]), do: true
   defp starts_with_hero?(_blocks), do: false
 
-  attr :nav_categories, :list, required: true
+  attr :categories, :list, required: true
   attr :locale, :string, required: true
 
   # the start page until a CMS page with the key "home" is published
@@ -150,11 +150,11 @@ defmodule MercatorWeb.PageLive do
       </div>
     </div>
 
-    <section :if={@nav_categories != []} id="home-categories">
+    <section :if={@categories != []} id="home-categories">
       <h2 class="mb-4 text-2xl font-bold">{gettext("Our range")}</h2>
       <div class="grid grid-cols-2 gap-4 md:grid-cols-4">
         <MercatorWeb.CatalogComponents.category_tile
-          :for={category <- @nav_categories}
+          :for={category <- @categories}
           category={category}
           locale={@locale}
         />

@@ -28,7 +28,11 @@ defmodule MercatorWeb.Layouts do
   attr :flash, :map, required: true, doc: "the map of flash messages"
   attr :current_user, :map, default: nil, doc: "the signed-in user, if any"
   attr :locale, :string, default: nil, doc: "the current UI language"
-  attr :nav_categories, :list, default: [], doc: "top-level categories for the main navigation"
+
+  attr :nav, :map,
+    default: %{categories: [], main: [], footer: []},
+    doc: "categories and menu pages, see MercatorWeb.Navigation"
+
   attr :basket_count, :integer, default: 0, doc: "number of items in the basket"
 
   slot :inner_block, required: true
@@ -64,7 +68,9 @@ defmodule MercatorWeb.Layouts do
         >
           <.icon name="hero-magnifying-glass" class="size-5" />
         </.link>
-        <.catalog_menu :if={@nav_categories != []} categories={@nav_categories} locale={@locale} />
+        <div :if={@nav.categories != []} class="md:hidden">
+          <.catalog_menu categories={@nav.categories} locale={@locale} />
+        </div>
         <.link
           navigate={~p"/basket"}
           class="btn btn-ghost btn-sm"
@@ -86,7 +92,7 @@ defmodule MercatorWeb.Layouts do
           <.locale_switch locale={@locale} />
           <.theme_toggle />
         </div>
-        <.more_menu locale={@locale} />
+        <.more_menu locale={@locale} pages={@nav.main} />
         <%= if @current_user do %>
           <.user_menu current_user={@current_user} />
         <% else %>
@@ -110,6 +116,36 @@ defmodule MercatorWeb.Layouts do
       </div>
     </header>
 
+    <%!-- second row (#93): main categories and pages; scrolls on its own if too long --%>
+    <nav
+      :if={@nav.categories != [] or @nav.main != []}
+      class="hidden border-t border-base-200 bg-base-100 shadow-sm md:block"
+      id="main-nav"
+    >
+      <ul class="flex gap-1 overflow-x-auto px-4 py-1 text-sm whitespace-nowrap sm:px-6 lg:px-8">
+        <li :for={category <- @nav.categories}>
+          <.link
+            navigate={~p"/categories/#{category.slug}"}
+            class="btn btn-ghost btn-sm font-normal"
+            id={"main-nav-#{category.slug}"}
+          >
+            {Mercator.Translated.t(category.name, @locale || "de")}
+          </.link>
+        </li>
+        <li :if={@nav.categories != [] and @nav.main != []} class="divider divider-horizontal mx-1">
+        </li>
+        <li :for={page <- @nav.main}>
+          <.link
+            navigate={page_path(page)}
+            class="btn btn-ghost btn-sm font-normal"
+            id={"main-nav-page-#{page.id}"}
+          >
+            {page_title(page, @locale)}
+          </.link>
+        </li>
+      </ul>
+    </nav>
+
     <main class="px-4 py-10 sm:px-6 lg:px-8">
       <div class="mx-auto max-w-5xl space-y-4">
         {render_slot(@inner_block)}
@@ -125,6 +161,14 @@ defmodule MercatorWeb.Layouts do
       <nav>
         <.link navigate={~p"/terms"} class="link link-hover" id="gtc-link">
           {gettext("Terms and conditions")}
+        </.link>
+        <.link
+          :for={page <- @nav.footer}
+          navigate={page_path(page)}
+          class="link link-hover"
+          id={"footer-page-#{page.id}"}
+        >
+          {page_title(page, @locale)}
         </.link>
       </nav>
     </footer>
@@ -275,9 +319,21 @@ defmodule MercatorWeb.Layouts do
     """
   end
 
-  attr :locale, :string, default: nil
+  @doc "The URL of a CMS page: `/` for the start page, otherwise `/pages/…`."
+  def page_path(%{key: "home"}), do: ~p"/"
+  def page_path(page), do: ~p"/pages/#{String.split(page.path, "/")}"
 
-  # Phones and small tablets (#72): language and theme move from the header into this menu.
+  # the published title, which visitors see
+  defp page_title(%{published: %{title: title}}, locale),
+    do: Mercator.Translated.t(title, locale || "de")
+
+  defp page_title(page, locale), do: Mercator.Translated.t(page.title, locale || "de")
+
+  attr :locale, :string, default: nil
+  attr :pages, :list, default: [], doc: "main navigation pages, shown here on phones"
+
+  # Phones and small tablets (#72): menu pages, language and theme move from
+  # the header into this menu.
   defp more_menu(assigns) do
     ~H"""
     <div class="dropdown dropdown-end md:hidden" id="more-menu">
@@ -288,6 +344,13 @@ defmodule MercatorWeb.Layouts do
         tabindex="0"
         class="dropdown-content bg-base-100 rounded-box z-10 mt-2 flex w-56 flex-col gap-3 p-4 shadow"
       >
+        <ul :if={@pages != []} class="menu -mx-2 -mt-2 border-b border-base-200 p-0 pb-2">
+          <li :for={page <- @pages}>
+            <.link navigate={page_path(page)} id={"more-page-#{page.id}"}>
+              {page_title(page, @locale)}
+            </.link>
+          </li>
+        </ul>
         <div class="flex items-center justify-between gap-2">
           <span class="text-sm">{gettext("Language")}</span>
           <.locale_switch locale={@locale} id="more-locale-switch" />

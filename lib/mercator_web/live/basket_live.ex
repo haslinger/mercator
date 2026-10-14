@@ -57,7 +57,7 @@ defmodule MercatorWeb.BasketLive do
       flash={@flash}
       current_user={@current_user}
       locale={@locale}
-      nav_categories={@nav_categories}
+      nav={@nav}
       basket_count={@basket_count}
     >
       <h1 class="text-3xl font-bold">{gettext("Basket")}</h1>

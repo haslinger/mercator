@@ -81,4 +81,31 @@ defmodule MercatorWeb.HomeLiveTest do
       assert has_element?(view, "#page", "Seit 1928.")
     end
   end
+
+  describe "navigation and footer from pages (#93)" do
+    test "published menu pages appear in the second row, the ⋯ menu and the footer", %{conn: conn} do
+      editor = user_fixture(roles: [:contentmanager])
+
+      page = fn title, menu ->
+        Mercator.Content.create_page!(%{title: %{"de" => title}, menu: menu}, actor: editor)
+      end
+
+      about = page.("Unser Betrieb", :main) |> Mercator.Content.publish_page!(actor: editor)
+      imprint = page.("Impressum", :footer) |> Mercator.Content.publish_page!(actor: editor)
+      draft = page.("Entwurf", :main)
+
+      {:ok, view, _html} = live(conn, ~p"/")
+
+      assert has_element?(view, ~s(#main-nav a[href="/pages/unser-betrieb"]), "Unser Betrieb")
+      assert has_element?(view, ~s(#more-menu a[href="/pages/unser-betrieb"]))
+      assert has_element?(view, ~s(footer a[href="/pages/impressum"]), "Impressum")
+      refute has_element?(view, "#main-nav-page-#{draft.id}")
+
+      # visitors see the published title, not the working copy
+      Mercator.Content.update_page!(about, %{title: %{"de" => "Wir"}}, actor: editor)
+      {:ok, view, _html} = live(conn, ~p"/pages/impressum")
+      assert has_element?(view, "#main-nav-page-#{about.id}", "Unser Betrieb")
+      assert has_element?(view, "#footer-page-#{imprint.id}")
+    end
+  end
 end

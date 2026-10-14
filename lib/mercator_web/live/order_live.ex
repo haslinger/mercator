@@ -35,7 +35,7 @@ defmodule MercatorWeb.OrderLive do
       flash={@flash}
       current_user={@current_user}
       locale={@locale}
-      nav_categories={@nav_categories}
+      nav={@nav}
       basket_count={@basket_count}
     >
       <.link navigate={~p"/account/orders"} class="link link-hover text-sm w-fit" id="back-to-orders">
