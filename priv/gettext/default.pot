@@ -164,6 +164,7 @@ msgstr ""
 #: lib/mercator_web/live/account_live.ex:63
 #: lib/mercator_web/live/addresses_live.ex:209
 #: lib/mercator_web/live/admin/category_tree_live.ex:309
+#: lib/mercator_web/live/admin/media_live.ex:328
 #: lib/mercator_web/live/admin/page_edit_live.ex:368
 #: lib/mercator_web/live/admin/product_configurator_tab.ex:225
 #: lib/mercator_web/live/admin/product_configurator_tab.ex:422
@@ -262,7 +263,7 @@ msgstr ""
 msgid "User not found."
 msgstr ""
 
-#: lib/mercator_web/admin_nav.ex:54
+#: lib/mercator_web/admin_nav.ex:58
 #: lib/mercator_web/live/admin/user_edit_live.ex:41
 #: lib/mercator_web/live/admin/user_index_live.ex:19
 #: lib/mercator_web/live/admin/user_index_live.ex:29
@@ -648,7 +649,7 @@ msgstr ""
 msgid "Admin"
 msgstr ""
 
-#: lib/mercator_web/admin_nav.ex:52
+#: lib/mercator_web/admin_nav.ex:56
 #: lib/mercator_web/components/layouts.ex:249
 #, elixir-autogen, elixir-format
 msgid "Administration"
@@ -731,6 +732,8 @@ msgstr ""
 
 #: lib/mercator_web/live/addresses_live.ex:208
 #: lib/mercator_web/live/admin/category_tree_live.ex:307
+#: lib/mercator_web/live/admin/media_live.ex:194
+#: lib/mercator_web/live/admin/media_live.ex:327
 #: lib/mercator_web/live/admin/page_edit_live.ex:415
 #: lib/mercator_web/live/admin/page_tree_live.ex:143
 #: lib/mercator_web/live/admin/product_configurator_tab.ex:419
@@ -773,6 +776,7 @@ msgstr ""
 
 #: lib/mercator_web/live/addresses_live.ex:169
 #: lib/mercator_web/live/admin/category_tree_live.ex:209
+#: lib/mercator_web/live/admin/media_live.ex:325
 #: lib/mercator_web/live/admin/page_edit_live.ex:328
 #: lib/mercator_web/live/admin/page_tree_live.ex:208
 #, elixir-autogen, elixir-format
@@ -1019,6 +1023,7 @@ msgstr ""
 msgid "Texts"
 msgstr ""
 
+#: lib/mercator_web/live/admin/media_live.ex:302
 #: lib/mercator_web/live/admin/page_edit_live.ex:348
 #: lib/mercator_web/live/admin/page_tree_live.ex:137
 #: lib/mercator_web/live/admin/product_edit_live.ex:305
@@ -1217,6 +1222,7 @@ msgstr ""
 msgid "Drop images here or click to choose"
 msgstr ""
 
+#: lib/mercator_web/live/admin/media_live.ex:240
 #: lib/mercator_web/live/admin/product_edit_live.ex:285
 #, elixir-autogen, elixir-format
 msgid "Images"
@@ -1242,21 +1248,25 @@ msgstr ""
 msgid "Only JPEG, PNG or WebP images."
 msgstr ""
 
+#: lib/mercator_web/live/admin/media_live.ex:343
 #: lib/mercator_web/live/admin/product_images_tab.ex:212
 #, elixir-autogen, elixir-format
 msgid "The file is too large."
 msgstr ""
 
+#: lib/mercator_web/live/admin/media_live.ex:345
 #: lib/mercator_web/live/admin/product_images_tab.ex:214
 #, elixir-autogen, elixir-format
 msgid "Too many files at once."
 msgstr ""
 
+#: lib/mercator_web/live/admin/media_live.ex:212
 #: lib/mercator_web/live/admin/product_images_tab.ex:159
 #, elixir-autogen, elixir-format
 msgid "Upload"
 msgstr ""
 
+#: lib/mercator_web/live/admin/media_live.ex:346
 #: lib/mercator_web/live/admin/product_images_tab.ex:215
 #, elixir-autogen, elixir-format
 msgid "Upload failed."
@@ -1603,7 +1613,7 @@ msgstr ""
 msgid "Tax class saved."
 msgstr ""
 
-#: lib/mercator_web/admin_nav.ex:56
+#: lib/mercator_web/admin_nav.ex:60
 #: lib/mercator_web/live/admin/tax_class_live.ex:19
 #: lib/mercator_web/live/admin/tax_class_live.ex:87
 #, elixir-autogen, elixir-format
@@ -2854,4 +2864,111 @@ msgstr ""
 #, elixir-autogen, elixir-format
 msgctxt "page state"
 msgid "Published"
+msgstr ""
+
+#: lib/mercator_web/live/admin/media_live.ex:103
+#, elixir-autogen, elixir-format
+msgid "1 file is neither an image nor a PDF."
+msgid_plural "%{count} files are neither images nor PDFs."
+msgstr[0] ""
+msgstr[1] ""
+
+#: lib/mercator_web/live/admin/media_live.ex:109
+#, elixir-autogen, elixir-format
+msgid "1 file uploaded."
+msgid_plural "%{count} files uploaded."
+msgstr[0] ""
+msgstr[1] ""
+
+#: lib/mercator_web/live/admin/media_live.ex:239
+#, elixir-autogen, elixir-format
+msgid "All files"
+msgstr ""
+
+#: lib/mercator_web/live/admin/media_live.ex:235
+#, elixir-autogen, elixir-format
+msgid "All tags"
+msgstr ""
+
+#: lib/mercator_web/live/admin/media_live.ex:306
+#, elixir-autogen, elixir-format
+msgid "Alternative text"
+msgstr ""
+
+#: lib/mercator_web/live/admin/media_live.ex:321
+#, elixir-autogen, elixir-format
+msgid "Delete this file?"
+msgstr ""
+
+#: lib/mercator_web/live/admin/media_live.ex:175
+#, elixir-autogen, elixir-format
+msgid "Drop images or PDFs here or click to choose"
+msgstr ""
+
+#: lib/mercator_web/live/admin/media_live.ex:145
+#, elixir-autogen, elixir-format
+msgid "File deleted."
+msgstr ""
+
+#: lib/mercator_web/live/admin/media_live.ex:290
+#, elixir-autogen, elixir-format
+msgid "For Markdown texts"
+msgstr ""
+
+#: lib/mercator_web/live/admin/media_live.ex:177
+#, elixir-autogen, elixir-format
+msgid "JPEG, PNG, WebP or PDF, up to 20 MB each. Images are converted to WebP."
+msgstr ""
+
+#: lib/mercator_web/admin_nav.ex:51
+#: lib/mercator_web/live/admin/media_live.ex:24
+#: lib/mercator_web/live/admin/media_live.ex:159
+#, elixir-autogen, elixir-format
+msgid "Media"
+msgstr ""
+
+#: lib/mercator_web/live/admin/media_live.ex:245
+#, elixir-autogen, elixir-format
+msgid "No files found."
+msgstr ""
+
+#: lib/mercator_web/live/admin/media_live.ex:344
+#, elixir-autogen, elixir-format
+msgid "Only images (JPEG, PNG, WebP) or PDFs."
+msgstr ""
+
+#: lib/mercator_web/live/admin/media_live.ex:288
+#, elixir-autogen, elixir-format
+msgid "Open file"
+msgstr ""
+
+#: lib/mercator_web/live/admin/media_live.ex:241
+#, elixir-autogen, elixir-format
+msgid "PDFs"
+msgstr ""
+
+#: lib/mercator_web/live/admin/media_live.ex:80
+#, elixir-autogen, elixir-format
+msgid "Please enter at least one tag."
+msgstr ""
+
+#: lib/mercator_web/live/admin/media_live.ex:130
+#, elixir-autogen, elixir-format
+msgid "Saved."
+msgstr ""
+
+#: lib/mercator_web/live/admin/media_live.ex:201
+#: lib/mercator_web/live/admin/media_live.ex:311
+#, elixir-autogen, elixir-format
+msgid "Tags (comma-separated, at least one)"
+msgstr ""
+
+#: lib/mercator_web/live/admin/media_live.ex:149
+#, elixir-autogen, elixir-format
+msgid "The file is used on a page and cannot be deleted."
+msgstr ""
+
+#: lib/mercator_web/live/admin/media_live.ex:229
+#, elixir-autogen, elixir-format
+msgid "Title, file name or tag"
 msgstr ""

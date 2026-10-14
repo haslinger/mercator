@@ -78,6 +78,7 @@ defmodule MercatorWeb.Router do
       live "/admin/pages", Admin.PageTreeLive, :index
       live "/admin/pages/new", Admin.PageTreeLive, :new
       live "/admin/pages/:id", Admin.PageEditLive
+      live "/admin/media", Admin.MediaLive
       live "/admin/tax-classes", Admin.TaxClassLive
       live "/admin/users", Admin.UserIndexLive
       live "/admin/users/:id", Admin.UserEditLive
