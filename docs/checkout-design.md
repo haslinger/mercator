@@ -67,7 +67,7 @@ placed ─► confirmed ─► paid ─► shipped ─► completed
 - **placed:** the customer has ordered; confirmation email sent.
 - **confirmed:** staff have checked it (e.g. freight costs, delivery date for made-to-order items).
 - **paid:** payment received. With prepayment that comes before shipping; with invoice after.
-- **shipped / completed:** picked up or delivered.
+- **shipped / completed:** shipped or delivered; for pickup orders **shipped** means ready for pickup (#75) and **completed** picked up.
 - **cancelled:** with a reason.
 - Stock is reduced when the order is placed (for variants with tracked stock, #54) and restored on cancellation.
 

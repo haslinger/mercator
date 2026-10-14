@@ -3,8 +3,8 @@ defmodule Mercator.Sales.Changes.RecordStateChange do
   Writes a `Mercator.Sales.OrderEvent` for a state transition, with the
   action's `note` argument and the acting staff member, and emails the
   customer about confirmation, shipping and cancellation (#74) unless the
-  `notify` argument is false. Pickup orders get no shipping email: for them
-  "shipped" means picked up.
+  `notify` argument is false. For pickup orders "shipped" means ready for
+  pickup (#75).
   """
   use Ash.Resource.Change
 
@@ -19,7 +19,7 @@ defmodule Mercator.Sales.Changes.RecordStateChange do
     user_id = context.actor && context.actor.id
 
     Ash.Changeset.after_action(changeset, fn _changeset, order ->
-      notify? = notify? and email?(order)
+      notify? = notify? and order.state in email_states()
 
       event =
         OrderEvent
@@ -39,6 +39,6 @@ defmodule Mercator.Sales.Changes.RecordStateChange do
     end)
   end
 
-  defp email?(%{state: :shipped, shipping_method: :pickup}), do: false
-  defp email?(%{state: state}), do: state in [:confirmed, :shipped, :cancelled]
+  @doc "States the customer is emailed about."
+  def email_states, do: [:confirmed, :shipped, :cancelled]
 end

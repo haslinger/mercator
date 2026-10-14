@@ -45,7 +45,11 @@ defmodule MercatorWeb.OrderLive do
         <h1 class="text-3xl font-bold" id="order-number">
           {gettext("Order %{number}", number: @order.number)}
         </h1>
-        <.state_badge state={@order.state} id="order-state" />
+        <.state_badge
+          state={@order.state}
+          shipping_method={@order.shipping_method}
+          id="order-state"
+        />
       </div>
       <p class="text-sm text-base-content/70">
         {gettext("Ordered on %{date}", date: Format.date(@order.inserted_at))}

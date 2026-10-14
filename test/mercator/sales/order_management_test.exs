@@ -220,22 +220,32 @@ defmodule Mercator.Sales.OrderManagementTest do
       assert email.text_body =~ "Nicht lieferbar"
     end
 
-    test "no email when staff opt out or a pickup order is picked up", %{
+    test "no email when staff opt out", %{board: board, sales: sales, customer: customer} do
+      order = order_fixture(customer, board)
+      order = Sales.confirm_order!(order, %{notify: false}, actor: sales)
+
+      refute event(order, sales, :confirmed).customer_notified
+      refute_enqueued worker: SendOrderStatusEmail
+    end
+
+    test "pickup orders are reported ready for pickup (#75)", %{
       board: board,
       sales: sales,
       customer: customer
     } do
-      order = order_fixture(customer, board)
-      order = Sales.confirm_order!(order, %{notify: false}, actor: sales)
-      refute event(order, sales, :confirmed).customer_notified
+      _ = emails()
 
       pickup =
         customer
         |> order_fixture(board, %{"shipping_method" => "pickup", "payment_method" => "on_pickup"})
         |> Sales.ship_order!(actor: sales)
 
-      refute event(pickup, sales, :shipped).customer_notified
-      refute_enqueued worker: SendOrderStatusEmail
+      shipped = event(pickup, sales, :shipped)
+      assert shipped.customer_notified
+      assert :ok = perform_job(SendOrderStatusEmail, %{event_id: shipped.id})
+      [email] = emails()
+      assert email.subject =~ "liegt zur Abholung bereit"
+      assert email.text_body =~ "bar oder mit Karte"
     end
   end
 end

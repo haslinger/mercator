@@ -10,6 +10,7 @@ defmodule MercatorWeb.Admin.OrderShowLive do
   import MercatorWeb.OrderComponents
 
   alias Mercator.Sales
+  alias Mercator.Sales.Changes.RecordStateChange
   alias Mercator.Sales.Payment
   alias MercatorWeb.Format
 
@@ -53,6 +54,7 @@ defmodule MercatorWeb.Admin.OrderShowLive do
   defp assign_order(socket, order) do
     socket
     |> assign(:order, order)
+    |> assign(:email_states, RecordStateChange.email_states())
     |> assign(
       :next_states,
       Enum.filter(
@@ -80,7 +82,10 @@ defmodule MercatorWeb.Admin.OrderShowLive do
 
       {:noreply,
        socket
-       |> put_flash(:info, gettext("Order is now: %{state}", state: state_label(state)))
+       |> put_flash(
+         :info,
+         gettext("Order is now: %{state}", state: state_label(state, order.shipping_method))
+       )
        |> assign_order(order)}
     else
       {:error, message} when is_binary(message) ->
@@ -132,7 +137,12 @@ defmodule MercatorWeb.Admin.OrderShowLive do
       </.link>
       <div class="flex flex-wrap items-baseline justify-between gap-2">
         <h1 class="text-3xl font-bold" id="order-number">{@order.number}</h1>
-        <.state_badge state={@order.state} id="order-state" class="badge-lg" />
+        <.state_badge
+          state={@order.state}
+          shipping_method={@order.shipping_method}
+          id="order-state"
+          class="badge-lg"
+        />
       </div>
       <p class="text-sm text-base-content/70">
         {gettext("Ordered on %{date}",
@@ -198,6 +208,7 @@ defmodule MercatorWeb.Admin.OrderShowLive do
                   )}
                 </p>
                 <.input
+                  :if={Enum.any?(@next_states, &(&1 in @email_states))}
                   field={@form[:notify]}
                   type="checkbox"
                   label={gettext("Inform the customer by email")}
@@ -214,7 +225,7 @@ defmodule MercatorWeb.Admin.OrderShowLive do
                     ]}
                     id={"to-#{state}"}
                   >
-                    {action_label(state)}
+                    {action_label(state, @order.shipping_method)}
                   </button>
                 </div>
               </.form>
@@ -239,7 +250,9 @@ defmodule MercatorWeb.Admin.OrderShowLive do
                   <hr />
                   <div class="timeline-middle"><.icon name="hero-check-circle" class="size-4" /></div>
                   <div class="timeline-end mb-3">
-                    <p class="text-sm font-semibold">{state_label(event.to_state)}</p>
+                    <p class="text-sm font-semibold">
+                      {state_label(event.to_state, @order.shipping_method)}
+                    </p>
                     <p class="text-xs text-base-content/70">
                       {Format.datetime(event.inserted_at)}
                       <span :if={event.user}>· {event.user.name || event.user.email}</span>
@@ -260,9 +273,10 @@ defmodule MercatorWeb.Admin.OrderShowLive do
     """
   end
 
-  defp action_label(:confirmed), do: gettext("Confirm")
-  defp action_label(:paid), do: gettext("Mark as paid")
-  defp action_label(:shipped), do: gettext("Mark as shipped")
-  defp action_label(:completed), do: gettext("Complete")
-  defp action_label(:cancelled), do: gettext("Cancel order")
+  defp action_label(:confirmed, _shipping_method), do: gettext("Confirm")
+  defp action_label(:paid, _shipping_method), do: gettext("Mark as paid")
+  defp action_label(:shipped, :pickup), do: gettext("Report ready for pickup")
+  defp action_label(:shipped, _shipping_method), do: gettext("Mark as shipped")
+  defp action_label(:completed, _shipping_method), do: gettext("Complete")
+  defp action_label(:cancelled, _shipping_method), do: gettext("Cancel order")
 end

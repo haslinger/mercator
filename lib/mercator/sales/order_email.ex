@@ -59,6 +59,9 @@ defmodule Mercator.Sales.OrderEmail do
   defp status_subject(order, :confirmed),
     do: gettext("Your order %{number} is confirmed", number: order.number)
 
+  defp status_subject(%{shipping_method: :pickup} = order, :shipped),
+    do: gettext("Your order %{number} is ready for pickup", number: order.number)
+
   defp status_subject(order, :shipped),
     do: gettext("Your order %{number} is on its way", number: order.number)
 
@@ -74,6 +77,14 @@ defmodule Mercator.Sales.OrderEmail do
       "",
       "#{gettext("Payment")}: #{Payment.label(order.payment_method)}"
     ] ++ Payment.instructions(order)
+  end
+
+  defp status_lines(%{shipping_method: :pickup} = order, :shipped, _note) do
+    [
+      gettext("Your order %{number} is ready for pickup.", number: order.number),
+      "",
+      delivery(order)
+    ] ++ if(order.payment_method == :on_pickup, do: Payment.instructions(order), else: [])
   end
 
   defp status_lines(order, :shipped, _note) do

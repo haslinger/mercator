@@ -79,6 +79,24 @@ defmodule MercatorWeb.Admin.OrderAdminLiveTest do
       refute has_element?(view, "#to-confirmed")
     end
 
+    test "pickup orders are reported ready for pickup", %{conn: conn, board: board} do
+      order =
+        order_fixture(customer_fixture(), board, %{
+          "shipping_method" => "pickup",
+          "payment_method" => "on_pickup"
+        })
+
+      {:ok, view, _html} = live(conn, ~p"/admin/orders/#{order.number}")
+      assert has_element?(view, "#to-shipped", "Abholbereit melden")
+
+      view |> form("#transition-form") |> render_submit(%{"to" => "shipped"})
+      assert has_element?(view, "#order-state", "Abholbereit")
+      assert has_element?(view, "#order-history", "Kunde informiert")
+
+      # only "completed" is left, which sends no email
+      refute has_element?(view, "#change_notify")
+    end
+
     test "staff can skip the customer email", %{conn: conn, board: board, sales: sales} do
       order = order_fixture(customer_fixture(), board)
       {:ok, view, _html} = live(conn, ~p"/admin/orders/#{order.number}")

@@ -157,7 +157,7 @@ defmodule MercatorWeb.Admin.OrderIndexLive do
                 <div class="text-xs text-base-content/70">{order.email}</div>
               </td>
               <td class="hidden md:table-cell">{Payment.label(order.payment_method)}</td>
-              <td><.state_badge state={order.state} /></td>
+              <td><.state_badge state={order.state} shipping_method={order.shipping_method} /></td>
               <td class="text-right font-semibold whitespace-nowrap">
                 {Format.money(order.gross, @locale)}
               </td>

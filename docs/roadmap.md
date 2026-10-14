@@ -248,6 +248,7 @@ Rails sources (#1–#4) and continuing the overview (#5) were answered on 2026-1
 - **#24** *(note: the DB connection sets `lc_messages=C`, which needs a superuser or `GRANT SET`; on managed databases configure English server messages instead)* Deployment target: where will it run (own server, Fly.io, Docker…)? Should a release or Docker setup be part of the first phase?
 - ~~**#73**~~ *(answered 2026-10-14: yes)* Time zone: `tz` package, shop time zone configurable (`:time_zone`, env `SHOP_TIME_ZONE`, default `Europe/Vienna`), see `Mercator.Clock`.
 - ~~**#74**~~ *(answered 2026-10-14: yes)* Customers get an email when staff confirm, ship or cancel their order (with the reason).
+- ~~**#75**~~ *(answered 2026-10-14: a)* For pickup orders the state `shipped` means **ready for pickup**: button "Abholbereit melden", label "Abholbereit", and an email to the customer with the pickup address (and the payment note for payment on pickup). "Completed" means picked up.
 
 ### Security note
 - ~~**#25**~~ *(answered, see Decisions)* The customer-system repos (`systems/*/config/application.yml`, `database.yml`) contain **plaintext credentials**: DB, Mesonic ERP, mPAY24 merchant, Icecat, Bechlem and secret tokens. In the port, secrets will live only in environment variables or `runtime.exs`. Are any of these credentials still live? If so, they should be rotated, since they are in git history.

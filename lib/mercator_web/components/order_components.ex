@@ -107,22 +107,32 @@ defmodule MercatorWeb.OrderComponents do
   end
 
   attr :state, :atom, required: true
+  attr :shipping_method, :atom, default: nil, doc: "pickup orders say \"ready for pickup\""
   attr :id, :string, default: nil
   attr :class, :string, default: nil
 
   def state_badge(assigns) do
     ~H"""
-    <span class={["badge", state_class(@state), @class]} id={@id}>{state_label(@state)}</span>
+    <span class={["badge", state_class(@state), @class]} id={@id}>
+      {state_label(@state, @shipping_method)}
+    </span>
     """
   end
 
-  @doc "The translated name of an order state."
-  def state_label(:placed), do: pgettext("order state", "Placed")
-  def state_label(:confirmed), do: pgettext("order state", "Confirmed")
-  def state_label(:paid), do: pgettext("order state", "Paid")
-  def state_label(:shipped), do: pgettext("order state", "Shipped")
-  def state_label(:completed), do: pgettext("order state", "Completed")
-  def state_label(:cancelled), do: pgettext("order state", "Cancelled")
+  @doc """
+  The translated name of an order state. For pickup orders the state
+  `:shipped` means "ready for pickup" (#75).
+  """
+  def state_label(state, shipping_method \\ nil)
+  def state_label(:shipped, :pickup), do: pgettext("order state", "Ready for pickup")
+  def state_label(state, _shipping_method), do: state_label_text(state)
+
+  defp state_label_text(:placed), do: pgettext("order state", "Placed")
+  defp state_label_text(:confirmed), do: pgettext("order state", "Confirmed")
+  defp state_label_text(:paid), do: pgettext("order state", "Paid")
+  defp state_label_text(:shipped), do: pgettext("order state", "Shipped")
+  defp state_label_text(:completed), do: pgettext("order state", "Completed")
+  defp state_label_text(:cancelled), do: pgettext("order state", "Cancelled")
 
   @doc "All order states in their usual order."
   def states, do: [:placed, :confirmed, :paid, :shipped, :completed, :cancelled]

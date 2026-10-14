@@ -62,7 +62,7 @@ defmodule MercatorWeb.OrdersLive do
                 </p>
               </div>
               <div class="flex items-center gap-4">
-                <.state_badge state={order.state} />
+                <.state_badge state={order.state} shipping_method={order.shipping_method} />
                 <span class="font-semibold whitespace-nowrap">
                   {Format.money(order.gross, @locale)}
                 </span>
