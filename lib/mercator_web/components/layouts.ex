@@ -42,9 +42,9 @@ defmodule MercatorWeb.Layouts do
           <span class="text-xl font-bold text-primary">{Mercator.Brand.name()}</span>
         </.link>
       </div>
-      <div class="flex-none flex items-center gap-2">
-        <form action={~p"/suche"} method="get" class="hidden md:block" id="navbar-search">
-          <label class="input input-sm w-48 lg:w-64">
+      <div class="flex-none flex items-center gap-0.5 md:gap-2">
+        <form action={~p"/suche"} method="get" class="hidden lg:block" id="navbar-search">
+          <label class="input input-sm w-48 xl:w-64">
             <.icon name="hero-magnifying-glass" class="size-4 opacity-50" />
             <input
               type="search"
@@ -56,7 +56,7 @@ defmodule MercatorWeb.Layouts do
         </form>
         <.link
           navigate={~p"/suche"}
-          class="btn btn-ghost btn-sm md:hidden"
+          class="btn btn-ghost btn-sm lg:hidden"
           aria-label={gettext("Search")}
         >
           <.icon name="hero-magnifying-glass" class="size-5" />
@@ -79,15 +79,28 @@ defmodule MercatorWeb.Layouts do
             </span>
           </div>
         </.link>
-        <.locale_switch locale={@locale} />
-        <.theme_toggle />
+        <div class="hidden items-center gap-2 md:flex">
+          <.locale_switch locale={@locale} />
+          <.theme_toggle />
+        </div>
+        <.more_menu locale={@locale} />
         <%= if @current_user do %>
           <.user_menu current_user={@current_user} />
         <% else %>
-          <.link navigate={~p"/sign-in"} class="btn btn-ghost btn-sm" id="sign-in-link">
-            {gettext("Sign in")}
+          <.link
+            navigate={~p"/sign-in"}
+            class="btn btn-ghost btn-sm"
+            id="sign-in-link"
+            aria-label={gettext("Sign in")}
+          >
+            <.icon name="hero-user-circle" class="size-5 sm:hidden" />
+            <span class="hidden sm:inline">{gettext("Sign in")}</span>
           </.link>
-          <.link navigate={~p"/register"} class="btn btn-primary btn-sm" id="register-link">
+          <.link
+            navigate={~p"/register"}
+            class="btn btn-primary btn-sm hidden md:inline-flex"
+            id="register-link"
+          >
             {gettext("Register")}
           </.link>
         <% end %>
@@ -146,13 +159,16 @@ defmodule MercatorWeb.Layouts do
               <span class="badge badge-neutral badge-sm">{gettext("Admin")}</span>
             </.link>
           </div>
-          <div class="flex-none flex items-center gap-2">
+          <div class="flex-none flex items-center gap-0.5 md:gap-2">
             <.link navigate={~p"/"} class="btn btn-ghost btn-sm" id="to-shop">
               <.icon name="hero-building-storefront" class="size-5" />
               <span class="hidden sm:inline">{gettext("Shop")}</span>
             </.link>
-            <.locale_switch locale={@locale} />
-            <.theme_toggle />
+            <div class="hidden items-center gap-2 md:flex">
+              <.locale_switch locale={@locale} />
+              <.theme_toggle />
+            </div>
+            <.more_menu locale={@locale} />
             <.user_menu current_user={@current_user} />
           </div>
         </header>
@@ -232,15 +248,42 @@ defmodule MercatorWeb.Layouts do
 
   attr :locale, :string, default: nil
 
+  # Phones and small tablets (#72): language and theme move from the header into this menu.
+  defp more_menu(assigns) do
+    ~H"""
+    <div class="dropdown dropdown-end md:hidden" id="more-menu">
+      <div tabindex="0" role="button" class="btn btn-ghost btn-sm" aria-label={gettext("More")}>
+        <.icon name="hero-ellipsis-horizontal" class="size-5" />
+      </div>
+      <div
+        tabindex="0"
+        class="dropdown-content bg-base-100 rounded-box z-10 mt-2 flex w-56 flex-col gap-3 p-4 shadow"
+      >
+        <div class="flex items-center justify-between gap-2">
+          <span class="text-sm">{gettext("Language")}</span>
+          <.locale_switch locale={@locale} id="more-locale-switch" />
+        </div>
+        <div class="flex items-center justify-between gap-2">
+          <span class="text-sm">{gettext("Theme")}</span>
+          <.theme_toggle />
+        </div>
+      </div>
+    </div>
+    """
+  end
+
+  attr :locale, :string, default: nil
+  attr :id, :string, default: "locale-switch"
+
   @doc "Switches the UI language by reloading the current page with `?locale=`."
   def locale_switch(assigns) do
     ~H"""
-    <div class="join" id="locale-switch">
+    <div class="join" id={@id}>
       <a
         :for={locale <- MercatorWeb.Locale.locales()}
         href={"?locale=#{locale}"}
         class={["btn btn-xs join-item", locale == @locale && "btn-active"]}
-        id={"locale-#{locale}"}
+        id={"#{@id}-#{locale}"}
       >
         {String.upcase(locale)}
       </a>
@@ -311,6 +354,7 @@ defmodule MercatorWeb.Layouts do
         class="flex p-2 cursor-pointer w-1/3"
         phx-click={JS.dispatch("phx:set-theme")}
         data-phx-theme="system"
+        aria-label={gettext("System theme")}
       >
         <.icon name="hero-computer-desktop-micro" class="size-4 opacity-75 hover:opacity-100" />
       </button>
@@ -319,6 +363,7 @@ defmodule MercatorWeb.Layouts do
         class="flex p-2 cursor-pointer w-1/3"
         phx-click={JS.dispatch("phx:set-theme")}
         data-phx-theme="light"
+        aria-label={gettext("Light theme")}
       >
         <.icon name="hero-sun-micro" class="size-4 opacity-75 hover:opacity-100" />
       </button>
@@ -327,6 +372,7 @@ defmodule MercatorWeb.Layouts do
         class="flex p-2 cursor-pointer w-1/3"
         phx-click={JS.dispatch("phx:set-theme")}
         data-phx-theme="dark"
+        aria-label={gettext("Dark theme")}
       >
         <.icon name="hero-moon-micro" class="size-4 opacity-75 hover:opacity-100" />
       </button>

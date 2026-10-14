@@ -24,5 +24,14 @@ defmodule MercatorWeb.PageControllerTest do
     refute has?(document, "#sign-in-link")
   end
 
+  test "GET / offers language and theme in a menu for phones (#72)", %{conn: conn} do
+    html = conn |> get(~p"/") |> html_response(200)
+    document = LazyHTML.from_document(html)
+
+    assert has?(document, ~s(#locale-switch a[href="?locale=en"]))
+    assert has?(document, ~s(#more-menu #more-locale-switch a[href="?locale=en"]))
+    assert has?(document, ~s(#more-menu button[data-phx-theme="dark"]))
+  end
+
   defp has?(document, selector), do: document |> LazyHTML.query(selector) |> Enum.any?()
 end

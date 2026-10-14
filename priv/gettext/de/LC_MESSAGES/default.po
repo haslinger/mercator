@@ -21,8 +21,8 @@ msgstr "Aktionen"
 msgid "An account with this email already exists. We've sent a link to that address - confirm it to finish linking this provider to your account."
 msgstr "Ein Konto mit dieser E-Mail-Adresse existiert bereits. Wir haben einen Link an diese Adresse gesendet – bestätigen Sie ihn, um die Verknüpfung abzuschließen."
 
-#: lib/mercator_web/components/layouts.ex:278
-#: lib/mercator_web/components/layouts.ex:293
+#: lib/mercator_web/components/layouts.ex:321
+#: lib/mercator_web/components/layouts.ex:336
 #, elixir-autogen, elixir-format
 msgid "Attempting to reconnect"
 msgstr "Verbindung wird wiederhergestellt"
@@ -32,7 +32,7 @@ msgstr "Verbindung wird wiederhergestellt"
 msgid "Incorrect email or password."
 msgstr "E-Mail oder Passwort ist falsch."
 
-#: lib/mercator_web/components/layouts.ex:91
+#: lib/mercator_web/components/layouts.ex:104
 #, elixir-autogen, elixir-format
 msgid "Register"
 msgstr "Registrieren"
@@ -42,22 +42,23 @@ msgstr "Registrieren"
 msgid "Shop on your own or get advice from our consultants."
 msgstr "Kaufen Sie selbständig ein oder lassen Sie sich von unseren Beraterinnen und Beratern unterstützen."
 
-#: lib/mercator_web/components/layouts.ex:88
+#: lib/mercator_web/components/layouts.ex:94
+#: lib/mercator_web/components/layouts.ex:97
 #, elixir-autogen, elixir-format
 msgid "Sign in"
 msgstr "Anmelden"
 
-#: lib/mercator_web/components/layouts.ex:227
+#: lib/mercator_web/components/layouts.ex:243
 #, elixir-autogen, elixir-format
 msgid "Sign out"
 msgstr "Abmelden"
 
-#: lib/mercator_web/components/layouts.ex:285
+#: lib/mercator_web/components/layouts.ex:328
 #, elixir-autogen, elixir-format
 msgid "Something went wrong!"
 msgstr "Etwas ist schiefgelaufen!"
 
-#: lib/mercator_web/components/layouts.ex:270
+#: lib/mercator_web/components/layouts.ex:313
 #, elixir-autogen, elixir-format
 msgid "We can't find the internet"
 msgstr "Keine Internetverbindung"
@@ -108,13 +109,14 @@ msgstr "Passwort ändern"
 msgid "Current password"
 msgstr "Aktuelles Passwort"
 
+#: lib/mercator_web/components/layouts.ex:263
 #: lib/mercator_web/live/account_live.ex:59
 #: lib/mercator_web/live/admin/user_index_live.ex:42
 #, elixir-autogen, elixir-format
 msgid "Language"
 msgstr "Sprache"
 
-#: lib/mercator_web/components/layouts.ex:220
+#: lib/mercator_web/components/layouts.ex:236
 #: lib/mercator_web/live/account_live.ex:18
 #: lib/mercator_web/live/account_live.ex:33
 #: lib/mercator_web/live/addresses_live.ex:100
@@ -633,13 +635,13 @@ msgstr "netto"
 msgid "%{active} active, %{drafts} drafts"
 msgstr "%{active} aktiv, %{drafts} Entwürfe"
 
-#: lib/mercator_web/components/layouts.ex:146
+#: lib/mercator_web/components/layouts.ex:159
 #, elixir-autogen, elixir-format
 msgid "Admin"
 msgstr "Verwaltung"
 
 #: lib/mercator_web/admin_nav.ex:37
-#: lib/mercator_web/components/layouts.ex:225
+#: lib/mercator_web/components/layouts.ex:241
 #, elixir-autogen, elixir-format
 msgid "Administration"
 msgstr "Verwaltung"
@@ -653,7 +655,7 @@ msgstr "Verwaltung"
 msgid "Categories"
 msgstr "Kategorien"
 
-#: lib/mercator_web/components/layouts.ex:166
+#: lib/mercator_web/components/layouts.ex:182
 #, elixir-autogen, elixir-format
 msgid "Close menu"
 msgstr "Menü schließen"
@@ -665,7 +667,7 @@ msgstr "Menü schließen"
 msgid "Dashboard"
 msgstr "Übersicht"
 
-#: lib/mercator_web/components/layouts.ex:139
+#: lib/mercator_web/components/layouts.ex:152
 #, elixir-autogen, elixir-format
 msgid "Menu"
 msgstr "Menü"
@@ -675,7 +677,7 @@ msgstr "Menü"
 msgid "Overview"
 msgstr "Übersicht"
 
-#: lib/mercator_web/components/layouts.ex:152
+#: lib/mercator_web/components/layouts.ex:165
 #, elixir-autogen, elixir-format
 msgid "Shop"
 msgstr "Shop"
@@ -1586,7 +1588,7 @@ msgstr "Steuerklassen"
 msgid "This tax class is still used by products."
 msgstr "Diese Steuerklasse wird noch von Produkten verwendet."
 
-#: lib/mercator_web/components/layouts.ex:197
+#: lib/mercator_web/components/layouts.ex:213
 #, elixir-autogen, elixir-format
 msgctxt "shop navigation"
 msgid "Products"
@@ -1960,7 +1962,7 @@ msgstr "Zahlung"
 msgid "Payment settings saved."
 msgstr "Zahlungseinstellungen gespeichert."
 
-#: lib/mercator_web/components/layouts.ex:111
+#: lib/mercator_web/components/layouts.ex:124
 #: lib/mercator_web/live/gtc_live.ex:16
 #: lib/mercator_web/live/gtc_live.ex:31
 #, elixir-autogen, elixir-format
@@ -2302,7 +2304,7 @@ msgid_plural "%{count} items"
 msgstr[0] "1 Artikel"
 msgstr[1] "%{count} Artikel"
 
-#: lib/mercator_web/components/layouts.ex:222
+#: lib/mercator_web/components/layouts.ex:238
 #: lib/mercator_web/live/account_live.ex:37
 #: lib/mercator_web/live/order_live.ex:45
 #: lib/mercator_web/live/orders_live.ex:18
@@ -2320,3 +2322,28 @@ msgstr "Zum Sortiment"
 #, elixir-autogen, elixir-format
 msgid "You have not placed any orders yet."
 msgstr "Sie haben noch keine Bestellungen aufgegeben."
+
+#: lib/mercator_web/components/layouts.ex:375
+#, elixir-autogen, elixir-format
+msgid "Dark theme"
+msgstr "Dunkles Farbschema"
+
+#: lib/mercator_web/components/layouts.ex:366
+#, elixir-autogen, elixir-format
+msgid "Light theme"
+msgstr "Helles Farbschema"
+
+#: lib/mercator_web/components/layouts.ex:255
+#, elixir-autogen, elixir-format
+msgid "More"
+msgstr "Mehr"
+
+#: lib/mercator_web/components/layouts.ex:357
+#, elixir-autogen, elixir-format
+msgid "System theme"
+msgstr "Farbschema des Systems"
+
+#: lib/mercator_web/components/layouts.ex:267
+#, elixir-autogen, elixir-format
+msgid "Theme"
+msgstr "Farbschema"
