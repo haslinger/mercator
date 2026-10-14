@@ -276,6 +276,59 @@ defmodule MercatorWeb.Admin.PageAdminLiveTest do
       assert has_element?(view, "#blocks .md\\:grid-cols-2 h3", "Nachhaltig")
     end
 
+    test "shared blocks are maintained once and shown on other pages", %{
+      conn: conn,
+      editor: editor
+    } do
+      text = fn markdown -> [%{type: "text", text: %{"de" => markdown}}] end
+
+      # created from the page list as a shared block
+      {:ok, view, _html} = live(conn, ~p"/admin/pages/new?kind=shared")
+
+      {:ok, _editor, _html} =
+        view
+        |> form("#page-form", form: %{title: %{de: "Öffnungszeiten"}})
+        |> render_submit()
+        |> follow_redirect(conn)
+
+      {:ok, hours} = Content.get_page_by_path("oeffnungszeiten", actor: editor)
+      assert hours.kind == :shared
+
+      hours =
+        hours
+        |> Content.update_page!(%{blocks: text.("Mo–Fr 7–17 Uhr")}, actor: editor)
+        |> Content.publish_page!(actor: editor)
+
+      # never shown at its own URL
+      assert {:error, _} = Content.get_published_page("oeffnungszeiten")
+
+      {:ok, list, _html} = live(conn, ~p"/admin/pages")
+      assert has_element?(list, "#shared-pages #page-#{hours.id}")
+
+      page = page!(editor)
+      {:ok, view, _html} = live(conn, ~p"/admin/pages/#{page.id}")
+      view |> element("#add-block-shared") |> render_click()
+      view |> form("#block-form", %{"block" => %{"page_id" => hours.id}}) |> render_submit()
+      assert has_element?(view, "#blocks", "Mo–Fr 7–17 Uhr")
+
+      view |> element("#publish") |> render_click()
+      {:ok, public, _html} = live(build_conn(), ~p"/pages/saegewerk")
+      assert has_element?(public, "#page", "Mo–Fr 7–17 Uhr")
+
+      # a change of the shared block shows everywhere once it is published
+      hours
+      |> Content.update_page!(%{blocks: text.("Mo–Sa 7–12 Uhr")}, actor: editor)
+      |> Content.publish_page!(actor: editor)
+
+      {:ok, public, _html} = live(build_conn(), ~p"/pages/saegewerk")
+      assert has_element?(public, "#page", "Mo–Sa 7–12 Uhr")
+
+      # no shared blocks inside shared blocks
+      {:ok, view, _html} = live(conn, ~p"/admin/pages/#{hours.id}")
+      refute has_element?(view, "#add-block-shared")
+      refute has_element?(view, "#settings-form select[name='form[menu]']")
+    end
+
     test "saves settings, publishes, archives; history and restore", %{conn: conn, editor: editor} do
       page = page!(editor, blocks: [%{type: "text", text: %{"de" => "Erste Fassung"}}])
       {:ok, view, _html} = live(conn, ~p"/admin/pages/#{page.id}")

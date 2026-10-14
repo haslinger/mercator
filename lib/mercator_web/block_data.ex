@@ -5,7 +5,10 @@ defmodule MercatorWeb.BlockData do
   result is the `data` map of `MercatorWeb.ContentComponents.block/1`:
 
       %{assets: %{id => asset}, products: %{block_id => [{product, price}]},
-        categories: %{block_id => [category]}}
+        categories: %{block_id => [category]}, shared: %{block_id => {blocks, data}}}
+
+  Shared blocks show the published blocks of a shared page; shared blocks
+  inside those are left out (no nesting, no loops).
 
   Products and categories are read as visitors see them (active only).
   """
@@ -15,14 +18,33 @@ defmodule MercatorWeb.BlockData do
   alias Mercator.Catalog.{Category, Listing, Product}
   alias Mercator.Content.Blocks
 
-  def load(blocks) do
+  def load(blocks, nested? \\ false) do
     values = Enum.map(blocks, & &1.value)
 
     %{
       assets: Content.assets_for_blocks(blocks),
       products: for(%Blocks.Products{} = b <- values, into: %{}, do: {b.id, products(b)}),
-      categories: for(%Blocks.Categories{} = b <- values, into: %{}, do: {b.id, categories(b)})
+      categories: for(%Blocks.Categories{} = b <- values, into: %{}, do: {b.id, categories(b)}),
+      shared:
+        if(nested?,
+          do: %{},
+          else: for(%Blocks.Shared{} = b <- values, into: %{}, do: {b.id, shared(b)})
+        )
     }
+  end
+
+  defp shared(%{page_id: nil}), do: nil
+
+  defp shared(%{page_id: page_id}) do
+    case Ash.get(Content.Page, page_id, authorize?: false) do
+      {:ok, %{kind: :shared, state: state, published: %{blocks: blocks}}}
+      when state in [:published, :hidden] ->
+        blocks = Enum.reject(blocks, &match?(%Ash.Union{value: %Blocks.Shared{}}, &1))
+        {blocks, load(blocks, true)}
+
+      _ ->
+        nil
+    end
   end
 
   defp products(block) do

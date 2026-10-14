@@ -196,6 +196,21 @@ defmodule MercatorWeb.ContentComponents do
     """
   end
 
+  defp render_block(%{b: %Blocks.Shared{}} = assigns) do
+    assigns = assign(assigns, :shared, get_in(assigns.data, [:shared, assigns.b.id]))
+
+    ~H"""
+    <div :if={@shared} class="space-y-8" id={"block-#{@b.id}"}>
+      <.block
+        :for={block <- elem(@shared, 0)}
+        block={block}
+        locale={@locale}
+        data={elem(@shared, 1)}
+      />
+    </div>
+    """
+  end
+
   defp render_block(%{b: %Blocks.CallToAction{}} = assigns) do
     ~H"""
     <section

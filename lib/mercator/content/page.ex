@@ -10,6 +10,9 @@ defmodule Mercator.Content.Page do
 
   States: `draft` (never published, only staff), `published`, `hidden`
   (reachable by URL, not in menus), `archived` (offline again).
+
+  Kind `shared`: a set of blocks that other pages embed with a Shared block
+  (e.g. opening hours); never shown at its own URL and not in menus.
   """
   use Ash.Resource,
     otp_app: :mercator,
@@ -65,19 +68,19 @@ defmodule Mercator.Content.Page do
       description "A page visitors can see (published or hidden), by its path."
       argument :path, :string, allow_nil?: false
       get? true
-      filter expr(path == ^arg(:path) and state in [:published, :hidden])
+      filter expr(path == ^arg(:path) and kind == :page and state in [:published, :hidden])
     end
 
     read :menu do
       description "Published pages in a menu (`:main` or `:footer`), in tree order."
       argument :menu, :atom, allow_nil?: false
-      filter expr(menu == ^arg(:menu) and state == :published)
+      filter expr(menu == ^arg(:menu) and kind == :page and state == :published)
       prepare build(sort: [position: :asc, path: :asc])
     end
 
     create :create do
       primary? true
-      accept @content ++ [:slug, :key, :menu, :position, :parent_id]
+      accept @content ++ [:slug, :key, :menu, :position, :parent_id, :kind]
       change {SetSlug, from: :title}
       change SetPagePath
     end
@@ -215,6 +218,14 @@ defmodule Mercator.Content.Page do
       allow_nil? false
       default 0
       public? true
+    end
+
+    attribute :kind, :atom do
+      description "`page`, or `shared`: blocks embedded in other pages."
+      allow_nil? false
+      default :page
+      public? true
+      constraints one_of: [:page, :shared]
     end
 
     timestamps()

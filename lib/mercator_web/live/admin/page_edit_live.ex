@@ -32,6 +32,7 @@ defmodule MercatorWeb.Admin.PageEditLive do
          |> assign(:block_form, nil)
          |> assign(:editing_block, nil)
          |> assign(:categories, categories())
+         |> assign(:shared_pages, shared_pages(socket.assigns.current_user))
          |> assign_page(page)}
 
       {:error, _} ->
@@ -40,6 +41,12 @@ defmodule MercatorWeb.Admin.PageEditLive do
          |> put_flash(:error, gettext("Page not found."))
          |> push_navigate(to: ~p"/admin/pages")}
     end
+  end
+
+  defp shared_pages(actor) do
+    actor
+    |> then(&Content.list_pages!(actor: &1, query: [sort: [path: :asc]]))
+    |> Enum.filter(&(&1.kind == :shared))
   end
 
   defp categories do
@@ -364,17 +371,25 @@ defmodule MercatorWeb.Admin.PageEditLive do
         <section class="space-y-3">
           <div class="flex flex-wrap items-center justify-between gap-2">
             <h2 class="text-xl font-semibold">{gettext("Content")}</h2>
-            <div class="flex gap-1">
-              <button
-                :for={{type, _module} <- Blocks.types()}
-                type="button"
-                phx-click="add_block"
-                phx-value-type={type}
-                class="btn btn-sm"
-                id={"add-block-#{type}"}
+            <div class="dropdown dropdown-end" id="add-block-menu">
+              <div tabindex="0" role="button" class="btn btn-sm btn-primary">
+                <.icon name="hero-plus" class="size-4" /> {gettext("Add block")}
+              </div>
+              <ul
+                tabindex="0"
+                class="menu dropdown-content z-10 mt-1 w-56 rounded-box bg-base-100 p-2 shadow"
               >
-                <.icon name="hero-plus" class="size-4" /> {block_type_label(type)}
-              </button>
+                <li :for={type <- addable_types(@page)}>
+                  <button
+                    type="button"
+                    phx-click="add_block"
+                    phx-value-type={type}
+                    id={"add-block-#{type}"}
+                  >
+                    {block_type_label(type)}
+                  </button>
+                </li>
+              </ul>
             </div>
           </div>
 
@@ -441,19 +456,21 @@ defmodule MercatorWeb.Admin.PageEditLive do
                 <.translated_input field={@settings_form[:title]} label={gettext("Title")} />
                 <.input field={@settings_form[:slug]} label={gettext("URL name (slug)")} />
                 <.input
+                  :if={@page.kind == :page}
                   field={@settings_form[:menu]}
                   type="select"
                   label={gettext("Menu")}
                   options={menu_options()}
                 />
                 <.translated_input
+                  :if={@page.kind == :page}
                   field={@settings_form[:seo_description]}
                   label={gettext("Description for search engines")}
                   type="textarea"
                   rows="2"
                 />
                 <.input
-                  :if={:administrator in @current_user.roles}
+                  :if={@page.kind == :page and :administrator in @current_user.roles}
                   field={@settings_form[:key]}
                   label={gettext("Key for links from the code (e.g. imprint)")}
                 />
@@ -516,6 +533,7 @@ defmodule MercatorWeb.Admin.PageEditLive do
               picker_assets={@picker_assets}
               picker_query={@picker_query}
               categories={@categories}
+              shared_pages={@shared_pages}
               locale={@locale}
             />
             <div class="modal-action">
@@ -535,6 +553,7 @@ defmodule MercatorWeb.Admin.PageEditLive do
   attr :picker_assets, :list, required: true
   attr :picker_query, :string, required: true
   attr :categories, :list, required: true
+  attr :shared_pages, :list, required: true
   attr :locale, :string, required: true
 
   defp block_fields(%{type: "text"} = assigns) do
@@ -699,6 +718,23 @@ defmodule MercatorWeb.Admin.PageEditLive do
     """
   end
 
+  defp block_fields(%{type: "shared"} = assigns) do
+    ~H"""
+    <.input
+      field={@form[:page_id]}
+      type="select"
+      label={gettext("Shared block")}
+      options={Enum.map(@shared_pages, &{Translated.t(&1.title, @locale), &1.id})}
+      prompt={gettext("Choose a shared block")}
+    />
+    <p class="text-sm text-base-content/60">
+      {gettext(
+        "Shows the published version of the shared block. Edit it under Pages → Shared blocks."
+      )}
+    </p>
+    """
+  end
+
   attr :block, :map, required: true
   attr :fields, :list, required: true, doc: "[{key, label, type}]"
   attr :label, :string, required: true
@@ -741,6 +777,11 @@ defmodule MercatorWeb.Admin.PageEditLive do
       field: String.to_existing_atom(key),
       form: to_form(%{}, as: :block)
     }
+  end
+
+  # shared pages cannot contain shared blocks (no nesting)
+  defp addable_types(page) do
+    for {type, _module} <- Blocks.types(), type != "shared" or page.kind == :page, do: type
   end
 
   defp category_options(categories, locale) do
@@ -840,4 +881,5 @@ defmodule MercatorWeb.Admin.PageEditLive do
   defp block_type_label("call_to_action"), do: gettext("Call to action")
   defp block_type_label("columns"), do: gettext("Columns")
   defp block_type_label("faq"), do: gettext("FAQ")
+  defp block_type_label("shared"), do: gettext("Shared block")
 end
