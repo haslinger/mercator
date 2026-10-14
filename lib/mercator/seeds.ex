@@ -7,7 +7,8 @@ defmodule Mercator.Seeds do
   `mix run priv/repo/seeds.exs` can run any number of times.
 
   All demo users share the password `demo_password/0` and are confirmed.
-  The demo catalogue comes from `Mercator.Seeds.BiberHolz`.
+  The demo catalogue comes from `Mercator.Seeds.BiberHolz`, demo addresses
+  and orders from `Mercator.Seeds.Orders`.
   """
 
   alias Mercator.Accounts.User
@@ -64,6 +65,7 @@ defmodule Mercator.Seeds do
     users = Enum.map(@demo_users, &ensure_user/1)
     BiberHolz.run()
     ensure_gtc()
+    Mercator.Seeds.Orders.run()
     users
   end
 
