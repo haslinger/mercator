@@ -98,7 +98,7 @@ defmodule MercatorWeb.OfferLive do
               class="btn btn-ghost btn-sm"
               id="print-link"
             >
-              <.icon name="hero-printer" class="size-4" /> {gettext("Print or save as PDF")}
+              <.icon name="hero-printer" class="size-4" /> {gettext("Print")}
             </.link>
             <.link
               :if={@offer.order}

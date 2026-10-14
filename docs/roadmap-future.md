@@ -26,6 +26,7 @@ Smaller improvements noted along the way, not tied to a phase step.
   - Changing the kind of an existing product needs a rule for data that no longer fits (extra variants, prices, options): warn, keep or delete.
 - **Start page key for content managers** (2026-10-14): only administrators can set a page's key (e.g. `home`). Content managers may need a simple "use as start page" action.
 - **Active entry in the shop sidebar** (2026-10-14): the sidebar does not highlight the current page or category yet (the admin sidebar does).
+- **PDF documents with Typst** (#17, decided): offers and order confirmations as PDF files. Then the offer pages get a "PDF erstellen" button next to "Drucken" (today the browser's print dialog can save as PDF), and the PDFs can be attached to the offer and confirmation emails.
 - **Variants combined with a configurator** (not possible today, see #39/#55): e.g. a panel in stock in three species that can also be cut to size. Workaround: two related products. Only if a customer needs it.
 
 ## Open questions

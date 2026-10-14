@@ -423,7 +423,7 @@ defmodule MercatorWeb.Admin.OfferEditLive do
                 class="link"
                 id="print-link"
               >
-                <.icon name="hero-printer" class="size-4" /> {gettext("Print or save as PDF")}
+                <.icon name="hero-printer" class="size-4" /> {gettext("Print")}
               </.link>
               <.link
                 :if={@offer.order}

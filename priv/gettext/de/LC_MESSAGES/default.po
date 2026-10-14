@@ -3428,7 +3428,7 @@ msgstr "Keine Icons gefunden."
 msgid "Search icons (English, e.g. truck, fire)"
 msgstr "Icons suchen (englisch, z. B. truck, fire)"
 
-#: lib/mercator_web/live/chat_live.ex:503
+#: lib/mercator_web/live/chat_live.ex:508
 #, elixir-autogen, elixir-format
 msgid "A consultant is with you"
 msgstr "Eine Beraterin bzw. ein Berater ist für Sie da"
@@ -3445,7 +3445,7 @@ msgstr "Zu: %{subject}"
 msgid "Advice"
 msgstr "Beratung"
 
-#: lib/mercator_web/live/chat_live.ex:497
+#: lib/mercator_web/live/chat_live.ex:502
 #, elixir-autogen, elixir-format
 msgid "Ask us anything"
 msgstr "Fragen Sie uns"
@@ -3482,12 +3482,12 @@ msgstr "Beraten lassen"
 msgid "Send"
 msgstr "Senden"
 
-#: lib/mercator_web/live/chat_live.ex:498
+#: lib/mercator_web/live/chat_live.ex:503
 #, elixir-autogen, elixir-format
 msgid "We are connecting you with a consultant …"
 msgstr "Einen Moment, wir verbinden Sie …"
 
-#: lib/mercator_web/live/chat_live.ex:501
+#: lib/mercator_web/live/chat_live.ex:506
 #, elixir-autogen, elixir-format
 msgid "You are talking to %{name}"
 msgstr "Sie sprechen mit %{name}"
@@ -4355,15 +4355,11 @@ msgid "Prices in euros. This offer is valid until %{date}."
 msgstr "Preise in Euro. Dieses Angebot ist gültig bis %{date}."
 
 #: lib/mercator_web/controllers/offer_print_html.ex:21
-#, elixir-autogen, elixir-format
-msgid "Print"
-msgstr "Drucken"
-
 #: lib/mercator_web/live/admin/offer_edit_live.ex:426
 #: lib/mercator_web/live/offer_live.ex:101
 #, elixir-autogen, elixir-format
-msgid "Print or save as PDF"
-msgstr "Drucken oder als PDF speichern"
+msgid "Print"
+msgstr "Drucken"
 
 #: lib/mercator_web/controllers/offer_print_html.ex:71
 #, elixir-autogen, elixir-format
@@ -4394,7 +4390,7 @@ msgstr "Bewertung des Kunden:"
 msgid "How satisfied were you with our advice?"
 msgstr "Wie zufrieden waren Sie mit unserer Beratung?"
 
-#: lib/mercator_web/live/chat_live.ex:487
+#: lib/mercator_web/live/chat_live.ex:492
 #, elixir-autogen, elixir-format
 msgid "No, thanks"
 msgstr "Nein, danke"
@@ -4404,7 +4400,7 @@ msgstr "Nein, danke"
 msgid "Rating"
 msgstr "Bewertung"
 
-#: lib/mercator_web/live/chat_live.ex:490
+#: lib/mercator_web/live/chat_live.ex:495
 #, elixir-autogen, elixir-format
 msgid "Send rating"
 msgstr "Bewertung senden"
