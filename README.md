@@ -116,7 +116,7 @@ The app limits what it can tell apart itself (`Mercator.RateLimit`, limits in `c
 Still open for production:
 
 - **Email delivery:** a Swoosh adapter for production is not configured yet; see the example in `config/runtime.exs`.
-- **Deployment target:** open question #24 in the roadmap.
+- **Deployment:** Docker (#24); the release and the Docker image are set up in the deployment phase.
 - **Postgres:** see the note above on `lc_messages`.
 
 ## License

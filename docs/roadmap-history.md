@@ -84,6 +84,7 @@ This makes it the test case for **configurable material**: wood species, dimensi
 - **#13** (2026-10-14) **Markdown instead of rich text** everywhere it applies (CMS content, product and category descriptions, GTC, later offers and messages): stored as Markdown in the translated JSONB maps, edited in a textarea with preview, rendered to sanitized HTML. No WYSIWYG editor. No CKEditor HTML needs to stay renderable (no data migration, #21).
 - **#25** (2026-10-13) **No security risk:** none of the old systems are deployed any more. Secrets still go only into env/`runtime.exs` in the port.
 - **#19** (2026-10-14) **No contracting module.** The printer and consumables leasing contracts were specific to one customer and are not needed; the phase is dropped.
+- **#24** (2026-10-14) **Deployment with Docker**: Mercator runs as a Docker container (a Mix release in the image), set up in the deployment phase. The database connection sets `lc_messages=C`; on managed Postgres configure English server messages instead (see README).
 
 ## Answered questions
 
@@ -111,6 +112,8 @@ The questions as they were asked, kept for the record (the decisions above are t
 - ~~**#73**~~ *(answered 2026-10-14: yes)* Time zone: `tz` package, shop time zone configurable (`:time_zone`, env `SHOP_TIME_ZONE`, default `Europe/Vienna`), see `Mercator.Clock`.
 - ~~**#74**~~ *(answered 2026-10-14: yes)* Customers get an email when staff confirm, ship or cancel their order (with the reason).
 - ~~**#75**~~ *(answered 2026-10-14: a)* For pickup orders the state `shipped` means **ready for pickup**: button "Abholbereit melden", label "Abholbereit", and an email to the customer with the pickup address (and the payment note for payment on pickup). "Completed" means picked up.
+
+- ~~**#24**~~ *(answered 2026-10-14: Docker, see Decisions)* *(note: the DB connection sets `lc_messages=C`, which needs a superuser or `GRANT SET`; on managed databases configure English server messages instead)* Deployment target: where will it run (own server, Fly.io, Docker…)? Should a release or Docker setup be part of the first phase?
 
 ### Security note
 - ~~**#25**~~ *(answered, see Decisions)* The customer-system repos (`systems/*/config/application.yml`, `database.yml`) contain **plaintext credentials**: DB, Mesonic ERP, mPAY24 merchant, Icecat, Bechlem and secret tokens. In the port, secrets will live only in environment variables or `runtime.exs`. Are any of these credentials still live? If so, they should be rotated, since they are in git history.
