@@ -154,7 +154,7 @@ Smaller improvements noted along the way, not tied to a phase step.
   - *simple:* "Variants & prices" reduced to the one variant (no adding variants), e.g. as "Price & stock".
   - *configurable:* no prices in the variants tab (the price comes from the configurator); only number, unit, delivery time and active remain, or the tab is hidden and those fields move to "General" / "Configurator".
   - Changing the kind of an existing product needs a rule for data that no longer fits (extra variants, prices, options): warn, keep or delete.
-- **Sign-out confirmation page** (2026-10-14): `/sign-out` shows AshAuthentication's own page "Are you sure you want to sign out?" in English, an extra click with a foreign layout. Sign out directly (or translate and style the page).
+- ~~**Sign-out confirmation page**~~ *(done 2026-10-14)*: the user menu signs out directly with `DELETE /sign-out`; the confirmation page for `GET /sign-out` is our own translated `MercatorWeb.SignOutLive`.
 - **Variants combined with a configurator** (not possible today, see #39/#55): e.g. a panel in stock in three species that can also be cut to size. Workaround: two related products. Only if a customer needs it.
 
 ## 5a. Demo customer: Biber Holz

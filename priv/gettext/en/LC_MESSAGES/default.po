@@ -21,8 +21,8 @@ msgstr ""
 msgid "An account with this email already exists. We've sent a link to that address - confirm it to finish linking this provider to your account."
 msgstr ""
 
-#: lib/mercator_web/components/layouts.ex:321
-#: lib/mercator_web/components/layouts.ex:336
+#: lib/mercator_web/components/layouts.ex:325
+#: lib/mercator_web/components/layouts.ex:340
 #, elixir-autogen, elixir-format
 msgid "Attempting to reconnect"
 msgstr ""
@@ -48,17 +48,19 @@ msgstr ""
 msgid "Sign in"
 msgstr ""
 
-#: lib/mercator_web/components/layouts.ex:243
+#: lib/mercator_web/components/layouts.ex:245
+#: lib/mercator_web/live/sign_out_live.ex:18
+#: lib/mercator_web/live/sign_out_live.ex:21
 #, elixir-autogen, elixir-format
 msgid "Sign out"
 msgstr ""
 
-#: lib/mercator_web/components/layouts.ex:328
+#: lib/mercator_web/components/layouts.ex:332
 #, elixir-autogen, elixir-format
 msgid "Something went wrong!"
 msgstr ""
 
-#: lib/mercator_web/components/layouts.ex:313
+#: lib/mercator_web/components/layouts.ex:317
 #, elixir-autogen, elixir-format
 msgid "We can't find the internet"
 msgstr ""
@@ -109,7 +111,7 @@ msgstr ""
 msgid "Current password"
 msgstr ""
 
-#: lib/mercator_web/components/layouts.ex:263
+#: lib/mercator_web/components/layouts.ex:267
 #: lib/mercator_web/live/account_live.ex:59
 #: lib/mercator_web/live/admin/user_index_live.ex:42
 #, elixir-autogen, elixir-format
@@ -733,6 +735,7 @@ msgstr ""
 #: lib/mercator_web/live/admin/product_variants_tab.ex:342
 #: lib/mercator_web/live/admin/product_variants_tab.ex:391
 #: lib/mercator_web/live/admin/tax_class_live.ex:157
+#: lib/mercator_web/live/sign_out_live.ex:24
 #, elixir-autogen, elixir-format
 msgid "Cancel"
 msgstr ""
@@ -2323,27 +2326,32 @@ msgstr ""
 msgid "You have not placed any orders yet."
 msgstr ""
 
-#: lib/mercator_web/components/layouts.ex:375
+#: lib/mercator_web/components/layouts.ex:379
 #, elixir-autogen, elixir-format
 msgid "Dark theme"
 msgstr ""
 
-#: lib/mercator_web/components/layouts.ex:366
+#: lib/mercator_web/components/layouts.ex:370
 #, elixir-autogen, elixir-format
 msgid "Light theme"
 msgstr ""
 
-#: lib/mercator_web/components/layouts.ex:255
+#: lib/mercator_web/components/layouts.ex:259
 #, elixir-autogen, elixir-format
 msgid "More"
 msgstr ""
 
-#: lib/mercator_web/components/layouts.ex:357
+#: lib/mercator_web/components/layouts.ex:361
 #, elixir-autogen, elixir-format
 msgid "System theme"
 msgstr ""
 
-#: lib/mercator_web/components/layouts.ex:267
+#: lib/mercator_web/components/layouts.ex:271
 #, elixir-autogen, elixir-format
 msgid "Theme"
+msgstr ""
+
+#: lib/mercator_web/live/sign_out_live.ex:19
+#, elixir-autogen, elixir-format
+msgid "Do you want to sign out?"
 msgstr ""

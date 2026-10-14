@@ -240,7 +240,11 @@ defmodule MercatorWeb.Layouts do
         <li :if={MercatorWeb.AdminNav.staff?(@current_user)}>
           <.link navigate={~p"/admin"} id="admin-link">{gettext("Administration")}</.link>
         </li>
-        <li><.link href={~p"/sign-out"} id="sign-out-link">{gettext("Sign out")}</.link></li>
+        <li>
+          <.link href={~p"/sign-out"} method="delete" id="sign-out-link">
+            {gettext("Sign out")}
+          </.link>
+        </li>
       </ul>
     </div>
     """

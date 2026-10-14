@@ -86,7 +86,8 @@ defmodule MercatorWeb.Router do
     auth_routes AuthController, Mercator.Accounts.User, path: "/auth"
 
     sign_out_route AuthController, "/sign-out",
-      overrides: [MercatorWeb.AuthOverrides, AshAuthentication.Phoenix.Overrides.Default]
+      live_view: MercatorWeb.SignOutLive,
+      on_mount_prepend: [{MercatorWeb.Locale, :default}]
 
     # Remove these if you'd like to use your own authentication views
     sign_in_route register_path: "/register",

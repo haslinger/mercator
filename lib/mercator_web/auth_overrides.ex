@@ -1,7 +1,8 @@
 defmodule MercatorWeb.AuthOverrides do
   @moduledoc """
   DaisyUI styling for the AshAuthentication.Phoenix pages (sign in, register,
-  password reset, magic link, confirmation, sign out).
+  password reset, magic link, confirmation). Sign out has its own page,
+  `MercatorWeb.SignOutLive`.
 
   Texts are translated through the `"auth"` Gettext domain
   (`priv/gettext/*/LC_MESSAGES/auth.po`), see the router.
@@ -15,8 +16,7 @@ defmodule MercatorWeb.AuthOverrides do
     ConfirmLive,
     MagicSignInLive,
     ResetLive,
-    SignInLive,
-    SignOutLive
+    SignInLive
   }
 
   @page "min-h-screen grid place-items-center bg-base-200 px-4 py-12"
@@ -26,7 +26,7 @@ defmodule MercatorWeb.AuthOverrides do
 
   # --- Pages -----------------------------------------------------------------
 
-  for live <- [SignInLive, SignOutLive, ResetLive, ConfirmLive, MagicSignInLive] do
+  for live <- [SignInLive, ResetLive, ConfirmLive, MagicSignInLive] do
     override live do
       set :root_class, @page
     end
@@ -51,13 +51,6 @@ defmodule MercatorWeb.AuthOverrides do
 
   override Components.Confirm.Input do
     set :submit_class, @primary_button
-  end
-
-  override Components.SignOut do
-    set :root_class, @card
-    set :h2_class, @heading
-    set :info_text_class, "mb-4"
-    set :button_class, @primary_button
   end
 
   # --- Shared building blocks -------------------------------------------------
