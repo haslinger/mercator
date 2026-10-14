@@ -102,11 +102,9 @@ defmodule MercatorWeb.Admin.DeskLive do
 
   defp new_form, do: to_form(%{"body" => ""}, as: :reply)
 
-  # --- events ---
-
-  @impl true
-  def handle_event("availability", _params, socket) do
-    available? = !socket.assigns.available?
+  # Presence tells the shop whether someone is at the desk; the tab keeps
+  # the choice in sessionStorage (event "desk:availability").
+  defp set_available(socket, available?) do
     user = socket.assigns.current_user
 
     Presence.update(self(), Presence.topic(), user.id, %{
@@ -114,8 +112,21 @@ defmodule MercatorWeb.Admin.DeskLive do
       name: Desk.display_name(user)
     })
 
-    {:noreply, assign(socket, :available?, available?)}
+    socket
+    |> assign(:available?, available?)
+    |> push_event("desk:availability", %{available: available?})
   end
+
+  # --- events ---
+
+  @impl true
+  def handle_event("availability", _params, socket),
+    do: {:noreply, set_available(socket, !socket.assigns.available?)}
+
+  # after a reload or reconnect the hook restores the tab's last choice
+  def handle_event("restore_availability", %{"available" => available?}, socket)
+      when is_boolean(available?),
+      do: {:noreply, set_available(socket, available?)}
 
   def handle_event("take", _params, socket) do
     case Desk.take(socket.assigns.selected, socket.assigns.current_user) do
@@ -626,7 +637,18 @@ defmodule MercatorWeb.Admin.DeskLive do
 
     <script :type={Phoenix.LiveView.ColocatedHook} name=".DeskNotify">
       export default {
+        restoreAvailability() {
+          let stored = null
+          try { stored = sessionStorage.getItem("desk-available") } catch (_e) {}
+          if (stored === "true") this.pushEvent("restore_availability", {available: true})
+        },
+        reconnected() { this.restoreAvailability() },
         mounted() {
+          // the availability survives reloads and reconnects of this tab, not a new tab
+          this.handleEvent("desk:availability", ({available}) => {
+            try { sessionStorage.setItem("desk-available", available ? "true" : "false") } catch (_e) {}
+          })
+          this.restoreAvailability()
           // ask for notification permission when going available (a user gesture)
           this.el.querySelector("#availability")?.addEventListener("click", () => {
             if ("Notification" in window && Notification.permission === "default") Notification.requestPermission()
