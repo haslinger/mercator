@@ -33,6 +33,16 @@ defmodule Mercator.Content.Blocks do
       else: blocks ++ [block]
   end
 
+  @doc "Ids of the media library files the blocks refer to."
+  def asset_ids(blocks) do
+    blocks
+    |> Enum.flat_map(fn %Ash.Union{value: value} ->
+      [Map.get(value, :image_id), Map.get(value, :document_id) | Map.get(value, :image_ids) || []]
+    end)
+    |> Enum.reject(&is_nil/1)
+    |> Enum.uniq()
+  end
+
   @doc "Removes the block with the id."
   def delete(blocks, id), do: Enum.reject(blocks, &(&1["id"] == id))
 

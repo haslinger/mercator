@@ -9,7 +9,12 @@ defmodule Mercator.Content.Block do
     constraints: [
       storage: :map_with_tag,
       types: [
-        text: [type: Mercator.Content.Blocks.Text, tag: :type, tag_value: "text"]
+        text: [type: Mercator.Content.Blocks.Text, tag: :type, tag_value: "text"],
+        hero: [type: Mercator.Content.Blocks.Hero, tag: :type, tag_value: "hero"],
+        text_image: [type: Mercator.Content.Blocks.TextImage, tag: :type, tag_value: "text_image"],
+        image: [type: Mercator.Content.Blocks.Image, tag: :type, tag_value: "image"],
+        gallery: [type: Mercator.Content.Blocks.Gallery, tag: :type, tag_value: "gallery"],
+        download: [type: Mercator.Content.Blocks.Download, tag: :type, tag_value: "download"]
       ]
     ]
 end

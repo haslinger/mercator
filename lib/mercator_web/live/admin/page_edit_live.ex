@@ -17,7 +17,7 @@ defmodule MercatorWeb.Admin.PageEditLive do
 
   alias Ash.Resource.Info
   alias Mercator.Content
-  alias Mercator.Content.Blocks
+  alias Mercator.Content.{Asset, Blocks}
   alias Mercator.Translated
   alias MercatorWeb.Format
 
@@ -54,6 +54,7 @@ defmodule MercatorWeb.Admin.PageEditLive do
 
     socket
     |> assign(:page, page)
+    |> assign(:assets, Content.assets_for_blocks(page.blocks))
     |> assign(:page_title, Translated.t(page.title, socket.assigns.locale))
     |> assign(:versions, versions)
     |> assign(
@@ -122,7 +123,22 @@ defmodule MercatorWeb.Admin.PageEditLive do
     {:noreply, assign(socket, block_form: nil, editing_block: nil)}
   end
 
-  def handle_event("save_block", %{"block" => params}, socket) do
+  def handle_event("block_change", params, socket) do
+    block =
+      Map.merge(
+        socket.assigns.editing_block,
+        block_params(socket.assigns.editing_block, params["block"] || %{})
+      )
+
+    {:noreply,
+     socket
+     |> assign(:editing_block, block)
+     |> assign_picker(params["picker_q"] || "")}
+  end
+
+  def handle_event("save_block", params, socket) do
+    params = params["block"] || %{}
+
     block =
       Map.merge(socket.assigns.editing_block, block_params(socket.assigns.editing_block, params))
 
@@ -147,7 +163,26 @@ defmodule MercatorWeb.Admin.PageEditLive do
 
   defp edit_block(socket, block) do
     form = to_form(Map.drop(block, ["id", "type"]), as: :block, id: "block-#{block["id"]}")
-    assign(socket, block_form: form, editing_block: block)
+
+    socket
+    |> assign(block_form: form, editing_block: block)
+    |> assign_picker("")
+  end
+
+  # media library files to choose from in the block form, plus the chosen ones
+  defp assign_picker(socket, query) do
+    block = socket.assigns.editing_block
+    kind = if block["type"] == "download", do: :document, else: :image
+
+    found =
+      Content.search_assets!(%{query: query, kind: kind}, actor: socket.assigns.current_user)
+
+    chosen =
+      Content.assets_by_ids([block["image_id"], block["document_id"] | block["image_ids"] || []])
+
+    missing = Enum.reject(Map.values(chosen), &(&1 in found))
+
+    assign(socket, picker_query: query, picker_assets: missing ++ Enum.take(found, 48))
   end
 
   # only the fields of the block type; drops LiveView's _unused_ keys
@@ -160,6 +195,8 @@ defmodule MercatorWeb.Admin.PageEditLive do
   defp clean(value) when is_map(value),
     do: value |> Enum.reject(fn {k, _v} -> String.starts_with?(k, "_unused_") end) |> Map.new()
 
+  defp clean(value) when is_list(value), do: Enum.reject(value, &(&1 == ""))
+  defp clean(""), do: nil
   defp clean(value), do: value
 
   defp settings_params(params) do
@@ -333,7 +370,7 @@ defmodule MercatorWeb.Admin.PageEditLive do
                   </div>
                 </div>
                 <div class="p-4">
-                  <.block block={block} locale={@locale} />
+                  <.block block={block} locale={@locale} assets={@assets} />
                 </div>
               </li>
             </ul>
@@ -409,8 +446,21 @@ defmodule MercatorWeb.Admin.PageEditLive do
       <div :if={@block_form} class="modal modal-open" id="block-modal">
         <div class="modal-box max-w-4xl">
           <h2 class="text-xl font-bold">{block_type_label(@editing_block["type"])}</h2>
-          <.form for={@block_form} id="block-form" phx-submit="save_block" class="mt-4">
-            <.block_fields type={@editing_block["type"]} form={@block_form} />
+          <.form
+            for={@block_form}
+            id="block-form"
+            phx-change="block_change"
+            phx-submit="save_block"
+            class="mt-4 space-y-2"
+          >
+            <.block_fields
+              type={@editing_block["type"]}
+              form={@block_form}
+              block={@editing_block}
+              picker_assets={@picker_assets}
+              picker_query={@picker_query}
+              locale={@locale}
+            />
             <div class="modal-action">
               <button type="button" phx-click="cancel_block" class="btn btn-ghost">{gettext("Cancel")}</button>
               <button type="submit" class="btn btn-primary" id="save-block">{gettext("Apply")}</button>
@@ -424,6 +474,10 @@ defmodule MercatorWeb.Admin.PageEditLive do
 
   attr :type, :string, required: true
   attr :form, :any, required: true
+  attr :block, :map, required: true
+  attr :picker_assets, :list, required: true
+  attr :picker_query, :string, required: true
+  attr :locale, :string, required: true
 
   defp block_fields(%{type: "text"} = assigns) do
     ~H"""
@@ -431,5 +485,143 @@ defmodule MercatorWeb.Admin.PageEditLive do
     """
   end
 
+  defp block_fields(%{type: "hero"} = assigns) do
+    ~H"""
+    <.asset_picker name="block[image_id]" selected={[@block["image_id"]]} {picker(assigns)} />
+    <.translated_input field={@form[:headline]} label={gettext("Headline")} />
+    <.translated_input field={@form[:text]} label={gettext("Text")} type="markdown" />
+    <.translated_input field={@form[:button_label]} label={gettext("Button label")} />
+    <.input
+      field={@form[:button_link]}
+      label={gettext("Button link, e.g. /categories/bauholz or /pages/kontakt")}
+    />
+    """
+  end
+
+  defp block_fields(%{type: "text_image"} = assigns) do
+    ~H"""
+    <.translated_input field={@form[:text]} label={gettext("Text")} type="markdown" />
+    <.asset_picker name="block[image_id]" selected={[@block["image_id"]]} {picker(assigns)} />
+    <.input
+      field={@form[:image_side]}
+      type="select"
+      label={gettext("Image position")}
+      options={[{gettext("right of the text"), "right"}, {gettext("left of the text"), "left"}]}
+    />
+    """
+  end
+
+  defp block_fields(%{type: "image"} = assigns) do
+    ~H"""
+    <.asset_picker name="block[image_id]" selected={[@block["image_id"]]} {picker(assigns)} />
+    <.translated_input field={@form[:caption]} label={gettext("Caption")} />
+    """
+  end
+
+  defp block_fields(%{type: "gallery"} = assigns) do
+    ~H"""
+    <.asset_picker
+      name="block[image_ids][]"
+      selected={@block["image_ids"] || []}
+      multiple
+      {picker(assigns)}
+    />
+    """
+  end
+
+  defp block_fields(%{type: "download"} = assigns) do
+    ~H"""
+    <.asset_picker name="block[document_id]" selected={[@block["document_id"]]} {picker(assigns)} />
+    <.translated_input
+      field={@form[:label]}
+      label={gettext("Link text (default: the file's title)")}
+    />
+    """
+  end
+
+  defp picker(assigns),
+    do: %{assets: assigns.picker_assets, query: assigns.picker_query, locale: assigns.locale}
+
+  attr :name, :string, required: true
+  attr :selected, :list, required: true
+  attr :multiple, :boolean, default: false
+  attr :assets, :list, required: true
+  attr :query, :string, required: true
+  attr :locale, :string, required: true
+
+  # Files of the media library as radio buttons (or checkboxes) with
+  # thumbnails, searchable; uploading happens in the media library.
+  defp asset_picker(assigns) do
+    assigns = assign(assigns, :selected, Enum.map(assigns.selected, &to_string/1))
+
+    ~H"""
+    <fieldset class="fieldset" id="asset-picker">
+      <legend class="fieldset-legend">
+        {if @multiple, do: gettext("Images"), else: gettext("File from the media library")}
+      </legend>
+      <div class="flex flex-wrap items-center gap-2">
+        <input
+          type="search"
+          name="picker_q"
+          value={@query}
+          placeholder={gettext("Search the media library")}
+          phx-debounce="300"
+          class="input input-sm w-64"
+          id="picker-search"
+        />
+        <.link navigate={~p"/admin/media"} target="_blank" class="link text-sm">
+          {gettext("Upload in the media library")}
+        </.link>
+      </div>
+      <input :if={@multiple} type="hidden" name={@name} value="" />
+      <p :if={@assets == []} class="text-sm text-base-content/60">{gettext("No files found.")}</p>
+      <div class="grid max-h-64 grid-cols-3 gap-2 overflow-y-auto sm:grid-cols-5 lg:grid-cols-6">
+        <label
+          :for={asset <- @assets}
+          class={[
+            "relative cursor-pointer overflow-hidden rounded-box border-2",
+            if(asset.id in @selected, do: "border-primary", else: "border-transparent")
+          ]}
+          title={Translated.t(asset.title, @locale) || asset.original_filename}
+          id={"pick-#{asset.id}"}
+        >
+          <input
+            type={if @multiple, do: "checkbox", else: "radio"}
+            name={@name}
+            value={asset.id}
+            checked={asset.id in @selected}
+            class="sr-only"
+          />
+          <img
+            :if={asset.kind == :image}
+            src={Asset.url(asset, :thumb)}
+            alt=""
+            class="aspect-square w-full object-cover"
+          />
+          <span
+            :if={asset.kind == :document}
+            class="flex aspect-square flex-col items-center justify-center gap-1 bg-base-200 p-1 text-center text-xs"
+          >
+            <.icon name="hero-document-text" class="size-6" />
+            <span class="line-clamp-2">
+              {Translated.t(asset.title, @locale) || asset.original_filename}
+            </span>
+          </span>
+          <.icon
+            :if={asset.id in @selected}
+            name="hero-check-circle-solid"
+            class="absolute right-1 top-1 size-5 text-primary"
+          />
+        </label>
+      </div>
+    </fieldset>
+    """
+  end
+
   defp block_type_label("text"), do: gettext("Text")
+  defp block_type_label("hero"), do: gettext("Hero")
+  defp block_type_label("text_image"), do: gettext("Text with image")
+  defp block_type_label("image"), do: gettext("Image")
+  defp block_type_label("gallery"), do: gettext("Gallery")
+  defp block_type_label("download"), do: gettext("Download")
 end

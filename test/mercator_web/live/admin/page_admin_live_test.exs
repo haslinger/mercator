@@ -104,6 +104,68 @@ defmodule MercatorWeb.Admin.PageAdminLiveTest do
       refute has_element?(view, "#edit-block-#{second.value.id}")
     end
 
+    test "image blocks choose files from the media library", %{conn: conn, editor: editor} do
+      upload = fn tags, source, name ->
+        Content.upload_asset!(
+          %{source_path: source, original_filename: name, tags: tags, title: %{"de" => name}},
+          actor: editor
+        )
+      end
+
+      forest = upload.(["wald"], "test/fixtures/wood.jpg", "wald.jpg")
+      logs = upload.(["stamm"], "test/fixtures/wood.jpg", "staemme.jpg")
+      pdf = upload.(["preise"], "test/fixtures/sample.pdf", "preise.pdf")
+
+      page = page!(editor)
+      {:ok, view, _html} = live(conn, ~p"/admin/pages/#{page.id}")
+
+      # hero with an image, found by searching the media library
+      view |> element("#add-block-hero") |> render_click()
+      view |> form("#block-form", %{"picker_q" => "wald"}) |> render_change()
+      assert has_element?(view, "#pick-#{forest.id}")
+      refute has_element?(view, "#pick-#{logs.id}")
+      refute has_element?(view, "#pick-#{pdf.id}")
+
+      view
+      |> form("#block-form", %{
+        "block" => %{
+          "image_id" => forest.id,
+          "headline" => %{"de" => "Holz aus dem Waldviertel"},
+          "button_label" => %{"de" => "Zum Sortiment"},
+          "button_link" => "/categories/bauholz"
+        }
+      })
+      |> render_submit()
+
+      assert has_element?(view, "#blocks .hero h2", "Holz aus dem Waldviertel")
+      assert has_element?(view, ~s(#blocks .hero a[href="/categories/bauholz"]))
+
+      # gallery with two images
+      view |> element("#add-block-gallery") |> render_click()
+
+      view
+      |> form("#block-form", %{"block" => %{"image_ids" => [forest.id, logs.id]}})
+      |> render_submit()
+
+      assert has_element?(view, ~s(#blocks img[src="/uploads/assets/#{logs.id}/thumb.webp"]))
+
+      # download: only documents to choose from
+      view |> element("#add-block-download") |> render_click()
+      assert has_element?(view, "#pick-#{pdf.id}")
+      refute has_element?(view, "#pick-#{forest.id}")
+      view |> form("#block-form", %{"block" => %{"document_id" => pdf.id}}) |> render_submit()
+      assert has_element?(view, ~s(#blocks a[href="/uploads/assets/#{pdf.id}/preise.pdf"]))
+
+      # visitors see the blocks after publishing
+      view |> element("#publish") |> render_click()
+      {:ok, public, _html} = live(build_conn(), ~p"/pages/saegewerk")
+      assert has_element?(public, "#page .hero h2", "Holz aus dem Waldviertel")
+      assert has_element?(public, ~s(#page a[href="/uploads/assets/#{pdf.id}/preise.pdf"]), "PDF")
+
+      # files in use cannot be deleted
+      assert {:error, _} = Content.destroy_asset(forest, actor: editor)
+    end
+
     test "saves settings, publishes, archives; history and restore", %{conn: conn, editor: editor} do
       page = page!(editor, blocks: [%{type: "text", text: %{"de" => "Erste Fassung"}}])
       {:ok, view, _html} = live(conn, ~p"/admin/pages/#{page.id}")

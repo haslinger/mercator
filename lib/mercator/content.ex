@@ -95,6 +95,23 @@ defmodule Mercator.Content do
     update_page(page, %{blocks: blocks}, actor: actor)
   end
 
+  @doc "The media library files the blocks refer to, as a map id => asset."
+  def assets_for_blocks(blocks), do: blocks |> Blocks.asset_ids() |> assets_by_ids()
+
+  @doc "Media library files by id, as a map id => asset; unknown ids are left out."
+  def assets_by_ids(ids) do
+    case Enum.reject(ids, &(&1 in [nil, ""])) do
+      [] ->
+        %{}
+
+      ids ->
+        Mercator.Content.Asset
+        |> Ash.Query.filter(id in ^ids)
+        |> Ash.read!(authorize?: false)
+        |> Map.new(&{&1.id, &1})
+    end
+  end
+
   @doc "All tags used in the media library, alphabetically."
   def asset_tags do
     %{rows: rows} =
