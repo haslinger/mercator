@@ -151,6 +151,32 @@ defmodule Mercator.Consulting.Conversations do
     end
   end
 
+  @doc """
+  The customer rates their closed conversation (#101) with 1 to 5 stars
+  and an optional comment; once.
+  """
+  def rate(owner, conversation_id, rating, comment \\ nil) do
+    with %Conversation{} = conversation <- get(owner, conversation_id),
+         {:ok, conversation} <-
+           Ash.update(conversation, %{rating: rating, rating_comment: comment},
+             action: :rate,
+             authorize?: false
+           ) do
+      broadcast("desk", {:conversation, conversation})
+      {:ok, conversation}
+    else
+      nil -> {:error, :not_found}
+      error -> error
+    end
+  end
+
+  @doc "Whether the customer is asked to rate a closed conversation: it was answered and is not rated."
+  def rateable?(%Conversation{state: :closed, consultant_id: id, rated_at: nil})
+      when not is_nil(id),
+      do: true
+
+  def rateable?(_conversation), do: false
+
   @doc "Stores a message, marks activity and tells everyone in the conversation."
   def create_message(conversation, attrs) do
     with {:ok, message} <-

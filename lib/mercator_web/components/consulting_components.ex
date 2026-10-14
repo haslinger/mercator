@@ -173,6 +173,26 @@ defmodule MercatorWeb.ConsultingComponents do
 
   def attachment(assigns), do: ~H""
 
+  attr :rating, :integer, required: true
+  attr :id, :string, default: nil
+
+  @doc "A customer's rating (#101) as 1 to 5 stars."
+  def stars(assigns) do
+    ~H"""
+    <span
+      class="whitespace-nowrap text-warning"
+      title={ngettext("1 star", "%{count} stars", @rating)}
+      aria-label={ngettext("1 star", "%{count} stars", @rating)}
+      id={@id}
+    >
+      {String.duplicate("★", @rating)}<span class="text-base-content/20">{String.duplicate(
+        "★",
+        5 - @rating
+      )}</span>
+    </span>
+    """
+  end
+
   attr :path, :string, required: true
   attr :desk, :boolean, required: true
   attr :class, :any, default: nil

@@ -43,6 +43,10 @@ defmodule MercatorWeb.Admin.ConversationArchiveLiveTest do
     assert has_element?(view, "#conversations a[href='/admin/desk/#{other.id}']")
     refute has_element?(view, "#conversations a[href='/admin/desk/#{mine.id}']")
 
+    {:ok, _} = Conversations.rate({:user, context.customer}, mine.id, 5, "Top Beratung")
+    {:ok, view, _html} = live(conn, ~p"/admin/conversations")
+    assert has_element?(view, "#conversations", "Top Beratung")
+
     view |> form("#archive-filters", %{"q" => "", "mine" => "true"}) |> render_change()
     assert has_element?(view, "#conversations a[href='/admin/desk/#{mine.id}']")
     refute has_element?(view, "#conversations a[href='/admin/desk/#{other.id}']")

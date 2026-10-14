@@ -5,7 +5,7 @@ defmodule MercatorWeb.ChatLiveTest do
   import Phoenix.LiveViewTest
   import Mercator.AccountsFixtures
 
-  alias Mercator.Consulting.Conversations
+  alias Mercator.Consulting.{Conversations, Desk}
   alias Mercator.Consulting.Workers.SendCallbackRequest
   alias MercatorWeb.ChatLive
 
@@ -104,6 +104,43 @@ defmodule MercatorWeb.ChatLiveTest do
 
     view |> element("#chat-end") |> render_click()
     assert Conversations.current({:user, user}) == nil
+  end
+
+  describe "rating (#101)" do
+    setup %{conn: conn} do
+      {conn, owner} = visitor_conn(conn)
+      {:ok, view, _html} = live_isolated(conn, ChatLive)
+      view |> element("#chat-toggle") |> render_click()
+      view |> form("#chat-form", chat: %{body: "Welches Öl für Lärche?"}) |> render_submit()
+      %{view: view, owner: owner, conversation: Conversations.current(owner)}
+    end
+
+    test "after advice the customer rates with stars and a comment", context do
+      consultant = user_fixture(roles: [:sales])
+      {:ok, _} = Desk.post(context.conversation, consultant, "Hartwachsöl.")
+      conversation = Conversations.get(context.owner, context.conversation.id)
+      {:ok, _} = Desk.close(conversation, consultant)
+
+      assert has_element?(context.view, "#chat-rating")
+
+      context.view
+      |> form("#chat-rating", %{"rating" => "4", "comment" => "Sehr hilfreich"})
+      |> render_submit()
+
+      assert has_element?(context.view, "#chat-rated")
+      refute has_element?(context.view, "#chat-rating")
+
+      rated = Conversations.get(context.owner, context.conversation.id)
+      assert rated.rating == 4
+      assert rated.rating_comment == "Sehr hilfreich"
+      assert {:error, _} = Conversations.rate(context.owner, rated.id, 5)
+    end
+
+    test "nothing to rate when nobody answered", %{view: view} do
+      view |> element("#chat-end") |> render_click()
+      refute has_element?(view, "#chat-rating")
+      refute has_element?(view, "#chat-panel.flex")
+    end
   end
 
   describe "nobody answers (#95)" do

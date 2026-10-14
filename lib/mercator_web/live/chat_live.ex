@@ -34,6 +34,7 @@ defmodule MercatorWeb.ChatLive do
     {:ok,
      socket
      |> assign(open?: session["open"] == true, unread: 0, context: %{}, form: new_form(), sent: 0)
+     |> assign(rating_for: nil, rated?: false)
      |> assign_conversation(conversation), layout: false}
   end
 
@@ -99,7 +100,12 @@ defmodule MercatorWeb.ChatLive do
         context = Map.put_new(socket.assigns.context, :page, params["page"])
         {:ok, conversation} = Conversations.start(owner, body, context)
         follow(conversation)
-        {:noreply, socket |> assign_conversation(conversation) |> clear_input()}
+
+        {:noreply,
+         socket
+         |> assign_conversation(conversation)
+         |> assign(rating_for: nil, rated?: false)
+         |> clear_input()}
     end
   end
 
@@ -139,9 +145,30 @@ defmodule MercatorWeb.ChatLive do
   end
 
   def handle_event("end", _params, socket) do
-    Conversations.close(socket.assigns.basket_owner, socket.assigns.conversation.id)
-    {:noreply, socket |> assign_conversation(nil) |> assign(context: %{}, open?: false)}
+    case Conversations.close(socket.assigns.basket_owner, socket.assigns.conversation.id) do
+      {:ok, conversation} -> {:noreply, ended(socket, conversation)}
+      _ -> {:noreply, socket |> assign_conversation(nil) |> assign(open?: false)}
+    end
   end
+
+  # #101: 1 to 5 stars and a comment for an answered conversation
+  def handle_event("rate", %{"rating" => rating} = params, socket)
+      when rating in ~w(1 2 3 4 5) do
+    case Conversations.rate(
+           socket.assigns.basket_owner,
+           socket.assigns.rating_for.id,
+           String.to_integer(rating),
+           params["comment"]
+         ) do
+      {:ok, _conversation} -> {:noreply, assign(socket, rating_for: nil, rated?: true)}
+      _ -> {:noreply, assign(socket, :rating_for, nil)}
+    end
+  end
+
+  def handle_event("rate", _params, socket), do: {:noreply, socket}
+
+  def handle_event("skip_rating", _params, socket),
+    do: {:noreply, assign(socket, rating_for: nil, open?: false)}
 
   @impl true
   def handle_info({:message, message}, socket) do
@@ -151,8 +178,8 @@ defmodule MercatorWeb.ChatLive do
 
   def handle_info({:visit, _path}, socket), do: {:noreply, socket}
 
-  def handle_info({:conversation, %{state: :closed}}, socket) do
-    {:noreply, assign_conversation(socket, nil)}
+  def handle_info({:conversation, %{state: :closed} = conversation}, socket) do
+    {:noreply, ended(socket, conversation)}
   end
 
   def handle_info({:conversation, conversation}, socket) do
@@ -203,7 +230,11 @@ defmodule MercatorWeb.ChatLive do
         </header>
 
         <div class="flex-1 space-y-2 overflow-y-auto p-3" id="chat-scroll" phx-hook=".ScrollDown">
-          <div :if={!@conversation} class="space-y-2 text-sm" id="chat-intro">
+          <.rating_form :if={@rating_for} />
+          <p :if={@rated?} class="alert alert-success py-2 text-sm" id="chat-rated">
+            <.icon name="hero-heart" class="size-5" /> {gettext("Thank you for your rating!")}
+          </p>
+          <div :if={!@conversation and !@rating_for} class="space-y-2 text-sm" id="chat-intro">
             <p>{gettext("Our experts are happy to help you choose – just ask your question.")}</p>
             <p :if={@context[:subject]} class="badge badge-ghost h-auto py-1">
               {gettext("About: %{subject}", subject: @context[:subject])}
@@ -414,10 +445,59 @@ defmodule MercatorWeb.ChatLive do
     """
   end
 
+  # a closed conversation: ask for a rating if a consultant advised, else close the panel
+  defp ended(socket, conversation) do
+    socket = socket |> assign_conversation(nil) |> assign(context: %{})
+
+    if Conversations.rateable?(conversation),
+      do: assign(socket, rating_for: conversation, rated?: false),
+      else: assign(socket, open?: false)
+  end
+
   # The form has no phx-change, so the server's value stays "" and resetting it
   # changes nothing in the browser: a new textarea (new id) is empty.
   defp clear_input(socket),
     do: socket |> assign(:form, new_form()) |> update(:sent, &(&1 + 1))
+
+  defp rating_form(assigns) do
+    ~H"""
+    <form id="chat-rating" phx-submit="rate" class="space-y-3 rounded-box bg-base-200 p-4 text-sm">
+      <p class="font-semibold">{gettext("How satisfied were you with our advice?")}</p>
+      <div class="rating rating-lg" id="chat-rating-stars">
+        <input
+          :for={stars <- 1..5}
+          type="radio"
+          name="rating"
+          value={stars}
+          class="mask mask-star-2 bg-warning"
+          aria-label={ngettext("1 star", "%{count} stars", stars)}
+          id={"chat-rating-#{stars}"}
+        />
+      </div>
+      <textarea
+        name="comment"
+        rows="2"
+        maxlength="2000"
+        class="textarea textarea-sm w-full"
+        placeholder={gettext("Anything you want to tell us? (optional)")}
+        id="chat-rating-comment"
+      ></textarea>
+      <div class="flex justify-end gap-2">
+        <button
+          type="button"
+          phx-click="skip_rating"
+          class="btn btn-ghost btn-sm"
+          id="chat-rating-skip"
+        >
+          {gettext("No, thanks")}
+        </button>
+        <button type="submit" class="btn btn-primary btn-sm" id="chat-rating-send">
+          {gettext("Send rating")}
+        </button>
+      </div>
+    </form>
+    """
+  end
 
   defp status(nil), do: gettext("Ask us anything")
   defp status(%{state: :waiting}), do: gettext("We are connecting you with a consultant …")

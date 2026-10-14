@@ -7,6 +7,8 @@ defmodule MercatorWeb.Admin.ConversationArchiveLive do
   """
   use MercatorWeb, :live_view
 
+  import MercatorWeb.ConsultingComponents, only: [stars: 1]
+
   alias Mercator.Consulting.Desk
   alias MercatorWeb.Format
 
@@ -121,11 +123,12 @@ defmodule MercatorWeb.Admin.ConversationArchiveLive do
               <th>{gettext("Customer")}</th>
               <th>{gettext("Subject")}</th>
               <th class="hidden md:table-cell">{gettext("Consultant")}</th>
+              <th>{gettext("Rating")}</th>
             </tr>
           </thead>
           <tbody id="conversations" phx-update="stream">
             <tr class="hidden only:table-row" id="no-conversations">
-              <td colspan="4" class="text-center text-base-content/70">
+              <td colspan="5" class="text-center text-base-content/70">
                 {gettext("No conversations found.")}
               </td>
             </tr>
@@ -148,6 +151,16 @@ defmodule MercatorWeb.Admin.ConversationArchiveLive do
               <td class="max-w-xs truncate">{conversation.subject || conversation.page}</td>
               <td class="hidden md:table-cell">
                 {conversation.consultant && Desk.display_name(conversation.consultant)}
+              </td>
+              <td>
+                <.stars :if={conversation.rating} rating={conversation.rating} />
+                <p
+                  :if={conversation.rating_comment}
+                  class="max-w-xs truncate text-xs text-base-content/70"
+                  title={conversation.rating_comment}
+                >
+                  {conversation.rating_comment}
+                </p>
               </td>
             </tr>
           </tbody>

@@ -7,7 +7,7 @@ defmodule MercatorWeb.Admin.DeskLive do
   """
   use MercatorWeb, :live_view
 
-  import MercatorWeb.ConsultingComponents, only: [attachment: 1]
+  import MercatorWeb.ConsultingComponents, only: [attachment: 1, stars: 1]
   import MercatorWeb.OfferComponents, only: [state_badge: 1]
 
   alias Mercator.{Catalog, Content}
@@ -303,7 +303,9 @@ defmodule MercatorWeb.Admin.DeskLive do
                 :callback_kind,
                 :callback_contact,
                 :callback_requested_at,
-                :closed_at
+                :closed_at,
+                :rating,
+                :rating_comment
               ])
               |> Map.reject(fn {_key, value} -> match?(%Ash.NotLoaded{}, value) end)
             )
@@ -527,6 +529,12 @@ defmodule MercatorWeb.Admin.DeskLive do
             id="conversation-ended"
           >
             {gettext("This conversation has ended; it can only be read.")}
+            <span :if={@selected.rating} class="mt-1 block" id="conversation-rating">
+              {gettext("Customer's rating:")} <.stars rating={@selected.rating} />
+              <span :if={@selected.rating_comment} class="block whitespace-pre-line">
+                „{@selected.rating_comment}“
+              </span>
+            </span>
           </p>
           <.form
             :if={@selected.state != :closed}
@@ -939,6 +947,7 @@ defmodule MercatorWeb.Admin.DeskLive do
               <span :if={earlier.consultant} class="text-base-content/60">
                 · {Desk.display_name(earlier.consultant)}
               </span>
+              <.stars :if={earlier.rating} rating={earlier.rating} />
               <span :if={earlier.subject} class="block truncate text-base-content/60">
                 {earlier.subject}
               </span>

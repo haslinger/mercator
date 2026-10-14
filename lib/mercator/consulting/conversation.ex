@@ -78,6 +78,15 @@ defmodule Mercator.Consulting.Conversation do
       change set_attribute(:callback_requested_at, &DateTime.utc_now/0)
     end
 
+    update :rate do
+      description "The customer rates a closed conversation (#101): 1 to 5 stars, a comment."
+      accept [:rating, :rating_comment]
+      validate attribute_equals(:state, :closed)
+      validate attribute_equals(:rated_at, nil), message: "has already been rated"
+      validate present(:rating)
+      change set_attribute(:rated_at, &DateTime.utc_now/0)
+    end
+
     update :visit do
       description "The customer is now on this shop page (live context for the consultant)."
       accept [:current_page]
@@ -137,6 +146,18 @@ defmodule Mercator.Consulting.Conversation do
 
     attribute :callback_requested_at, :utc_datetime_usec, public?: true
     attribute :closed_at, :utc_datetime_usec, public?: true
+
+    attribute :rating, :integer do
+      description "The customer's rating of the advice, 1 to 5 stars (#101)."
+      public? true
+      constraints min: 1, max: 5
+    end
+
+    attribute :rating_comment, :string,
+      public?: true,
+      constraints: [max_length: 2000, trim?: true]
+
+    attribute :rated_at, :utc_datetime_usec, public?: true
     timestamps()
   end
 

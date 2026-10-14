@@ -67,7 +67,7 @@ From the models, the sales subsite and the sales process diagram (`mercator.wiki
 3. Customer context for the consultant (current page, basket, orders), product recommendations, "show a page", files.
 4. ✅ Offers: resource and editor in the desk (products, configurations, free positions, discounts, approval). Configured items come from the customer's basket; products added from the catalogue use the default configuration. Addresses are chosen at checkout, not on the offer.
 5. ✅ Offers for customers: account and conversation, accept → checkout; order refers to the offer. *Changed while building:* accepting does not go through the basket but straight into the checkout with the offer as the source (its items at its prices, free-text items included, quantities fixed); the basket stays untouched. Offer items without a product are delivered like freight.
-6. Emails: reply notifications for offline customers, offer sent, approval requests; PDF (#99).
+6. ✅ Emails: reply notifications for offline customers, offer sent, approval requests, new conversations while nobody is at the desk (#97); printable offer page (#99, Typst PDF later with #17); rating with 1–5 stars and a comment (#101).
 7. Biber Holz demo data: a few conversations and offers.
 
 ## 6. Questions (answered 2026-10-14)
