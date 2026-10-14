@@ -32,7 +32,7 @@ defmodule MercatorWeb.ChatLiveTest do
     |> render_submit(%{"page" => "/products/terrassendiele"})
 
     assert has_element?(view, "#chat-messages .chat-end", "Wie viel Lärche")
-    assert has_element?(view, "#chat-status", "verbinden")
+    assert has_element?(view, "#chat-status", "wir verbinden Sie")
 
     conversation = Conversations.current(owner)
     assert conversation.page == "/products/terrassendiele"

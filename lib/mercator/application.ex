@@ -13,6 +13,7 @@ defmodule Mercator.Application do
       {DNSCluster, query: Application.get_env(:mercator, :dns_cluster_query) || :ignore},
       {Oban, Application.fetch_env!(:mercator, Oban)},
       {Phoenix.PubSub, name: Mercator.PubSub},
+      MercatorWeb.Presence,
       {Mercator.RateLimit, clean_period: :timer.minutes(10)},
       # Start a worker by calling: Mercator.Worker.start_link(arg)
       # {Mercator.Worker, arg},

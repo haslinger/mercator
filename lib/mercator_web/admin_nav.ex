@@ -25,6 +25,11 @@ defmodule MercatorWeb.AdminNav do
        ]},
       {gettext("Sales"),
        [
+         item(gettext("Sales desk"), ~p"/admin/desk", "hero-chat-bubble-left-right", "desk", [
+           :sales,
+           :sales_manager,
+           :administrator
+         ]),
          item(gettext("Orders"), ~p"/admin/orders", "hero-shopping-bag", "orders", [
            :sales,
            :sales_manager,

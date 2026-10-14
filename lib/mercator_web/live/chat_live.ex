@@ -122,7 +122,7 @@ defmodule MercatorWeb.ChatLive do
           <.icon name="hero-chat-bubble-left-right" class="size-5" />
           <div class="min-w-0 flex-1">
             <p class="font-semibold">{gettext("Advice")}</p>
-            <p class="truncate text-xs opacity-80" id="chat-status">{status(@conversation)}</p>
+            <p class="text-xs leading-snug opacity-80" id="chat-status">{status(@conversation)}</p>
           </div>
           <button
             :if={@conversation}
