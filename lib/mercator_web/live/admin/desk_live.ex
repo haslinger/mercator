@@ -297,7 +297,7 @@ defmodule MercatorWeb.Admin.DeskLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <Layouts.admin flash={@flash} current_user={@current_user} locale={@locale} active="desk">
+    <Layouts.admin flash={@flash} current_user={@current_user} locale={@locale} active="desk" wide>
       <div class="flex flex-wrap items-center justify-between gap-2" id="desk" phx-hook=".DeskNotify">
         <h1 class="text-3xl font-bold">{gettext("Sales desk")}</h1>
         <button
@@ -314,7 +314,7 @@ defmodule MercatorWeb.Admin.DeskLive do
         </button>
       </div>
 
-      <div class="grid gap-6 lg:grid-cols-[18rem_1fr] 2xl:grid-cols-[18rem_1fr_20rem]">
+      <div class="grid gap-6 lg:grid-cols-[18rem_1fr] xl:grid-cols-[18rem_1fr_22rem] 2xl:grid-cols-[20rem_1fr_26rem]">
         <aside class="space-y-4">
           <.conversation_list
             id="waiting"
@@ -349,7 +349,7 @@ defmodule MercatorWeb.Admin.DeskLive do
 
         <section
           :if={@selected}
-          class="card flex h-[36rem] flex-col overflow-hidden bg-base-100 shadow-sm"
+          class="card flex h-[calc(100vh-13rem)] min-h-[32rem] flex-col overflow-hidden bg-base-100 shadow-sm"
           id="conversation"
         >
           <header class="flex flex-wrap items-center gap-2 border-b border-base-200 p-4">
@@ -433,7 +433,9 @@ defmodule MercatorWeb.Admin.DeskLive do
                 >
                   {message.body}
                 </div>
-                <.attachment message={message} locale={@locale} desk />
+                <div class={attachment_column(message.sender_kind == :customer)}>
+                  <.attachment message={message} locale={@locale} desk />
+                </div>
               </div>
             </div>
           </div>
@@ -659,7 +661,7 @@ defmodule MercatorWeb.Admin.DeskLive do
   # what the consultant knows about the customer (guided selling step 3)
   defp customer_context(assigns) do
     ~H"""
-    <aside class="space-y-4 lg:col-span-2 2xl:col-span-1" id="customer-context">
+    <aside class="space-y-4 lg:col-span-2 xl:col-span-1" id="customer-context">
       <div class="card bg-base-100 shadow-sm">
         <div class="card-body gap-1 p-4 text-sm">
           <h2 class="font-semibold">{gettext("Now on")}</h2>
@@ -794,6 +796,10 @@ defmodule MercatorWeb.Admin.DeskLive do
     </div>
     """
   end
+
+  # attachments sit in the bubble's column of the daisyUI chat grid
+  defp attachment_column(true = _start?), do: "col-start-2"
+  defp attachment_column(false), do: "col-start-1"
 
   defp sender(%{sender_kind: :customer}), do: gettext("Customer")
   defp sender(%{sender_kind: :system}), do: gettext("System")

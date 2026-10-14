@@ -168,6 +168,7 @@ defmodule MercatorWeb.Layouts do
   attr :current_user, :map, required: true
   attr :locale, :string, default: nil
   attr :active, :string, default: nil, doc: "id of the active navigation entry"
+  attr :wide, :boolean, default: false, doc: "use the full width (e.g. the sales desk)"
   slot :inner_block, required: true
 
   @doc "Layout of the admin area (#16): top bar plus a sidebar filtered by role."
@@ -212,7 +213,7 @@ defmodule MercatorWeb.Layouts do
           </div>
         </header>
         <main class="flex-1 bg-base-200 px-4 py-8 sm:px-6 lg:px-8">
-          <div class="mx-auto max-w-6xl space-y-4">
+          <div class={["mx-auto space-y-4", if(@wide, do: "max-w-none", else: "max-w-6xl")]}>
             {render_slot(@inner_block)}
           </div>
         </main>

@@ -45,8 +45,9 @@ defmodule Mercator.Consulting.ConversationsTest do
     Phoenix.PubSub.subscribe(Mercator.PubSub, "desk")
     {:ok, conversation} = Conversations.start(visitor(), "Hallo")
 
-    assert_receive {:conversation, %{id: id, state: :waiting}}
-    assert id == conversation.id
+    # other async tests broadcast on the same topic
+    id = conversation.id
+    assert_receive {:conversation, %{id: ^id, state: :waiting}}
   end
 
   test "closed conversations are no longer current" do

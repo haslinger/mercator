@@ -35,18 +35,23 @@ defmodule MercatorWeb.ConsultingComponents do
     <.shop_link
       path={~p"/products/#{@product.slug}"}
       desk={@desk}
-      class="mt-1 flex w-64 max-w-full items-center gap-3 rounded-box bg-base-100 p-2 text-base-content shadow-sm hover:shadow"
+      class="mt-1 block w-72 max-w-full overflow-hidden rounded-box bg-base-100 text-base-content shadow-sm transition hover:shadow-md"
       id={"attachment-#{@message.id}"}
     >
       <.catalog_image
         image={first_image(@product)}
         label={Translated.t(@product.title, @locale)}
-        class="size-14 shrink-0 rounded"
+        class="aspect-[4/3] w-full"
       />
-      <span class="min-w-0">
-        <span class="line-clamp-2 text-sm font-semibold">{Translated.t(@product.title, @locale)}</span>
-        <span :if={@price} class="text-sm text-base-content/70">
-          {gettext("from %{amount}", amount: Format.money(@price.unit_gross, @locale))}
+      <span class="block space-y-1 p-3">
+        <span class="line-clamp-2 font-semibold">{Translated.t(@product.title, @locale)}</span>
+        <span class="flex items-center justify-between gap-2 text-sm">
+          <span :if={@price} class="text-base-content/70">
+            {gettext("from %{amount}", amount: Format.money(@price.unit_gross, @locale))}
+          </span>
+          <span class="ml-auto font-semibold text-primary">
+            {gettext("View")} <.icon name="hero-arrow-right" class="size-4" />
+          </span>
         </span>
       </span>
     </.shop_link>
@@ -60,7 +65,7 @@ defmodule MercatorWeb.ConsultingComponents do
     <.shop_link
       path={@path}
       desk={@desk}
-      class="mt-1 flex w-64 max-w-full items-center gap-2 rounded-box bg-base-100 p-2 text-sm text-base-content shadow-sm hover:shadow"
+      class="mt-1 flex w-72 max-w-full items-center gap-2 rounded-box bg-base-100 p-2 text-sm text-base-content shadow-sm hover:shadow"
       id={"attachment-#{@message.id}"}
     >
       <.icon name="hero-arrow-right-circle" class="size-6 shrink-0 text-primary" />
@@ -75,7 +80,7 @@ defmodule MercatorWeb.ConsultingComponents do
       href={@message.link_url}
       target="_blank"
       rel="noopener noreferrer"
-      class="mt-1 flex w-64 max-w-full items-center gap-2 rounded-box bg-base-100 p-2 text-sm text-base-content shadow-sm hover:shadow"
+      class="mt-1 flex w-72 max-w-full items-center gap-2 rounded-box bg-base-100 p-2 text-sm text-base-content shadow-sm hover:shadow"
       id={"attachment-#{@message.id}"}
     >
       <.icon name="hero-arrow-top-right-on-square" class="size-6 shrink-0 text-primary" />
@@ -95,7 +100,7 @@ defmodule MercatorWeb.ConsultingComponents do
     <a
       href={Asset.url(@asset, :large)}
       target="_blank"
-      class="mt-1 block w-64 max-w-full"
+      class="mt-1 block w-72 max-w-full"
       id={"attachment-#{@message.id}"}
     >
       <img
@@ -114,7 +119,7 @@ defmodule MercatorWeb.ConsultingComponents do
     <a
       href={Asset.url(@asset)}
       target="_blank"
-      class="mt-1 flex w-64 max-w-full items-center gap-2 rounded-box bg-base-100 p-2 text-sm text-base-content shadow-sm hover:shadow"
+      class="mt-1 flex w-72 max-w-full items-center gap-2 rounded-box bg-base-100 p-2 text-sm text-base-content shadow-sm hover:shadow"
       id={"attachment-#{@message.id}"}
     >
       <.icon name="hero-document-text" class="size-6 shrink-0 text-primary" />

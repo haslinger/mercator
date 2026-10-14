@@ -169,7 +169,7 @@ defmodule MercatorWeb.ChatLive do
       <%!-- always in the page (only hidden), so the message stream keeps its history --%>
       <section
         class={[
-          "card h-[28rem] max-h-[calc(100vh-6rem)] w-[min(24rem,calc(100vw-2rem))] flex-col overflow-hidden bg-base-100 shadow-xl",
+          "card h-[min(44rem,calc(100vh-7rem))] w-[min(32rem,calc(100vw-2rem))] flex-col overflow-hidden bg-base-100 shadow-xl",
           if(@open?, do: "flex", else: "hidden")
         ]}
         id="chat-panel"
@@ -230,7 +230,9 @@ defmodule MercatorWeb.ChatLive do
               >
                 {message.body}
               </div>
-              <.attachment message={message} locale={@locale} />
+              <div class={if message.sender_kind == :customer, do: "col-start-1", else: "col-start-2"}>
+                <.attachment message={message} locale={@locale} />
+              </div>
             </div>
           </div>
           <.waiting
