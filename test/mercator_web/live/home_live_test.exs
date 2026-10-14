@@ -112,4 +112,23 @@ defmodule MercatorWeb.HomeLiveTest do
       assert has_element?(view, "#footer-page-#{imprint.id}")
     end
   end
+
+  test "subpages appear nested below their parent in the sidebar", %{conn: conn} do
+    editor = user_fixture(roles: [:contentmanager])
+
+    publish = fn attrs ->
+      attrs
+      |> Map.put(:menu, :main)
+      |> Mercator.Content.create_page!(actor: editor)
+      |> Mercator.Content.publish_page!(actor: editor)
+    end
+
+    parent = publish.(%{title: %{"de" => "Kontaktwege"}})
+    child = publish.(%{title: %{"de" => "Anfahrt"}, parent_id: parent.id})
+
+    {:ok, view, _html} = live(conn, ~p"/")
+
+    assert has_element?(view, "#shop-nav ul.menu > li > #nav-page-#{parent.id}")
+    assert has_element?(view, "#shop-nav ul.menu > li > ul > li > #nav-page-#{child.id}")
+  end
 end

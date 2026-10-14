@@ -344,18 +344,46 @@ defmodule MercatorWeb.Layouts do
         </div>
         <div :if={@nav.main != []}>
           <p class="menu-title px-2">{gettext("Information")}</p>
-          <ul class="menu w-full">
-            <li :for={page <- @nav.main}>
-              <.link navigate={page_path(page)} id={"nav-page-#{page.id}"}>
-                <.icon name={page.icon || "hero-document-text"} class="size-5" />
-                {page_title(page, @locale)}
-              </.link>
-            </li>
-          </ul>
+          <.page_menu tree={page_tree(@nav.main)} parent_id={:root} locale={@locale} />
         </div>
       </div>
     </nav>
     """
+  end
+
+  attr :tree, :map, required: true
+  attr :parent_id, :any, required: true
+  attr :locale, :string, default: nil
+
+  # pages of the main navigation, subpages nested below their parent
+  defp page_menu(assigns) do
+    assigns = assign(assigns, :pages, Map.get(assigns.tree, assigns.parent_id, []))
+
+    ~H"""
+    <ul class={[@parent_id == :root && "menu w-full"]}>
+      <li :for={page <- @pages}>
+        <.link navigate={page_path(page)} id={"nav-page-#{page.id}"}>
+          <.icon name={page.icon || "hero-document-text"} class="size-5" />
+          {page_title(page, @locale)}
+        </.link>
+        <.page_menu
+          :if={Map.has_key?(@tree, page.id)}
+          tree={@tree}
+          parent_id={page.id}
+          locale={@locale}
+        />
+      </li>
+    </ul>
+    """
+  end
+
+  # groups menu pages by parent; a page whose parent is not in the menu is a root
+  defp page_tree(pages) do
+    ids = MapSet.new(pages, & &1.id)
+
+    Enum.group_by(pages, fn page ->
+      if page.parent_id && MapSet.member?(ids, page.parent_id), do: page.parent_id, else: :root
+    end)
   end
 
   @doc "The URL of a CMS page: `/` for the start page, otherwise `/pages/…`."
