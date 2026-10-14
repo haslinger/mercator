@@ -29,4 +29,3 @@ Smaller improvements noted along the way, not tied to a phase step.
 
 - **#17** PDF output: which documents are needed (offers, orders, contracts)? Which tool do you prefer (ChromicPDF needs headless Chrome; Typst is a single binary)?
 - **#18** *(analytics part answered, see Decisions)* Which of these features are still needed: blog, podcasts, comments, Twitter integration, Ahoy visitor tracking, the contact form with its captcha question, Gravatar?
-- **#22** Do we keep the version history (paper_trail) for all resources, or only for selected ones (orders, prices, products)? ~~Should the old history be migrated?~~ (no, see #21)

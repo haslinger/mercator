@@ -85,6 +85,7 @@ This makes it the test case for **configurable material**: wood species, dimensi
 - **#25** (2026-10-13) **No security risk:** none of the old systems are deployed any more. Secrets still go only into env/`runtime.exs` in the port.
 - **#19** (2026-10-14) **No contracting module.** The printer and consumables leasing contracts were specific to one customer and are not needed; the phase is dropped.
 - **#24** (2026-10-14) **Deployment with Docker**: Mercator runs as a Docker container (a Mix release in the image), set up in the deployment phase. The database connection sets `lc_messages=C`; on managed Postgres configure English server messages instead (see README).
+- **#22** (2026-10-14) **Version history only where it is needed**, decided per resource: CMS pages keep every published version (AshPaperTrail, #84), the GTC are versioned by date (#92), orders keep their state changes with notes (OrderEvent), and offers will keep their revised versions. No history for the rest.
 
 ## Answered questions
 
@@ -108,6 +109,7 @@ The questions as they were asked, kept for the record (the decisions above are t
 
 ### Data and operations
 - ~~**#21**~~ *(answered, see Decisions)* Do we migrate existing production data from MySQL (users, orders, catalogue, CMS content), or start fresh? Is a recent DB dump available to develop against?
+- ~~**#22**~~ *(answered 2026-10-14: only where needed, see Decisions)* Do we keep the version history (paper_trail) for all resources, or only for selected ones (orders, prices, products)? ~~Should the old history be migrated?~~ (no, see #21)
 - ~~**#23**~~ *(obsolete because of #21)* Is there an existing user base whose passwords must keep working? Hobo stores crypted passwords; I'd need to check the hash algorithm. If they can't be verified, we'd force a reset.
 - ~~**#73**~~ *(answered 2026-10-14: yes)* Time zone: `tz` package, shop time zone configurable (`:time_zone`, env `SHOP_TIME_ZONE`, default `Europe/Vienna`), see `Mercator.Clock`.
 - ~~**#74**~~ *(answered 2026-10-14: yes)* Customers get an email when staff confirm, ship or cancel their order (with the reason).
