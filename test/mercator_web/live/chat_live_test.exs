@@ -1,10 +1,12 @@
 defmodule MercatorWeb.ChatLiveTest do
   use MercatorWeb.ConnCase, async: true
+  use Oban.Testing, repo: Mercator.Repo
 
   import Phoenix.LiveViewTest
   import Mercator.AccountsFixtures
 
   alias Mercator.Consulting.Conversations
+  alias Mercator.Consulting.Workers.SendCallbackRequest
   alias MercatorWeb.ChatLive
 
   defp visitor_conn(conn) do
@@ -90,5 +92,59 @@ defmodule MercatorWeb.ChatLiveTest do
 
     view |> element("#chat-end") |> render_click()
     assert Conversations.current({:user, user}) == nil
+  end
+
+  describe "nobody answers (#95)" do
+    test "after the waiting time the customer may leave email or phone", %{conn: conn} do
+      {conn, owner} = visitor_conn(conn)
+      {:ok, view, _html} = live_isolated(conn, ChatLive)
+      view |> element("#chat-toggle") |> render_click()
+      view |> form("#chat-form", chat: %{body: "Brauche ein Angebot"}) |> render_submit()
+
+      # the countdown in the browser runs out
+      render_hook(view, "waited", %{})
+      assert has_element?(view, "#chat-callback")
+
+      view
+      |> form("#chat-callback", %{"kind" => "phone", "contact" => "kein Telefon"})
+      |> render_submit()
+
+      assert has_element?(view, "#chat-callback-error")
+
+      view
+      |> form("#chat-callback", %{"kind" => "phone", "contact" => "+43 664 1234567"})
+      |> render_submit()
+
+      assert has_element?(view, "#chat-callback-done", "+43 664 1234567")
+      assert has_element?(view, "#chat-messages", "Rückruf gewünscht per Telefon")
+
+      conversation = Conversations.current(owner)
+      assert conversation.state == :waiting
+      assert conversation.callback_kind == :phone
+
+      assert_enqueued worker: SendCallbackRequest,
+                      args: %{conversation_id: conversation.id}
+    end
+
+    test "the shop gets an email with the request and the questions", %{conn: conn} do
+      {_conn, owner} = visitor_conn(conn)
+
+      {:ok, conversation} =
+        Conversations.start(owner, "Gartenhaus mit Fundament?", %{subject: "Gartenhaus"})
+
+      {:ok, _} =
+        Conversations.request_callback(owner, conversation.id, :email, "karl@example.com")
+
+      email =
+        SendCallbackRequest.email(
+          Ash.load!(Conversations.current(owner), [:customer, messages: [:sender]],
+            authorize?: false
+          )
+        )
+
+      assert email.subject =~ "karl@example.com"
+      assert email.text_body =~ "> Gartenhaus mit Fundament?"
+      assert email.text_body =~ "/admin/desk/#{conversation.id}"
+    end
   end
 end

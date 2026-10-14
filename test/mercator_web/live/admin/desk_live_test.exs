@@ -68,4 +68,14 @@ defmodule MercatorWeb.Admin.DeskLiveTest do
     refute has_element?(desk, "#desk-conversation-#{conversation.id}")
     assert Conversations.current(owner) == nil
   end
+
+  test "callback requests are marked on the desk", %{conn: conn} do
+    {_customer_conn, owner} = visitor_conn()
+    {:ok, conversation} = Conversations.start(owner, "Bitte zurückrufen")
+    {:ok, _} = Conversations.request_callback(owner, conversation.id, :phone, "+43 1 2345678")
+
+    {:ok, desk, _html} = live(conn, ~p"/admin/desk/#{conversation.id}")
+    assert has_element?(desk, "#desk-conversation-#{conversation.id} .badge", "Rückruf")
+    assert has_element?(desk, "#conversation-callback", "+43 1 2345678")
+  end
 end

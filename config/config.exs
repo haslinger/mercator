@@ -135,6 +135,10 @@ config :mercator, :rate_limits,
   auth_email: {3, :timer.minutes(15)},
   contact: {5, :timer.hours(1)}
 
+# Guided selling (#95): seconds a customer waits for a consultant before the
+# callback form appears (immediately when nobody is at the sales desk)
+config :mercator, :consulting_wait_seconds, 120
+
 # Reverse proxies whose X-Forwarded-For header is believed (MercatorWeb.ClientIp);
 # override with TRUSTED_PROXIES (comma-separated) at runtime.
 config :mercator, :trusted_proxies, ["127.0.0.1", "::1"]

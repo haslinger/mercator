@@ -67,6 +67,15 @@ defmodule Mercator.Consulting.Conversation do
       change set_attribute(:last_message_at, &DateTime.utc_now/0)
     end
 
+    update :request_callback do
+      description "Nobody answered in time (#95): the customer asks to be contacted."
+      accept [:callback_kind, :callback_contact]
+      require_atomic? false
+      validate present([:callback_kind, :callback_contact])
+      validate Mercator.Consulting.Validations.CallbackContact
+      change set_attribute(:callback_requested_at, &DateTime.utc_now/0)
+    end
+
     update :move_to_user do
       description "At sign-in, a visitor's conversation becomes the user's."
       accept [:customer_id]
@@ -102,6 +111,18 @@ defmodule Mercator.Consulting.Conversation do
     end
 
     attribute :last_message_at, :utc_datetime_usec, public?: true
+
+    attribute :callback_kind, :atom do
+      description "How the customer wants to be contacted when nobody answered (#95)."
+      public? true
+      constraints one_of: [:email, :phone]
+    end
+
+    attribute :callback_contact, :string,
+      public?: true,
+      constraints: [max_length: 200, trim?: true]
+
+    attribute :callback_requested_at, :utc_datetime_usec, public?: true
     timestamps()
   end
 

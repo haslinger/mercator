@@ -141,7 +141,14 @@ defmodule MercatorWeb.Admin.DeskLive do
             :selected,
             Map.merge(
               socket.assigns.selected,
-              Map.take(conversation, [:state, :consultant_id, :consultant])
+              Map.take(conversation, [
+                :state,
+                :consultant_id,
+                :consultant,
+                :callback_kind,
+                :callback_contact,
+                :callback_requested_at
+              ])
             )
           ),
         else: socket
@@ -230,6 +237,22 @@ defmodule MercatorWeb.Admin.DeskLive do
             <div class="min-w-0 flex-1">
               <p class="font-semibold" id="conversation-customer">
                 {Desk.display_name(@selected.customer)}
+              </p>
+              <p
+                :if={@selected.callback_requested_at}
+                class="text-sm text-warning"
+                id="conversation-callback"
+              >
+                <.icon name="hero-phone-arrow-down-left" class="size-4" />
+                {if @selected.callback_kind == :email,
+                  do:
+                    gettext("Callback requested by email: %{contact}",
+                      contact: @selected.callback_contact
+                    ),
+                  else:
+                    gettext("Callback requested by phone: %{contact}",
+                      contact: @selected.callback_contact
+                    )}
               </p>
               <p class="truncate text-sm text-base-content/60">
                 <span :if={@selected.subject}>{@selected.subject} · </span>
@@ -359,7 +382,12 @@ defmodule MercatorWeb.Admin.DeskLive do
               id={"desk-conversation-#{conversation.id}"}
             >
               <div class="min-w-0 flex-1">
-                <p class="truncate font-medium">{Desk.display_name(conversation.customer)}</p>
+                <p class="truncate font-medium">
+                  {Desk.display_name(conversation.customer)}
+                  <span :if={conversation.callback_requested_at} class="badge badge-warning badge-xs">
+                    {gettext("Callback")}
+                  </span>
+                </p>
                 <p class="truncate text-xs opacity-70">{conversation.subject || conversation.page}</p>
               </div>
               <span class="text-xs opacity-70">{since(conversation.inserted_at)}</span>

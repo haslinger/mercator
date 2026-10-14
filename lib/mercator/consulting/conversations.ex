@@ -15,6 +15,7 @@ defmodule Mercator.Consulting.Conversations do
   require Ash.Query
 
   alias Mercator.Consulting.{Conversation, Message}
+  alias Mercator.Consulting.Workers.SendCallbackRequest
 
   @pubsub Mercator.PubSub
 
@@ -69,6 +70,48 @@ defmodule Mercator.Consulting.Conversations do
     |> Ash.Query.filter(id == ^id)
     |> Ash.read_one!(authorize?: false)
   end
+
+  @doc """
+  Nobody answered in time (#95): the customer leaves an email address or a
+  phone number. The conversation keeps waiting; the desk and the shop's
+  email address are told.
+  """
+  def request_callback(owner, conversation_id, kind, contact) do
+    with %Conversation{} = conversation <- get(owner, conversation_id),
+         {:ok, conversation} <-
+           Ash.update(conversation, %{callback_kind: kind, callback_contact: contact},
+             action: :request_callback,
+             authorize?: false
+           ) do
+      create_message(conversation, %{sender_kind: :system, body: callback_note(conversation)})
+
+      %{conversation_id: conversation.id}
+      |> SendCallbackRequest.new()
+      |> Oban.insert!()
+
+      broadcast("conversation:#{conversation.id}", {:conversation, conversation})
+      broadcast("desk", {:conversation, conversation})
+      {:ok, conversation}
+    else
+      nil -> {:error, :not_found}
+      error -> error
+    end
+  end
+
+  defp callback_note(%{callback_kind: :email, callback_contact: contact}),
+    do:
+      Gettext.gettext(MercatorWeb.Gettext, "Callback requested by email: %{contact}",
+        contact: contact
+      )
+
+  defp callback_note(%{callback_contact: contact}),
+    do:
+      Gettext.gettext(MercatorWeb.Gettext, "Callback requested by phone: %{contact}",
+        contact: contact
+      )
+
+  @doc "How long a customer waits for a consultant before being offered a callback (#95)."
+  def wait_seconds, do: Application.get_env(:mercator, :consulting_wait_seconds, 120)
 
   @doc "The customer ends the conversation."
   def close(owner, conversation_id) do

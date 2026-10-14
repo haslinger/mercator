@@ -201,6 +201,7 @@ msgstr ""
 msgid "too many attempts, please try again later"
 msgstr ""
 
+#: lib/mercator/consulting/validations/callback_contact.ex:14
 #: lib/mercator/content/submission.ex:35
 #, elixir-autogen, elixir-format
 msgid "is not a valid email address"
@@ -214,4 +215,9 @@ msgstr ""
 #: lib/mercator/sales/validations/gtc_not_in_force.ex:23
 #, elixir-autogen, elixir-format
 msgid "must be today or later"
+msgstr ""
+
+#: lib/mercator/consulting/validations/callback_contact.ex:19
+#, elixir-autogen, elixir-format
+msgid "is not a valid phone number"
 msgstr ""

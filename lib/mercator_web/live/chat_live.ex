@@ -35,14 +35,26 @@ defmodule MercatorWeb.ChatLive do
   end
 
   defp assign_conversation(socket, nil) do
-    socket |> assign(:conversation, nil) |> stream(:messages, [], reset: true)
+    socket
+    |> assign(conversation: nil, callback_offered?: false, callback_error: nil)
+    |> stream(:messages, [], reset: true)
   end
 
   defp assign_conversation(socket, conversation) do
     socket
     |> assign(:conversation, Map.delete(conversation, :messages))
+    |> assign(:callback_offered?, waited_long_enough?(conversation))
+    |> assign(:callback_error, nil)
     |> stream(:messages, conversation.messages, reset: true)
   end
+
+  # #95: after the waiting time, or right away when nobody is at the desk
+  defp waited_long_enough?(%{state: :waiting} = conversation) do
+    MercatorWeb.Presence.available_count() == 0 or
+      DateTime.diff(DateTime.utc_now(), conversation.inserted_at) >= Conversations.wait_seconds()
+  end
+
+  defp waited_long_enough?(_conversation), do: false
 
   defp new_form, do: to_form(%{"body" => ""}, as: :chat)
 
@@ -79,6 +91,33 @@ defmodule MercatorWeb.ChatLive do
         {:ok, conversation} = Conversations.start(owner, body, context)
         Conversations.subscribe(conversation.id)
         {:noreply, socket |> assign_conversation(conversation) |> assign(:form, new_form())}
+    end
+  end
+
+  # the countdown in the browser has run out
+  def handle_event("waited", _params, socket) do
+    {:noreply, assign(socket, :callback_offered?, socket.assigns.conversation != nil)}
+  end
+
+  def handle_event("callback", %{"kind" => kind, "contact" => contact}, socket)
+      when kind in ["email", "phone"] do
+    case Conversations.request_callback(
+           socket.assigns.basket_owner,
+           socket.assigns.conversation.id,
+           String.to_existing_atom(kind),
+           contact
+         ) do
+      {:ok, conversation} ->
+        {:noreply,
+         assign(socket, conversation: Map.delete(conversation, :messages), callback_error: nil)}
+
+      {:error, _} ->
+        {:noreply,
+         assign(
+           socket,
+           :callback_error,
+           gettext("Please enter a valid email address or phone number.")
+         )}
     end
   end
 
@@ -172,6 +211,12 @@ defmodule MercatorWeb.ChatLive do
               </div>
             </div>
           </div>
+          <.waiting
+            :if={@conversation && @conversation.state == :waiting}
+            conversation={@conversation}
+            offered?={@callback_offered?}
+            error={@callback_error}
+          />
         </div>
 
         <.form
@@ -241,12 +286,98 @@ defmodule MercatorWeb.ChatLive do
         destroyed() { window.removeEventListener("mercator:open-chat", this.onOpen) }
       }
     </script>
+    <script :type={Phoenix.LiveView.ColocatedHook} name=".Countdown">
+      export default {
+        mounted() { this.tick(); this.timer = setInterval(() => this.tick(), 1000) },
+        destroyed() { clearInterval(this.timer) },
+        tick() {
+          const left = Math.max(0, Math.round((Number(this.el.dataset.until) - Date.now()) / 1000))
+          const out = this.el.querySelector("[data-remaining]")
+          if (out) out.textContent = `${Math.floor(left / 60)}:${String(left % 60).padStart(2, "0")}`
+          if (left === 0) { clearInterval(this.timer); this.pushEvent("waited", {}) }
+        }
+      }
+    </script>
     <script :type={Phoenix.LiveView.ColocatedHook} name=".ScrollDown">
       export default {
         mounted() { this.el.scrollTop = this.el.scrollHeight },
         updated() { this.el.scrollTop = this.el.scrollHeight }
       }
     </script>
+    """
+  end
+
+  attr :conversation, :map, required: true
+  attr :offered?, :boolean, required: true
+  attr :error, :string, default: nil
+
+  # #95: countdown while a consultant is sought, then the callback form
+  defp waiting(assigns) do
+    assigns =
+      assign(
+        assigns,
+        :until,
+        assigns.conversation.inserted_at
+        |> DateTime.add(Conversations.wait_seconds())
+        |> DateTime.to_unix(:millisecond)
+      )
+
+    ~H"""
+    <div class="mt-3 text-sm" id="chat-waiting">
+      <%= cond do %>
+        <% @conversation.callback_requested_at -> %>
+          <div class="alert alert-info py-2" id="chat-callback-done">
+            <.icon name="hero-check-circle" class="size-5" />
+            <span>
+              {if @conversation.callback_kind == :email,
+                do:
+                  gettext("Thank you! We will write to %{contact}.",
+                    contact: @conversation.callback_contact
+                  ),
+                else:
+                  gettext("Thank you! We will call you at %{contact}.",
+                    contact: @conversation.callback_contact
+                  )}
+            </span>
+          </div>
+        <% @offered? -> %>
+          <form class="space-y-2 rounded-box bg-base-200 p-3" id="chat-callback" phx-submit="callback">
+            <p>{gettext("Sorry, nobody is available right now. May we contact you?")}</p>
+            <div class="join w-full">
+              <label class="join-item btn btn-sm flex-1 has-[:checked]:btn-primary">
+                <input type="radio" name="kind" value="email" checked class="sr-only" /> {gettext(
+                  "Email"
+                )}
+              </label>
+              <label class="join-item btn btn-sm flex-1 has-[:checked]:btn-primary">
+                <input type="radio" name="kind" value="phone" class="sr-only" /> {gettext("Phone")}
+              </label>
+            </div>
+            <input
+              type="text"
+              name="contact"
+              class="input input-sm w-full"
+              placeholder={gettext("Email address or phone number")}
+              aria-label={gettext("Email address or phone number")}
+              id="chat-callback-contact"
+            />
+            <p :if={@error} class="text-error" id="chat-callback-error">{@error}</p>
+            <button type="submit" class="btn btn-primary btn-sm w-full" id="chat-callback-send">
+              {gettext("Please contact me")}
+            </button>
+          </form>
+        <% true -> %>
+          <p
+            class="text-base-content/70"
+            id="chat-countdown"
+            phx-hook=".Countdown"
+            data-until={@until}
+          >
+            {gettext("A consultant will be with you shortly …")}
+            <span data-remaining class="font-mono"></span>
+          </p>
+      <% end %>
+    </div>
     """
   end
 
