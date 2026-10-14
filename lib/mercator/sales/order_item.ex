@@ -71,8 +71,7 @@ defmodule Mercator.Sales.OrderItem do
     attribute :position, :integer, allow_nil?: false, public?: true
 
     attribute :number, :string do
-      description "Article number, or the configuration number of a configured product."
-      allow_nil? false
+      description "Article number, or the configuration number of a configured product; nil for free-text items of an offer."
       public? true
     end
 

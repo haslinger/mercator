@@ -2,10 +2,12 @@ defmodule Mercator.Consulting.OfferTotals do
   @moduledoc """
   Totals of an offer (docs/guided-selling-design.md, 3.3).
 
-    * an item's net amount is quantity × unit price less the item discount,
-      rounded to cents
-    * the overall discount is taken off the net amount per VAT rate
-    * VAT is calculated per rate on the discounted net amount
+    * an item's goods amount is quantity × unit price less the item
+      discount, rounded to cents
+    * the overall discount is taken off each item, rounded to cents
+    * VAT is calculated per item on its discounted net amount, like basket
+      lines (`Mercator.Catalog.PriceInfo`), so an order placed from the
+      offer has exactly the offer's amounts
 
   Shipping is not part of an offer; the checkout adds it (or the consultant
   adds a free-text item for delivery).
@@ -14,26 +16,24 @@ defmodule Mercator.Consulting.OfferTotals do
   @hundred Decimal.new(100)
 
   @doc """
-  Returns `%{lines: [%{item, net}], goods_net, discount, net, vat, gross,
-  vat_lines: [%{rate, net, vat}]}`.
+  Returns `%{lines: [%{item, goods, net, vat, gross, vat_rate}], goods_net,
+  discount, net, vat, gross, vat_lines: [%{rate, net, vat}]}`.
   """
   def calculate(items, discount_percent) do
     discount_percent = discount_percent || Decimal.new(0)
-    lines = Enum.map(items, &%{item: &1, net: item_net(&1)})
+    lines = Enum.map(items, &line(&1, discount_percent))
 
     vat_lines =
       lines
-      |> Enum.group_by(& &1.item.vat_rate)
+      |> Enum.group_by(& &1.vat_rate)
       |> Enum.map(fn {rate, group} ->
-        goods = sum(group, :net)
-        net = Decimal.sub(goods, percent_of(goods, discount_percent))
-        %{rate: rate, goods: goods, net: net, vat: percent_of(net, rate)}
+        %{rate: rate, net: sum(group, :net), vat: sum(group, :vat)}
       end)
       |> Enum.sort_by(& &1.rate, {:desc, Decimal})
 
-    goods_net = sum(vat_lines, :goods)
-    net = sum(vat_lines, :net)
-    vat = sum(vat_lines, :vat)
+    goods_net = sum(lines, :goods)
+    net = sum(lines, :net)
+    vat = sum(lines, :vat)
 
     %{
       lines: lines,
@@ -42,7 +42,22 @@ defmodule Mercator.Consulting.OfferTotals do
       net: net,
       vat: vat,
       gross: Decimal.add(net, vat),
-      vat_lines: Enum.map(vat_lines, &Map.delete(&1, :goods))
+      vat_lines: vat_lines
+    }
+  end
+
+  defp line(item, discount_percent) do
+    goods = item_net(item)
+    net = Decimal.sub(goods, percent_of(goods, discount_percent))
+    vat = percent_of(net, item.vat_rate)
+
+    %{
+      item: item,
+      goods: goods,
+      net: net,
+      vat: vat,
+      gross: Decimal.add(net, vat),
+      vat_rate: item.vat_rate
     }
   end
 

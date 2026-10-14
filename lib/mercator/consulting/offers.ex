@@ -13,7 +13,7 @@ defmodule Mercator.Consulting.Offers do
   alias Mercator.Accounts.User
   alias Mercator.{Catalog, Translated}
   alias Mercator.Catalog.{Configurator, Variant}
-  alias Mercator.Consulting.{Offer, OfferItem, OfferTotals}
+  alias Mercator.Consulting.{Conversation, Conversations, Offer, OfferItem, OfferTotals}
   alias Mercator.Sales.{BasketPricing, Baskets}
 
   @loads [:customer, :consultant, :approved_by, :conversation, items: [:product]]
@@ -167,11 +167,50 @@ defmodule Mercator.Consulting.Offers do
     with :ok <- Ash.destroy(item, actor: actor), do: recalculate(item.offer_id)
   end
 
-  @doc "Submits a draft: sent, or waiting for a sales manager's approval (#98)."
-  def submit(offer, actor), do: transition(offer, :submit, %{}, actor)
+  @doc """
+  Submits a draft: sent, or waiting for a sales manager's approval (#98).
+  A sent offer appears as a card in its conversation (`announce/1`).
+  """
+  def submit(offer, actor), do: offer |> transition(:submit, %{}, actor) |> announce()
 
   @doc "A sales manager approves; the offer is sent."
-  def approve(offer, actor), do: transition(offer, :approve, %{}, actor)
+  def approve(offer, actor), do: offer |> transition(:approve, %{}, actor) |> announce()
+
+  # a sent offer of a conversation that is still open: a card in the chat
+  defp announce({:ok, %Offer{state: :sent, conversation_id: id} = offer} = result)
+       when not is_nil(id) do
+    case Ash.get(Conversation, id, authorize?: false) do
+      {:ok, %{state: state} = conversation} when state in [:waiting, :active] ->
+        Conversations.create_message(conversation, %{
+          sender_kind: :consultant,
+          sender_id: offer.consultant_id,
+          offer_id: offer.id
+        })
+
+      _closed_or_gone ->
+        :ok
+    end
+
+    result
+  end
+
+  defp announce(result), do: result
+
+  @doc """
+  A sent offer of the customer (`actor`) that can still be ordered, with
+  its items, for the checkout; else `{:error, :not_acceptable}`.
+  """
+  def for_checkout(id, customer) do
+    with {:ok, %Offer{} = offer} <-
+           Offer
+           |> Ash.Query.filter(id == ^id and customer_id == ^customer.id)
+           |> Ash.read_one(actor: customer),
+         true <- Offer.acceptable?(offer) do
+      Ash.load(offer, [items: [:variant, :product]], authorize?: false)
+    else
+      _ -> {:error, :not_acceptable}
+    end
+  end
 
   @doc "A sales manager sends the offer back to the draft, with a reason."
   def reject(offer, note, actor), do: transition(offer, :reject, %{note: note}, actor)

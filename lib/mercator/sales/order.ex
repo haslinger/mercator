@@ -23,6 +23,7 @@ defmodule Mercator.Sales.Order do
 
     references do
       reference :user, on_delete: :restrict
+      reference :offer, on_delete: :nilify
     end
   end
 
@@ -61,7 +62,8 @@ defmodule Mercator.Sales.Order do
         :vat_lines,
         :gtc_version,
         :gtc_accepted_at,
-        :note
+        :note,
+        :offer_id
       ]
 
       argument :items, {:array, :map}, allow_nil?: false
@@ -225,6 +227,11 @@ defmodule Mercator.Sales.Order do
 
   relationships do
     belongs_to :user, Mercator.Accounts.User, allow_nil?: false, public?: true
+
+    belongs_to :offer, Mercator.Consulting.Offer do
+      description "The offer this order was placed from (guided selling)."
+      public? true
+    end
 
     has_many :items, Mercator.Sales.OrderItem do
       public? true

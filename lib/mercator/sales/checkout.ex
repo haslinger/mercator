@@ -3,17 +3,22 @@ defmodule Mercator.Sales.Checkout do
   Checkout of a signed-in customer's basket (checkout-design.md, section 5;
   #66: signed-in customers only).
 
-  `prepare/2` resolves the customer's choices (addresses, shipping and
+  `prepare/3` resolves the customer's choices (addresses, shipping and
   payment method) against what is possible and calculates the totals, for
-  display. `place/2` checks everything again and, in one transaction,
+  display. `place/3` checks everything again and, in one transaction,
   reduces the stock, creates the order snapshot and empties the basket. The
   confirmation email is sent by an Oban job.
+
+  The source is the basket, or an accepted offer (`{:offer, offer}`,
+  guided selling step 5): its items at the offer's prices, free-text items
+  included; the basket stays as it is and the offer becomes `accepted`.
   """
 
   use Gettext, backend: MercatorWeb.Gettext
 
   alias Mercator.{Accounts, Catalog, Countries, Sales, Translated}
   alias Mercator.Catalog.{Configurator, Variant}
+  alias Mercator.Consulting.{Offer, OfferItem, OfferTotals}
   alias Mercator.Sales.{BasketPricing, Baskets, OrderTotals, Payment, Shipping}
   alias Mercator.Sales.Workers.SendOrderConfirmation
 
@@ -25,16 +30,18 @@ defmodule Mercator.Sales.Checkout do
   The checkout state for a user and the form params (string keys
   `billing_address_id`, `shipping_address_id`, `shipping_method`,
   `payment_method`). Invalid or missing choices fall back to defaults.
+  `source` is `:basket` or `{:offer, offer}` (with items, variant and
+  product loaded, see `Mercator.Consulting.Offers.for_checkout/2`).
   """
-  def prepare(user, params \\ %{}) do
-    pricing = {:user, user} |> Baskets.get() |> BasketPricing.calculate()
+  def prepare(user, params \\ %{}, source \\ :basket) do
+    pricing = pricing(user, source)
     lines = Enum.filter(pricing.lines, & &1.available?)
     addresses = Accounts.list_my_addresses!(actor: user)
     delivery_addresses = Enum.filter(addresses, &(&1.country in Countries.delivery()))
 
     billing = pick(addresses, params["billing_address_id"], & &1.default_billing)
 
-    shipping_methods = Shipping.methods_for(Enum.map(lines, & &1.product))
+    shipping_methods = Shipping.methods_for(shipping_products(lines))
     shipping_method = pick_value(shipping_methods, params["shipping_method"])
 
     delivery_address =
@@ -49,6 +56,7 @@ defmodule Mercator.Sales.Checkout do
     payment_methods = Payment.methods_for(user, shipping_method)
 
     %{
+      offer: offer(source),
       pricing: pricing,
       unavailable?: length(lines) < length(pricing.lines),
       addresses: addresses,
@@ -73,6 +81,8 @@ defmodule Mercator.Sales.Checkout do
   """
   def problems(checkout, gtc_accepted?) do
     [
+      {:offer, checkout.offer != nil and not Offer.acceptable?(checkout.offer),
+       gettext("This offer is no longer valid.")},
       {:basket, checkout.pricing.lines == [], gettext("Your basket is empty.")},
       {:basket, checkout.unavailable?,
        gettext("Please remove the items that are no longer available.")},
@@ -106,8 +116,8 @@ defmodule Mercator.Sales.Checkout do
   Places the order. Params as for `prepare/2`, plus `"gtc" => "true"` and an
   optional `"note"`. Returns `{:ok, order}` or `{:error, [{field, message}]}`.
   """
-  def place(user, params) do
-    checkout = prepare(user, params)
+  def place(user, params, source \\ :basket) do
+    checkout = prepare(user, params, source)
 
     case problems(checkout, params["gtc"] == "true") do
       [] -> create(user, checkout, params["note"])
@@ -127,9 +137,9 @@ defmodule Mercator.Sales.Checkout do
                  action: :place,
                  actor: user,
                  return_notifications?: true
-               ) do
-          basket_notifications = Baskets.clear({:user, user})
-          {order, stock_notifications ++ order_notifications ++ basket_notifications}
+               ),
+             {:ok, finish_notifications} <- finish(user, checkout.offer) do
+          {order, stock_notifications ++ order_notifications ++ finish_notifications}
         else
           {:error, reason} -> Mercator.Repo.rollback(reason)
         end
@@ -169,7 +179,27 @@ defmodule Mercator.Sales.Checkout do
       gtc_version: checkout.gtc.version,
       gtc_accepted_at: DateTime.utc_now(),
       note: blank_to_nil(note),
+      offer_id: checkout.offer && checkout.offer.id,
       items: lines |> Enum.with_index(1) |> Enum.map(&item/1)
+    }
+  end
+
+  # a free-text or product item of an offer: the texts the customer saw, at the offer's prices
+  defp item({%{item: %OfferItem{} = item} = line, position}) do
+    %{
+      position: position,
+      number: item.number,
+      title: all_locales(item.title),
+      configuration: item.description && all_locales(item.description),
+      unit: item.unit,
+      quantity: item.quantity,
+      unit_net: line.unit_net,
+      vat_rate: line.vat_rate,
+      net: line.net,
+      vat: line.vat,
+      gross: line.gross,
+      variant_id: item.variant_id,
+      product_id: item.product_id
     }
   end
 
@@ -194,6 +224,45 @@ defmodule Mercator.Sales.Checkout do
     }
   end
 
+  defp all_locales(text), do: Map.new(Translated.locales(), &{&1, text})
+
+  defp pricing(user, :basket), do: {:user, user} |> Baskets.get() |> BasketPricing.calculate()
+
+  defp pricing(_user, {:offer, offer}) do
+    totals = OfferTotals.calculate(offer.items, offer.discount_percent)
+
+    lines =
+      Enum.map(totals.lines, fn line ->
+        Map.merge(line, %{
+          variant: line.item.variant,
+          product: line.item.product,
+          available?: true,
+          unit_net: line.net |> Decimal.div(line.item.quantity) |> Decimal.round(4)
+        })
+      end)
+
+    %{lines: lines, net: totals.net, vat: totals.vat, gross: totals.gross}
+  end
+
+  defp offer(:basket), do: nil
+  defp offer({:offer, offer}), do: offer
+
+  # free-text items of an offer (no product) are delivered like freight
+  defp shipping_products(lines) do
+    lines
+    |> Enum.map(&(&1.product || %{shipping: :freight}))
+  end
+
+  # after the order: the basket is emptied, or the offer is accepted
+  defp finish(user, nil), do: {:ok, Baskets.clear({:user, user})}
+
+  defp finish(user, offer) do
+    case Ash.update(offer, %{}, action: :accept, actor: user, return_notifications?: true) do
+      {:ok, _offer, notifications} -> {:ok, notifications}
+      error -> error
+    end
+  end
+
   defp configuration(_product, selections) when map_size(selections) == 0, do: nil
 
   defp configuration(product, selections),
@@ -205,6 +274,7 @@ defmodule Mercator.Sales.Checkout do
   # Stock is tracked for variants with a stock value (#54); others are made to order.
   defp reduce_stock(lines) do
     lines
+    |> Enum.filter(& &1.variant)
     |> Enum.group_by(& &1.variant.id, & &1.item.quantity)
     |> Enum.reduce_while({:ok, []}, fn {variant_id, quantities}, {:ok, notifications} ->
       quantity = Enum.reduce(quantities, &Decimal.add/2)

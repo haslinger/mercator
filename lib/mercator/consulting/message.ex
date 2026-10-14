@@ -21,6 +21,7 @@ defmodule Mercator.Consulting.Message do
       reference :conversation, on_delete: :delete
       reference :sender, on_delete: :nilify
       reference :product, on_delete: :nilify
+      reference :offer, on_delete: :nilify
       reference :asset, on_delete: :nilify
     end
   end
@@ -37,7 +38,8 @@ defmodule Mercator.Consulting.Message do
         :product_id,
         :asset_id,
         :link_url,
-        :link_title
+        :link_title,
+        :offer_id
       ]
 
       validate Mercator.Consulting.Validations.MessageContent
@@ -86,5 +88,6 @@ defmodule Mercator.Consulting.Message do
     belongs_to :sender, Mercator.Accounts.User, public?: true
     belongs_to :product, Mercator.Catalog.Product, public?: true
     belongs_to :asset, Mercator.Content.Asset, public?: true
+    belongs_to :offer, Mercator.Consulting.Offer, public?: true
   end
 end

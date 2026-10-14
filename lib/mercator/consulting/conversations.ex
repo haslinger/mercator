@@ -160,8 +160,8 @@ defmodule Mercator.Consulting.Conversations do
     end
   end
 
-  @doc "What is loaded with messages: sender and attachments (product as on listings, file)."
-  def message_loads, do: [:sender, :asset, product: Listing.loads()]
+  @doc "What is loaded with messages: sender and attachments (product as on listings, file, offer)."
+  def message_loads, do: [:sender, :asset, :offer, product: Listing.loads()]
 
   @doc "Receive the updates of a conversation."
   def subscribe(conversation_id),

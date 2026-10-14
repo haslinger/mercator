@@ -12,7 +12,7 @@ defmodule Mercator.Consulting.Validations.MessageContent do
     link = get.(:link_url)
 
     cond do
-      Enum.all?([:body, :product_id, :asset_id, :link_url], &(get.(&1) in [nil, ""])) ->
+      Enum.all?([:body, :product_id, :asset_id, :link_url, :offer_id], &(get.(&1) in [nil, ""])) ->
         {:error, field: :body, message: dgettext_noop("errors", "is required")}
 
       link && not valid_link?(link) ->

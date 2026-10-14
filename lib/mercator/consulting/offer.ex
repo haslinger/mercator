@@ -51,6 +51,7 @@ defmodule Mercator.Consulting.Offer do
       transition :withdraw, from: [:draft, :pending_approval, :sent], to: :withdrawn
       transition :expire, from: :sent, to: :expired
       transition :mark_revised, from: [:sent, :expired], to: :revised
+      transition :accept, from: :sent, to: :accepted
     end
   end
 
@@ -139,6 +140,14 @@ defmodule Mercator.Consulting.Offer do
       change set_attribute(:approval_note, arg(:note))
     end
 
+    update :accept do
+      description "The customer orders the offer (in the checkout, see Mercator.Sales.Checkout)."
+      require_atomic? false
+      validate Mercator.Consulting.Validations.OfferValid
+      change transition_state(:accepted)
+      change set_attribute(:accepted_at, &DateTime.utc_now/0)
+    end
+
     update :withdraw, change: transition_state(:withdrawn)
     update :expire, change: transition_state(:expired)
     update :mark_revised, change: transition_state(:revised)
@@ -159,7 +168,13 @@ defmodule Mercator.Consulting.Offer do
       authorize_if {ActorHasRole, role: :sales_manager}
     end
 
+    policy action(:accept) do
+      authorize_if expr(customer_id == ^actor(:id))
+    end
+
     policy action_type([:create, :update]) do
+      # restricted to the customer by the policy above
+      authorize_if action(:accept)
       authorize_if {ActorHasRole, role: :sales}
       authorize_if {ActorHasRole, role: :sales_manager}
     end
@@ -228,6 +243,7 @@ defmodule Mercator.Consulting.Offer do
 
     attribute :sent_at, :utc_datetime_usec, public?: true
     attribute :approved_at, :utc_datetime_usec, public?: true
+    attribute :accepted_at, :utc_datetime_usec, public?: true
     timestamps()
   end
 
@@ -237,6 +253,11 @@ defmodule Mercator.Consulting.Offer do
     belongs_to :approved_by, Mercator.Accounts.User, public?: true
     belongs_to :conversation, Mercator.Consulting.Conversation, public?: true
     belongs_to :previous_offer, __MODULE__, public?: true
+
+    has_one :order, Mercator.Sales.Order do
+      description "The order placed from the accepted offer."
+      public? true
+    end
 
     has_many :items, Mercator.Consulting.OfferItem do
       public? true
@@ -255,6 +276,12 @@ defmodule Mercator.Consulting.Offer do
   @doc "The discount in percent above which a sales manager approves (#98)."
   def approval_limit,
     do: Decimal.new(Application.get_env(:mercator, :offer_approval_limit, 10))
+
+  @doc "Whether the customer can still order the offer."
+  def acceptable?(%{state: :sent, valid_until: date}),
+    do: not Date.before?(date, Mercator.Clock.today())
+
+  def acceptable?(_offer), do: false
 
   @doc "The number as shown, with the version from the second one on: `BH-A-2026-00012/2`."
   def display_number(%{version: 1, number: number}), do: number
