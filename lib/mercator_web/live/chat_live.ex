@@ -32,7 +32,7 @@ defmodule MercatorWeb.ChatLive do
 
     {:ok,
      socket
-     |> assign(open?: false, unread: 0, context: %{}, form: new_form())
+     |> assign(open?: false, unread: 0, context: %{}, form: new_form(), sent: 0)
      |> assign_conversation(conversation), layout: false}
   end
 
@@ -92,13 +92,13 @@ defmodule MercatorWeb.ChatLive do
 
       socket.assigns.conversation ->
         Conversations.post(owner, socket.assigns.conversation.id, body)
-        {:noreply, assign(socket, :form, new_form())}
+        {:noreply, clear_input(socket)}
 
       true ->
         context = Map.put_new(socket.assigns.context, :page, params["page"])
         {:ok, conversation} = Conversations.start(owner, body, context)
         follow(conversation)
-        {:noreply, socket |> assign_conversation(conversation) |> assign(:form, new_form())}
+        {:noreply, socket |> assign_conversation(conversation) |> clear_input()}
     end
   end
 
@@ -258,7 +258,8 @@ defmodule MercatorWeb.ChatLive do
               if @conversation, do: gettext("Your message"), else: gettext("Your question")
             }
             aria-label={gettext("Your message")}
-            id="chat-input"
+            id={"chat-input-#{@sent}"}
+            phx-mounted={@sent > 0 && JS.focus()}
           >{@form[:body].value}</textarea>
           <button
             type="submit"
@@ -411,6 +412,11 @@ defmodule MercatorWeb.ChatLive do
     </div>
     """
   end
+
+  # The form has no phx-change, so the server's value stays "" and resetting it
+  # changes nothing in the browser: a new textarea (new id) is empty.
+  defp clear_input(socket),
+    do: socket |> assign(:form, new_form()) |> update(:sent, &(&1 + 1))
 
   defp status(nil), do: gettext("Ask us anything")
   defp status(%{state: :waiting}), do: gettext("We are connecting you with a consultant …")

@@ -49,7 +49,8 @@ defmodule MercatorWeb.Admin.DeskLive do
        share_query: "",
        share_results: [],
        share_error: nil,
-       form: new_form()
+       form: new_form(),
+       sent: 0
      )
      |> stream(:messages, [])
      |> load_lists()}
@@ -180,7 +181,8 @@ defmodule MercatorWeb.Admin.DeskLive do
 
       body ->
         Desk.post(socket.assigns.selected, socket.assigns.current_user, body)
-        {:noreply, assign(socket, :form, new_form())}
+        # a new textarea (new id) is empty; resetting the value alone changes nothing
+        {:noreply, socket |> assign(:form, new_form()) |> update(:sent, &(&1 + 1))}
     end
   end
 
@@ -451,7 +453,8 @@ defmodule MercatorWeb.Admin.DeskLive do
               rows="2"
               class="textarea flex-1 resize-none"
               placeholder={gettext("Your answer")}
-              id="reply-input"
+              id={"reply-input-#{@sent}"}
+              phx-mounted={@sent > 0 && JS.focus()}
             >{@form[:body].value}</textarea>
             <div class="flex flex-col gap-1 self-end">
               <div class="dropdown dropdown-top dropdown-end" id="share-menu">

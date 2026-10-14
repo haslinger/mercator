@@ -46,6 +46,8 @@ defmodule MercatorWeb.Admin.DeskLiveTest do
     chat |> form("#chat-form", chat: %{body: "Brauche Beratung zu Lärche"}) |> render_submit()
 
     conversation = Conversations.current(owner)
+    # a fresh, empty input after sending
+    assert has_element?(chat, "#chat-input-1")
     assert_push_event(desk, "desk:notify", %{title: "Neues Gespräch"})
     assert has_element?(desk, "#waiting-list #desk-conversation-#{conversation.id}")
 
@@ -62,8 +64,10 @@ defmodule MercatorWeb.Admin.DeskLiveTest do
     |> render_submit()
 
     assert has_element?(chat, "#chat-messages .chat-start", "Wie groß ist die Terrasse?")
+    assert has_element?(desk, "#reply-input-1")
 
     chat |> form("#chat-form", chat: %{body: "40 m²"}) |> render_submit()
+    assert has_element?(chat, "#chat-input-2")
     assert has_element?(desk, "#desk-messages .chat-start", "40 m²")
 
     desk |> element("#close-conversation") |> render_click()
