@@ -336,7 +336,7 @@ defmodule MercatorWeb.Admin.ProductEditLive do
           </div>
         </section>
 
-        <div class="space-y-4">
+        <div class="flex flex-col gap-4">
           <section class="card bg-base-100 shadow-sm">
             <div class="card-body">
               <h2 class="card-title">{gettext("Master data")}</h2>
@@ -367,11 +367,15 @@ defmodule MercatorWeb.Admin.ProductEditLive do
             </div>
           </section>
 
-          <section class="card bg-base-100 shadow-sm">
-            <div class="card-body">
+          <%!-- fills the column down to the end of the texts; scrolls only beyond that --%>
+          <section class="card bg-base-100 shadow-sm lg:min-h-80 lg:flex-1">
+            <div class="card-body min-h-0">
               <h2 class="card-title">{gettext("Categories")}</h2>
               <input type="hidden" name="category_ids[]" value="" />
-              <div class="max-h-80 overflow-y-auto" id="category-checkboxes">
+              <div
+                class="max-h-[32rem] overflow-y-auto lg:max-h-none lg:min-h-0 lg:flex-1 lg:basis-0"
+                id="category-checkboxes"
+              >
                 <label
                   :for={category <- @categories}
                   class="label flex text-base-content"
