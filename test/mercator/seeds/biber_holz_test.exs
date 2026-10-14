@@ -1,5 +1,5 @@
 defmodule Mercator.Seeds.BiberHolzTest do
-  use Mercator.DataCase, async: true
+  use Mercator.DataCase, async: false
 
   alias Mercator.Catalog
   alias Mercator.Seeds

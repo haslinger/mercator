@@ -1,5 +1,5 @@
 defmodule Mercator.Seeds.OrdersTest do
-  use Mercator.DataCase, async: true
+  use Mercator.DataCase, async: false
 
   alias Mercator.Accounts.User
   alias Mercator.{Sales, Seeds}

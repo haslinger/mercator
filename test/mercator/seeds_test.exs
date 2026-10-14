@@ -1,5 +1,5 @@
 defmodule Mercator.SeedsTest do
-  use Mercator.DataCase, async: true
+  use Mercator.DataCase, async: false
 
   alias AshAuthentication.{Info, Strategy}
   alias Mercator.Accounts.User

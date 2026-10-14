@@ -8,11 +8,11 @@ defmodule Mercator.Seeds do
 
   All demo users share the password `demo_password/0` and are confirmed.
   The demo catalogue comes from `Mercator.Seeds.BiberHolz`, demo addresses
-  and orders from `Mercator.Seeds.Orders`.
+  and orders from `Mercator.Seeds.Orders`, CMS pages from `Mercator.Seeds.Pages`.
   """
 
   alias Mercator.Accounts.User
-  alias Mercator.Seeds.{BiberHolz, Orders}
+  alias Mercator.Seeds.{BiberHolz, Orders, Pages}
 
   require Ash.Query
 
@@ -66,6 +66,7 @@ defmodule Mercator.Seeds do
     BiberHolz.run()
     ensure_gtc()
     Orders.run()
+    Pages.run()
     users
   end
 
