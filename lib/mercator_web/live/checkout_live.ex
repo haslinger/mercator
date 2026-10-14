@@ -3,6 +3,9 @@ defmodule MercatorWeb.CheckoutLive do
   The checkout (`/checkout`, checkout-design.md section 5): addresses, shipping
   and payment method, review with totals, GTC and "Zahlungspflichtig
   bestellen" on one page. Signed-in customers only (#66).
+
+  With `?offer=<id>` the customer orders an offer (guided selling step 5):
+  its items at its prices instead of the basket.
   """
   use MercatorWeb, :live_view
 
@@ -10,6 +13,7 @@ defmodule MercatorWeb.CheckoutLive do
 
   alias Mercator.Brand
   alias Mercator.Catalog.{Configurator, Unit}
+  alias Mercator.Consulting.{Offer, OfferItem, Offers}
   alias Mercator.Sales.{Checkout, Payment, Shipping}
   alias Mercator.Translated
   alias MercatorWeb.Format
@@ -17,28 +21,53 @@ defmodule MercatorWeb.CheckoutLive do
   on_mount {MercatorWeb.LiveUserAuth, :live_user_required}
 
   @impl true
-  def mount(_params, _session, socket) do
-    socket =
-      socket
-      |> assign(:page_title, gettext("Checkout"))
-      |> assign(:params, %{})
-      |> assign(:problems, [])
-      |> assign(:submitted?, false)
-      |> load()
+  def mount(params, _session, socket) do
+    case source(params, socket.assigns.current_user) do
+      {:ok, source} ->
+        socket =
+          socket
+          |> assign(:page_title, gettext("Checkout"))
+          |> assign(:source, source)
+          |> assign(:params, %{})
+          |> assign(:problems, [])
+          |> assign(:submitted?, false)
+          |> load()
 
-    if socket.assigns.checkout.pricing.lines == [] do
-      {:ok, push_navigate(socket, to: ~p"/basket")}
-    else
-      {:ok, socket}
+        if socket.assigns.checkout.pricing.lines == [] do
+          {:ok, push_navigate(socket, to: ~p"/basket")}
+        else
+          {:ok, socket}
+        end
+
+      {:error, offer_id} ->
+        {:ok,
+         socket
+         |> put_flash(:error, gettext("This offer is no longer valid."))
+         |> push_navigate(to: ~p"/account/offers/#{offer_id}")}
     end
   end
 
+  defp source(%{"offer" => id}, user) do
+    case Offers.for_checkout(id, user) do
+      {:ok, offer} -> {:ok, {:offer, offer}}
+      _ -> {:error, id}
+    end
+  end
+
+  defp source(_params, _user), do: {:ok, :basket}
+
   defp load(socket) do
-    checkout = Checkout.prepare(socket.assigns.current_user, socket.assigns.params)
+    checkout =
+      Checkout.prepare(socket.assigns.current_user, socket.assigns.params, socket.assigns.source)
 
     socket
     |> assign(:checkout, checkout)
-    |> assign(:basket_count, length(checkout.pricing.lines))
+    |> then(fn socket ->
+      # ordering an offer leaves the basket as it is
+      if checkout.offer,
+        do: socket,
+        else: assign(socket, :basket_count, length(checkout.pricing.lines))
+    end)
     |> assign(:problems, problems(checkout, socket.assigns))
   end
 
@@ -56,7 +85,7 @@ defmodule MercatorWeb.CheckoutLive do
   def handle_event("place", %{"checkout" => params}, socket) do
     socket = assign(socket, params: params, submitted?: true)
 
-    case Checkout.place(socket.assigns.current_user, params) do
+    case Checkout.place(socket.assigns.current_user, params, socket.assigns.source) do
       {:ok, order} ->
         {:noreply,
          socket
@@ -79,6 +108,9 @@ defmodule MercatorWeb.CheckoutLive do
       basket_count={@basket_count}
     >
       <h1 class="text-3xl font-bold">{gettext("Checkout")}</h1>
+      <p :if={@checkout.offer} class="text-base-content/70" id="checkout-offer">
+        {gettext("You are ordering offer %{number}.", number: Offer.display_number(@checkout.offer))}
+      </p>
 
       <.form
         for={%{}}
@@ -191,23 +223,7 @@ defmodule MercatorWeb.CheckoutLive do
                 class="flex justify-between gap-4 py-2"
                 id={"checkout-item-#{line.item.id}"}
               >
-                <div>
-                  <p class="font-semibold">
-                    {Format.quantity(line.item.quantity, quantity_unit(line), @locale)}
-                    {Unit.symbol(quantity_unit(line))}
-                    {Translated.t(line.product.title, @locale)}
-                  </p>
-                  <p class="text-sm text-base-content/70">
-                    {line.item.config_number || line.variant.number}
-                    <span :if={line.variant.name}>· {Translated.t(line.variant.name, @locale)}</span>
-                  </p>
-                  <p :if={line.item.selections != %{}} class="text-xs text-base-content/60">
-                    {Configurator.describe(line.product, line.item.selections, @locale)}
-                  </p>
-                  <p :if={!line.available?} class="text-sm text-error">
-                    {gettext("No longer available")}
-                  </p>
-                </div>
+                <.line_text line={line} locale={@locale} />
                 <span :if={line.available?} class="font-semibold whitespace-nowrap">
                   {Format.money(line.gross, @locale)}
                 </span>
@@ -283,16 +299,68 @@ defmodule MercatorWeb.CheckoutLive do
               {gettext("Place binding order")}
             </button>
             <.link
+              :if={!@checkout.offer}
               navigate={~p"/basket"}
               class="link link-hover text-center text-sm"
               id="back-to-basket"
             >
               {gettext("Back to basket")}
             </.link>
+            <.link
+              :if={@checkout.offer}
+              navigate={~p"/account/offers/#{@checkout.offer.id}"}
+              class="link link-hover text-center text-sm"
+              id="back-to-offer"
+            >
+              {gettext("Back to the offer")}
+            </.link>
           </div>
         </aside>
       </.form>
     </Layouts.app>
+    """
+  end
+
+  attr :line, :map, required: true
+  attr :locale, :string, required: true
+
+  # an item of an offer: the texts the customer was offered
+  defp line_text(%{line: %{item: %OfferItem{}}} = assigns) do
+    ~H"""
+    <div>
+      <p class="font-semibold">
+        {Format.quantity(@line.item.quantity, @line.item.unit, @locale)}
+        {Unit.symbol(@line.item.unit)} {@line.item.title}
+      </p>
+      <p
+        :if={@line.item.number || @line.item.description}
+        class="text-sm text-base-content/70"
+      >
+        {[@line.item.number, @line.item.description] |> Enum.reject(&is_nil/1) |> Enum.join(" · ")}
+      </p>
+    </div>
+    """
+  end
+
+  defp line_text(assigns) do
+    ~H"""
+    <div>
+      <p class="font-semibold">
+        {Format.quantity(@line.item.quantity, quantity_unit(@line), @locale)}
+        {Unit.symbol(quantity_unit(@line))}
+        {Translated.t(@line.product.title, @locale)}
+      </p>
+      <p class="text-sm text-base-content/70">
+        {@line.item.config_number || @line.variant.number}
+        <span :if={@line.variant.name}>· {Translated.t(@line.variant.name, @locale)}</span>
+      </p>
+      <p :if={@line.item.selections != %{}} class="text-xs text-base-content/60">
+        {Configurator.describe(@line.product, @line.item.selections, @locale)}
+      </p>
+      <p :if={!@line.available?} class="text-sm text-error">
+        {gettext("No longer available")}
+      </p>
+    </div>
     """
   end
 

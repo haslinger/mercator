@@ -9,7 +9,8 @@ Questions are numbered globally (`#N`); the numbering is never restarted. When a
 6. **Guided selling** – in progress ([guided-selling-design.md](guided-selling-design.md), #94–#101 agreed):
    - done: step 1 conversations and the customer's chat; step 2 the sales desk with availability, taking conversations, countdown and callback requests (#95); step 3 customer context on the desk (online, current page, basket, orders), product recommendations, links and files as cards (#96)
    - done: step 4 offers in the back office (Offer/OfferItem, /admin/offers editor, approval #98, revisions, desk integration)
-   - next: step 5 offers for customers (/account/offers, card in the chat, accept → basket at offer prices → checkout, order refers to the offer); step 6 emails (#97), printable offer page (#99, PDF with Typst #17), feedback stars (#101); step 7 demo data
+   - done: step 5 offers for customers (/account/offers, card in the chat, accept → checkout with the offer as source, order refers to the offer)
+   - next: step 6 emails (#97), printable offer page (#99, PDF with Typst #17), feedback stars (#101); step 7 demo data
    - postponed: audio/video and screen sharing (#100; possible self-hosted with `ex_webrtc`)
 7. **Integrations:** online payment with a provider still to be chosen (replacing mPAY24, #14). Mesonic, Icecat and Bechlem are out of scope (#15).
 8. **Deployment and demo mode:** a Mix release in a **Docker** image (#24; details such as the Postgres setup and the image registry to be decided in this phase), demo mode `MERCATOR_MODE=demo` with public demo accounts and nightly reset (#44–#48), production email delivery, reverse proxy rate limits (README).

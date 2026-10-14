@@ -148,6 +148,14 @@ defmodule MercatorWeb.Admin.OrderShowLive do
         {gettext("Ordered on %{date}",
           date: Format.datetime(@order.inserted_at)
         )}
+        <.link
+          :if={@order.offer_id}
+          navigate={~p"/admin/offers/#{@order.offer_id}"}
+          class="link ml-2"
+          id="order-offer"
+        >
+          {gettext("from an offer")}
+        </.link>
       </p>
 
       <div class="grid gap-6 lg:grid-cols-[1fr_22rem]">

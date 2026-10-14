@@ -418,6 +418,14 @@ defmodule MercatorWeb.Admin.OfferEditLive do
                 {gettext("Conversation")}
               </.link>
               <.link
+                :if={@offer.order}
+                navigate={~p"/admin/orders/#{@offer.order.number}"}
+                class="link font-semibold"
+                id="offer-order"
+              >
+                {gettext("Order %{number}", number: @offer.order.number)}
+              </.link>
+              <.link
                 :if={@offer.previous_offer_id}
                 navigate={~p"/admin/offers/#{@offer.previous_offer_id}"}
                 class="link"

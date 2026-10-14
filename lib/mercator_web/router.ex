@@ -69,6 +69,8 @@ defmodule MercatorWeb.Router do
       live "/account/addresses", AddressesLive
       live "/account/orders", OrdersLive
       live "/account/orders/:number", OrderLive
+      live "/account/offers", OffersLive
+      live "/account/offers/:id", OfferLive
       live "/checkout", CheckoutLive
 
       live "/admin", Admin.DashboardLive

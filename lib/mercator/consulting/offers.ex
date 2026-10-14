@@ -16,7 +16,7 @@ defmodule Mercator.Consulting.Offers do
   alias Mercator.Consulting.{Conversation, Conversations, Offer, OfferItem, OfferTotals}
   alias Mercator.Sales.{BasketPricing, Baskets}
 
-  @loads [:customer, :consultant, :approved_by, :conversation, items: [:product]]
+  @loads [:customer, :consultant, :approved_by, :conversation, :order, items: [:product]]
 
   @doc "Offers for the back office list; `filters` may hold `:state` and `:customer_id`."
   def list(actor, filters \\ %{}, page \\ [limit: 25]) do

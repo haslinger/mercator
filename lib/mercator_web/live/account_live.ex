@@ -36,6 +36,9 @@ defmodule MercatorWeb.AccountLive do
         <.link navigate={~p"/account/orders"} class="btn btn-outline btn-sm" id="orders-link">
           <.icon name="hero-shopping-bag" class="size-4" /> {gettext("My orders")}
         </.link>
+        <.link navigate={~p"/account/offers"} class="btn btn-outline btn-sm" id="offers-link">
+          <.icon name="hero-document-currency-euro" class="size-4" /> {gettext("My offers")}
+        </.link>
         <.link navigate={~p"/account/addresses"} class="btn btn-outline btn-sm" id="addresses-link">
           <.icon name="hero-map-pin" class="size-4" /> {gettext("My addresses")}
         </.link>

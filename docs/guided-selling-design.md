@@ -66,7 +66,7 @@ From the models, the sales subsite and the sales process diagram (`mercator.wiki
 2. Sales desk: availability (presence), queue, taking conversations, chat, notifications in the desk.
 3. Customer context for the consultant (current page, basket, orders), product recommendations, "show a page", files.
 4. ✅ Offers: resource and editor in the desk (products, configurations, free positions, discounts, approval). Configured items come from the customer's basket; products added from the catalogue use the default configuration. Addresses are chosen at checkout, not on the offer.
-5. Offers for customers: account and conversation, accept → basket at offer prices → checkout; order refers to the offer.
+5. ✅ Offers for customers: account and conversation, accept → checkout; order refers to the offer. *Changed while building:* accepting does not go through the basket but straight into the checkout with the offer as the source (its items at its prices, free-text items included, quantities fixed); the basket stays untouched. Offer items without a product are delivered like freight.
 6. Emails: reply notifications for offline customers, offer sent, approval requests; PDF (#99).
 7. Biber Holz demo data: a few conversations and offers.
 

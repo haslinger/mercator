@@ -8,6 +8,7 @@ defmodule MercatorWeb.ConsultingComponents do
   import MercatorWeb.CatalogComponents, only: [catalog_image: 1, first_image: 1]
 
   alias Mercator.Catalog
+  alias Mercator.Consulting.Offer
   alias Mercator.Content.Asset
   alias Mercator.Translated
   alias MercatorWeb.Format
@@ -19,7 +20,42 @@ defmodule MercatorWeb.ConsultingComponents do
     default: false,
     doc: "on the sales desk links open in a new tab, not in the shop the consultant is in"
 
-  @doc "The attachment of a message as a card: product, link or file."
+  @doc "The attachment of a message as a card: offer, product, link or file."
+  def attachment(%{message: %{offer: %Offer{} = offer}} = assigns) do
+    assigns =
+      assign(assigns,
+        offer: offer,
+        path:
+          if(assigns.desk,
+            do: ~p"/admin/offers/#{offer.id}",
+            else: ~p"/account/offers/#{offer.id}"
+          )
+      )
+
+    ~H"""
+    <.shop_link
+      path={@path}
+      desk={@desk}
+      class="mt-1 block w-72 max-w-full rounded-box border-2 border-primary/30 bg-base-100 p-3 text-base-content shadow-sm transition hover:shadow-md"
+      id={"attachment-#{@message.id}"}
+    >
+      <span class="flex items-center gap-2 font-semibold">
+        <.icon name="hero-document-currency-euro" class="size-6 shrink-0 text-primary" />
+        {gettext("Your offer %{number}", number: Offer.display_number(@offer))}
+      </span>
+      <span class="mt-1 flex items-baseline justify-between gap-2 text-sm">
+        <span class="text-base-content/70">
+          {gettext("valid until %{date}", date: Format.date(@offer.valid_until))}
+        </span>
+        <span class="text-base font-bold">{Format.money(@offer.gross, @locale)}</span>
+      </span>
+      <span class="mt-2 flex justify-end text-sm font-semibold text-primary">
+        {gettext("View offer")} <.icon name="hero-arrow-right" class="size-4" />
+      </span>
+    </.shop_link>
+    """
+  end
+
   def attachment(%{message: %{product: %{} = product}} = assigns) do
     assigns =
       assign(assigns,

@@ -256,6 +256,9 @@ defmodule MercatorWeb.Layouts do
         <li>
           <.link navigate={~p"/account/orders"} id="my-orders-link">{gettext("My orders")}</.link>
         </li>
+        <li>
+          <.link navigate={~p"/account/offers"} id="my-offers-link">{gettext("My offers")}</.link>
+        </li>
         <li :if={MercatorWeb.AdminNav.staff?(@current_user)}>
           <.link navigate={~p"/admin"} id="admin-link">{gettext("Administration")}</.link>
         </li>
