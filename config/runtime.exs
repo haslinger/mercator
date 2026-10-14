@@ -23,6 +23,10 @@ end
 config :mercator, MercatorWeb.Endpoint,
   http: [port: String.to_integer(System.get_env("PORT", "4000"))]
 
+if time_zone = System.get_env("SHOP_TIME_ZONE") do
+  config :mercator, :time_zone, time_zone
+end
+
 if config_env() == :dev do
   # Reload browser tabs when matching files change.
   config :mercator, MercatorWeb.Endpoint,

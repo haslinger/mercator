@@ -414,11 +414,11 @@ defmodule MercatorWeb.Admin.ProductVariantsTab do
   defp validity(%{valid_from: nil, valid_until: nil}), do: gettext("always")
 
   defp validity(%{valid_from: from, valid_until: nil}),
-    do: gettext("from %{date}", date: Calendar.strftime(from, "%d.%m.%Y"))
+    do: gettext("from %{date}", date: Format.date(from))
 
   defp validity(%{valid_from: nil, valid_until: until}),
-    do: gettext("until %{date}", date: Calendar.strftime(until, "%d.%m.%Y"))
+    do: gettext("until %{date}", date: Format.date(until))
 
   defp validity(%{valid_from: from, valid_until: until}),
-    do: "#{Calendar.strftime(from, "%d.%m.%Y")} – #{Calendar.strftime(until, "%d.%m.%Y")}"
+    do: "#{Format.date(from)} – #{Format.date(until)}"
 end

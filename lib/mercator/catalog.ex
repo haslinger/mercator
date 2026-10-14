@@ -7,10 +7,10 @@ defmodule Mercator.Catalog do
     otp_app: :mercator,
     extensions: [AshAdmin.Domain, AshPhoenix]
 
-  defdelegate price_for(variant, quantity \\ 1, date \\ Date.utc_today()),
+  defdelegate price_for(variant, quantity \\ 1, date \\ Mercator.Clock.today()),
     to: Mercator.Catalog.Pricing
 
-  defdelegate from_price(product, date \\ Date.utc_today()), to: Mercator.Catalog.Pricing
+  defdelegate from_price(product, date \\ Mercator.Clock.today()), to: Mercator.Catalog.Pricing
 
   defdelegate quote(product, selections, quantity \\ 1), to: Mercator.Catalog.Configurator
 

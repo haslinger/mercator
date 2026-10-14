@@ -6,6 +6,7 @@ defmodule MercatorWeb.GtcLive do
 
   alias Mercator.Sales
   alias Mercator.Translated
+  alias MercatorWeb.Format
 
   on_mount {MercatorWeb.LiveUserAuth, :live_user_optional}
 
@@ -32,7 +33,7 @@ defmodule MercatorWeb.GtcLive do
 
         <%= if @gtc do %>
           <p class="text-sm text-base-content/70" id="gtc-version">
-            {gettext("Valid from %{date}", date: Calendar.strftime(@gtc.version, "%d.%m.%Y"))}
+            {gettext("Valid from %{date}", date: Format.date(@gtc.version))}
           </p>
           <.gtc_text text={Translated.t(@gtc.text, @locale)} />
         <% else %>

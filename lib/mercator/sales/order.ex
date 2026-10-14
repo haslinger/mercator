@@ -14,8 +14,6 @@ defmodule Mercator.Sales.Order do
     authorizers: [Ash.Policy.Authorizer],
     extensions: [AshStateMachine]
 
-  require Ash.Query
-
   alias Mercator.Accounts.Checks.ActorHasRole
   alias Mercator.Sales.{PaymentMethod, ShippingMethod}
 
@@ -92,31 +90,7 @@ defmodule Mercator.Sales.Order do
       argument :query, :string
 
       filter expr(is_nil(^arg(:state)) or state == ^arg(:state))
-      filter expr(is_nil(^arg(:from)) or inserted_at >= ^arg(:from))
-      filter expr(is_nil(^arg(:to)) or inserted_at < date_add(^arg(:to), 1, :day))
-
-      prepare fn query, _context ->
-        case String.trim(Ash.Query.get_argument(query, :query) || "") do
-          "" ->
-            query
-
-          text ->
-            pattern = "%" <> String.replace(text, ~r/[\\%_]/, "\\\\\\0") <> "%"
-
-            Ash.Query.filter(
-              query,
-              fragment(
-                "concat_ws(' ', ?, ?, ? ->> 'name', ? ->> 'company') ILIKE ?",
-                number,
-                email,
-                billing_address,
-                billing_address,
-                ^pattern
-              )
-            )
-        end
-      end
-
+      prepare Mercator.Sales.Preparations.SearchOrders
       prepare build(sort: [inserted_at: :desc])
       pagination offset?: true, countable: true, default_limit: 25, required?: false
     end

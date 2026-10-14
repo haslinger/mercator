@@ -1,10 +1,12 @@
 defmodule MercatorWeb.Format do
   @moduledoc """
-  Locale-aware formatting of money, quantities and units for templates.
+  Locale-aware formatting of money, quantities, units and dates for templates.
+  Datetimes are shown in the shop's time zone (`Mercator.Clock`, #73).
   """
   use Gettext, backend: MercatorWeb.Gettext
 
   alias Mercator.Catalog.Unit
+  alias Mercator.Clock
 
   @doc """
   Formats an amount in euros, e.g. `"1.234,50 €"` (de) or `"€1,234.50"` (en).
@@ -54,6 +56,26 @@ defmodule MercatorWeb.Format do
 
   @doc ~s(Price per unit, e.g. "pro m³" / "per m³".)
   def per_unit(unit), do: gettext("per %{unit}", unit: Unit.symbol(unit))
+
+  @doc """
+  A date, or the local date of a UTC datetime, e.g. `"14.10.2026"`.
+
+      iex> MercatorWeb.Format.date(~U[2026-10-13 22:30:00Z])
+      "14.10.2026"
+  """
+  def date(%DateTime{} = datetime),
+    do: datetime |> Clock.local() |> Calendar.strftime("%d.%m.%Y")
+
+  def date(%Date{} = date), do: Calendar.strftime(date, "%d.%m.%Y")
+
+  @doc """
+  A UTC datetime in local time, e.g. `"13.10.2026 18:44"`.
+
+      iex> MercatorWeb.Format.datetime(~U[2026-10-13 16:44:00Z])
+      "13.10.2026 18:44"
+  """
+  def datetime(%DateTime{} = datetime),
+    do: datetime |> Clock.local() |> Calendar.strftime("%d.%m.%Y %H:%M")
 
   defp places(%Decimal{exp: exp}) when exp < 0, do: -exp
   defp places(_decimal), do: 0

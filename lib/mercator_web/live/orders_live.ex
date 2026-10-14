@@ -54,7 +54,7 @@ defmodule MercatorWeb.OrdersLive do
               <div>
                 <p class="font-semibold">{order.number}</p>
                 <p class="text-sm text-base-content/70">
-                  {Calendar.strftime(order.inserted_at, "%d.%m.%Y")} · {ngettext(
+                  {Format.date(order.inserted_at)} · {ngettext(
                     "1 item",
                     "%{count} items",
                     order.item_count

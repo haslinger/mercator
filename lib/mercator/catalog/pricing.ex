@@ -22,7 +22,7 @@ defmodule Mercator.Catalog.Pricing do
   Loads the variant's prices and its product's tax class if needed.
   Returns `{:ok, %PriceInfo{}}` or `{:error, :no_price}`.
   """
-  def price_for(%Variant{} = variant, quantity \\ 1, date \\ Date.utc_today()) do
+  def price_for(%Variant{} = variant, quantity \\ 1, date \\ Mercator.Clock.today()) do
     variant = Ash.load!(variant, [:prices, product: :tax_class], authorize?: false, lazy?: true)
     quantity = Decimal.new(quantity)
 
@@ -37,7 +37,7 @@ defmodule Mercator.Catalog.Pricing do
   the "from" price on category pages. Returns `{:ok, %PriceInfo{}}` or
   `{:error, :no_price}`.
   """
-  def from_price(product, date \\ Date.utc_today())
+  def from_price(product, date \\ Mercator.Clock.today())
 
   # configurable products: the price of one piece in the default configuration
   def from_price(%{kind: :configurable} = product, _date) do

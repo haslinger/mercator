@@ -246,8 +246,8 @@ Rails sources (#1–#4) and continuing the overview (#5) were answered on 2026-1
 - **#22** Do we keep the version history (paper_trail) for all resources, or only for selected ones (orders, prices, products)? ~~Should the old history be migrated?~~ (no, see #21)
 - ~~**#23**~~ *(obsolete because of #21)* Is there an existing user base whose passwords must keep working? Hobo stores crypted passwords; I'd need to check the hash algorithm. If they can't be verified, we'd force a reset.
 - **#24** *(note: the DB connection sets `lc_messages=C`, which needs a superuser or `GRANT SET`; on managed databases configure English server messages instead)* Deployment target: where will it run (own server, Fly.io, Docker…)? Should a release or Docker setup be part of the first phase?
-- **#73** Time zone: times are stored in UTC and currently also shown in UTC (an order placed at 18:44 in Vienna shows 16:44). Proper local times need a time zone database: add the `tz` package (small, pure Elixir) and a configurable shop time zone (default `Europe/Vienna`)?
-- **#74** Should customers get an email when staff change the state of their order (confirmed, shipped, cancelled with the reason)? Today only the order confirmation is sent.
+- ~~**#73**~~ *(answered 2026-10-14: yes)* Time zone: `tz` package, shop time zone configurable (`:time_zone`, env `SHOP_TIME_ZONE`, default `Europe/Vienna`), see `Mercator.Clock`.
+- ~~**#74**~~ *(answered 2026-10-14: yes)* Customers get an email when staff confirm, ship or cancel their order (with the reason).
 
 ### Security note
 - ~~**#25**~~ *(answered, see Decisions)* The customer-system repos (`systems/*/config/application.yml`, `database.yml`) contain **plaintext credentials**: DB, Mesonic ERP, mPAY24 merchant, Icecat, Bechlem and secret tokens. In the port, secrets will live only in environment variables or `runtime.exs`. Are any of these credentials still live? If so, they should be rotated, since they are in git history.

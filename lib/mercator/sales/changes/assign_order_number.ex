@@ -10,7 +10,7 @@ defmodule Mercator.Sales.Changes.AssignOrderNumber do
   @impl true
   def change(changeset, _opts, _context) do
     Ash.Changeset.before_action(changeset, fn changeset ->
-      year = Date.utc_today().year
+      year = Mercator.Clock.today().year
       sequence = next(year)
 
       Ash.Changeset.force_change_attributes(changeset,

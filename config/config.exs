@@ -115,6 +115,12 @@ config :mercator, MercatorWeb.Gettext, default_locale: "de", locales: ~w(de en)
 # default and fallback. Keep in sync with the UI languages above.
 config :mercator, :content_locales, ~w(de en)
 
+# Time zone of the shop (#73): times are stored in UTC and shown in this zone;
+# "today" (price validity, order number year, date filters) follows it too.
+# Override with SHOP_TIME_ZONE at runtime.
+config :elixir, :time_zone_database, Tz.TimeZoneDatabase
+config :mercator, :time_zone, "Europe/Vienna"
+
 # Countries the shop delivers to (#67); billing addresses may be in any EU country
 config :mercator, :delivery_countries, ~w(AT DE IT)
 

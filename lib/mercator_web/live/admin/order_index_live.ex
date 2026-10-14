@@ -145,7 +145,7 @@ defmodule MercatorWeb.Admin.OrderIndexLive do
                   {order.number}
                 </.link>
                 <div class="text-xs text-base-content/70">
-                  {Calendar.strftime(order.inserted_at, "%d.%m.%Y %H:%M")} · {ngettext(
+                  {Format.datetime(order.inserted_at)} · {ngettext(
                     "1 item",
                     "%{count} items",
                     order.item_count

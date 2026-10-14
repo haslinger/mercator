@@ -53,6 +53,24 @@ defmodule Mercator.Sales.OrderManagementTest do
       assert page.count >= 2
     end
 
+    test "the period uses local days", %{board: board, sales: sales, customer: customer} do
+      order = order_fixture(customer, board)
+
+      # 23:30 on 13 October in Vienna is 21:30 UTC
+      Mercator.Repo.query!("UPDATE orders SET inserted_at = $1 WHERE id = $2", [
+        ~U[2026-10-13 21:30:00.000000Z],
+        Ecto.UUID.dump!(order.id)
+      ])
+
+      find = fn from, to ->
+        Sales.search_orders!(%{from: from, to: to, query: order.number}, actor: sales)
+      end
+
+      assert [_] = find.(~D[2026-10-13], ~D[2026-10-13])
+      assert [] = find.(~D[2026-10-14], nil)
+      assert [] = find.(nil, ~D[2026-10-12])
+    end
+
     test "customers find only their own orders", %{board: board, customer: customer} do
       order_fixture(customer_fixture(), board)
       own = order_fixture(customer, board)

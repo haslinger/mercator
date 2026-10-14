@@ -11,6 +11,7 @@ defmodule MercatorWeb.Admin.OrderShowLive do
 
   alias Mercator.Sales
   alias Mercator.Sales.Payment
+  alias MercatorWeb.Format
 
   on_mount {MercatorWeb.LiveUserAuth,
             {:require_any_role, [:sales, :sales_manager, :administrator]}}
@@ -131,7 +132,7 @@ defmodule MercatorWeb.Admin.OrderShowLive do
       </div>
       <p class="text-sm text-base-content/70">
         {gettext("Ordered on %{date}",
-          date: Calendar.strftime(@order.inserted_at, "%d.%m.%Y %H:%M")
+          date: Format.datetime(@order.inserted_at)
         )}
       </p>
 
@@ -215,7 +216,7 @@ defmodule MercatorWeb.Admin.OrderShowLive do
                   <div class="timeline-end mb-3">
                     <p class="text-sm font-semibold">{state_label(:placed)}</p>
                     <p class="text-xs text-base-content/70">
-                      {Calendar.strftime(@order.inserted_at, "%d.%m.%Y %H:%M")}
+                      {Format.datetime(@order.inserted_at)}
                     </p>
                   </div>
                   <hr :if={@order.events != []} />
@@ -226,7 +227,7 @@ defmodule MercatorWeb.Admin.OrderShowLive do
                   <div class="timeline-end mb-3">
                     <p class="text-sm font-semibold">{state_label(event.to_state)}</p>
                     <p class="text-xs text-base-content/70">
-                      {Calendar.strftime(event.inserted_at, "%d.%m.%Y %H:%M")}
+                      {Format.datetime(event.inserted_at)}
                       <span :if={event.user}>· {event.user.name || event.user.email}</span>
                     </p>
                     <p :if={event.note} class="text-sm">{event.note}</p>

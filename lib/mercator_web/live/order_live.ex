@@ -10,6 +10,7 @@ defmodule MercatorWeb.OrderLive do
 
   alias Mercator.Sales
   alias Mercator.Sales.Payment
+  alias MercatorWeb.Format
 
   on_mount {MercatorWeb.LiveUserAuth, :live_user_required}
 
@@ -47,7 +48,7 @@ defmodule MercatorWeb.OrderLive do
         <.state_badge state={@order.state} id="order-state" />
       </div>
       <p class="text-sm text-base-content/70">
-        {gettext("Ordered on %{date}", date: Calendar.strftime(@order.inserted_at, "%d.%m.%Y"))}
+        {gettext("Ordered on %{date}", date: Format.date(@order.inserted_at))}
       </p>
 
       <div class="grid gap-6 lg:grid-cols-[1fr_22rem]">
