@@ -23,6 +23,14 @@ defmodule MercatorWeb.AdminNav do
        [
          item(gettext("Dashboard"), ~p"/admin", "hero-home", "dashboard", :all)
        ]},
+      {gettext("Sales"),
+       [
+         item(gettext("Orders"), ~p"/admin/orders", "hero-shopping-bag", "orders", [
+           :sales,
+           :sales_manager,
+           :administrator
+         ])
+       ]},
       {gettext("Catalogue"),
        [
          item(gettext("Products"), ~p"/admin/products", "hero-cube", "products", [

@@ -4,8 +4,10 @@ defmodule MercatorWeb.OrdersLive do
   """
   use MercatorWeb, :live_view
 
+  import MercatorWeb.OrderComponents, only: [state_badge: 1]
+
   alias Mercator.Sales
-  alias MercatorWeb.{Format, OrderLive}
+  alias MercatorWeb.Format
 
   on_mount {MercatorWeb.LiveUserAuth, :live_user_required}
 
@@ -60,9 +62,7 @@ defmodule MercatorWeb.OrdersLive do
                 </p>
               </div>
               <div class="flex items-center gap-4">
-                <span class="badge badge-primary badge-outline">
-                  {OrderLive.state_label(order.state)}
-                </span>
+                <.state_badge state={order.state} />
                 <span class="font-semibold whitespace-nowrap">
                   {Format.money(order.gross, @locale)}
                 </span>

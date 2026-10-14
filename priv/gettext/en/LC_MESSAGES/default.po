@@ -122,7 +122,7 @@ msgstr ""
 #: lib/mercator_web/live/account_live.ex:18
 #: lib/mercator_web/live/account_live.ex:33
 #: lib/mercator_web/live/addresses_live.ex:100
-#: lib/mercator_web/live/orders_live.ex:34
+#: lib/mercator_web/live/orders_live.ex:36
 #, elixir-autogen, elixir-format
 msgid "My account"
 msgstr ""
@@ -243,6 +243,7 @@ msgstr ""
 msgid "Roles saved."
 msgstr ""
 
+#: lib/mercator_web/admin_nav.ex:26
 #: lib/mercator_web/components/role_components.ex:10
 #, elixir-autogen, elixir-format
 msgid "Sales"
@@ -258,7 +259,7 @@ msgstr ""
 msgid "User not found."
 msgstr ""
 
-#: lib/mercator_web/admin_nav.ex:39
+#: lib/mercator_web/admin_nav.ex:47
 #: lib/mercator_web/live/admin/user_edit_live.ex:41
 #: lib/mercator_web/live/admin/user_index_live.ex:19
 #: lib/mercator_web/live/admin/user_index_live.ex:29
@@ -441,7 +442,7 @@ msgstr ""
 msgid "Product not found."
 msgstr ""
 
-#: lib/mercator_web/admin_nav.ex:28
+#: lib/mercator_web/admin_nav.ex:36
 #: lib/mercator_web/live/admin/dashboard_live.ex:37
 #: lib/mercator_web/live/admin/product_edit_live.ex:166
 #: lib/mercator_web/live/admin/product_index_live.ex:28
@@ -498,9 +499,10 @@ msgid "Sort by"
 msgstr ""
 
 #: lib/mercator/sales/order_email.ex:46
+#: lib/mercator_web/components/order_components.ex:91
+#: lib/mercator_web/live/admin/order_index_live.ex:133
 #: lib/mercator_web/live/basket_live.ex:163
 #: lib/mercator_web/live/checkout_live.ex:244
-#: lib/mercator_web/live/order_live.ex:129
 #: lib/mercator_web/live/product_live.ex:293
 #: lib/mercator_web/live/product_live.ex:458
 #, elixir-autogen, elixir-format
@@ -642,13 +644,13 @@ msgstr ""
 msgid "Admin"
 msgstr ""
 
-#: lib/mercator_web/admin_nav.ex:37
+#: lib/mercator_web/admin_nav.ex:45
 #: lib/mercator_web/components/layouts.ex:241
 #, elixir-autogen, elixir-format
 msgid "Administration"
 msgstr ""
 
-#: lib/mercator_web/admin_nav.ex:32
+#: lib/mercator_web/admin_nav.ex:40
 #: lib/mercator_web/live/admin/category_tree_live.ex:17
 #: lib/mercator_web/live/admin/category_tree_live.ex:137
 #: lib/mercator_web/live/admin/dashboard_live.ex:47
@@ -740,7 +742,7 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#: lib/mercator_web/admin_nav.ex:26
+#: lib/mercator_web/admin_nav.ex:34
 #, elixir-autogen, elixir-format
 msgid "Catalogue"
 msgstr ""
@@ -860,6 +862,7 @@ msgstr ""
 msgid "All kinds"
 msgstr ""
 
+#: lib/mercator_web/live/admin/order_index_live.ex:106
 #: lib/mercator_web/live/admin/product_index_live.ex:187
 #, elixir-autogen, elixir-format
 msgid "All states"
@@ -967,9 +970,9 @@ msgstr ""
 msgid "Product saved."
 msgstr ""
 
+#: lib/mercator_web/components/order_components.ex:87
 #: lib/mercator_web/live/admin/product_edit_live.ex:364
 #: lib/mercator_web/live/checkout_live.ex:240
-#: lib/mercator_web/live/order_live.ex:125
 #, elixir-autogen, elixir-format
 msgid "Shipping"
 msgstr ""
@@ -979,6 +982,7 @@ msgstr ""
 msgid "Simple"
 msgstr ""
 
+#: lib/mercator_web/live/admin/order_index_live.ex:132
 #: lib/mercator_web/live/admin/product_index_live.ex:216
 #, elixir-autogen, elixir-format
 msgid "State"
@@ -1579,7 +1583,7 @@ msgstr ""
 msgid "Tax class saved."
 msgstr ""
 
-#: lib/mercator_web/admin_nav.ex:41
+#: lib/mercator_web/admin_nav.ex:49
 #: lib/mercator_web/live/admin/tax_class_live.ex:19
 #: lib/mercator_web/live/admin/tax_class_live.ex:87
 #, elixir-autogen, elixir-format
@@ -1660,9 +1664,9 @@ msgstr ""
 msgid "Remove"
 msgstr ""
 
+#: lib/mercator_web/components/order_components.ex:81
 #: lib/mercator_web/live/basket_live.ex:153
 #: lib/mercator_web/live/checkout_live.ex:234
-#: lib/mercator_web/live/order_live.ex:119
 #, elixir-autogen, elixir-format
 msgid "Summary"
 msgstr ""
@@ -1708,9 +1712,9 @@ msgstr ""
 msgid "Belgium"
 msgstr ""
 
+#: lib/mercator_web/components/order_components.ex:56
 #: lib/mercator_web/live/addresses_live.ex:121
 #: lib/mercator_web/live/checkout_live.ex:92
-#: lib/mercator_web/live/order_live.ex:100
 #, elixir-autogen, elixir-format
 msgid "Billing address"
 msgstr ""
@@ -1954,8 +1958,10 @@ msgid "May pay by invoice"
 msgstr ""
 
 #: lib/mercator/sales/order_email.ex:54
+#: lib/mercator_web/live/admin/order_index_live.ex:131
+#: lib/mercator_web/live/admin/order_show_live.ex:147
 #: lib/mercator_web/live/admin/user_edit_live.ex:89
-#: lib/mercator_web/live/order_live.ex:61
+#: lib/mercator_web/live/order_live.ex:57
 #, elixir-autogen, elixir-format
 msgid "Payment"
 msgstr ""
@@ -2044,8 +2050,8 @@ msgstr ""
 msgid "Free from %{amount}"
 msgstr ""
 
+#: lib/mercator_web/components/order_components.ex:83
 #: lib/mercator_web/live/checkout_live.ex:236
-#: lib/mercator_web/live/order_live.ex:121
 #, elixir-autogen, elixir-format
 msgid "Goods"
 msgstr ""
@@ -2055,7 +2061,8 @@ msgstr ""
 msgid "I accept the"
 msgstr ""
 
-#: lib/mercator_web/live/order_live.ex:68
+#: lib/mercator_web/live/admin/order_show_live.ex:156
+#: lib/mercator_web/live/order_live.ex:64
 #, elixir-autogen, elixir-format
 msgid "Items"
 msgstr ""
@@ -2071,17 +2078,18 @@ msgstr ""
 msgid "Note (optional)"
 msgstr ""
 
-#: lib/mercator/sales/checkout.ex:237
+#: lib/mercator/sales/checkout.ex:233
 #, elixir-autogen, elixir-format
 msgid "Only %{stock} of %{number} are in stock."
 msgstr ""
 
-#: lib/mercator_web/live/order_live.ex:49
+#: lib/mercator_web/live/order_live.ex:45
 #, elixir-autogen, elixir-format
 msgid "Order %{number}"
 msgstr ""
 
-#: lib/mercator_web/live/order_live.ex:29
+#: lib/mercator_web/live/admin/order_show_live.ex:39
+#: lib/mercator_web/live/order_live.ex:25
 #, elixir-autogen, elixir-format
 msgid "Order not found."
 msgstr ""
@@ -2091,7 +2099,8 @@ msgstr ""
 msgid "Order number: %{number}"
 msgstr ""
 
-#: lib/mercator_web/live/order_live.ex:54
+#: lib/mercator_web/live/admin/order_show_live.ex:126
+#: lib/mercator_web/live/order_live.ex:50
 #, elixir-autogen, elixir-format
 msgid "Ordered on %{date}"
 msgstr ""
@@ -2182,8 +2191,8 @@ msgstr ""
 msgid "The order could not be placed. Please try again."
 msgstr ""
 
+#: lib/mercator_web/components/order_components.ex:102
 #: lib/mercator_web/live/checkout_live.ex:131
-#: lib/mercator_web/live/order_live.ex:140
 #, elixir-autogen, elixir-format
 msgid "We confirm the exact freight costs before delivery."
 msgstr ""
@@ -2214,7 +2223,7 @@ msgid "You will receive an invoice with the delivery, payable within 14 days."
 msgstr ""
 
 #: lib/mercator/sales/order_email.ex:57
-#: lib/mercator_web/live/order_live.ex:92
+#: lib/mercator_web/live/order_live.ex:67
 #, elixir-autogen, elixir-format
 msgid "Your note"
 msgstr ""
@@ -2230,21 +2239,21 @@ msgid "Your order %{number} at %{shop}"
 msgstr ""
 
 #: lib/mercator/sales/order_email.ex:86
+#: lib/mercator_web/components/order_components.ex:142
 #: lib/mercator_web/live/checkout_live.ex:369
-#: lib/mercator_web/live/order_live.ex:156
 #, elixir-autogen, elixir-format
 msgid "free"
 msgstr ""
 
 #: lib/mercator/sales/order_email.ex:87
+#: lib/mercator_web/components/order_components.ex:143
 #: lib/mercator_web/live/checkout_live.ex:370
-#: lib/mercator_web/live/order_live.ex:157
 #, elixir-autogen, elixir-format
 msgid "from %{amount}"
 msgstr ""
 
+#: lib/mercator_web/components/order_components.ex:98
 #: lib/mercator_web/live/checkout_live.ex:251
-#: lib/mercator_web/live/order_live.ex:136
 #, elixir-autogen, elixir-format
 msgid "incl. VAT %{rate} %"
 msgstr ""
@@ -2259,37 +2268,37 @@ msgstr ""
 msgid "terms and conditions"
 msgstr ""
 
-#: lib/mercator_web/live/order_live.ex:168
+#: lib/mercator_web/components/order_components.ex:125
 #, elixir-autogen, elixir-format
 msgctxt "order state"
 msgid "Cancelled"
 msgstr ""
 
-#: lib/mercator_web/live/order_live.ex:167
+#: lib/mercator_web/components/order_components.ex:124
 #, elixir-autogen, elixir-format
 msgctxt "order state"
 msgid "Completed"
 msgstr ""
 
-#: lib/mercator_web/live/order_live.ex:164
+#: lib/mercator_web/components/order_components.ex:121
 #, elixir-autogen, elixir-format
 msgctxt "order state"
 msgid "Confirmed"
 msgstr ""
 
-#: lib/mercator_web/live/order_live.ex:165
+#: lib/mercator_web/components/order_components.ex:122
 #, elixir-autogen, elixir-format
 msgctxt "order state"
 msgid "Paid"
 msgstr ""
 
-#: lib/mercator_web/live/order_live.ex:163
+#: lib/mercator_web/components/order_components.ex:120
 #, elixir-autogen, elixir-format
 msgctxt "order state"
 msgid "Placed"
 msgstr ""
 
-#: lib/mercator_web/live/order_live.ex:166
+#: lib/mercator_web/components/order_components.ex:123
 #, elixir-autogen, elixir-format
 msgctxt "order state"
 msgid "Shipped"
@@ -2300,7 +2309,8 @@ msgstr ""
 msgid "The product could not be saved. Please check the fields."
 msgstr ""
 
-#: lib/mercator_web/live/orders_live.ex:55
+#: lib/mercator_web/live/admin/order_index_live.ex:148
+#: lib/mercator_web/live/orders_live.ex:57
 #, elixir-autogen, elixir-format
 msgid "1 item"
 msgid_plural "%{count} items"
@@ -2309,19 +2319,19 @@ msgstr[1] ""
 
 #: lib/mercator_web/components/layouts.ex:238
 #: lib/mercator_web/live/account_live.ex:37
-#: lib/mercator_web/live/order_live.ex:45
-#: lib/mercator_web/live/orders_live.ex:18
-#: lib/mercator_web/live/orders_live.ex:36
+#: lib/mercator_web/live/order_live.ex:41
+#: lib/mercator_web/live/orders_live.ex:20
+#: lib/mercator_web/live/orders_live.ex:38
 #, elixir-autogen, elixir-format
 msgid "My orders"
 msgstr ""
 
-#: lib/mercator_web/live/orders_live.ex:41
+#: lib/mercator_web/live/orders_live.ex:43
 #, elixir-autogen, elixir-format
 msgid "Start shopping"
 msgstr ""
 
-#: lib/mercator_web/live/orders_live.ex:40
+#: lib/mercator_web/live/orders_live.ex:42
 #, elixir-autogen, elixir-format
 msgid "You have not placed any orders yet."
 msgstr ""
@@ -2354,4 +2364,133 @@ msgstr ""
 #: lib/mercator_web/live/sign_out_live.ex:19
 #, elixir-autogen, elixir-format
 msgid "Do you want to sign out?"
+msgstr ""
+
+#: lib/mercator_web/live/admin/order_index_live.ex:89
+#, elixir-autogen, elixir-format
+msgid "1 order"
+msgid_plural "%{count} orders"
+msgstr[0] ""
+msgstr[1] ""
+
+#: lib/mercator_web/live/admin/order_show_live.ex:242
+#, elixir-autogen, elixir-format
+msgid "Cancel order"
+msgstr ""
+
+#: lib/mercator_web/live/admin/order_show_live.ex:169
+#, elixir-autogen, elixir-format
+msgid "Change state"
+msgstr ""
+
+#: lib/mercator_web/live/admin/order_show_live.ex:241
+#, elixir-autogen, elixir-format
+msgid "Complete"
+msgstr ""
+
+#: lib/mercator_web/live/admin/order_show_live.ex:238
+#, elixir-autogen, elixir-format
+msgid "Confirm"
+msgstr ""
+
+#: lib/mercator_web/live/admin/order_index_live.ex:130
+#: lib/mercator_web/live/admin/order_show_live.ex:135
+#, elixir-autogen, elixir-format
+msgid "Customer"
+msgstr ""
+
+#: lib/mercator_web/live/admin/order_show_live.ex:149
+#, elixir-autogen, elixir-format
+msgid "Customer note"
+msgstr ""
+
+#: lib/mercator_web/live/admin/order_show_live.ex:176
+#, elixir-autogen, elixir-format
+msgid "Final shipping costs (gross, €)"
+msgstr ""
+
+#: lib/mercator_web/live/admin/order_show_live.ex:204
+#, elixir-autogen, elixir-format
+msgid "History"
+msgstr ""
+
+#: lib/mercator_web/live/admin/order_show_live.ex:239
+#, elixir-autogen, elixir-format
+msgid "Mark as paid"
+msgstr ""
+
+#: lib/mercator_web/live/admin/order_show_live.ex:240
+#, elixir-autogen, elixir-format
+msgid "Mark as shipped"
+msgstr ""
+
+#: lib/mercator_web/live/admin/order_index_live.ex:139
+#, elixir-autogen, elixir-format
+msgid "No orders found."
+msgstr ""
+
+#: lib/mercator_web/live/admin/order_show_live.ex:181
+#, elixir-autogen, elixir-format
+msgid "Note (required for cancellation)"
+msgstr ""
+
+#: lib/mercator_web/live/admin/order_index_live.ex:129
+#, elixir-autogen, elixir-format
+msgid "Order"
+msgstr ""
+
+#: lib/mercator_web/live/admin/order_show_live.ex:72
+#, elixir-autogen, elixir-format
+msgid "Order is now: %{state}"
+msgstr ""
+
+#: lib/mercator_web/live/admin/order_index_live.ex:100
+#, elixir-autogen, elixir-format
+msgid "Order number, customer or email"
+msgstr ""
+
+#: lib/mercator_web/admin_nav.ex:28
+#: lib/mercator_web/live/admin/order_index_live.ex:23
+#: lib/mercator_web/live/admin/order_index_live.ex:87
+#: lib/mercator_web/live/admin/order_show_live.ex:119
+#, elixir-autogen, elixir-format
+msgid "Orders"
+msgstr ""
+
+#: lib/mercator_web/live/admin/order_show_live.ex:94
+#, elixir-autogen, elixir-format
+msgid "Please enter a reason for the cancellation."
+msgstr ""
+
+#: lib/mercator/sales/changes/set_final_shipping.ex:24
+#: lib/mercator_web/live/admin/order_show_live.ex:99
+#, elixir-autogen, elixir-format
+msgid "Please enter the final shipping costs."
+msgstr ""
+
+#: lib/mercator_web/live/admin/order_show_live.ex:82
+#, elixir-autogen, elixir-format
+msgid "The state could not be changed."
+msgstr ""
+
+#: lib/mercator_web/live/admin/order_show_live.ex:86
+#, elixir-autogen, elixir-format
+msgid "This state change is not possible."
+msgstr ""
+
+#: lib/mercator_web/live/admin/order_show_live.ex:144
+#, elixir-autogen, elixir-format
+msgid "User account"
+msgstr ""
+
+#: lib/mercator_web/live/admin/order_index_live.ex:116
+#, elixir-autogen, elixir-format
+msgctxt "date range"
+msgid "from"
+msgstr ""
+
+#: lib/mercator_web/live/admin/order_index_live.ex:120
+#, elixir-autogen, elixir-format
+msgctxt "date range"
+msgid "to"
 msgstr ""

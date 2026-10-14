@@ -43,6 +43,14 @@ defmodule Mercator.Sales.OrderTotals do
     }
   end
 
+  @doc "VAT lines as stored on an order: string keys and values."
+  def snapshot_vat_lines(vat_lines) do
+    Enum.map(
+      vat_lines,
+      &Map.new(&1, fn {key, value} -> {to_string(key), Decimal.to_string(value)} end)
+    )
+  end
+
   defp by_rate(lines) do
     lines
     |> Enum.group_by(& &1.vat_rate)

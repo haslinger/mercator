@@ -84,6 +84,7 @@ placed ─► confirmed ─► paid ─► shipped ─► completed
 
 - `/admin/orders` (sales, sales_manager, administrator): list with filters (state, period, search by order number or customer).
 - Order detail: items, addresses, totals, state changes with notes, cancellation.
+- *Implemented (step 6, 2026-10-14):* every state change is stored as an `OrderEvent` (from/to state, note, staff member) and shown as the order's history; cancelling needs a reason and puts tracked stock back; confirming an order with estimated freight costs requires the final shipping costs, and totals and VAT lines are recalculated from the order items.
 
 ## 7. Demo (Biber Holz)
 

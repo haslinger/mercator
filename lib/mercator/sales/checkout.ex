@@ -165,11 +165,7 @@ defmodule Mercator.Sales.Checkout do
       net: totals.net,
       vat: totals.vat,
       gross: totals.gross,
-      vat_lines:
-        Enum.map(
-          totals.vat_lines,
-          &Map.new(&1, fn {key, value} -> {to_string(key), Decimal.to_string(value)} end)
-        ),
+      vat_lines: OrderTotals.snapshot_vat_lines(totals.vat_lines),
       gtc_version: checkout.gtc.version,
       gtc_accepted_at: DateTime.utc_now(),
       note: blank_to_nil(note),

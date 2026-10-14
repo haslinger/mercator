@@ -14,6 +14,8 @@ defmodule Mercator.Sales.Order do
     authorizers: [Ash.Policy.Authorizer],
     extensions: [AshStateMachine]
 
+  require Ash.Query
+
   alias Mercator.Accounts.Checks.ActorHasRole
   alias Mercator.Sales.{PaymentMethod, ShippingMethod}
 
@@ -81,12 +83,73 @@ defmodule Mercator.Sales.Order do
       get_by [:number]
     end
 
-    # state changes by staff (back office, step 6)
-    update :confirm, change: transition_state(:confirmed)
-    update :mark_paid, change: transition_state(:paid)
-    update :ship, change: transition_state(:shipped)
-    update :complete, change: transition_state(:completed)
-    update :cancel, change: transition_state(:cancelled)
+    read :search do
+      description "Back office list: filter by state, period and text, newest first."
+
+      argument :state, :atom
+      argument :from, :date
+      argument :to, :date
+      argument :query, :string
+
+      filter expr(is_nil(^arg(:state)) or state == ^arg(:state))
+      filter expr(is_nil(^arg(:from)) or inserted_at >= ^arg(:from))
+      filter expr(is_nil(^arg(:to)) or inserted_at < date_add(^arg(:to), 1, :day))
+
+      prepare fn query, _context ->
+        case String.trim(Ash.Query.get_argument(query, :query) || "") do
+          "" ->
+            query
+
+          text ->
+            pattern = "%" <> String.replace(text, ~r/[\\%_]/, "\\\\\\0") <> "%"
+
+            Ash.Query.filter(
+              query,
+              fragment(
+                "concat_ws(' ', ?, ?, ? ->> 'name', ? ->> 'company') ILIKE ?",
+                number,
+                email,
+                billing_address,
+                billing_address,
+                ^pattern
+              )
+            )
+        end
+      end
+
+      prepare build(sort: [inserted_at: :desc])
+      pagination offset?: true, countable: true, default_limit: 25, required?: false
+    end
+
+    # state changes by staff, each recorded as an OrderEvent with an optional note
+    update :confirm do
+      require_atomic? false
+      argument :note, :string
+
+      argument :shipping_gross, :decimal,
+        description: "Final costs when they were estimated (freight)."
+
+      change Mercator.Sales.Changes.SetFinalShipping
+      change transition_state(:confirmed)
+      change Mercator.Sales.Changes.RecordStateChange
+    end
+
+    for {name, state} <- [mark_paid: :paid, ship: :shipped, complete: :completed] do
+      update name do
+        require_atomic? false
+        argument :note, :string
+        change transition_state(state)
+        change Mercator.Sales.Changes.RecordStateChange
+      end
+    end
+
+    update :cancel do
+      require_atomic? false
+      argument :note, :string, allow_nil?: false, description: "Reason for the cancellation."
+      change transition_state(:cancelled)
+      change Mercator.Sales.Changes.RestoreStock
+      change Mercator.Sales.Changes.RecordStateChange
+    end
   end
 
   policies do
@@ -189,6 +252,11 @@ defmodule Mercator.Sales.Order do
     has_many :items, Mercator.Sales.OrderItem do
       public? true
       sort position: :asc
+    end
+
+    has_many :events, Mercator.Sales.OrderEvent do
+      public? true
+      sort inserted_at: :asc
     end
   end
 
