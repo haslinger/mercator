@@ -58,6 +58,7 @@ defmodule MercatorWeb.Router do
       live "/search", SearchLive
       live "/basket", BasketLive
       live "/terms", GtcLive
+      live "/pages/*path", PageLive
 
       live "/account", AccountLive
       live "/account/addresses", AddressesLive

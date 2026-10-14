@@ -20,6 +20,7 @@ defmodule Mercator.Content do
     resource Mercator.Content.Page do
       define :get_page, action: :read, get_by: [:id]
       define :get_published_page, action: :published_by_path, args: [:path], get?: true
+      define :get_page_by_path, action: :read, get_by: [:path]
       define :list_pages, action: :read
       define :create_page, action: :create
       define :update_page, action: :update

@@ -167,7 +167,7 @@ msgstr ""
 #: lib/mercator_web/live/admin/product_configurator_tab.ex:225
 #: lib/mercator_web/live/admin/product_configurator_tab.ex:422
 #: lib/mercator_web/live/admin/product_configurator_tab.ex:481
-#: lib/mercator_web/live/admin/product_edit_live.ex:397
+#: lib/mercator_web/live/admin/product_edit_live.ex:401
 #: lib/mercator_web/live/admin/product_properties_tab.ex:306
 #: lib/mercator_web/live/admin/product_variants_tab.ex:345
 #: lib/mercator_web/live/admin/product_variants_tab.ex:394
@@ -655,7 +655,7 @@ msgstr ""
 #: lib/mercator_web/live/admin/category_tree_live.ex:17
 #: lib/mercator_web/live/admin/category_tree_live.ex:137
 #: lib/mercator_web/live/admin/dashboard_live.ex:47
-#: lib/mercator_web/live/admin/product_edit_live.ex:372
+#: lib/mercator_web/live/admin/product_edit_live.ex:373
 #, elixir-autogen, elixir-format
 msgid "Categories"
 msgstr ""
@@ -896,7 +896,7 @@ msgstr ""
 msgid "Discontinued"
 msgstr ""
 
-#: lib/mercator_web/live/admin/product_edit_live.ex:406
+#: lib/mercator_web/live/admin/product_edit_live.ex:410
 #, elixir-autogen, elixir-format
 msgid "Freight"
 msgstr ""
@@ -935,17 +935,17 @@ msgstr ""
 msgid "New product"
 msgstr ""
 
-#: lib/mercator_web/live/admin/product_edit_live.ex:408
+#: lib/mercator_web/live/admin/product_edit_live.ex:412
 #, elixir-autogen, elixir-format
 msgid "No shipping (service)"
 msgstr ""
 
-#: lib/mercator_web/live/admin/product_edit_live.ex:405
+#: lib/mercator_web/live/admin/product_edit_live.ex:409
 #, elixir-autogen, elixir-format
 msgid "Parcel"
 msgstr ""
 
-#: lib/mercator_web/live/admin/product_edit_live.ex:407
+#: lib/mercator_web/live/admin/product_edit_live.ex:411
 #, elixir-autogen, elixir-format
 msgid "Pickup only"
 msgstr ""
@@ -2579,4 +2579,14 @@ msgstr ""
 #: lib/mercator_web/live/admin/category_tree_live.ex:298
 #, elixir-autogen, elixir-format
 msgid "Text below the products"
+msgstr ""
+
+#: lib/mercator_web/live/page_live.ex:34
+#, elixir-autogen, elixir-format
+msgid "Page not found."
+msgstr ""
+
+#: lib/mercator_web/live/page_live.ex:68
+#, elixir-autogen, elixir-format
+msgid "Preview of the working copy – visitors see the published version."
 msgstr ""
