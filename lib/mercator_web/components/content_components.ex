@@ -205,9 +205,22 @@ defmodule MercatorWeb.ContentComponents do
         :for={block <- elem(@shared, 0)}
         block={block}
         locale={@locale}
-        data={elem(@shared, 1)}
+        data={Map.merge(elem(@shared, 1), Map.take(@data, [:page_id, :client_ip]))}
       />
     </div>
+    """
+  end
+
+  defp render_block(%{b: %Blocks.ContactForm{}} = assigns) do
+    ~H"""
+    <.live_component
+      module={MercatorWeb.ContactFormComponent}
+      id={"block-#{@b.id}"}
+      block={@b}
+      locale={@locale}
+      page_id={@data[:page_id]}
+      client_ip={@data[:client_ip]}
+    />
     """
   end
 

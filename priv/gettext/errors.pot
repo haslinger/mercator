@@ -197,3 +197,8 @@ msgstr ""
 #, elixir-autogen, elixir-format
 msgid "too many attempts, please try again later"
 msgstr ""
+
+#: lib/mercator/content/submission.ex:34
+#, elixir-autogen, elixir-format
+msgid "is not a valid email address"
+msgstr ""

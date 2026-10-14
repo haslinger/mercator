@@ -37,6 +37,13 @@ defmodule Mercator.Content do
       define :destroy_page, action: :destroy
     end
 
+    resource Mercator.Content.Submission do
+      define :submit_contact_form, action: :submit
+      define :list_submissions, action: :read
+      define :mark_submission_handled, action: :mark_handled
+      define :mark_submission_open, action: :mark_open
+    end
+
     resource Mercator.Content.Asset do
       define :get_asset, action: :read, get_by: [:id]
       define :list_assets, action: :read

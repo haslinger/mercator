@@ -29,7 +29,14 @@ defmodule MercatorWeb.AdminNav do
            :sales,
            :sales_manager,
            :administrator
-         ])
+         ]),
+         item(
+           gettext("Contact requests"),
+           ~p"/admin/submissions",
+           "hero-envelope",
+           "submissions",
+           [:sales, :sales_manager, :contentmanager, :administrator]
+         )
        ]},
       {gettext("Catalogue"),
        [

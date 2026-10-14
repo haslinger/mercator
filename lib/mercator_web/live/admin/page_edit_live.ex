@@ -718,6 +718,15 @@ defmodule MercatorWeb.Admin.PageEditLive do
     """
   end
 
+  defp block_fields(%{type: "contact_form"} = assigns) do
+    ~H"""
+    <.translated_input field={@form[:intro]} label={gettext("Introduction")} type="markdown" />
+    <p class="text-sm text-base-content/60">
+      {gettext("Messages are stored under Contact requests and emailed to the shop address.")}
+    </p>
+    """
+  end
+
   defp block_fields(%{type: "shared"} = assigns) do
     ~H"""
     <.input
@@ -882,4 +891,5 @@ defmodule MercatorWeb.Admin.PageEditLive do
   defp block_type_label("columns"), do: gettext("Columns")
   defp block_type_label("faq"), do: gettext("FAQ")
   defp block_type_label("shared"), do: gettext("Shared block")
+  defp block_type_label("contact_form"), do: gettext("Contact form")
 end

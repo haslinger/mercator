@@ -190,3 +190,8 @@ msgstr "ist weder ein Bild noch ein PDF"
 #, elixir-autogen, elixir-format
 msgid "too many attempts, please try again later"
 msgstr "zu viele Versuche, bitte später erneut versuchen"
+
+#: lib/mercator/content/submission.ex:34
+#, elixir-autogen, elixir-format
+msgid "is not a valid email address"
+msgstr "ist keine gültige E-Mail-Adresse"

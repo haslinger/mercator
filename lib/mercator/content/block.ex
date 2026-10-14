@@ -24,6 +24,11 @@ defmodule Mercator.Content.Block do
         columns: [type: Mercator.Content.Blocks.Columns, tag: :type, tag_value: "columns"],
         faq: [type: Mercator.Content.Blocks.Faq, tag: :type, tag_value: "faq"],
         shared: [type: Mercator.Content.Blocks.Shared, tag: :type, tag_value: "shared"],
+        contact_form: [
+          type: Mercator.Content.Blocks.ContactForm,
+          tag: :type,
+          tag_value: "contact_form"
+        ],
         call_to_action: [
           type: Mercator.Content.Blocks.CallToAction,
           tag: :type,

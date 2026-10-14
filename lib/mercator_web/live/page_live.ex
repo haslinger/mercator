@@ -31,7 +31,12 @@ defmodule MercatorWeb.PageLive do
          socket
          |> assign(:page, page)
          |> assign(:content, content)
-         |> assign(:block_data, MercatorWeb.BlockData.load(content.blocks))
+         |> assign(
+           :block_data,
+           content.blocks
+           |> MercatorWeb.BlockData.load()
+           |> Map.merge(%{page_id: page.id, client_ip: MercatorWeb.ClientIp.from_socket(socket)})
+         )
          |> assign(:preview?, preview?)
          |> assign(:page_title, Translated.t(content.title, socket.assigns.locale))
          |> assign_page_meta(page, content)}
