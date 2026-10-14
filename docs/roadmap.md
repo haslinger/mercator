@@ -140,7 +140,7 @@ Customer systems and the modules they mount (the last commit date of each system
 2. **Catalogue (read side):** Category tree, Product, Inventory, Price (price determination), Properties/Values, Features, relations; public category and product pages; search.
 3. **Basket and checkout:** Order/Lineitem state machine, addresses, shipping costs, GTC, prepayment, cash and ATM payment, confirmation mails, PDF.
 4. **Back office:** admin CRUD; productmanager tools (tree, price, property and relation manager).
-5. **CMS:** Webpages, templates, content elements, folders; blog and podcasts if needed.
+5. **CMS:** pages built from blocks, media library, contact form, page history (see [cms-design.md](cms-design.md)). No blog and no podcasts (#82).
 6. **Guided selling:** Conversations, realtime chat, offers, the sales desk, consultant assignment, cobrowsing, A/V chat.
 7. **Integrations:** payment provider (replacing mPAY24, #14). Mesonic, Icecat and Bechlem are out of scope (#15).
 8. **Contracting** module.
@@ -184,7 +184,7 @@ Rails sources (#1–#4) and continuing the overview (#5) were answered on 2026-1
 - **#7** (2026-10-13) **Translations:** UI texts use Gettext (in code). Translatable **content** is stored in the DB as **one JSONB map per attribute** (`%{"de" => …, "en" => …}`), with a calculation for the current locale that falls back to `de`. Search uses Postgres full-text search with one index per language (German/English stemming). Adding a language means config only, no migration.
 - **#31** (2026-10-13) `usage_rules` added: Elixir/OTP and Phoenix rules are inline in `AGENTS.md`; Ash rules form the on-demand `ash-framework` skill.
 - **#8** (2026-10-13) **No database user per visitor.** Anonymous visitors get a **session basket** that moves to the real user at login or registration. Login uses **password + magic link** (AshAuthentication). The session carries an anonymous session ID for later analytics.
-- **#18 (analytics part)** (2026-10-13) General traffic stats live **outside the app** (proxy logs or Plausible/Umami/Matomo, chosen per customer). **Shop funnel events** (visit → basket → checkout → order) come later as an anonymous in-app event table (no personal data, no IPs). Still open: which other features are needed (blog, podcasts, comments, Twitter, contact form, Gravatar).
+- **#18 (analytics part)** (2026-10-13) General traffic stats live **outside the app** (proxy logs or Plausible/Umami/Matomo, chosen per customer). **Shop funnel events** (visit → basket → checkout → order) come later as an anonymous in-app event table (no personal data, no IPs). Blog and podcasts: no (#82); contact form: yes (#83). Still open: comments, Twitter, Gravatar.
 - **#32** (2026-10-13) **Roles as one list attribute** (`roles: [:sales, :contentmanager]`) using the enum `Mercator.Accounts.Role`. Only administrators may change roles. Implemented in c85e2e8.
 - **#33** (2026-10-13) **User profile:** an optional `name` (one field, no first/last split, no salutation or academic title), an optional `phone`, and `locale` (de/en, default de). Structured address data (company, recipient) belongs to billing and delivery addresses (phase 3).
 - **#34** (2026-10-13) License: **GPL v3**, as in the Rails version (`LICENSE` copied from the Rails repository).
@@ -229,7 +229,7 @@ Rails sources (#1–#4) and continuing the overview (#5) were answered on 2026-1
 - ~~**#6**~~ *(answered, see Decisions)* Who is the port for? One customer installation (which one: ivellio-vellin?), or a generic product that again supports several customer systems with their own themes, config and modules? Should one instance serve several tenants? (→ no, see #28)
 - ~~**#7**~~ *(answered, see Decisions)* Translations: keep the `_de`/`_en` column pairs, or move to one map/JSONB column per field? Will there only ever be de/en?
 - ~~**#8**~~ *(answered, see Decisions)* Guest users: keep the Rails model, where every visitor gets a DB user? The alternative is a session-based anonymous basket that becomes a user at checkout or login. Do we keep email-link login and passwords?
-- **#9** Page templates: the Rails app lets content managers write DRYML/ERB templates in the DB. Do we need user-editable templates (e.g. Liquid/Solid with `container`/`photo`/`document` tags), or are a few fixed HEEx layouts with named content slots enough?
+- ~~**#9**~~ *(answered 2026-10-14 by #76: blocks instead of templates)* Page templates: the Rails app lets content managers write DRYML/ERB templates in the DB. Do we need user-editable templates (e.g. Liquid/Solid with `container`/`photo`/`document` tags), or are a few fixed HEEx layouts with named content slots enough?
 - ~~**#10**~~ *(answered by #56: Postgres full-text search)* Search: Postgres full-text search (simplest, no extra service), or a dedicated engine (Meilisearch/Typesense/Elasticsearch)? How large is the catalogue (number of products/categories)?
 - ~~**#11**~~ *(answered, see Decisions)* File storage: local disk or S3-compatible? ~~Do the existing Paperclip files have to be migrated?~~ (no, see #21)
 - **#12** Audio/video chat and cobrowsing: still wanted? If so, should WebRTC signalling run over Phoenix Channels? Cobrowsing in Rails worked by sending events to the customer's page. Is that still needed in the same form?
@@ -240,7 +240,7 @@ Rails sources (#1–#4) and continuing the overview (#5) were answered on 2026-1
 - **#17** PDF output: which documents are needed (offers, orders, contracts)? Which tool do you prefer (ChromicPDF needs headless Chrome; Typst is a single binary)?
 - **#18** *(analytics part answered, see Decisions)* Which of these features are still needed: blog, podcasts, comments, Twitter integration, Ahoy visitor tracking, the contact form with its captcha question, Gravatar?
 - **#19** Contracting module (printer/consumable leasing contracts): still needed? Who uses it? Should it stay a separate area?
-- **#20** Multi-domain setup (separate CMS, shop and podcast domains with session handover): still needed, or one domain?
+- ~~**#20**~~ *(answered 2026-10-14 by #86: one domain)* Multi-domain setup (separate CMS, shop and podcast domains with session handover): still needed, or one domain?
 
 ### Data and operations
 - ~~**#21**~~ *(answered, see Decisions)* Do we migrate existing production data from MySQL (users, orders, catalogue, CMS content), or start fresh? Is a recent DB dump available to develop against?
@@ -278,5 +278,5 @@ Rails sources (#1–#4) and continuing the overview (#5) were answered on 2026-1
 - ~~**#58**~~ *(answered, see Decisions)* Image storage: static files per brand, or real uploads?
 - ~~**#59**~~ *(answered, see Decisions)* Demo images: SVG illustrations, or photos generated externally from a prompt list?
 - ~~**#64–#70**~~ *(answered, see Decisions)* Basket and checkout questions (payment methods, shipping costs, signed-in checkout, delivery countries, order numbers, B2B reverse charge, order email): see [checkout-design.md](checkout-design.md#9-open-questions).
-- **#76–#86** CMS design questions (blocks instead of templates, Markdown library and editor, URLs, start page, blog, contact form, history, media library, one domain): see [cms-design.md](cms-design.md#9-open-questions).
+- ~~**#76–#86**~~ *(answered 2026-10-14)* CMS design questions: see [cms-design.md](cms-design.md#9-questions). Follow-ups #87–#92 there.
 

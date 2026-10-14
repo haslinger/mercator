@@ -1,6 +1,6 @@
 # CMS design (phase 5) — draft
 
-Status: **draft, 2026-10-14.** Open questions #76–#86 are in section 9.
+Status: **agreed 2026-10-14** (#76–#86 answered); follow-up questions #87–#92 in section 9.
 
 ## 1. Goal
 
@@ -48,7 +48,7 @@ Block types for a start:
 
 - **Page:** title, slug, SEO description (all translated), parent (tree, like categories), position, state (`draft`, `published`, `hidden` = reachable by URL but not in menus, `archived`; AshStateMachine), menu placement (main navigation / footer / none), optional `key` for pages the code links to (`home`, `imprint`, `privacy`, `contact`).
 - **Block:** page (or shared), type, position, `data` (map with the type's fields; translated texts as `%{"de" => …, "en" => …}` inside), validated per type by an Ash type or a change.
-- **Asset** (media library): images and documents, stored with `Mercator.Uploads` and converted with libvips like product images; title and alt text (translated), folder or tags (#85).
+- **Asset** (media library): images and documents, stored with `Mercator.Uploads` and converted with libvips like product images; title and alt text (translated); **tags, at least one required**, free text with suggestions from existing tags, and search (#85).
 - **Submission:** contact form entries (#83).
 - Policies: **contentmanager** and **administrator** edit; everyone reads published pages; content managers also see drafts, with a "draft" banner.
 
@@ -61,7 +61,7 @@ Block types for a start:
 
 ## 6. URLs and navigation (#80, #81)
 
-- Pages live at **top-level paths from the tree**, e.g. `/ueber-uns`, `/ueber-uns/team`, via a catch-all route at the end of the router (shop routes take precedence; reserved slugs are rejected).
+- Pages live under **`/pages/`** with paths from the tree, e.g. `/pages/ueber-uns/team` (#80). Routes are intentionally English (German visitors are used to English URLs, English visitors would be puzzled by German ones); the slugs themselves are content.
 - The start page `/` becomes a CMS page (key `home`) built from blocks (hero, bestseller products, categories, text). The fixed home template goes away (#81).
 - Main navigation: the shop menu ("Sortiment") plus published pages marked for the main navigation; footer: pages marked for the footer (imprint, privacy, GTC, contact).
 
@@ -70,7 +70,7 @@ Block types for a start:
 - `/admin/pages`: page tree with drag and drop (like the category tree), state changes, "new page".
 - `/admin/pages/:id`: page settings (title, slug, SEO, menu, state) and the block list: add a block by type, edit it in place, reorder, delete; preview of the page as visitors see it.
 - `/admin/shared-blocks`, `/admin/media` (upload, folders/tags, alt texts), `/admin/submissions` (contact form entries).
-- History (#84).
+- History (#84): every saved change of a page is kept; content managers can view and restore older versions.
 
 ## 8. Implementation order (one commit each, with tests)
 
@@ -83,16 +83,27 @@ Block types for a start:
 7. Contact form and submissions.
 8. Demo content for Biber Holz: start page, Über uns, Unser Sägewerk, FAQ, Kontakt, Impressum, Datenschutz.
 
-## 9. Open questions
+## 9. Questions
 
-- **#76 Blocks instead of templates:** pages as an ordered list of typed blocks, with new block types added in code, instead of user-editable templates with placeholders? This also answers #9 (no templates in the DB).
-- **#77 Markdown library:** add **MDEx** (my recommendation: GitHub-flavoured Markdown, built-in sanitizing, fast; a precompiled Rust NIF, so nothing to compile locally) or Earmark (pure Elixir)?
-- **#78 Editor:** textarea with a small toolbar and live preview, no WYSIWYG — OK?
-- **#79 Markdown in existing fields:** switch product (description, long description), category description and GTC text to Markdown now, in step 1?
-- **#80 URLs:** top-level paths from the page tree (`/ueber-uns/team`), or a prefix such as `/seite/ueber-uns`? Top-level is nicer for visitors and SEO, but needs reserved slugs.
-- **#81 Start page:** build `/` from CMS blocks (recommended), or keep a fixed start page with a few editable blocks?
-- **#82 Blog and podcasts:** the blog could be a later extension (pages of type "post" with date and category); podcasts were informatom-specific. My suggestion: **no blog and no podcasts for now**, both as optional modules later if a customer needs them.
-- **#83 Contact form:** store submissions and email them to the shop address; spam protection with a honeypot field and rate limiting instead of the Rails question ("answer must contain 8")? Do we need more forms (e.g. a callback request) later?
-- **#84 History:** keep a version history of pages and blocks (AshPaperTrail, see #22) with "restore this version", or later?
-- **#85 Media library:** organise assets in **folders** (as in Rails) or with **tags and search** (my suggestion: tags and search; simpler and works across uses)?
-- **#86 One domain:** shop and CMS on one domain (my suggestion), so #20 (multi-domain with session handover) is dropped?
+Answered 2026-10-14:
+
+- ~~**#76**~~ *(yes)* Pages as an ordered list of typed blocks; new block types in code. Also answers #9 (no templates in the DB).
+- ~~**#77**~~ *(yes)* MDEx for Markdown.
+- ~~**#78**~~ *(yes)* Textarea with toolbar and live preview, no WYSIWYG.
+- ~~**#79**~~ *(yes)* Product, category and GTC texts become Markdown in step 1.
+- ~~**#80**~~ *(prefix)* Pages under `/pages/…`; routes intentionally in English. Makes one domain easy.
+- ~~**#81**~~ *(yes)* The start page is a CMS page built from blocks.
+- ~~**#82**~~ *(no)* No blog and no podcasts; removed from the roadmap.
+- ~~**#83**~~ *(yes)* Contact form: submissions stored and emailed; honeypot and rate limiting (how: #87).
+- ~~**#84**~~ *(now)* Version history of pages with restore, built right away.
+- ~~**#85**~~ *(tags)* Media library with tags and search; at least one tag per asset.
+- ~~**#86**~~ *(yes)* One domain; #20 is dropped.
+
+Open:
+
+- **#87 Rate limiting in the app:** with **Hammer** (a counter per key and time window in ETS, i.e. in the app's memory; a Redis backend exists for several nodes) and the client IP taken from the proxy's `X-Forwarded-For` header (Plug's `Plug.RewriteOn`, only from the trusted proxy). Contact form e.g. 5 per hour per IP. Apply the same to sign-in, registration, password reset and magic-link requests (today only the proxy could do that)?
+- **#88 English shop routes too:** following #80, rename the German routes: `/kategorien` → `/categories`, `/produkte` → `/products`, `/suche` → `/search`, `/warenkorb` → `/basket`, `/kasse` → `/checkout`, `/kasse/anmelden` → `/checkout/sign-in`, `/agb` → `/terms`. Now, before CMS content starts linking to them?
+- **#89 Blocks stored inside the page:** the block list as one embedded list on the page (JSONB) instead of a separate table. Then one saved version is the whole page, and history and restore (#84) are simple and exact. Shared blocks stay a resource of their own, with their own history, and are referenced by id.
+- **#90 Working copy and publish:** edits to a published page go into a working copy; visitors keep seeing the published version until "Veröffentlichen". The history records every published version (and lets you restore one into the working copy). Or edit live?
+- **#91 SEO basics now:** `sitemap.xml` (pages, categories, products), meta description and Open Graph image per page, canonical URLs — as part of step 6?
+- **#92 GTC and legal pages:** imprint and privacy policy become normal CMS pages (with keys, linked in the footer). The GTC stay versioned in Sales (orders store the accepted version) and get a back-office editor: new version with a valid-from date, Markdown text. In this phase?
