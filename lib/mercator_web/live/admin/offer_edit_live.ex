@@ -187,6 +187,19 @@ defmodule MercatorWeb.Admin.OfferEditLive do
     end
   end
 
+  def handle_event("copy", _params, socket) do
+    case Offers.copy(socket.assigns.offer, actor(socket)) do
+      {:ok, copy} ->
+        {:noreply,
+         socket
+         |> put_flash(:info, gettext("Copied as a new offer with today's prices."))
+         |> push_navigate(to: ~p"/admin/offers/#{copy.id}")}
+
+      error ->
+        result(error, socket)
+    end
+  end
+
   def handle_event("withdraw", _params, socket) do
     socket.assigns.offer |> Offers.withdraw(actor(socket)) |> result(socket)
   end
@@ -537,6 +550,15 @@ defmodule MercatorWeb.Admin.OfferEditLive do
         id="revise-offer"
       >
         <.icon name="hero-document-duplicate" class="size-4" /> {gettext("Revise")}
+      </button>
+      <button
+        type="button"
+        class="btn"
+        phx-click="copy"
+        title={gettext("A new offer with a new number for the same customer, at today's prices")}
+        id="copy-offer"
+      >
+        <.icon name="hero-square-2-stack" class="size-4" /> {gettext("Copy")}
       </button>
       <button
         :if={@offer.state in [:draft, :pending_approval, :sent]}

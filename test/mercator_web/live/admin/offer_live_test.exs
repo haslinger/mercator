@@ -109,6 +109,11 @@ defmodule MercatorWeb.Admin.OfferLiveTest do
       assert has_element?(view, "#offer-state", "Versendet")
       refute has_element?(view, "#offer-header form")
 
+      view |> element("#copy-offer") |> render_click()
+      {copy_path, _flash} = assert_redirect(view)
+      assert copy_path != ~p"/admin/offers/#{offer.id}"
+
+      {:ok, view, _html} = live(conn, ~p"/admin/offers/#{offer.id}")
       view |> element("#revise-offer") |> render_click()
       {path, _flash} = assert_redirect(view)
       assert path != ~p"/admin/offers/#{offer.id}"

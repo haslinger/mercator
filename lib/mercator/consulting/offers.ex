@@ -222,6 +222,24 @@ defmodule Mercator.Consulting.Offers do
     end
   end
 
+  @doc """
+  Copies an offer (in any state) into a new draft with a new number for
+  the same customer, e.g. after it expired or for a repeat order. Product
+  items get today's prices; the original stays unchanged.
+  """
+  def copy(offer, actor) do
+    offer = Ash.load!(offer, :items, authorize?: false)
+
+    attrs =
+      offer
+      |> Map.take([:customer_id, :locale, :discount_percent, :note])
+      |> Map.put(:items, Enum.map(offer.items, &refreshed/1))
+
+    with {:ok, copy} <- Ash.create(Offer, attrs, action: :create, actor: actor) do
+      recalculate(copy)
+    end
+  end
+
   @doc "Sent offers past their validity date expire (daily job)."
   def expire_overdue do
     Offer
@@ -318,17 +336,10 @@ defmodule Mercator.Consulting.Offers do
     end
   end
 
-  defp reprice(%{kind: :product, variant_id: variant_id} = item, %{quantity: quantity} = attrs)
-       when not is_nil(variant_id) and not is_nil(quantity) do
-    variant =
-      Ash.get!(Variant, variant_id,
-        load: [product: [:tax_class, options: :choices]],
-        authorize?: false
-      )
-
+  defp reprice(%{kind: :product} = item, %{quantity: quantity} = attrs)
+       when not is_nil(quantity) do
     with false <- Decimal.equal?(Decimal.new(quantity), item.quantity),
-         {:ok, %{list_unit_net: list}} <-
-           price(variant.product, variant, quantity, item.selections, Translated.default_locale()) do
+         {:ok, %{list_unit_net: list}} <- current_price(item, quantity) do
       attrs = Map.put(attrs, :list_unit_net, list)
       if unchanged_price?(item, attrs), do: Map.put(attrs, :unit_net, list), else: attrs
     else
@@ -337,6 +348,39 @@ defmodule Mercator.Consulting.Offers do
   end
 
   defp reprice(_item, attrs), do: attrs
+
+  # today's price list price of a product item, for a quantity
+  defp current_price(%{variant_id: nil}, _quantity), do: {:error, :no_variant}
+
+  defp current_price(item, quantity) do
+    case Ash.get(Variant, item.variant_id,
+           load: [product: [:tax_class, options: :choices]],
+           authorize?: false
+         ) do
+      {:ok, variant} ->
+        price(variant.product, variant, quantity, item.selections, Translated.default_locale())
+
+      error ->
+        error
+    end
+  end
+
+  # an item copied into a new offer: product items at today's prices, a
+  # unit price set by the consultant stays
+  defp refreshed(%{kind: :product} = item) do
+    attrs = Map.take(item, @copied)
+
+    case current_price(item, item.quantity) do
+      {:ok, %{list_unit_net: list, vat_rate: vat_rate}} ->
+        unit_net = if unchanged_price?(item, %{}), do: list, else: item.unit_net
+        %{attrs | list_unit_net: list, unit_net: unit_net, vat_rate: vat_rate}
+
+      _ ->
+        attrs
+    end
+  end
+
+  defp refreshed(item), do: Map.take(item, @copied)
 
   # the consultant neither changed the unit price before nor now
   defp unchanged_price?(item, attrs) do

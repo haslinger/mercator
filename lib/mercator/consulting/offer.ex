@@ -60,8 +60,10 @@ defmodule Mercator.Consulting.Offer do
     create :create do
       description "A new offer for a customer; the actor is the consultant."
       accept [:customer_id, :conversation_id, :locale, :valid_until, :discount_percent, :note]
+      argument :items, {:array, :map}, default: [], description: "Items of a copied offer."
       change relate_actor(:consultant)
       change Mercator.Consulting.Changes.AssignOfferNumber
+      change manage_relationship(:items, type: :create)
     end
 
     create :revision do

@@ -223,6 +223,48 @@ defmodule Mercator.Consulting.OffersTest do
       assert {:ok, %{state: :revised}} = Offers.get(sent.id, context.consultant)
     end
 
+    test "copying: a new number, today's prices, a set price stays", context do
+      variant = variant()
+
+      {:ok, offer} = Offers.add_product(draft(context), variant.id, 2, context.consultant)
+      {:ok, offer} = Offers.add_product(offer, variant.id, 1, context.consultant)
+      [listed, set] = offer.items
+      {:ok, offer} = Offers.update_item(set, %{unit_net: "70"}, context.consultant)
+
+      {:ok, offer} =
+        Offers.add_text(
+          offer,
+          %{title: "Montage", quantity: 1, unit_net: "50"},
+          context.consultant
+        )
+
+      # 30 % below the list price: a sales manager sends it
+      {:ok, sent} = Offers.submit(offer, context.manager)
+      Ash.Seed.update!(sent, %{valid_until: Date.add(Mercator.Clock.today(), -1)})
+      Offers.expire_overdue()
+
+      # the price list changed meanwhile
+      Mercator.Catalog.create_price!(%{variant_id: variant.id, amount: "90"}, authorize?: false)
+
+      {:ok, expired} = Offers.get(sent.id, context.consultant)
+      {:ok, copy} = Offers.copy(expired, context.consultant)
+
+      assert copy.state == :draft
+      assert copy.number != expired.number and copy.version == 1
+      assert copy.customer_id == expired.customer_id
+      assert copy.valid_until == Date.add(Mercator.Clock.today(), 30)
+
+      [copied_listed, copied_set, text] = copy.items
+      assert copied_listed.title == listed.title
+      assert Decimal.equal?(copied_listed.unit_net, 90)
+      assert Decimal.equal?(copied_set.list_unit_net, 90)
+      assert Decimal.equal?(copied_set.unit_net, 70)
+      assert text.title == "Montage" and Decimal.equal?(text.unit_net, 50)
+      assert Decimal.equal?(copy.net, 180 + 70 + 50)
+
+      assert {:ok, %{state: :expired}} = Offers.get(expired.id, context.consultant)
+    end
+
     test "withdrawing", context do
       {:ok, sent} = Offers.submit(with_product(context), context.consultant)
       assert {:ok, %{state: :withdrawn}} = Offers.withdraw(sent, context.consultant)
