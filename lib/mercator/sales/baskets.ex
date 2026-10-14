@@ -7,6 +7,9 @@ defmodule Mercator.Sales.Baskets do
 
   Operations run without an actor (`authorize?: false`) but are always
   scoped to the owner's basket, so nobody reaches someone else's basket.
+
+  Changes are announced on the PubSub topic `"baskets"` as
+  `{:basket_changed, owner_key}` (`owner_key/1`), e.g. for the sales desk.
   """
   use Gettext, backend: MercatorWeb.Gettext
 
@@ -66,6 +69,7 @@ defmodule Mercator.Sales.Baskets do
         item ->
           Ash.update(item, %{quantity: Decimal.add(item.quantity, quantity)}, authorize?: false)
       end
+      |> changed(owner)
     end
   end
 
@@ -73,23 +77,38 @@ defmodule Mercator.Sales.Baskets do
   def update_quantity(owner, item_id, quantity) do
     with {:ok, item} <- fetch_item(owner, item_id),
          {:ok, quantity} <- parse_quantity(quantity, item.variant.unit) do
-      Ash.update(item, %{quantity: quantity}, authorize?: false)
+      item |> Ash.update(%{quantity: quantity}, authorize?: false) |> changed(owner)
     end
   end
 
   @doc "Removes an item from the owner's basket."
   def remove(owner, item_id) do
     with {:ok, item} <- fetch_item(owner, item_id) do
-      Ash.destroy(item, authorize?: false)
+      item |> Ash.destroy(authorize?: false) |> changed(owner)
     end
   end
 
   @doc "Deletes the owner's basket with its items (after an order); returns notifications."
   def clear(owner) do
     case Basket |> filter_owner(owner) |> Ash.read_one!(authorize?: false) do
-      nil -> []
-      basket -> Ash.destroy!(basket, authorize?: false, return_notifications?: true)
+      nil ->
+        []
+
+      basket ->
+        basket |> Ash.destroy!(authorize?: false, return_notifications?: true) |> changed(owner)
     end
+  end
+
+  @doc "A stable key of a basket owner: `{:user, id}` or `{:session, token}`."
+  def owner_key({:user, %{id: id}}), do: {:user, id}
+  def owner_key({:session, token}), do: {:session, token}
+
+  # announces a successful change, passes the result through
+  defp changed({:error, _} = error, _owner), do: error
+
+  defp changed(result, owner) do
+    Phoenix.PubSub.broadcast(Mercator.PubSub, "baskets", {:basket_changed, owner_key(owner)})
+    result
   end
 
   @doc """

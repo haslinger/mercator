@@ -11,6 +11,7 @@ defmodule MercatorWeb.Admin.DeskLive do
 
   alias Mercator.{Catalog, Content}
   alias Mercator.Consulting.Desk
+  alias Mercator.Sales.Baskets
   alias MercatorWeb.{Format, Presence}
 
   on_mount {MercatorWeb.LiveUserAuth,
@@ -24,6 +25,8 @@ defmodule MercatorWeb.Admin.DeskLive do
       Phoenix.PubSub.subscribe(Mercator.PubSub, "desk")
       # customers coming online or leaving (their chat widget)
       Phoenix.PubSub.subscribe(Mercator.PubSub, Presence.chat_topic())
+      # the selected customer's basket changes
+      Phoenix.PubSub.subscribe(Mercator.PubSub, "baskets")
 
       Presence.track(self(), Presence.topic(), user.id, %{
         available: false,
@@ -253,6 +256,15 @@ defmodule MercatorWeb.Admin.DeskLive do
   end
 
   def handle_info({:visit, _path}, socket), do: {:noreply, socket}
+
+  def handle_info({:basket_changed, key}, %{assigns: %{selected: %{} = selected}} = socket) do
+    if Baskets.owner_key(Desk.basket_owner(selected)) == key,
+      do:
+        {:noreply, assign(socket, :context, Desk.context(selected, socket.assigns.current_user))},
+      else: {:noreply, socket}
+  end
+
+  def handle_info({:basket_changed, _key}, socket), do: {:noreply, socket}
 
   def handle_info(%Phoenix.Socket.Broadcast{event: "presence_diff"}, socket) do
     case socket.assigns.selected do

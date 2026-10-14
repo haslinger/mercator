@@ -114,10 +114,7 @@ defmodule Mercator.Consulting.Desk do
   last orders of a signed-in customer.
   """
   def context(conversation, actor) do
-    owner =
-      if conversation.customer_id,
-        do: {:user, %{id: conversation.customer_id}},
-        else: {:session, conversation.session_token}
+    owner = basket_owner(conversation)
 
     basket =
       owner
@@ -141,6 +138,10 @@ defmodule Mercator.Consulting.Desk do
       orders: orders
     }
   end
+
+  @doc "The basket owner of the conversation's customer (see `Mercator.Sales.Baskets`)."
+  def basket_owner(%{customer_id: id}) when not is_nil(id), do: {:user, %{id: id}}
+  def basket_owner(%{session_token: token}), do: {:session, token}
 
   @doc "How staff and customers are named in the desk and the chat."
   def display_name(%{name: name}) when is_binary(name) and name != "", do: name

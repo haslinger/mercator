@@ -113,6 +113,22 @@ defmodule MercatorWeb.Admin.DeskLiveTest do
       assert has_element?(desk, ~s(#customer-online[data-online="false"]))
     end
 
+    test "the basket updates live while the conversation is open", %{conn: conn} do
+      {_customer_conn, {:session, token} = owner} = visitor_conn()
+      {:ok, conversation} = Conversations.start(owner, "Hallo")
+      {:ok, desk, _html} = live(conn, ~p"/admin/desk/#{conversation.id}")
+      assert has_element?(desk, "#customer-basket", "Leer.")
+
+      [variant] = Ash.load!(product_fixture(title: %{"de" => "Zirbenbrett"}), :variants).variants
+      Baskets.add({:session, token}, variant.id, 2)
+
+      assert has_element?(desk, "#customer-basket", "Zirbenbrett")
+
+      # another customer's basket does not concern this conversation
+      Baskets.add({:session, "someone-else"}, variant.id, 1)
+      assert has_element?(desk, "#customer-basket", "Zirbenbrett")
+    end
+
     test "previous orders of a signed-in customer", %{conn: conn} do
       import Mercator.SalesFixtures
 
