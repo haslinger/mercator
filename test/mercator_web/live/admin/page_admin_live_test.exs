@@ -169,7 +169,7 @@ defmodule MercatorWeb.Admin.PageAdminLiveTest do
 
     test "shop blocks show products and categories", %{conn: conn, editor: editor} do
       wood = category_fixture(name: %{"de" => "Bauholz"}, slug: "bauholz", state: :active)
-      beam = product_fixture(title: %{"de" => "Balken"}, number: "BALKEN", bestseller: true)
+      _beam = product_fixture(title: %{"de" => "Balken"}, number: "BALKEN", bestseller: true)
       lath = product_fixture(title: %{"de" => "Latte"}, number: "LATTE")
       Mercator.Catalog.categorize!(wood.id, lath.id, authorize?: false)
 
