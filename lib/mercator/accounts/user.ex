@@ -129,6 +129,8 @@ defmodule Mercator.Accounts.User do
         sensitive? true
       end
 
+      prepare {Mercator.Accounts.Preparations.RateLimit, bucket: :sign_in}
+
       # validates the provided email and password and generates a token
       prepare AshAuthentication.Strategy.Password.SignInPreparation
 
@@ -210,6 +212,8 @@ defmodule Mercator.Accounts.User do
         allow_nil? false
       end
 
+      prepare {Mercator.Accounts.Preparations.RateLimit, bucket: :auth_email}
+
       # creates a reset token and invokes the relevant senders
       run {AshAuthentication.Strategy.Password.RequestPasswordReset, action: :get_by_email}
     end
@@ -284,6 +288,7 @@ defmodule Mercator.Accounts.User do
         allow_nil? false
       end
 
+      prepare {Mercator.Accounts.Preparations.RateLimit, bucket: :auth_email}
       run AshAuthentication.Strategy.MagicLink.Request
     end
   end

@@ -104,6 +104,7 @@ defmodule Mercator.MixProject do
        compile: false,
        depth: 1},
       {:swoosh, "~> 1.16"},
+      {:hammer, "~> 7.5"},
       {:mdex, "~> 0.14.2"},
       {:req, "~> 0.5"},
       {:tz, "~> 0.28.4"},
