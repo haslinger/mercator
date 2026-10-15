@@ -107,7 +107,7 @@ defmodule Mercator.Consulting.Conversations do
 
   defp callback_note(%{callback_kind: :email, callback_contact: contact}),
     do:
-      Gettext.gettext(MercatorWeb.Gettext, "Callback requested by email: %{contact}",
+      Gettext.gettext(MercatorWeb.Gettext, "Reply by email requested: %{contact}",
         contact: contact
       )
 

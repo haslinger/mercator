@@ -449,10 +449,17 @@ defmodule MercatorWeb.Admin.DeskLive do
                 class="text-sm text-warning"
                 id="conversation-callback"
               >
-                <.icon name="hero-phone-arrow-down-left" class="size-4" />
+                <.icon
+                  name={
+                    if @selected.callback_kind == :email,
+                      do: "hero-envelope",
+                      else: "hero-phone-arrow-down-left"
+                  }
+                  class="size-4"
+                />
                 {if @selected.callback_kind == :email,
                   do:
-                    gettext("Callback requested by email: %{contact}",
+                    gettext("Reply by email requested: %{contact}",
                       contact: @selected.callback_contact
                     ),
                   else:
@@ -1014,7 +1021,9 @@ defmodule MercatorWeb.Admin.DeskLive do
                 <p class="truncate font-medium">
                   {Desk.display_name(conversation.customer)}
                   <span :if={conversation.callback_requested_at} class="badge badge-warning badge-xs">
-                    {gettext("Callback")}
+                    {if conversation.callback_kind == :email,
+                      do: gettext("Reply by email"),
+                      else: gettext("Callback")}
                   </span>
                 </p>
                 <p class="truncate text-xs opacity-70">{conversation.subject || conversation.page}</p>

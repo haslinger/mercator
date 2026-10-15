@@ -20,7 +20,10 @@ defmodule Mercator.Consulting.Workers.SendCallbackRequest do
 
   @doc "The email to the shop."
   def email(conversation) do
-    how = if conversation.callback_kind == :email, do: "E-Mail", else: "Telefon"
+    wish =
+      if conversation.callback_kind == :email,
+        do: "Antwort per E-Mail gewünscht",
+        else: "Rückruf gewünscht"
 
     questions =
       conversation.messages
@@ -28,7 +31,7 @@ defmodule Mercator.Consulting.Workers.SendCallbackRequest do
       |> Enum.map_join("\n", &("> " <> &1.body))
 
     text = """
-    Rückruf gewünscht per #{how}: #{conversation.callback_contact}
+    #{wish}: #{conversation.callback_contact}
     Kunde: #{Desk.display_name(conversation.customer)}
     Thema: #{conversation.subject || "–"} (#{conversation.page || "–"})
 
@@ -40,7 +43,7 @@ defmodule Mercator.Consulting.Workers.SendCallbackRequest do
     new()
     |> from(Mercator.Mailer.default_from())
     |> to(SendSubmission.recipient())
-    |> subject("Rückruf gewünscht: #{conversation.callback_contact}")
+    |> subject("#{wish}: #{conversation.callback_contact}")
     |> text_body(text)
   end
 end

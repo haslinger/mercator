@@ -7,7 +7,8 @@ defmodule MercatorWeb.Admin.DeskLiveTest do
   import Mercator.AccountsFixtures
   import Mercator.CatalogFixtures
 
-  alias Mercator.Consulting.Conversations
+  alias Mercator.Consulting.{Conversation, Conversations}
+  alias Mercator.Consulting.Workers.SendCallbackRequest
   alias Mercator.Sales.Baskets
   alias MercatorWeb.{ChatLive, Presence}
 
@@ -111,6 +112,31 @@ defmodule MercatorWeb.Admin.DeskLiveTest do
     {:ok, desk, _html} = live(conn, ~p"/admin/desk/#{conversation.id}")
     assert has_element?(desk, "#desk-conversation-#{conversation.id} .badge", "Rückruf")
     assert has_element?(desk, "#conversation-callback", "+43 1 2345678")
+  end
+
+  test "a reply by email is not called a callback", %{conn: conn} do
+    {_customer_conn, owner} = visitor_conn()
+    {:ok, conversation} = Conversations.start(owner, "Bitte per Mail")
+    {:ok, _} = Conversations.request_callback(owner, conversation.id, :email, "eva@example.com")
+
+    {:ok, desk, _html} = live(conn, ~p"/admin/desk/#{conversation.id}")
+
+    assert has_element?(
+             desk,
+             "#desk-conversation-#{conversation.id} .badge",
+             "Antwort per E-Mail"
+           )
+
+    assert has_element?(desk, "#conversation-callback", "Antwort per E-Mail gewünscht")
+
+    conversation =
+      Ash.get!(Conversation, conversation.id,
+        load: [:customer, :messages],
+        authorize?: false
+      )
+
+    email = SendCallbackRequest.email(conversation)
+    assert email.subject == "Antwort per E-Mail gewünscht: eva@example.com"
   end
 
   describe "customer context (step 3)" do

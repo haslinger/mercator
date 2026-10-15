@@ -2534,7 +2534,7 @@ msgstr "Bestätigen"
 #: lib/mercator_web/components/demo_components.ex:90
 #: lib/mercator_web/documents.ex:64
 #: lib/mercator_web/live/admin/conversation_archive_live.ex:129
-#: lib/mercator_web/live/admin/desk_live.ex:1035
+#: lib/mercator_web/live/admin/desk_live.ex:1037
 #: lib/mercator_web/live/admin/offer_index_live.ex:120
 #: lib/mercator_web/live/admin/order_index_live.ex:136
 #: lib/mercator_web/live/admin/order_show_live.ex:186
@@ -3553,12 +3553,12 @@ msgstr "Ihre Frage"
 msgid "Our experts are happy to help you choose – just ask your question."
 msgstr "Unsere Fachleute helfen Ihnen gerne bei der Auswahl – stellen Sie einfach Ihre Frage."
 
-#: lib/mercator_web/live/admin/desk_live.ex:1043
+#: lib/mercator_web/live/admin/desk_live.ex:1045
 #, elixir-autogen, elixir-format
 msgid "%{count} h"
 msgstr "%{count} Std."
 
-#: lib/mercator_web/live/admin/desk_live.ex:1042
+#: lib/mercator_web/live/admin/desk_live.ex:1044
 #, elixir-autogen, elixir-format
 msgid "%{count} min"
 msgstr "%{count} Min."
@@ -3630,7 +3630,7 @@ msgstr "Andere offene Gespräche"
 msgid "Sales desk"
 msgstr "Beratungsplatz"
 
-#: lib/mercator_web/live/admin/desk_live.ex:1036
+#: lib/mercator_web/live/admin/desk_live.ex:1038
 #, elixir-autogen, elixir-format
 msgid "System"
 msgstr "System"
@@ -3665,7 +3665,7 @@ msgstr "Wartend"
 msgid "Your answer"
 msgstr "Ihre Antwort"
 
-#: lib/mercator_web/live/admin/desk_live.ex:1041
+#: lib/mercator_web/live/admin/desk_live.ex:1043
 #, elixir-autogen, elixir-format
 msgid "now"
 msgstr "jetzt"
@@ -3675,15 +3675,10 @@ msgstr "jetzt"
 msgid "A consultant will be with you shortly …"
 msgstr "Gleich ist jemand für Sie da …"
 
-#: lib/mercator_web/live/admin/desk_live.ex:1017
+#: lib/mercator_web/live/admin/desk_live.ex:1019
 #, elixir-autogen, elixir-format
 msgid "Callback"
 msgstr "Rückruf"
-
-#: lib/mercator_web/live/admin/desk_live.ex:455
-#, elixir-autogen, elixir-format
-msgid "Callback requested by email: %{contact}"
-msgstr "Rückruf gewünscht per E-Mail: %{contact}"
 
 #: lib/mercator_web/live/admin/desk_live.ex:459
 #, elixir-autogen, elixir-format
@@ -5254,3 +5249,13 @@ msgstr "unbekannter IP"
 #, elixir-autogen, elixir-format
 msgid "Sign in with one of the demo accounts:"
 msgstr "Melden Sie sich mit einem der Demo-Konten an:"
+
+#: lib/mercator_web/live/admin/desk_live.ex:1018
+#, elixir-autogen, elixir-format
+msgid "Reply by email"
+msgstr "Antwort per E-Mail"
+
+#: lib/mercator_web/live/admin/desk_live.ex:455
+#, elixir-autogen, elixir-format
+msgid "Reply by email requested: %{contact}"
+msgstr "Antwort per E-Mail gewünscht: %{contact}"
