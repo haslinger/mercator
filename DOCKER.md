@@ -85,7 +85,23 @@ server {
 }
 ```
 
-If your reverse proxy runs in a container itself (e.g. Nginx Proxy Manager,
+The same with Caddy (`Caddyfile`). Caddy gets the certificate by itself and
+already forwards WebSockets, the host and `X-Forwarded-For`/`-Proto`, and it
+speaks HTTP/1.1 to the app:
+
+```caddy
+biber.mittenin.at {
+    request_body {
+        max_size 50MB   # uploads (product images, media, chat files)
+    }
+    reverse_proxy 127.0.0.1:4010
+}
+```
+
+After changing it: `sudo systemctl reload caddy` (or `caddy reload` in the
+directory of the `Caddyfile`).
+
+If your reverse proxy runs in a container itself (e.g. Nginx Proxy Manager, a Caddy container,
 Traefik), `127.0.0.1` is not reachable from it: change the port mapping in
 `docker-compose.yml` to the host's Docker address or put both on one Docker
 network.
