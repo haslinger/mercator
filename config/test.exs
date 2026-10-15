@@ -5,6 +5,22 @@ config :mercator, :uploads_dir, Path.expand("../tmp/test_uploads", __DIR__)
 
 config :mercator, token_signing_secret: "ilfoFdFrYuSbZKTWiq0aRYjeMPbEUawB"
 config :bcrypt_elixir, log_rounds: 1
+
+# Shipping in tests: freight as estimates ("from", confirmed by staff), so that
+# mode stays covered; calculated costs (#112) are tested in ShippingTest
+config :mercator, :shipping,
+  parcel: [
+    rates: [
+      %{countries: ~w(AT), gross: "9.90", free_from: "250"},
+      %{countries: ~w(DE IT), gross: "14.90", free_from: "500"}
+    ]
+  ],
+  freight: [
+    estimate: true,
+    rates: [%{countries: ~w(AT), gross: "89"}, %{countries: ~w(DE IT), gross: "189"}]
+  ],
+  pickup: []
+
 config :ash, policies: [show_policy_breakdowns?: true], disable_async?: true
 
 # Configure your database

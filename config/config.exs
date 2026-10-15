@@ -163,8 +163,8 @@ config :mercator, :trusted_proxies, ["127.0.0.1", "::1"]
 config :mercator, :delivery_countries, ~w(AT DE IT)
 
 # Shipping methods in display order with their costs (#65): gross amounts in EUR
-# per country zone, optionally free from an order value (goods, gross). Freight
-# costs are estimates ("from"), confirmed by staff. See Mercator.Sales.Shipping.
+# per country zone, plus an optional percentage of the goods value (#112), and
+# optionally free from an order value (goods, gross). See Mercator.Sales.Shipping.
 config :mercator, :shipping,
   parcel: [
     rates: [
@@ -173,8 +173,10 @@ config :mercator, :shipping,
     ]
   ],
   freight: [
-    estimate: true,
-    rates: [%{countries: ~w(AT), gross: "89"}, %{countries: ~w(DE IT), gross: "189"}]
+    rates: [
+      %{countries: ~w(AT), gross: "89", percent: "2"},
+      %{countries: ~w(DE IT), gross: "189", percent: "3"}
+    ]
   ],
   pickup: []
 

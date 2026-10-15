@@ -4,13 +4,15 @@ defmodule Mercator.Sales.Shipping do
 
       config :mercator, :shipping,
         parcel: [rates: [%{countries: ~w(AT), gross: "9.90", free_from: "250"}]],
-        freight: [estimate: true, rates: [%{countries: ~w(AT), gross: "89"}]],
+        freight: [rates: [%{countries: ~w(AT), gross: "89", percent: "2"}]],
         pickup: []
 
   The order of the keys is the display order; leaving a method out disables
-  it. Amounts are gross EUR (what the customer sees). `free_from` compares
-  with the gross value of the goods. Freight costs with `estimate: true` are
-  "from" prices that staff confirm. Pickup is always free.
+  it. Amounts are gross EUR (what the customer sees). A rate costs `gross`
+  plus `percent` of the gross value of the goods (#112; both per country
+  zone, `percent` optional); `free_from` compares with the same value.
+  Costs of a method with `estimate: true` are "from" prices that staff
+  confirm (then the order cannot be paid online). Pickup is always free.
   """
 
   alias Mercator.Sales.ShippingMethod
@@ -48,7 +50,7 @@ defmodule Mercator.Sales.Shipping do
   def cost(method, country, goods_gross) do
     with {:ok, options} <- Keyword.fetch(config(), method),
          %{} = rate <- Enum.find(Keyword.get(options, :rates, []), &(country in &1.countries)) do
-      gross = if free?(rate, goods_gross), do: Decimal.new(0), else: Decimal.new(rate.gross)
+      gross = if free?(rate, goods_gross), do: Decimal.new(0), else: rate_cost(rate, goods_gross)
       {:ok, %{gross: gross, estimate?: Keyword.get(options, :estimate, false)}}
     else
       _ -> {:error, :not_available}
@@ -67,6 +69,23 @@ defmodule Mercator.Sales.Shipping do
   end
 
   defdelegate label(method), to: ShippingMethod
+
+  @doc """
+  The cost of a rate for the gross value of the goods: its fixed amount
+  plus its percentage (#112), rounded to cents.
+
+      iex> Mercator.Sales.Shipping.rate_cost(%{gross: "89", percent: "2"}, Decimal.new("1234.50"))
+      Decimal.new("113.69")
+  """
+  def rate_cost(rate, goods_gross) do
+    percent = Decimal.new(Map.get(rate, :percent, "0"))
+
+    goods_gross
+    |> Decimal.mult(percent)
+    |> Decimal.div(100)
+    |> Decimal.add(Decimal.new(rate.gross))
+    |> Decimal.round(2)
+  end
 
   defp free?(%{free_from: free_from}, goods_gross),
     do: Decimal.compare(goods_gross, Decimal.new(free_from)) != :lt

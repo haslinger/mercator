@@ -3,6 +3,8 @@ defmodule Mercator.Sales.ShippingTest do
 
   alias Mercator.Sales.Shipping
 
+  doctest Shipping
+
   defp products(kinds), do: Enum.map(kinds, &%{shipping: &1})
 
   describe "methods_for/1" do
@@ -43,6 +45,16 @@ defmodule Mercator.Sales.ShippingTest do
                Shipping.cost(:freight, "DE", Decimal.new("5000"))
 
       assert Decimal.equal?(gross, "189")
+    end
+
+    test "a rate is a fixed amount plus a percentage of the goods (#112)" do
+      assert Decimal.equal?(
+               Shipping.rate_cost(%{gross: "189", percent: "3"}, Decimal.new("5000")),
+               "339"
+             )
+
+      # without a percentage, the fixed amount
+      assert Decimal.equal?(Shipping.rate_cost(%{gross: "9.90"}, Decimal.new("100")), "9.90")
     end
 
     test "pickup is free everywhere" do
