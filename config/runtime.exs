@@ -143,21 +143,37 @@ if config_env() == :prod do
   #
   # Check `Plug.SSL` for all available options in `force_ssl`.
 
-  # ## Configuring the mailer
-  #
-  # In production you need to configure the mailer to use a different adapter.
-  # Here is an example configuration for Mailgun:
-  #
-  #     config :mercator, Mercator.Mailer,
-  #       adapter: Swoosh.Adapters.Mailgun,
-  #       api_key: System.get_env("MAILGUN_API_KEY"),
-  #       domain: System.get_env("MAILGUN_DOMAIN")
-  #
-  # Most non-SMTP adapters require an API client. Swoosh supports Req, Hackney,
-  # and Finch out-of-the-box. This configuration is typically done at
-  # compile-time in your config/prod.exs:
-  #
-  #     config :swoosh, :api_client, Swoosh.ApiClient.Req
-  #
-  # See https://swoosh.hexdocs.pm/Swoosh.html#module-installation for details.
+  # Emails by SMTP (#115), e.g. box.mittenin.at on port 465 with TLS. Without
+  # SMTP_RELAY the release does not start: no silently lost emails.
+  config :mercator, Mercator.Mailer,
+    adapter: Swoosh.Adapters.SMTP,
+    relay: System.get_env("SMTP_RELAY") || raise("environment variable SMTP_RELAY is missing."),
+    username: System.get_env("SMTP_USERNAME"),
+    password: System.get_env("SMTP_PASSWORD"),
+    port: String.to_integer(System.get_env("SMTP_PORT", "465")),
+    # 465: TLS from the start; 587: STARTTLS (set SMTP_PORT=587)
+    ssl: System.get_env("SMTP_PORT", "465") == "465",
+    tls: if(System.get_env("SMTP_PORT", "465") == "465", do: :never, else: :always),
+    auth: if(System.get_env("SMTP_USERNAME"), do: :always, else: :never),
+    # the server certificate is checked unless SMTP_TLS_VERIFY=false
+    sockopts:
+      if(System.get_env("SMTP_TLS_VERIFY") == "false",
+        do: [verify: :verify_none],
+        else: [
+          verify: :verify_peer,
+          cacerts: :public_key.cacerts_get(),
+          server_name_indication: String.to_charlist(System.get_env("SMTP_RELAY")),
+          customize_hostname_check: [
+            match_fun: :public_key.pkix_verify_hostname_match_fun(:https)
+          ]
+        ]
+      ),
+    retries: 1,
+    no_mx_lookups: true
+
+  # demo photos for seeding (the Docker image has them in /app/demo-img)
+  if dir = System.get_env("DEMO_IMAGE_DIR") do
+    config :mercator, :demo_image_dir, dir
+    config :mercator, :seed_image_dir, Path.join(dir, "categories")
+  end
 end

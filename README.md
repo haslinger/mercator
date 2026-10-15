@@ -100,7 +100,7 @@ Production is configured through environment variables, read in `config/runtime.
 | `PHX_SERVER` | no | Set to `true` to start the web server when running a release |
 | `DNS_CLUSTER_QUERY` | no | DNS query for clustering several nodes |
 | `SHOP_TIME_ZONE` | no | Time zone for displayed times and "today" (default `Europe/Vienna`) |
-| `TRUSTED_PROXIES` | no | Comma-separated IPs of reverse proxies whose `X-Forwarded-For` header is believed (default `127.0.0.1,::1`) |
+| `TRUSTED_PROXIES` | no | Comma-separated addresses or networks (e.g. `172.16.0.0/12` for Docker) of reverse proxies whose `X-Forwarded-For` header is believed (default `127.0.0.1,::1`) |
 
 ### Reverse proxy and rate limiting
 

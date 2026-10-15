@@ -1,0 +1,53 @@
+# Mercator in Docker (phase 8, DOCKER.md): the app and its PostgreSQL. Built on
+# the server from this checkout; settings and secrets come from .env (see
+# .env.example). A reverse proxy on the host does HTTPS and forwards to the
+# published port.
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    ports:
+      # host:container – only for the reverse proxy on this host, so bound to
+      # localhost; change the host side if 4010 is taken
+      - "127.0.0.1:${APP_PORT:-4010}:4000"
+    environment:
+      DATABASE_URL: ecto://postgres:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is not set, see .env.example}@db/mercator
+      SECRET_KEY_BASE: ${SECRET_KEY_BASE:?SECRET_KEY_BASE is not set, see .env.example}
+      TOKEN_SIGNING_SECRET: ${TOKEN_SIGNING_SECRET:?TOKEN_SIGNING_SECRET is not set, see .env.example}
+      PHX_HOST: ${PHX_HOST:?PHX_HOST is not set, see .env.example}
+      # the reverse proxy reaches the container through Docker's network
+      TRUSTED_PROXIES: ${TRUSTED_PROXIES:-172.16.0.0/12}
+      MAIL_FROM_ADDRESS: ${MAIL_FROM_ADDRESS:?MAIL_FROM_ADDRESS is not set, see .env.example}
+      MAIL_FROM_NAME: ${MAIL_FROM_NAME:-Mercator}
+      SMTP_RELAY: ${SMTP_RELAY:?SMTP_RELAY is not set, see .env.example}
+      SMTP_PORT: ${SMTP_PORT:-465}
+      SMTP_USERNAME: ${SMTP_USERNAME:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      SMTP_TLS_VERIFY: ${SMTP_TLS_VERIFY:-true}
+      MERCATOR_MODE: ${MERCATOR_MODE:-}
+      DEMO_ADMIN_PASSWORD: ${DEMO_ADMIN_PASSWORD:-}
+      MOLLIE_API_KEY: ${MOLLIE_API_KEY:-}
+    volumes:
+      - uploads:/data/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:17
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: mercator
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is not set, see .env.example}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d mercator"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  db_data:
+  uploads:

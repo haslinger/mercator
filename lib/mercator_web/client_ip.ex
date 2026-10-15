@@ -41,6 +41,48 @@ defmodule MercatorWeb.ClientIp do
     end
   end
 
-  defp trusted?(ip),
-    do: ip in Application.get_env(:mercator, :trusted_proxies, ["127.0.0.1", "::1"])
+  defp trusted?(ip) do
+    :mercator
+    |> Application.get_env(:trusted_proxies, ["127.0.0.1", "::1"])
+    |> Enum.any?(&matches?(ip, &1))
+  end
+
+  @doc """
+  Whether an address matches a trusted proxy entry: an address, or a
+  network such as `172.16.0.0/12` (Docker's networks, where the reverse
+  proxy's address can change).
+
+      iex> MercatorWeb.ClientIp.matches?("172.18.0.1", "172.16.0.0/12")
+      true
+      iex> MercatorWeb.ClientIp.matches?("172.32.0.1", "172.16.0.0/12")
+      false
+      iex> MercatorWeb.ClientIp.matches?("::1", "::1")
+      true
+  """
+  def matches?(ip, entry) do
+    case String.split(entry, "/") do
+      [^ip] -> true
+      [network, bits] -> in_network?(ip, network, bits)
+      _other -> false
+    end
+  end
+
+  defp in_network?(ip, network, bits) do
+    with {:ok, address} <- :inet.parse_address(String.to_charlist(ip)),
+         {:ok, network} <- :inet.parse_address(String.to_charlist(network)),
+         true <- tuple_size(address) == tuple_size(network),
+         size = if(tuple_size(address) == 4, do: 8, else: 16),
+         {bits, ""} when bits in 0..(size * tuple_size(address)) <- Integer.parse(bits) do
+      prefix(address, size, bits) == prefix(network, size, bits)
+    else
+      _ -> false
+    end
+  end
+
+  # the first `bits` bits of an address
+  defp prefix(address, size, bits) do
+    binary = address |> Tuple.to_list() |> Enum.map(&<<&1::size(size)>>) |> IO.iodata_to_binary()
+    <<prefix::bitstring-size(bits), _rest::bitstring>> = binary
+    prefix
+  end
 end

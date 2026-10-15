@@ -43,3 +43,6 @@ npm-debug.log
 
 # files passed between the user and Claude, not part of the project
 /assets/handover/
+
+# Deployment settings and secrets (DOCKER.md)
+/.env
