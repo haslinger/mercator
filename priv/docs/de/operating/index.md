@@ -2,8 +2,11 @@
 title: Betrieb
 order: 0
 ---
-Mercator läuft als Docker-Image (Mix-Release) mit PostgreSQL, gestartet mit `docker compose`. Jede Installation ist ein eigener Shop (eine Kundin, ein Kunde pro Installation).
+Mercator läuft als Docker-Image (Mix-Release) neben PostgreSQL, gestartet mit `docker compose`; jede Installation ist ein Shop. Die Einrichtung auf einem Server beschreibt `DOCKER.md` im Repository (Voraussetzungen, Reverse Proxy, erster Start). Diese Kapitel gelten dem laufenden Betrieb:
 
-- **Konfiguration:** alles Geheime und Standortspezifische steht in der Datei `.env` neben `docker-compose.yml`.
-- **Aktualisieren:** `git pull && docker compose build && docker compose up -d`. Datenbank und Uploads bleiben erhalten, Migrationen laufen beim Start.
-- **Probleme**, die der Shop selbst bemerkt, erscheinen unter Verwaltung → Vorfälle.
+- [Konfiguration](configuration.md): die Einstellungen in `.env`.
+- [Wartung](maintenance.md): Aktualisieren, Logs, Konsole, Sicherung.
+- [Demo-Modus](demo.md): die öffentliche Demo mit nächtlichem Zurücksetzen.
+- [Fehlersuche](troubleshooting.md).
+
+Probleme, die der Shop selbst bemerkt (E-Mails, die nicht zugestellt wurden, fehlgeschlagene PDFs, Zahlungsprobleme), erscheinen unter **Verwaltung → Vorfälle**.

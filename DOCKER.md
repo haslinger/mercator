@@ -4,6 +4,11 @@ How to run Mercator on a server with Docker: the Biber Holz demo at
 `https://biber.mittenin.at`, or a customer's shop. Design and decisions:
 [docs/deployment-design.md](docs/deployment-design.md).
 
+This file covers installing; running the shop (configuration, updates,
+backups, demo mode, troubleshooting) is also described in the app itself,
+for administrators under Verwaltung → Hilfe → Betrieb
+(`priv/docs/<de|en>/operating/`). Keep both in step when changing one.
+
 ## 📋 Prerequisites
 
 * A server with Ubuntu 24.04 on x86_64 (the `Dockerfile`'s base images are pinned
