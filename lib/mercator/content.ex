@@ -31,6 +31,7 @@ defmodule Mercator.Content do
       define :publish_page, action: :publish
       define :discard_page_changes, action: :discard_changes
       define :restore_page_version, action: :restore_version, args: [:version_id]
+      define :make_start_page, action: :make_start_page
       define :hide_page, action: :hide
       define :show_page, action: :show
       define :archive_page, action: :archive

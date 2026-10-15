@@ -131,6 +131,19 @@ defmodule Mercator.Content.Page do
       change RestoreVersion
     end
 
+    update :make_start_page do
+      description "Content managers make a published page the start page (key `home`)."
+      require_atomic? false
+      validate attribute_equals(:kind, :page)
+      validate attribute_equals(:state, :published), message: "must be published first"
+      change Mercator.Content.Changes.MakeStartPage
+    end
+
+    update :clear_key do
+      description "The previous start page loses its key (see :make_start_page)."
+      change set_attribute(:key, nil)
+    end
+
     update :hide, change: transition_state(:hidden)
     update :show, change: transition_state(:published)
     update :archive, change: transition_state(:archived)

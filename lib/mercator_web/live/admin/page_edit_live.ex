@@ -98,6 +98,9 @@ defmodule MercatorWeb.Admin.PageEditLive do
   def handle_event("publish", _params, socket),
     do: run(socket, &Content.publish_page/2, gettext("Page published."))
 
+  def handle_event("make_start_page", _params, socket),
+    do: run(socket, &Content.make_start_page/2, gettext("This page is now the start page."))
+
   def handle_event("discard", _params, socket),
     do: run(socket, &Content.discard_page_changes/2, gettext("Changes discarded."))
 
@@ -304,6 +307,9 @@ defmodule MercatorWeb.Admin.PageEditLive do
         <span :if={@page.changes_pending} class="badge badge-info badge-outline" id="changes-pending">
           {gettext("Unpublished changes")}
         </span>
+        <span :if={@page.key == "home"} class="badge badge-primary" id="start-page-badge">
+          <.icon name="hero-home" class="size-3" /> {gettext("Start page")}
+        </span>
       </div>
       <p class="text-sm text-base-content/70">/pages/{@page.path}</p>
 
@@ -324,6 +330,18 @@ defmodule MercatorWeb.Admin.PageEditLive do
           id="publish"
         >
           <.icon name="hero-globe-alt" class="size-4" /> {gettext("Publish")}
+        </button>
+        <button
+          :if={@page.kind == :page and @page.state == :published and @page.key != "home"}
+          type="button"
+          phx-click="make_start_page"
+          data-confirm={
+            gettext("Use this page as the start page? The current start page becomes a normal page.")
+          }
+          class="btn btn-sm btn-ghost"
+          id="make-start-page"
+        >
+          <.icon name="hero-home" class="size-4" /> {gettext("Use as start page")}
         </button>
         <button
           :if={@page.published && @page.changes_pending}

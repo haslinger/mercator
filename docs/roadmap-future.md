@@ -19,7 +19,6 @@ Smaller improvements noted along the way, not tied to a phase step.
   - *simple:* "Variants & prices" reduced to the one variant (no adding variants), e.g. as "Price & stock".
   - *configurable:* no prices in the variants tab (the price comes from the configurator); only number, unit, delivery time and active remain, or the tab is hidden and those fields move to "General" / "Configurator".
   - Changing the kind of an existing product needs a rule for data that no longer fits (extra variants, prices, options): warn, keep or delete.
-- **Start page key for content managers** (2026-10-14): only administrators can set a page's key (e.g. `home`). Content managers may need a simple "use as start page" action.
 - **PDF documents with Typst** (#17, decided): offers and order confirmations as PDF files. Then the offer pages get a "PDF erstellen" button next to "Drucken" (today the browser's print dialog can save as PDF), and the PDFs can be attached to the offer and confirmation emails.
 
 ## Open questions
