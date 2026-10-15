@@ -111,6 +111,10 @@ This makes it the test case for **configurable material**: wood species, dimensi
 - **#117** (2026-10-15) The home server is x86_64 with Ubuntu 24.04 and Docker Compose v2. Design: [deployment-design.md](deployment-design.md).
 - **#118** (2026-10-15) Emails are sent by the **mittenin.at mail server** (`box.mittenin.at`, port 465 with TLS), like pan.
 - **#119** (2026-10-15) New dependency **`gen_smtp`** for Swoosh's SMTP adapter.
+- **#121** (2026-10-15) Phase 9 **documentation** has four audiences: the shop owner and staff (back office manual by role), operators, developers (all in the admin area), and shop visitors (help in the shop, #125).
+- **#122** (2026-10-15) The documentation is **Markdown in the repo**, versioned with the code and the same for every customer.
+- **#123** (2026-10-15) Documentation in **German and English**, German first, shown in the user's language with German fallback.
+- **#124** (2026-10-15) Admin area: a **"Hilfe" section** (table of contents, search) plus **context links** ("?") from each admin page to its chapter, chapters filtered by role.
 - **#120** (2026-10-15) The **sign-in emails** (confirmation, password reset, magic link) stay sent directly, not by Oban: if delivery fails, the error is logged and reported as an incident (`Mercator.Mailer.deliver_or_report/3`), and the action (e.g. the registration) still succeeds. The page cannot show a message: AshAuthentication ignores what a sender returns.
 - (2026-10-14) **Chat messages are sent with the button only**, not with Enter: many people don't know Shift+Enter for a new line. Enter makes a new line (customer chat and sales desk).
 
