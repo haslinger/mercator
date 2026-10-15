@@ -68,3 +68,8 @@ config :mercator, :seed_image_dir, nil
 
 # Online payment: the simulator (no real payment), see Mercator.Payments
 config :mercator, :payment_providers, [Mercator.Payments.Simulator]
+
+# The Mollie adapter is tested against stubbed responses (Mercator.Payments.MollieTest)
+config :mercator, Mercator.Payments.Mollie,
+  api_key: "test_dummy",
+  req_options: [plug: {Req.Test, Mercator.Payments.Mollie}]

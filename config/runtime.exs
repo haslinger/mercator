@@ -39,6 +39,13 @@ if time_zone = System.get_env("SHOP_TIME_ZONE") do
   config :mercator, Oban, timezone: time_zone
 end
 
+# Mollie (phase 7): test_… only simulates payments, live_… takes real money
+if config_env() != :test do
+  if api_key = System.get_env("MOLLIE_API_KEY") do
+    config :mercator, Mercator.Payments.Mollie, api_key: api_key
+  end
+end
+
 # Demo mode (#48, Mercator.Demo): MERCATOR_MODE=demo, empty for a real shop
 case System.get_env("MERCATOR_MODE", "") do
   "" ->

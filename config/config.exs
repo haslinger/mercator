@@ -189,10 +189,11 @@ config :mercator, :shipping,
 config :mercator, :payment_methods, [:online, :prepayment, :invoice, :on_pickup]
 
 # Online payment providers of the deployment (phase 7); administrators switch
-# between them. :online is only offered while one is active. The simulator is
-# never registered here (customers could "pay" without paying): only in dev,
-# test and the demo. See Mercator.Payments.
-config :mercator, :payment_providers, []
+# between them. :online is only offered while one is active. Mollie needs
+# MOLLIE_API_KEY (runtime.exs). The simulator is never registered here
+# (customers could "pay" without paying): only in dev, test and the demo.
+# See Mercator.Payments.
+config :mercator, :payment_providers, [Mercator.Payments.Mollie]
 
 # Sender of all system emails; override per deployment in runtime.exs
 config :mercator, :mail_from, {"Mercator", "noreply@localhost"}

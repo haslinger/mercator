@@ -140,8 +140,13 @@ weight, by volume, with a maximum) can follow.
 1. Provider behaviour, simulator, `OnlinePayment`, payment method `:online`, switching
    providers in the back office.
 2. Checkout redirect, return page, "Pay now" again; order paid by the system.
-3. Mollie adapter (create, fetch, webhook controller) with stubbed tests; manual test
-   in test mode locally.
+3. ~~Mollie adapter~~ *(built 2026-10-15)*: `Mercator.Payments.Mollie` (API v2 with
+   `Req`; create, fetch, refund; statuses mapped, `authorized` → pending, a fully
+   refunded payment → refunded), registered in config.exs (dev: next to the
+   simulator), key from `MOLLIE_API_KEY`; without a public HTTPS webhook URL
+   (development) the payment is created without one. Tests with `Req.Test` stubs and
+   an end-to-end webhook test. Still to do: the manual test with the test key, first
+   locally (return page), then on the home server with webhooks.
 4. Back office: payment attempts on the order, refund on cancel, list filter;
    incidents; "payment received" email.
 5. Phase 8 (Docker on the home server), then the webhook test there.

@@ -531,7 +531,7 @@ msgstr ""
 #: lib/mercator_web/controllers/offer_print_html.ex:149
 #: lib/mercator_web/documents.ex:86
 #: lib/mercator_web/documents.ex:330
-#: lib/mercator_web/live/admin/desk_live.ex:909
+#: lib/mercator_web/live/admin/desk_live.ex:916
 #: lib/mercator_web/live/admin/offer_index_live.ex:123
 #: lib/mercator_web/live/admin/order_index_live.ex:139
 #: lib/mercator_web/live/basket_live.ex:163
@@ -606,7 +606,7 @@ msgstr ""
 msgid "Search"
 msgstr ""
 
-#: lib/mercator_web/live/admin/desk_live.ex:639
+#: lib/mercator_web/live/admin/desk_live.ex:646
 #: lib/mercator_web/live/admin/product_index_live.ex:177
 #: lib/mercator_web/live/admin/product_relations_tab.ex:165
 #: lib/mercator_web/live/search_live.ex:71
@@ -812,7 +812,7 @@ msgid "Category saved."
 msgstr ""
 
 #: lib/mercator_web/live/admin/category_tree_live.ex:319
-#: lib/mercator_web/live/admin/desk_live.ex:805
+#: lib/mercator_web/live/admin/desk_live.ex:812
 #: lib/mercator_web/live/admin/gtc_live.ex:191
 #: lib/mercator_web/live/admin/offer_edit_live.ex:517
 #: lib/mercator_web/live/admin/page_tree_live.ex:209
@@ -1720,7 +1720,7 @@ msgid "Added to the basket."
 msgstr ""
 
 #: lib/mercator_web/components/layouts.ex:92
-#: lib/mercator_web/live/admin/desk_live.ex:891
+#: lib/mercator_web/live/admin/desk_live.ex:898
 #: lib/mercator_web/live/basket_live.ex:19
 #: lib/mercator_web/live/basket_live.ex:63
 #, elixir-autogen, elixir-format
@@ -1768,7 +1768,7 @@ msgstr ""
 msgid "Proceed to checkout"
 msgstr ""
 
-#: lib/mercator_web/live/admin/desk_live.ex:781
+#: lib/mercator_web/live/admin/desk_live.ex:788
 #: lib/mercator_web/live/admin/offer_edit_live.ex:660
 #: lib/mercator_web/live/basket_live.ex:144
 #, elixir-autogen, elixir-format
@@ -2534,7 +2534,7 @@ msgstr ""
 #: lib/mercator_web/components/demo_components.ex:90
 #: lib/mercator_web/documents.ex:64
 #: lib/mercator_web/live/admin/conversation_archive_live.ex:129
-#: lib/mercator_web/live/admin/desk_live.ex:1037
+#: lib/mercator_web/live/admin/desk_live.ex:1044
 #: lib/mercator_web/live/admin/offer_index_live.ex:120
 #: lib/mercator_web/live/admin/order_index_live.ex:136
 #: lib/mercator_web/live/admin/order_show_live.ex:186
@@ -2595,7 +2595,7 @@ msgid "Order number, customer or email"
 msgstr ""
 
 #: lib/mercator_web/admin_nav.ex:38
-#: lib/mercator_web/live/admin/desk_live.ex:977
+#: lib/mercator_web/live/admin/desk_live.ex:984
 #: lib/mercator_web/live/admin/order_index_live.ex:23
 #: lib/mercator_web/live/admin/order_index_live.ex:93
 #: lib/mercator_web/live/admin/order_show_live.ex:142
@@ -3115,7 +3115,7 @@ msgid "Download"
 msgstr ""
 
 #: lib/mercator_web/live/admin/desk_live.ex:276
-#: lib/mercator_web/live/admin/desk_live.ex:596
+#: lib/mercator_web/live/admin/desk_live.ex:603
 #: lib/mercator_web/live/admin/page_edit_live.ex:851
 #, elixir-autogen, elixir-format
 msgid "File from the media library"
@@ -3152,7 +3152,7 @@ msgstr ""
 msgid "Link text (default: the file's title)"
 msgstr ""
 
-#: lib/mercator_web/live/admin/desk_live.ex:640
+#: lib/mercator_web/live/admin/desk_live.ex:647
 #: lib/mercator_web/live/admin/page_edit_live.ex:858
 #, elixir-autogen, elixir-format
 msgid "Search the media library"
@@ -3503,13 +3503,13 @@ msgstr ""
 msgid "Consultant"
 msgstr ""
 
-#: lib/mercator_web/live/admin/desk_live.ex:499
+#: lib/mercator_web/live/admin/desk_live.ex:506
 #: lib/mercator_web/live/chat_live.ex:220
 #, elixir-autogen, elixir-format
 msgid "End"
 msgstr ""
 
-#: lib/mercator_web/live/admin/desk_live.ex:495
+#: lib/mercator_web/live/admin/desk_live.ex:502
 #: lib/mercator_web/live/chat_live.ex:216
 #, elixir-autogen, elixir-format
 msgid "End the conversation?"
@@ -3520,8 +3520,8 @@ msgstr ""
 msgid "Get advice"
 msgstr ""
 
-#: lib/mercator_web/live/admin/desk_live.ex:616
-#: lib/mercator_web/live/admin/desk_live.ex:793
+#: lib/mercator_web/live/admin/desk_live.ex:623
+#: lib/mercator_web/live/admin/desk_live.ex:800
 #: lib/mercator_web/live/chat_live.ex:299
 #, elixir-autogen, elixir-format
 msgid "Send"
@@ -3553,12 +3553,12 @@ msgstr ""
 msgid "Our experts are happy to help you choose – just ask your question."
 msgstr ""
 
-#: lib/mercator_web/live/admin/desk_live.ex:1045
+#: lib/mercator_web/live/admin/desk_live.ex:1052
 #, elixir-autogen, elixir-format
 msgid "%{count} h"
 msgstr ""
 
-#: lib/mercator_web/live/admin/desk_live.ex:1044
+#: lib/mercator_web/live/admin/desk_live.ex:1051
 #, elixir-autogen, elixir-format
 msgid "%{count} min"
 msgstr ""
@@ -3609,9 +3609,9 @@ msgid "Nobody is waiting."
 msgstr ""
 
 #: lib/mercator_web/live/admin/desk_live.ex:409
-#: lib/mercator_web/live/admin/desk_live.ex:936
-#: lib/mercator_web/live/admin/desk_live.ex:953
-#: lib/mercator_web/live/admin/desk_live.ex:978
+#: lib/mercator_web/live/admin/desk_live.ex:943
+#: lib/mercator_web/live/admin/desk_live.ex:960
+#: lib/mercator_web/live/admin/desk_live.ex:985
 #, elixir-autogen, elixir-format
 msgid "None."
 msgstr ""
@@ -3630,17 +3630,17 @@ msgstr ""
 msgid "Sales desk"
 msgstr ""
 
-#: lib/mercator_web/live/admin/desk_live.ex:1038
+#: lib/mercator_web/live/admin/desk_live.ex:1045
 #, elixir-autogen, elixir-format
 msgid "System"
 msgstr ""
 
-#: lib/mercator_web/live/admin/desk_live.ex:489
+#: lib/mercator_web/live/admin/desk_live.ex:496
 #, elixir-autogen, elixir-format
 msgid "Take"
 msgstr ""
 
-#: lib/mercator_web/live/admin/desk_live.ex:489
+#: lib/mercator_web/live/admin/desk_live.ex:496
 #, elixir-autogen, elixir-format
 msgid "Take over"
 msgstr ""
@@ -3660,12 +3660,12 @@ msgstr ""
 msgid "Waiting"
 msgstr ""
 
-#: lib/mercator_web/live/admin/desk_live.ex:566
+#: lib/mercator_web/live/admin/desk_live.ex:573
 #, elixir-autogen, elixir-format
 msgid "Your answer"
 msgstr ""
 
-#: lib/mercator_web/live/admin/desk_live.ex:1043
+#: lib/mercator_web/live/admin/desk_live.ex:1050
 #, elixir-autogen, elixir-format
 msgid "now"
 msgstr ""
@@ -3675,12 +3675,12 @@ msgstr ""
 msgid "A consultant will be with you shortly …"
 msgstr ""
 
-#: lib/mercator_web/live/admin/desk_live.ex:1019
+#: lib/mercator_web/live/admin/desk_live.ex:1026
 #, elixir-autogen, elixir-format
 msgid "Callback"
 msgstr ""
 
-#: lib/mercator_web/live/admin/desk_live.ex:459
+#: lib/mercator_web/live/admin/desk_live.ex:466
 #, elixir-autogen, elixir-format
 msgid "Callback requested by phone: %{contact}"
 msgstr ""
@@ -3716,17 +3716,17 @@ msgstr ""
 msgid "Thank you! We will write to %{contact}."
 msgstr ""
 
-#: lib/mercator_web/live/admin/desk_live.ex:893
+#: lib/mercator_web/live/admin/desk_live.ex:900
 #, elixir-autogen, elixir-format
 msgid "Empty."
 msgstr ""
 
-#: lib/mercator_web/live/admin/desk_live.ex:873
+#: lib/mercator_web/live/admin/desk_live.ex:880
 #, elixir-autogen, elixir-format
 msgid "Now on"
 msgstr ""
 
-#: lib/mercator_web/live/admin/desk_live.ex:884
+#: lib/mercator_web/live/admin/desk_live.ex:891
 #, elixir-autogen, elixir-format
 msgid "The customer is not in the shop right now."
 msgstr ""
@@ -3741,7 +3741,7 @@ msgstr ""
 msgid "online"
 msgstr ""
 
-#: lib/mercator_web/live/admin/desk_live.ex:801
+#: lib/mercator_web/live/admin/desk_live.ex:808
 #, elixir-autogen, elixir-format
 msgid "Nothing found."
 msgstr ""
@@ -3751,39 +3751,39 @@ msgstr ""
 msgid "Please enter a shop page (starting with /) or a web address."
 msgstr ""
 
-#: lib/mercator_web/live/admin/desk_live.ex:669
+#: lib/mercator_web/live/admin/desk_live.ex:676
 #, elixir-autogen, elixir-format
 msgid "Recommend"
 msgstr ""
 
 #: lib/mercator_web/live/admin/desk_live.ex:274
-#: lib/mercator_web/live/admin/desk_live.ex:586
+#: lib/mercator_web/live/admin/desk_live.ex:593
 #, elixir-autogen, elixir-format
 msgid "Recommend a product"
 msgstr ""
 
-#: lib/mercator_web/live/admin/desk_live.ex:727
+#: lib/mercator_web/live/admin/desk_live.ex:734
 #, elixir-autogen, elixir-format
 msgid "Send link"
 msgstr ""
 
-#: lib/mercator_web/live/admin/desk_live.ex:573
+#: lib/mercator_web/live/admin/desk_live.ex:580
 #, elixir-autogen, elixir-format
 msgid "Share"
 msgstr ""
 
 #: lib/mercator_web/live/admin/desk_live.ex:275
-#: lib/mercator_web/live/admin/desk_live.ex:591
+#: lib/mercator_web/live/admin/desk_live.ex:598
 #, elixir-autogen, elixir-format
 msgid "Share a link"
 msgstr ""
 
-#: lib/mercator_web/live/admin/desk_live.ex:714
+#: lib/mercator_web/live/admin/desk_live.ex:721
 #, elixir-autogen, elixir-format
 msgid "Shop page (/pages/faq) or web address (https://…)"
 msgstr ""
 
-#: lib/mercator_web/live/admin/desk_live.ex:722
+#: lib/mercator_web/live/admin/desk_live.ex:729
 #, elixir-autogen, elixir-format
 msgid "Title (optional)"
 msgstr ""
@@ -3920,7 +3920,7 @@ msgstr ""
 msgid "New item"
 msgstr ""
 
-#: lib/mercator_web/live/admin/desk_live.ex:926
+#: lib/mercator_web/live/admin/desk_live.ex:933
 #: lib/mercator_web/live/admin/offer_index_live.ex:101
 #: lib/mercator_web/live/admin/offer_index_live.ex:167
 #, elixir-autogen, elixir-format
@@ -3976,7 +3976,7 @@ msgid "Offer not found."
 msgstr ""
 
 #: lib/mercator_web/admin_nav.ex:33
-#: lib/mercator_web/live/admin/desk_live.ex:918
+#: lib/mercator_web/live/admin/desk_live.ex:925
 #: lib/mercator_web/live/admin/offer_edit_live.ex:299
 #: lib/mercator_web/live/admin/offer_index_live.ex:23
 #: lib/mercator_web/live/admin/offer_index_live.ex:95
@@ -3984,7 +3984,7 @@ msgstr ""
 msgid "Offers"
 msgstr ""
 
-#: lib/mercator_web/live/admin/desk_live.ex:930
+#: lib/mercator_web/live/admin/desk_live.ex:937
 #, elixir-autogen, elixir-format
 msgid "Offers need an account: the customer signs in first."
 msgstr ""
@@ -4154,13 +4154,13 @@ msgstr ""
 msgid "Customer name, email or subject"
 msgstr ""
 
-#: lib/mercator_web/live/admin/desk_live.ex:952
+#: lib/mercator_web/live/admin/desk_live.ex:959
 #, elixir-autogen, elixir-format
 msgid "Earlier conversations"
 msgstr ""
 
 #: lib/mercator_web/live/admin/conversation_archive_live.ex:128
-#: lib/mercator_web/live/admin/desk_live.ex:476
+#: lib/mercator_web/live/admin/desk_live.ex:483
 #, elixir-autogen, elixir-format
 msgid "Ended"
 msgstr ""
@@ -4180,7 +4180,7 @@ msgstr ""
 msgid "Subject"
 msgstr ""
 
-#: lib/mercator_web/live/admin/desk_live.ex:547
+#: lib/mercator_web/live/admin/desk_live.ex:554
 #, elixir-autogen, elixir-format
 msgid "This conversation has ended; it can only be read."
 msgstr ""
@@ -4272,13 +4272,13 @@ msgstr ""
 msgid "from an offer"
 msgstr ""
 
-#: lib/mercator_web/live/admin/desk_live.ex:743
+#: lib/mercator_web/live/admin/desk_live.ex:750
 #, elixir-autogen, elixir-format
 msgid "Drop a file here or click to choose one"
 msgstr ""
 
 #: lib/mercator_web/live/admin/desk_live.ex:277
-#: lib/mercator_web/live/admin/desk_live.ex:608
+#: lib/mercator_web/live/admin/desk_live.ex:615
 #, elixir-autogen, elixir-format
 msgid "File from my computer"
 msgstr ""
@@ -4308,7 +4308,7 @@ msgstr ""
 msgid "The file is larger than 20 MB."
 msgstr ""
 
-#: lib/mercator_web/live/admin/desk_live.ex:745
+#: lib/mercator_web/live/admin/desk_live.ex:752
 #, elixir-autogen, elixir-format
 msgid "Images, PDF, Word, Excel, LibreOffice (ODT, ODS) or AutoCAD (DWG, DXF), up to 20 MB"
 msgstr ""
@@ -4442,7 +4442,7 @@ msgstr[1] ""
 msgid "Anything you want to tell us? (optional)"
 msgstr ""
 
-#: lib/mercator_web/live/admin/desk_live.ex:549
+#: lib/mercator_web/live/admin/desk_live.ex:556
 #, elixir-autogen, elixir-format
 msgid "Customer's rating:"
 msgstr ""
@@ -4730,8 +4730,8 @@ msgstr ""
 msgid "Please describe the resolution first."
 msgstr ""
 
-#: lib/mercator_web/live/admin/desk_live.ex:504
-#: lib/mercator_web/live/admin/desk_live.ex:505
+#: lib/mercator_web/live/admin/desk_live.ex:511
+#: lib/mercator_web/live/admin/desk_live.ex:512
 #: lib/mercator_web/live/admin/offer_edit_live.ex:447
 #: lib/mercator_web/live/admin/order_show_live.ex:178
 #, elixir-autogen, elixir-format
@@ -5250,12 +5250,22 @@ msgstr ""
 msgid "Sign in with one of the demo accounts:"
 msgstr ""
 
-#: lib/mercator_web/live/admin/desk_live.ex:1018
+#: lib/mercator_web/live/admin/desk_live.ex:1025
 #, elixir-autogen, elixir-format
 msgid "Reply by email"
 msgstr ""
 
-#: lib/mercator_web/live/admin/desk_live.ex:455
+#: lib/mercator_web/live/admin/desk_live.ex:462
 #, elixir-autogen, elixir-format
 msgid "Reply by email requested: %{contact}"
+msgstr ""
+
+#: lib/mercator/payments/mollie.ex:42
+#, elixir-autogen, elixir-format
+msgid "Mollie (test mode)"
+msgstr ""
+
+#: lib/mercator/payments/mollie.ex:52
+#, elixir-autogen, elixir-format
+msgid "Set MOLLIE_API_KEY in the server's .env (a test_… key for testing)."
 msgstr ""

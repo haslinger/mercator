@@ -9,7 +9,7 @@ Questions are numbered globally (`#N`); the numbering is never restarted. When a
 6. **Guided selling** – done 2026-10-15 (see [roadmap-history.md](roadmap-history.md)); still open from it:
    - postponed: audio/video and screen sharing (#100; possible self-hosted with `ex_webrtc`)
 7. **Online payment** – working with the payment simulator (steps 0–2 of [payment-design.md](payment-design.md) done, #108–#113). Still to do, after phase 8:
-   - step 3: Mollie adapter (needs a Mollie account and `MOLLIE_API_KEY`), webhook test on the home server
+   - step 3: Mollie adapter built (`Mercator.Payments.Mollie`, stubbed tests); still to do: the manual test with the test key, locally and on the home server with webhooks
    - step 4: back office (payment attempts on the order, refund on cancel, unpaid filter), "payment received" email
    - later: Stripe; an embedded payment form as a third provider (#109)
    - Mesonic, Icecat and Bechlem are out of scope (#15).

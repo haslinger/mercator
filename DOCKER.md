@@ -146,6 +146,20 @@ To seed again without emptying (idempotent):
 `docker compose exec app bin/mercator rpc "Mercator.Release.seed()"`
 (`rpc` runs it inside the running app; `eval` would start a second one).
 
+### Online payment (Mollie)
+
+Put the API key from Mollie's dashboard into `.env` (never into the
+repository) and restart with `docker compose up -d`:
+
+```sh
+MOLLIE_API_KEY=test_...   # test_… simulates payments, live_… takes real money
+```
+
+Then switch Mollie on as administrator under Verwaltung → Zahlungsanbieter
+(with a test key it is called "Mollie (Testmodus)"). Mollie reports payments to
+`https://<your domain>/payments/mollie/webhook`; the reverse proxy forwards it
+like every other request, nothing to configure at Mollie.
+
 ## 🔍 Verify
 
 ```sh
