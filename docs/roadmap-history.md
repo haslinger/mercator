@@ -2,7 +2,7 @@
 
 What has been **done and decided** in the port of **Mercator** (Rails 4.2 + Hobo 2.2) to **Elixir / Phoenix / Ash / LiveView / DaisyUI** on PostgreSQL. What is still to come and to decide: [roadmap-future.md](roadmap-future.md).
 
-Questions are numbered globally (`#N`); the numbering is never restarted. Designs of the phases: [catalog-design.md](catalog-design.md), [checkout-design.md](checkout-design.md), [cms-design.md](cms-design.md), [guided-selling-design.md](guided-selling-design.md), [payment-design.md](payment-design.md), [deployment-design.md](deployment-design.md).
+Questions are numbered globally (`#N`); the numbering is never restarted. Designs of the phases: [catalog-design.md](catalog-design.md), [checkout-design.md](checkout-design.md), [cms-design.md](cms-design.md), [guided-selling-design.md](guided-selling-design.md), [payment-design.md](payment-design.md), [deployment-design.md](deployment-design.md), [documentation-design.md](documentation-design.md).
 
 ---
 
@@ -107,6 +107,9 @@ This makes it the test case for **configurable material**: wood species, dimensi
 - **#106** (2026-10-15) Administrators see all incidents; sales staff those about a customer, order, offer or conversation, and the ones they reported.
 - **#107** (2026-10-15) Staff can also record incidents by hand.
 - **#108** (2026-10-15) **Online payment with Mollie first** (the easier integration: hosted page, webhook sends only an id), Stripe later. Liberapay is not suitable (donations, not shop payments) and dropped; mPAY24 is not used. Test mode costs nothing.
+- **#131** (2026-10-15) The **session logs** become part of the documentation (the making-of). Removed from them: the user's name, infrastructure details of the home server (host name, router, firewall, ports, local paths) and personal asides; the public demo domain and demo accounts stay. The export script applies the same rules to future logs.
+- **#132** (2026-10-15) The **making-of** (cleaned session logs and project metrics) is public in the demo shop (`/making-of`, linked from the footer), switched on per deployment; customer shops do not show it.
+- **#133** (2026-10-15) The making-of stays **English only**; the rest of the documentation is German and English (#123).
 - **#130** (2026-10-15) The **cancellation email** names the online payment when the order was paid online: "Ihre Online-Zahlung über … erstatten wir auf dasselbe Zahlungsmittel." (decided by a paid or refunded payment, since the email may go out before the refund is recorded); other orders keep "Falls Sie bereits bezahlt haben …".
 - **#129** (2026-10-15) The shop does **not track refunds** after Mollie accepted them (pending, paid out, failed). Staff check them in Mollie's dashboard through the link on the payment attempt; the shop does not copy Mollie's refund logic.
 - **#128** (2026-10-15) **Mollie is the only payment provider, with its hosted payment page.** Stripe and the embedded payment form are dropped: after the test on biber.mittenin.at, Mollie's integration, webhooks, payment page and dashboard all look professional. Replaces "Stripe later" in #108 and "embedded form later" in #109.
