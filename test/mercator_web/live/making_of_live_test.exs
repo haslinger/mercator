@@ -4,10 +4,20 @@ defmodule MercatorWeb.MakingOfLiveTest do
 
   import Phoenix.LiveViewTest
 
-  defp making_of(enabled?) do
-    previous = Application.get_env(:mercator, :making_of)
-    Application.put_env(:mercator, :making_of, enabled?)
-    on_exit(fn -> Application.put_env(:mercator, :making_of, previous) end)
+  defp making_of(enabled?), do: put_env(:making_of, enabled?)
+
+  # sets an application setting for one test; afterwards it is exactly as
+  # before (removed if it was not set: nil would be a setting of its own)
+  defp put_env(key, value) do
+    previous = Application.fetch_env(:mercator, key)
+    Application.put_env(:mercator, key, value)
+
+    on_exit(fn ->
+      case previous do
+        {:ok, value} -> Application.put_env(:mercator, key, value)
+        :error -> Application.delete_env(:mercator, key)
+      end
+    end)
   end
 
   describe "switched off (a customer shop)" do
@@ -62,12 +72,10 @@ defmodule MercatorWeb.MakingOfLiveTest do
 
   test "without the setting it follows demo mode" do
     making_of(nil)
-    previous = Application.get_env(:mercator, :demo_mode)
-    on_exit(fn -> Application.put_env(:mercator, :demo_mode, previous) end)
 
-    Application.put_env(:mercator, :demo_mode, false)
+    put_env(:demo_mode, false)
     refute Mercator.Docs.making_of?()
-    Application.put_env(:mercator, :demo_mode, true)
+    put_env(:demo_mode, true)
     assert Mercator.Docs.making_of?()
   end
 end
