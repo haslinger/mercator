@@ -21,18 +21,7 @@ defmodule MercatorWeb.AdminNav do
     [
       {gettext("Overview"),
        [
-         item(gettext("Dashboard"), ~p"/admin", "hero-home", "dashboard", :all),
-         item(
-           gettext("Incidents"),
-           ~p"/admin/incidents",
-           "hero-exclamation-triangle",
-           "incidents",
-           [
-             :sales,
-             :sales_manager,
-             :administrator
-           ]
-         )
+         item(gettext("Dashboard"), ~p"/admin", "hero-home", "dashboard", :all)
        ]},
       {gettext("Sales"),
        [
@@ -87,6 +76,13 @@ defmodule MercatorWeb.AdminNav do
        ]},
       {gettext("Administration"),
        [
+         item(
+           gettext("Incidents"),
+           ~p"/admin/incidents",
+           "hero-exclamation-triangle",
+           "incidents",
+           [:sales, :sales_manager, :administrator]
+         ),
          item(gettext("Users"), ~p"/admin/users", "hero-users", "users", [:administrator]),
          item(
            gettext("Tax classes"),
@@ -99,12 +95,28 @@ defmodule MercatorWeb.AdminNav do
          )
        ]}
     ]
+    |> add_dev_tools()
     |> Enum.map(fn {title, items} -> {title, Enum.filter(items, &visible?(&1, roles))} end)
     |> Enum.reject(fn {_title, items} -> items == [] end)
   end
 
   defp item(label, path, icon, id, roles),
-    do: %{label: label, path: path, icon: icon, id: id, roles: roles}
+    do: %{label: label, path: path, icon: icon, id: id, roles: roles, external?: false}
+
+  # development only: the mailbox preview of sent emails, last in the
+  # "Administration" section (a plain page, not a LiveView: linked with href)
+  if Application.compile_env(:mercator, :dev_routes) do
+    defp add_dev_tools(sections) do
+      mailbox = %{
+        item(gettext("Mailbox (dev)"), "/dev/mailbox", "hero-inbox", "dev-mailbox", :all)
+        | external?: true
+      }
+
+      List.update_at(sections, -1, fn {title, items} -> {title, items ++ [mailbox]} end)
+    end
+  else
+    defp add_dev_tools(sections), do: sections
+  end
 
   defp visible?(%{roles: :all}, roles), do: MapSet.size(roles) > 0
   defp visible?(%{roles: allowed}, roles), do: Enum.any?(allowed, &MapSet.member?(roles, &1))

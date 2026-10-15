@@ -32,6 +32,9 @@ defmodule MercatorWeb.Admin.IncidentLiveTest do
     assert has_element?(view, "#incidents-#{visible.id}")
     refute has_element?(view, "#incidents-#{hidden.id}")
     assert has_element?(view, "#open-incidents-badge", "1")
+    # in the "Administration" section; the dev mailbox only in development
+    assert has_element?(view, "#admin-nav-incidents.menu-active")
+    refute has_element?(view, "#admin-nav-dev-mailbox")
   end
 
   test "the list and the badge update when an incident is reported", %{conn: conn} do

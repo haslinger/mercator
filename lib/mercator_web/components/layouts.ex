@@ -230,7 +230,11 @@ defmodule MercatorWeb.Layouts do
             <p class="menu-title px-2">{title}</p>
             <ul class="menu w-full">
               <li :for={item <- items}>
+                <.link :if={item.external?} href={item.path} id={"admin-nav-#{item.id}"}>
+                  <.icon name={item.icon} class="size-5" /> {item.label}
+                </.link>
                 <.link
+                  :if={!item.external?}
                   navigate={item.path}
                   class={[@active == item.id && "menu-active"]}
                   id={"admin-nav-#{item.id}"}
