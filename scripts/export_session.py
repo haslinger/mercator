@@ -9,9 +9,18 @@ Usage:
     scripts/export_session.py                     # list this project's sessions
     scripts/export_session.py <session-id> [out]  # export one session
     scripts/export_session.py latest [out]        # export the newest session
+    scripts/export_session.py redact              # clean the logs in docs/sessions again
 
 <session-id> may be a prefix of the id or a path to a .jsonl transcript.
 The default output is docs/sessions/<date>-<id prefix>.md.
+
+The logs are part of the documentation (the making-of, #131), so personal
+details are replaced on export: local paths by the general rules below, and
+names, addresses and infrastructure details by the rules in
+scripts/session_redactions.local.tsv. That file is git-ignored, since it
+holds exactly what should not be published: one rule per line, a Python
+regular expression and its replacement separated by a tab; lines starting
+with # are comments.
 """
 import json
 import re
@@ -28,6 +37,41 @@ DROP_TAGS = re.compile(
     re.S,
 )
 COMPACTED = "*(Context was compacted here; the conversation continued from a summary.)*"
+LOCAL_RULES = REPO / "scripts" / "session_redactions.local.tsv"
+
+# where the projects live on this machine, e.g. /home/<user>/src
+BASE = str(REPO.parent.parent)
+GENERAL_RULES = [
+    (re.escape(BASE), "~/src"),
+    (re.escape(re.sub(r"[^A-Za-z0-9]", "-", BASE)) + "-", "-src-"),
+    (r"/home/[A-Za-z0-9_.-]+", "~"),
+]
+
+
+def rules():
+    local = []
+    if LOCAL_RULES.exists():
+        for line in LOCAL_RULES.read_text(encoding="utf-8").splitlines():
+            if line.strip() and not line.startswith("#"):
+                pattern, replacement = line.split("\t", 1)
+                local.append((pattern, replacement))
+    else:
+        print(f"warning: {LOCAL_RULES.name} is missing, only general rules applied", file=sys.stderr)
+    # the local rules first: they may name full paths or addresses
+    return [(re.compile(p), r) for p, r in local + GENERAL_RULES]
+
+
+def redact(text, compiled, counts):
+    for pattern, replacement in compiled:
+        text, n = pattern.subn(replacement, text)
+        if n:
+            counts[pattern.pattern] = counts.get(pattern.pattern, 0) + n
+    return text
+
+
+def report(counts):
+    for pattern, n in counts.items():
+        print(f"  replaced {n}x  {pattern}")
 
 
 def sessions():
@@ -92,6 +136,17 @@ def render(path):
 
 
 def main(args):
+    if args == ["redact"]:
+        compiled = rules()
+        for log in sorted((REPO / "docs" / "sessions").glob("*.md")):
+            counts = {}
+            text = log.read_text(encoding="utf-8")
+            cleaned = redact(text, compiled, counts)
+            if cleaned != text:
+                log.write_text(cleaned, encoding="utf-8")
+                print(f"cleaned {log.name}")
+                report(counts)
+        return
     if not args:
         for p in sessions():
             mtime = datetime.fromtimestamp(p.stat().st_mtime).strftime("%Y-%m-%d %H:%M")
@@ -99,10 +154,13 @@ def main(args):
         return
     path = find(args[0])
     date, markdown = render(path)
+    counts = {}
+    markdown = redact(markdown, rules(), counts)
     out = Path(args[1]) if len(args) > 1 else REPO / "docs" / "sessions" / f"{date}-{path.stem[:8]}.md"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(markdown, encoding="utf-8")
     print(f"wrote {out}")
+    report(counts)
 
 
 if __name__ == "__main__":

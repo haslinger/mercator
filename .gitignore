@@ -46,3 +46,6 @@ npm-debug.log
 
 # Deployment settings and secrets (DOCKER.md)
 /.env
+
+# personal rules for cleaning the session logs (#131), never published
+/scripts/session_redactions.local.tsv
