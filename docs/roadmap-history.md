@@ -99,6 +99,9 @@ This makes it the test case for **configurable material**: wood species, dimensi
 - **#105** (2026-10-15) **Incidents** in a new domain `Mercator.Operations`: problems the system notices (a PDF that could not be created, a background job that failed for good) and problems staff record become incidents with title, description, technical details, resolution, state open/resolved, who resolved it and when, and links to customer, order, offer or conversation. The same open problem counts up instead of repeating. `/admin/incidents` with a live badge in the admin sidebar; "Report incident" on order, offer and conversation.
 - **#106** (2026-10-15) Administrators see all incidents; sales staff those about a customer, order, offer or conversation, and the ones they reported.
 - **#107** (2026-10-15) Staff can also record incidents by hand.
+- **#108** (2026-10-15) **Online payment with Mollie first** (the easier integration: hosted page, webhook sends only an id), Stripe later. Liberapay is not suitable (donations, not shop payments) and dropped; mPAY24 is not used. Test mode costs nothing.
+- **#109** (2026-10-15) The provider's **hosted payment page** first; an embedded payment form later, shown as if it were a third provider.
+- **#110** (2026-10-15) Online payment is **one more payment method** next to prepayment, invoice and payment on pickup; the concrete methods (cards, EPS, …) are chosen in the provider's dashboard. Webhooks are tested on the home server deployment (phase 8). Design: [payment-design.md](payment-design.md).
 - (2026-10-14) **Chat messages are sent with the button only**, not with Enter: many people don't know Shift+Enter for a new line. Enter makes a new line (customer chat and sales desk).
 
 ## Answered questions
