@@ -41,6 +41,12 @@ defmodule MercatorWeb.Admin.DashboardLiveTest do
     assert has_element?(view, "#stat-products", "2")
     assert has_element?(view, "#admin-nav-users")
     assert has_element?(view, "#shortcut-users")
+
+    # grouped like the sidebar: "Administration" starts with the incidents
+    assert has_element?(view, "#shortcuts-incidents h2", "Verwaltung")
+    assert has_element?(view, "#shortcuts-incidents #shortcut-users")
+    assert has_element?(view, "#shortcuts-desk #shortcut-orders")
+    refute has_element?(view, "#shortcut-dashboard")
   end
 
   test "the user menu links to the admin area for staff only", %{conn: conn} do

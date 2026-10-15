@@ -55,22 +55,52 @@ defmodule MercatorWeb.Admin.DashboardLive do
         </div>
       </div>
 
-      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <.link
-          :for={
-            item <- Enum.flat_map(@sections, &elem(&1, 1)) |> Enum.reject(&(&1.id == "dashboard"))
-          }
-          navigate={item.path}
-          class="card bg-base-100 shadow-sm hover:shadow-md transition-shadow"
-          id={"shortcut-#{item.id}"}
-        >
-          <div class="card-body flex-row items-center gap-3">
-            <.icon name={item.icon} class="size-6 text-primary" />
-            <span class="font-semibold">{item.label}</span>
-          </div>
-        </.link>
-      </div>
+      <%!-- the shortcuts, grouped like the sidebar (without the dashboard itself) --%>
+      <section
+        :for={{title, items} <- shortcut_sections(@sections)}
+        class="space-y-2"
+        id={"shortcuts-#{items |> hd() |> Map.fetch!(:id)}"}
+      >
+        <h2 class="text-sm font-semibold uppercase tracking-wide text-base-content/60">
+          {title}
+        </h2>
+        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <.shortcut :for={item <- items} item={item} open_incidents={@open_incidents} />
+        </div>
+      </section>
     </Layouts.admin>
+    """
+  end
+
+  defp shortcut_sections(sections) do
+    sections
+    |> Enum.map(fn {title, items} -> {title, Enum.reject(items, &(&1.id == "dashboard"))} end)
+    |> Enum.reject(fn {_title, items} -> items == [] end)
+  end
+
+  attr :item, :map, required: true
+  attr :open_incidents, :integer, default: nil
+
+  defp shortcut(assigns) do
+    ~H"""
+    <.link
+      navigate={if(!@item.external?, do: @item.path)}
+      href={if(@item.external?, do: @item.path)}
+      class="card bg-base-100 shadow-sm hover:shadow-md transition-shadow"
+      id={"shortcut-#{@item.id}"}
+    >
+      <div class="card-body flex-row items-center gap-3">
+        <.icon name={@item.icon} class="size-6 text-primary" />
+        <span class="font-semibold">{@item.label}</span>
+        <span
+          :if={@item.id == "incidents" and (@open_incidents || 0) > 0}
+          class="badge badge-error ml-auto"
+          id="shortcut-open-incidents"
+        >
+          {@open_incidents}
+        </span>
+      </div>
+    </.link>
     """
   end
 end
