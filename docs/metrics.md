@@ -10,10 +10,25 @@ A snapshot of the size and shape of the Mercator port. Numbers as of
 | First commit | 2026-10-13 12:18 |
 | Latest commit | 2026-10-15 13:15 |
 | Commits | 219 (90 on 10-13, 90 on 10-14, 39 on 10-15) |
-| Working sessions (logs in `docs/sessions/`) | 6 |
+| Working sessions (logs in `docs/sessions/`) | 5 |
+| Working time | **16 h 37 min** active (23 h 10 min from first to last message) |
 | Questions decided (`#N`) | #1–#120 |
 | Phases | 1–6 and 8 done, 7 (online payment) in progress |
 | Demo | live at https://biber.mittenin.at since 2026-10-15 |
+
+## Work sessions
+
+From the timestamps of the Claude Code transcripts (local time). *Active*
+counts the time between messages, leaving out pauses longer than 15 minutes.
+
+| Session | Date | From – to | Span | Active | Main topics |
+|---|---|---|---:|---:|---|
+| `2a53ba5b` | 2026-10-13 | 11:57 – 18:52 | 6:55 | 5:36 | analysis of the Rails app, roadmap, foundation, catalogue, checkout (first steps) |
+| `87be7c65` | 2026-10-13 | 19:13 – 19:19 | 0:05 | 0:05 | setting up the session log export |
+| `3c7d3d68` | 2026-10-14 | 08:15 – 19:30 | 11:14 | 6:00 | checkout completion, CMS, guided selling (chat, offers, emails, print) |
+| `4c06f629` | 2026-10-15 | 06:26 – 09:15 | 2:48 | 2:48 | backlog, incidents, online payment, Docker |
+| `fafce14e` | 2026-10-15 | 11:21 – 13:27 | 2:05 | 2:05 | demo mode, home server deployment, metrics |
+| **Total** | | | **23:10** | **16:37** | |
 
 ## Code size
 
@@ -125,3 +140,8 @@ Phoenix.Router.routes(MercatorWeb.Router) |> length()
 ```
 
 Demo data counts are from the dev database after `mix run priv/repo/seeds.exs`.
+
+Session durations come from the `timestamp` of every entry in the transcripts
+(`~/.claude/projects/-daten-DATA-phoenix-mercator/*.jsonl`): the span is first
+to last entry; active time sums the gaps between consecutive entries that are
+at most 15 minutes long.
