@@ -147,8 +147,10 @@ weight, by volume, with a maximum) can follow.
    (development) the payment is created without one. Tests with `Req.Test` stubs and
    an end-to-end webhook test. Tested by hand with the test key on 2026-10-15,
    locally (return page) and on biber.mittenin.at (webhook on paid and on expiry).
-4. Back office: payment attempts on the order, refund on cancel, list filter;
-   incidents; "payment received" email.
+4. ~~Back office~~ *(done 2026-10-15)*: payment attempts on the order with a link to
+   the provider's dashboard (`dashboard_url`, as Mollie returns it), refund on cancel
+   (checkbox) or later ("Refund" button), list filter "Online unbezahlt"; incident when
+   a refund fails; "payment received" email (the order state `paid` is emailed, #74).
 5. ~~Phase 8 (Docker on the home server), then the webhook test there~~ *(done
    2026-10-15)*.
 

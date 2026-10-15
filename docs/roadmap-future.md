@@ -8,8 +8,8 @@ Questions are numbered globally (`#N`); the numbering is never restarted. When a
 
 6. **Guided selling** – done 2026-10-15 (see [roadmap-history.md](roadmap-history.md)); still open from it:
    - postponed: audio/video and screen sharing (#100; possible self-hosted with `ex_webrtc`)
-7. **Online payment** – working with Mollie's hosted payment page and the payment simulator (steps 0–3 of [payment-design.md](payment-design.md) done, #108–#113; Mollie only, no Stripe and no embedded form, #128). Still to do:
-   - step 4: back office (payment attempts on the order, refund on cancel, unpaid filter), "payment received" email
+7. **Online payment – done in code** (2026-10-15, [payment-design.md](payment-design.md), #108–#113, #128: Mollie only, hosted payment page). Still to do:
+   - a manual test of the back office part on biber.mittenin.at: refund a Mollie test payment by cancelling its order, check the "payment received" email and the dashboard link
    - Mesonic, Icecat and Bechlem are out of scope (#15).
 8. **Deployment and demo mode – done** (2026-10-15, [deployment-design.md](deployment-design.md), #114–#120): the demo runs at https://biber.mittenin.at on the home server. Smoke test passed: registration with confirmation email (SMTP), order paid with the simulator, the full advice process (chat, recommendation, offer, accepting it from the chat widget, print page). The offer PDF (Typst in the image) works too. Reverse proxy rate limits: see the README.
 9. **Documentation** – planned (#121–#125 decided): the documentation goes into the product itself, as Markdown in the repo (`priv/docs/<locale>/…`, versioned with the code, rendered by `MercatorWeb.Markdown`), German and English with German fallback.
