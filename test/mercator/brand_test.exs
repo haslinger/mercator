@@ -5,12 +5,17 @@ defmodule Mercator.BrandTest do
   alias Mercator.Brand
 
   setup do
-    previous = Application.get_env(:mercator, :brand)
-    on_exit(fn -> restore(previous) end)
+    previous =
+      {Application.get_env(:mercator, :brand), Application.get_env(:mercator, :brand_key)}
+
+    on_exit(fn ->
+      restore(:brand, elem(previous, 0))
+      restore(:brand_key, elem(previous, 1))
+    end)
   end
 
-  defp restore(nil), do: Application.delete_env(:mercator, :brand)
-  defp restore(value), do: Application.put_env(:mercator, :brand, value)
+  defp restore(key, nil), do: Application.delete_env(:mercator, key)
+  defp restore(key, value), do: Application.put_env(:mercator, key, value)
 
   test "falls back to the neutral Mercator defaults" do
     Application.delete_env(:mercator, :brand)
@@ -37,6 +42,23 @@ defmodule Mercator.BrandTest do
     assert Brand.image_path(:pin) == "/images/brands/biberholz/pin.webp"
     assert Brand.tagline(:en) == "Timber since 1928"
     assert Brand.tagline("fr") == "Holz seit 1928"
+  end
+
+  test "a brand of config/brands/ is chosen by :brand_key (#43); :brand wins" do
+    Application.delete_env(:mercator, :brand)
+    Application.put_env(:mercator, :brand_key, :biberholz)
+
+    assert Brand.name() == "Biber Holz"
+    assert Brand.get(:order_prefix) == "BH"
+    assert Brand.image_path(:logo) == "/images/brands/biberholz/logo.webp"
+
+    for kind <- Brand.images(), path = Brand.image_path(kind) do
+      assert File.regular?(Path.join("priv/static", path)), "missing #{path}"
+    end
+
+    Application.put_env(:mercator, :brand, name: "Biber Holz Test")
+    assert Brand.name() == "Biber Holz Test"
+    assert Brand.get(:order_prefix) == "BH"
   end
 
   test "the pin falls back to the logo" do

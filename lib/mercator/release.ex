@@ -4,7 +4,7 @@ defmodule Mercator.Release do
   docs/deployment-design.md and DOCKER.md):
 
       bin/mercator eval "Mercator.Release.migrate()"
-      bin/mercator eval "Mercator.Release.seed()"
+      bin/mercator rpc "Mercator.Release.seed()"   # inside the running app
 
   The Docker entrypoint runs `migrate/0` before every start.
   """

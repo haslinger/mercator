@@ -1,8 +1,13 @@
 defmodule Mercator.Brand do
   @moduledoc """
   Branding of a deployment: shop name, tagline, contact data, images and
-  DaisyUI themes (decision #36). Each customer deployment configures its
-  own brand; unset keys fall back to the neutral Mercator defaults.
+  DaisyUI themes (decision #36). Unset keys fall back to the neutral
+  Mercator defaults.
+
+  Brands that come with Mercator live in `config/brands/` (`:brands`, e.g.
+  Biber Holz) and are chosen by `:brand_key` (`BRAND=biberholz` in
+  production, #43). A deployment can also configure its own brand, which
+  wins over the chosen one:
 
       config :mercator, :brand,
         name: "Biber Holz",
@@ -43,7 +48,16 @@ defmodule Mercator.Brand do
 
   @doc "The complete brand configuration as a keyword list."
   def config do
-    Keyword.merge(@defaults, Application.get_env(:mercator, :brand, []))
+    @defaults
+    |> Keyword.merge(chosen())
+    |> Keyword.merge(Application.get_env(:mercator, :brand, []))
+  end
+
+  defp chosen do
+    case Application.get_env(:mercator, :brand_key) do
+      nil -> []
+      key -> :mercator |> Application.get_env(:brands, []) |> Keyword.get(key, [])
+    end
   end
 
   @doc "A single brand setting."

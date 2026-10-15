@@ -224,4 +224,7 @@ config :phoenix, :json_library, Jason
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
+# Brands (#36, #43); the active one is chosen by `:brand_key` (BRAND in production)
+import_config "brands/biberholz.exs"
+
 import_config "#{config_env()}.exs"

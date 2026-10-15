@@ -48,6 +48,8 @@ In `.env` set at least:
   STARTTLS), `SMTP_USERNAME`, `SMTP_PASSWORD`, and `MAIL_FROM_ADDRESS`, an
   address the SMTP account may send as. Without `SMTP_RELAY` the app does not
   start, so emails are never lost silently.
+* `BRAND`: one of the brands in `config/brands/`, e.g. `biberholz` (name,
+  logo, colours, contact data); empty for the neutral Mercator look.
 * For the demo: `MERCATOR_MODE=demo` and `DEMO_ADMIN_PASSWORD` (the
   administrator's password, never published). For a customer's shop leave
   `MERCATOR_MODE` empty.
@@ -108,9 +110,10 @@ database starts empty and is migrated automatically.
 Until demo mode seeds by itself (phase 8, step 2), seed once by hand:
 
 ```sh
-docker compose exec app bin/mercator eval "Mercator.Release.seed()"
+docker compose exec app bin/mercator rpc "Mercator.Release.seed()"
 ```
 
+(`rpc` runs it inside the running app; `eval` would start a second one.)
 This creates the Biber Holz catalogue with photos, pages, orders,
 conversations and offers, and the demo users (password `mercator-demo`, see
 README). Change the administrator's password right after, or wait for step 2,
