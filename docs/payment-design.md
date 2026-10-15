@@ -43,8 +43,10 @@ config :mercator, :payment_providers, [Mercator.Payments.Mollie]
 
 `Mercator.Payments.Simulator` is a provider without a provider: its payment page is
 part of the shop, with a card form and test cards (`4242 4242 4242 4242` is paid,
-`4000 0000 0000 0002` is declined, as at Stripe), EPS and cancel; payments live in
-memory. Registered only in
+`4000 0000 0000 0002` is declined, as at Stripe), EPS (fictional banks, a simulated
+online banking with test login 12345678 / 1234, TAN 123456 confirms, 000000 is
+rejected) and cancel. Every step says it is a simulation and that no real data may be
+entered. Payments live in memory. Registered only in
 dev, test and the demo, never in a real shop (customers could "pay" without paying).
 It replaces a separate fake provider in the tests.
 

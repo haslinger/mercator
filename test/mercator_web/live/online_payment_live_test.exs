@@ -44,7 +44,7 @@ defmodule MercatorWeb.OnlinePaymentLiveTest do
     |> form("#card-form", card: %{number: "1234 5678", expiry: "12/39", cvc: "123"})
     |> render_submit()
 
-    assert has_element?(simulator, "#card-error")
+    assert has_element?(simulator, "#simulator-error")
 
     assert {:error, {:redirect, %{to: return_url}}} =
              simulator
@@ -90,6 +90,56 @@ defmodule MercatorWeb.OnlinePaymentLiveTest do
     {:ok, view, _html} = live(ctx.conn, path(return_url))
     assert has_element?(view, "#payment-not-completed")
     assert has_element?(view, "#pay-now")
+  end
+
+  test "EPS: bank, simulated online banking, TAN", ctx do
+    order = order_fixture(ctx.customer, ctx.variant, %{"payment_method" => "online"})
+    {:ok, url} = Payments.start(order)
+    {:ok, simulator, _html} = live(ctx.conn, path(url))
+
+    simulator |> element("#pay-eps") |> render_click()
+    assert has_element?(simulator, "#simulation-warning")
+
+    simulator |> form("#eps-bank-form", eps: %{bank: "Testbank Alpen"}) |> render_submit()
+    assert has_element?(simulator, "#eps-login-form", "Testbank Alpen")
+    assert has_element?(simulator, "#test-login", "12345678")
+
+    # a wrong PIN stays on the page
+    simulator
+    |> form("#eps-login-form", eps: %{user_number: "12345678", pin: "9999"})
+    |> render_submit()
+
+    assert has_element?(simulator, "#simulator-error")
+
+    simulator
+    |> form("#eps-login-form", eps: %{user_number: "12345678", pin: "1234"})
+    |> render_submit()
+
+    assert has_element?(simulator, "#test-tans", "123456")
+
+    assert {:error, {:redirect, %{to: _return_url}}} =
+             simulator |> form("#eps-tan-form", eps: %{tan: "123456"}) |> render_submit()
+
+    assert %{status: :paid, method: "eps"} = Payments.latest(order)
+    assert Sales.get_order_by_number!(order.number, authorize?: false).state == :paid
+  end
+
+  test "EPS: a rejected TAN fails the payment", ctx do
+    order = order_fixture(ctx.customer, ctx.variant, %{"payment_method" => "online"})
+    {:ok, url} = Payments.start(order)
+    {:ok, simulator, _html} = live(ctx.conn, path(url))
+
+    simulator |> element("#pay-eps") |> render_click()
+    simulator |> form("#eps-bank-form", eps: %{bank: "Musterbank Donau"}) |> render_submit()
+
+    simulator
+    |> form("#eps-login-form", eps: %{user_number: "12345678", pin: "1234"})
+    |> render_submit()
+
+    assert {:error, {:redirect, _to}} =
+             simulator |> form("#eps-tan-form", eps: %{tan: "000000"}) |> render_submit()
+
+    assert %{status: :failed} = Payments.latest(order)
   end
 
   test "the webhook updates the order; unknown providers get 404", ctx do

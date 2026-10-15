@@ -96,6 +96,39 @@ defmodule Mercator.Payments.Simulator do
     end
   end
 
+  # EPS: fictional banks (never real bank names) and test credentials
+  @eps_banks ["Demo-Bank Waldviertel", "Testbank Alpen", "Musterbank Donau"]
+  @eps_login {"12345678", "1234"}
+  @eps_tans [{"123456", :paid}, {"000000", :failed}]
+
+  @doc "The fictional banks of the EPS simulation."
+  def eps_banks, do: @eps_banks
+
+  @doc "The test login of the simulated online banking: `{user_number, pin}`."
+  def eps_test_login, do: @eps_login
+
+  @doc "The test TANs: `[{tan, outcome}]`."
+  def eps_tans, do: @eps_tans
+
+  @doc "Checks the login of the simulated online banking."
+  def eps_login(user_number, pin) do
+    if {String.trim(user_number || ""), String.trim(pin || "")} == @eps_login,
+      do: :ok,
+      else: {:error, :invalid_login}
+  end
+
+  @doc """
+  Confirms an EPS transfer with a TAN (after `eps_login/2`): a test TAN
+  decides the outcome (`eps_tans/0`); any other is `{:error, :unknown_tan}`
+  and the payment stays open.
+  """
+  def pay_by_eps(id, tan) do
+    case List.keyfind(@eps_tans, String.trim(tan || ""), 0) do
+      {_tan, outcome} -> complete(id, outcome, "eps")
+      nil -> {:error, :unknown_tan}
+    end
+  end
+
   defp card_outcome(number) do
     case List.keyfind(@test_cards, number, 0) do
       {^number, outcome} -> {:ok, outcome}

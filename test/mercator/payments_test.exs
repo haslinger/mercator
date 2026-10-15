@@ -104,6 +104,16 @@ defmodule Mercator.PaymentsTest do
                Simulator.pay_by_card(start().id, "4242 4242 4242 4242", "12/39", "1234")
     end
 
+    test "EPS: test login and TANs" do
+      assert :ok = Simulator.eps_login("12345678", "1234")
+      assert {:error, :invalid_login} = Simulator.eps_login("12345678", "0000")
+
+      payment = start()
+      assert {:error, :unknown_tan} = Simulator.pay_by_eps(payment.id, "111111")
+      assert {:ok, %{status: :failed}} = Simulator.pay_by_eps(payment.id, "000000")
+      assert {:ok, %{status: :paid, method: "eps"}} = Simulator.pay_by_eps(start().id, "123456")
+    end
+
     test "unknown payments" do
       assert {:error, :not_found} = Simulator.fetch_payment("sim_nothing")
     end
