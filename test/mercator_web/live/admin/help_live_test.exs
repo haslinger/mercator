@@ -92,9 +92,28 @@ defmodule MercatorWeb.Admin.HelpLiveTest do
       assert has_element?(view, ~s(#page-help[href="/admin/help/manual/index"]))
     end
 
-    test "is missing where no chapter names the page", %{conn: conn} do
+    test "every admin area has its chapter", %{conn: conn} do
       {:ok, view, _html} = live(sign_in(conn, [:administrator]), ~p"/admin/tax-classes")
+      assert has_element?(view, ~s(#page-help[href="/admin/help/manual/tax-classes"]))
+    end
+
+    test "is missing where no chapter names the page", %{conn: conn} do
+      {:ok, view, _html} = live(sign_in(conn, [:administrator]), ~p"/admin/help")
       refute has_element?(view, "#page-help")
+    end
+
+    test "every admin page has a chapter for its \"?\"" do
+      named = MapSet.new(Docs.pages())
+
+      missing =
+        for %{path: "/admin" <> _ = path, plug: plug} <- Phoenix.Router.routes(MercatorWeb.Router),
+            plug == Phoenix.LiveView.Plug,
+            not String.starts_with?(path, "/admin/help"),
+            page = MercatorWeb.HelpLink.page(path),
+            page not in named,
+            do: page
+
+      assert missing == [], "admin pages without a help chapter: #{inspect(missing)}"
     end
 
     test "every page a chapter names is an admin route" do
