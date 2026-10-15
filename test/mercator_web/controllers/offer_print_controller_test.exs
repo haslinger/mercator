@@ -6,6 +6,7 @@ defmodule MercatorWeb.OfferPrintControllerTest do
   import Mercator.SalesFixtures
 
   alias Mercator.Consulting.Offers
+  alias MercatorWeb.Documents
 
   setup do
     customer = customer_fixture(%{name: "Karla Dachs", street: "Biberweg 7"})
@@ -47,5 +48,41 @@ defmodule MercatorWeb.OfferPrintControllerTest do
              "Zirbenbrett"
 
     assert conn |> log_in_user(context.customer) |> get(path) |> response(404)
+  end
+
+  describe "PDF (#17)" do
+    test "the customer downloads their sent offer as PDF", %{conn: conn} = context do
+      path = ~p"/account/offers/#{context.offer.id}/pdf"
+      assert conn |> log_in_user(context.customer) |> get(path) |> response(404)
+
+      {:ok, offer} = Offers.submit(context.offer, context.consultant)
+      conn = conn |> log_in_user(context.customer) |> get(path)
+
+      assert "%PDF-" <> _ = response(conn, 200)
+      assert response_content_type(conn, :pdf) =~ "application/pdf"
+
+      assert get_resp_header(conn, "content-disposition") ==
+               [~s(inline; filename="Angebot-#{offer.number}.pdf")]
+    end
+
+    test "staff download drafts; customers cannot use the staff route", %{conn: conn} = context do
+      path = ~p"/admin/offers/#{context.offer.id}/pdf"
+
+      assert "%PDF-" <> _ = conn |> log_in_user(context.consultant) |> get(path) |> response(200)
+      assert conn |> log_in_user(context.customer) |> get(path) |> response(404)
+    end
+
+    test "the document data: address, items, sums in the offer's language", context do
+      {:ok, offer} = Offers.get(context.offer.id, context.consultant)
+      data = Gettext.with_locale(MercatorWeb.Gettext, "de", fn -> Documents.offer_data(offer) end)
+
+      assert data.title == "Angebot #{offer.number}"
+      assert "Biberweg 7" in data.recipient
+      assert data.intro == "Wie besprochen."
+      assert [[_pos, _qty, %{title: "Zirbenbrett"}, _unit, _amount]] = data.rows
+      assert %{label: "Gesamt", value: total, strong: true} = List.last(data.sums)
+      assert total =~ "240,00"
+      refute Enum.any?(data.columns, &(&1.label == "Rabatt"))
+    end
   end
 end
