@@ -11,7 +11,7 @@ defmodule Mercator.SeedsTest do
     assert length(users) == length(Seeds.demo_users())
     assert Enum.all?(users, & &1.confirmed_at)
 
-    admin = Enum.find(users, &(to_string(&1.email) == "admin@example.com"))
+    admin = Enum.find(users, &(to_string(&1.email) == "admin@mittenin.at"))
     assert admin.roles == [:administrator]
   end
 
@@ -46,7 +46,7 @@ defmodule Mercator.SeedsTest do
 
     assert {:ok, user} =
              Strategy.action(Info.strategy!(User, :password), :sign_in, %{
-               "email" => "admin@example.com",
+               "email" => "admin@mittenin.at",
                "password" => Seeds.demo_password()
              })
 

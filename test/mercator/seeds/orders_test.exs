@@ -19,7 +19,7 @@ defmodule Mercator.Seeds.OrdersTest do
   test "creates demo orders in different states, backdated, without emails" do
     # the order of an offer comes from Mercator.Seeds.Consulting
     orders =
-      Enum.reject(orders("kunde@example.com") ++ orders("customer@example.com"), & &1.offer_id)
+      Enum.reject(orders("kunde@mittenin.at") ++ orders("customer@mittenin.at"), & &1.offer_id)
 
     assert length(orders) == 6
 
@@ -44,6 +44,6 @@ defmodule Mercator.Seeds.OrdersTest do
 
   test "is idempotent" do
     Seeds.run()
-    assert length(orders("kunde@example.com")) == 5
+    assert length(orders("kunde@mittenin.at")) == 5
   end
 end

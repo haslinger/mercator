@@ -21,19 +21,19 @@ defmodule Mercator.Seeds do
 
   # Surnames of animals living in the woods (Biber Holz demo)
   @demo_users [
-    %{email: "admin@example.com", name: "Anna Specht", roles: [:administrator]},
-    %{email: "sales@example.com", name: "Sepp Fuchs", roles: [:sales]},
-    %{email: "manager@example.com", name: "Maria Hirsch", roles: [:sales, :sales_manager]},
-    %{email: "content@example.com", name: "Klara Eichhorn", roles: [:contentmanager]},
-    %{email: "products@example.com", name: "Peter Dachs", roles: [:productmanager]},
+    %{email: "admin@mittenin.at", name: "Anna Specht", roles: [:administrator]},
+    %{email: "sales@mittenin.at", name: "Sepp Fuchs", roles: [:sales]},
+    %{email: "manager@mittenin.at", name: "Maria Hirsch", roles: [:sales, :sales_manager]},
+    %{email: "content@mittenin.at", name: "Klara Eichhorn", roles: [:contentmanager]},
+    %{email: "products@mittenin.at", name: "Peter Dachs", roles: [:productmanager]},
     %{
-      email: "kunde@example.com",
+      email: "kunde@mittenin.at",
       name: "Karl Luchs",
       roles: [],
       locale: :de,
       invoice_allowed: true
     },
-    %{email: "customer@example.com", name: "Lena Igel", roles: [], locale: :en}
+    %{email: "customer@mittenin.at", name: "Lena Igel", roles: [], locale: :en}
   ]
 
   # Austrian VAT rates for the demo (#51, information from the Wirtschaftskammer):

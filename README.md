@@ -26,13 +26,13 @@ Then open [localhost:4000](http://localhost:4000).
 
 | Email | Name | Roles |
 |---|---|---|
-| `admin@example.com` | Anna Specht | administrator |
-| `sales@example.com` | Sepp Fuchs | sales |
-| `manager@example.com` | Maria Hirsch | sales, sales_manager |
-| `content@example.com` | Klara Eichhorn | contentmanager |
-| `products@example.com` | Peter Dachs | productmanager |
-| `kunde@example.com` | Karl Luchs | customer (German) |
-| `customer@example.com` | Lena Igel | customer (English) |
+| `admin@mittenin.at` | Anna Specht | administrator |
+| `sales@mittenin.at` | Sepp Fuchs | sales |
+| `manager@mittenin.at` | Maria Hirsch | sales, sales_manager |
+| `content@mittenin.at` | Klara Eichhorn | contentmanager |
+| `products@mittenin.at` | Peter Dachs | productmanager |
+| `kunde@mittenin.at` | Karl Luchs | customer (German) |
+| `customer@mittenin.at` | Lena Igel | customer (English) |
 
 In development:
 
@@ -90,9 +90,9 @@ Production is configured through environment variables, read in `config/runtime.
 | `DATABASE_URL` | yes | e.g. `ecto://USER:PASS@HOST/DATABASE` |
 | `SECRET_KEY_BASE` | yes | Signs and encrypts cookies; generate with `mix phx.gen.secret` |
 | `TOKEN_SIGNING_SECRET` | yes | Signs authentication tokens; generate with `mix phx.gen.secret` |
-| `PHX_HOST` | yes | Public host name, used for generated URLs (e.g. in emails) |
 | `MAIL_FROM_ADDRESS` | yes | Sender address of all system emails |
 | `UPLOADS_DIR` | yes | Directory for uploaded files (product and category images); must be persistent and writable |
+| `PHX_HOST` | no | Public host name, used for generated URLs (e.g. in emails); default `biber.mittenin.at` until the final domain is fixed |
 | `MAIL_FROM_NAME` | no | Sender name (default `Mercator`) |
 | `PORT` | no | HTTP port (default `4000`) |
 | `POOL_SIZE` | no | Database connection pool size (default `10`) |

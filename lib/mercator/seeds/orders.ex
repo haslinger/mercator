@@ -18,7 +18,7 @@ defmodule Mercator.Seeds.Orders do
   require Ash.Query
 
   @addresses %{
-    "kunde@example.com" => %{
+    "kunde@mittenin.at" => %{
       name: "Karl Luchs",
       street: "Waldweg 3",
       postcode: "6020",
@@ -26,7 +26,7 @@ defmodule Mercator.Seeds.Orders do
       country: "AT",
       phone: "+43 512 123456"
     },
-    "customer@example.com" => %{
+    "customer@mittenin.at" => %{
       name: "Lena Igel",
       company: "Igel Gartenbau GmbH",
       street: "Leopoldstraße 12",
@@ -39,7 +39,7 @@ defmodule Mercator.Seeds.Orders do
   # days: placed that many days ago; steps: {action, days after placing, args}
   @orders [
     %{
-      customer: "kunde@example.com",
+      customer: "kunde@mittenin.at",
       note: "Bitte beim Nachbarn abgeben, falls niemand da ist.",
       days: 40,
       lines: [{"BH-ZIRBE-BRETT-1", 4}, {"BH-OEL-TERRASSE-1", 2}],
@@ -52,7 +52,7 @@ defmodule Mercator.Seeds.Orders do
       ]
     },
     %{
-      customer: "kunde@example.com",
+      customer: "kunde@mittenin.at",
       note: "Zufahrt über den Forstweg, LKW bis 12 m möglich.",
       days: 14,
       lines: [
@@ -78,7 +78,7 @@ defmodule Mercator.Seeds.Orders do
       ]
     },
     %{
-      customer: "kunde@example.com",
+      customer: "kunde@mittenin.at",
       note: "Abholung am Samstag Vormittag.",
       days: 0,
       lines: [{"BH-BRENNHOLZ-LANG-1", 2}],
@@ -86,7 +86,7 @@ defmodule Mercator.Seeds.Orders do
       steps: []
     },
     %{
-      customer: "kunde@example.com",
+      customer: "kunde@mittenin.at",
       note: "Ein Geschenk für die Enkel.",
       days: 2,
       lines: [{"BH-PLUSHIE-1", 3}],
@@ -94,7 +94,7 @@ defmodule Mercator.Seeds.Orders do
       steps: []
     },
     %{
-      customer: "customer@example.com",
+      customer: "customer@mittenin.at",
       note: "Please deliver on a weekday.",
       days: 25,
       lines: [{"BH-PELLETS-SACK-PALETTE", 1}],
@@ -104,7 +104,7 @@ defmodule Mercator.Seeds.Orders do
       ]
     },
     %{
-      customer: "customer@example.com",
+      customer: "customer@mittenin.at",
       note: "For our show garden.",
       days: 8,
       lines: [{"BH-PELLETS-SACK-SACK", 10}, {"BH-PLUSHIE-1", 1}],
@@ -122,7 +122,7 @@ defmodule Mercator.Seeds.Orders do
     customers =
       Map.new(@addresses, fn {email, address} -> {email, ensure_customer(email, address)} end)
 
-    sales = user!("sales@example.com")
+    sales = user!("sales@mittenin.at")
 
     @orders
     |> Enum.reject(&exists?(customers[&1.customer], &1.note))

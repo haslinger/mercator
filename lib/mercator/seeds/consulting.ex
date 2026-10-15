@@ -43,10 +43,10 @@ defmodule Mercator.Seeds.Consulting do
     last_job = Repo.one(from j in Oban.Job, select: max(j.id)) || 0
 
     staff = %{
-      sepp: user!("sales@example.com"),
-      maria: user!("manager@example.com"),
-      karl: user!("kunde@example.com"),
-      lena: user!("customer@example.com")
+      sepp: user!("sales@mittenin.at"),
+      maria: user!("manager@mittenin.at"),
+      karl: user!("kunde@mittenin.at"),
+      lena: user!("customer@mittenin.at")
     }
 
     garden_house(staff)

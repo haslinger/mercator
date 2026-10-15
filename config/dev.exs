@@ -64,7 +64,7 @@ config :mercator, :brand,
     "de" => "Österreichische Alpen-Forstwirtschaft\nQualitäts-Bau- und Edelholz seit 1928",
     "en" => "Austrian alpine forestry\nQuality construction and fine timber since 1928"
   },
-  email: "service@biberholz.example",
+  email: "service@mittenin.at",
   phone: "+43 1 234 56 78",
   address: "Waldweg 1, 3914 Waldhausen",
   # order numbers like BH-2026-00042 (#68)
