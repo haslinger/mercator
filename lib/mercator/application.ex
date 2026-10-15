@@ -12,27 +12,35 @@ defmodule Mercator.Application do
     # background jobs that fail for good become incidents (#105)
     JobFailures.attach()
 
-    children = [
-      MercatorWeb.Telemetry,
-      Mercator.Repo,
-      {DNSCluster, query: Application.get_env(:mercator, :dns_cluster_query) || :ignore},
-      {Oban, Application.fetch_env!(:mercator, Oban)},
-      {Phoenix.PubSub, name: Mercator.PubSub},
-      MercatorWeb.Presence,
-      {Mercator.RateLimit, clean_period: :timer.minutes(10)},
-      # in-memory payments of the payment simulator (dev, tests, demo)
-      Mercator.Payments.Simulator,
-      # Start a worker by calling: Mercator.Worker.start_link(arg)
-      # {Mercator.Worker, arg},
-      # Start to serve requests, typically the last entry
-      MercatorWeb.Endpoint,
-      {AshAuthentication.Supervisor, [otp_app: :mercator]}
-    ]
+    children =
+      [
+        MercatorWeb.Telemetry,
+        Mercator.Repo,
+        {DNSCluster, query: Application.get_env(:mercator, :dns_cluster_query) || :ignore},
+        {Oban, Application.fetch_env!(:mercator, Oban)},
+        {Phoenix.PubSub, name: Mercator.PubSub},
+        MercatorWeb.Presence,
+        {Mercator.RateLimit, clean_period: :timer.minutes(10)},
+        # in-memory payments of the payment simulator (dev, tests, demo)
+        Mercator.Payments.Simulator,
+        # Start a worker by calling: Mercator.Worker.start_link(arg)
+        # {Mercator.Worker, arg},
+        # Start to serve requests, typically the last entry
+        MercatorWeb.Endpoint,
+        {AshAuthentication.Supervisor, [otp_app: :mercator]}
+      ] ++ demo_children()
 
     # See https://elixir.hexdocs.pm/Supervisor.html
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: Mercator.Supervisor]
     Supervisor.start_link(children, opts)
+  end
+
+  # the demo seeds itself when it starts with an empty database (#44)
+  defp demo_children do
+    if Mercator.Demo.enabled?(),
+      do: [Supervisor.child_spec({Task, &Mercator.Demo.seed_if_empty/0}, id: :demo_seed)],
+      else: []
   end
 
   # Tell Phoenix to update the endpoint configuration

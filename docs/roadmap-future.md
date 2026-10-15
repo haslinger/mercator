@@ -13,7 +13,7 @@ Questions are numbered globally (`#N`); the numbering is never restarted. When a
    - step 4: back office (payment attempts on the order, refund on cancel, unpaid filter), "payment received" email
    - later: Stripe; an embedded payment form as a third provider (#109)
    - Mesonic, Icecat and Bechlem are out of scope (#15).
-8. **Deployment and demo mode** – design in progress ([deployment-design.md](deployment-design.md), #114–#117 decided, #118–#119 open): Docker image with `typst` and fonts, built on the home server, behind its reverse proxy; demo mode `MERCATOR_MODE=demo` with public demo accounts and nightly reset (#44–#48); SMTP; reverse proxy rate limits (README).
+8. **Deployment and demo mode** ([deployment-design.md](deployment-design.md), #114–#117 decided, #118–#119 open): steps 1 (Docker image, compose, SMTP, DOCKER.md) and 2 (demo mode `MERCATOR_MODE=demo`: seeding at start, public demo logins on the sign-in page, protected demo accounts, badge, simulator, nightly reset; #44–#48) done. Next: step 3, deployment on the home server (by you, with DOCKER.md), then step 4 Mollie (phase 7 step 3); reverse proxy rate limits (README).
 
 ## Backlog
 

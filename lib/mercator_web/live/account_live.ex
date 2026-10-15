@@ -16,6 +16,7 @@ defmodule MercatorWeb.AccountLive do
     {:ok,
      socket
      |> assign(:page_title, gettext("My account"))
+     |> assign(:demo_account?, Mercator.Demo.public_account?(user))
      |> assign_profile_form(user)
      |> assign_password_form(user)}
   end
@@ -75,7 +76,11 @@ defmodule MercatorWeb.AccountLive do
             <p class="text-sm text-base-content/70">
               {gettext("After changing your password you will be signed out on all devices.")}
             </p>
+            <p :if={@demo_account?} class="alert alert-info text-sm" id="demo-password-note">
+              {gettext("The password of a demo account cannot be changed.")}
+            </p>
             <.form
+              :if={!@demo_account?}
               for={@password_form}
               id="password-form"
               phx-change="validate_password"

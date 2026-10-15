@@ -8,8 +8,7 @@ defmodule Mercator.Release do
 
   The Docker entrypoint runs `migrate/0` before every start.
   """
-  alias Mercator.Seeds
-  alias Mercator.Seeds.Images
+  alias Mercator.Demo
 
   @app :mercator
 
@@ -29,19 +28,13 @@ defmodule Mercator.Release do
   end
 
   @doc """
-  Seeds the demo data (`Mercator.Seeds`), with the demo photos from the
-  directory in `DEMO_IMAGE_DIR` if there is one. For the demo only (#44):
-  a customer's shop starts empty.
+  Seeds the demo data (`Mercator.Demo.seed/0`). For the demo only (#44): a
+  customer's shop starts empty. The demo seeds itself when it starts with an
+  empty database, so this is only needed to seed again by hand.
   """
   def seed do
     {:ok, _apps} = Application.ensure_all_started(@app)
-    users = Seeds.run()
-
-    with dir when is_binary(dir) <- Application.get_env(@app, :demo_image_dir),
-         true <- File.dir?(dir) do
-      Images.import(dir)
-    end
-
+    users = Demo.seed()
     IO.puts("Seeded demo data: #{length(users)} demo users.")
   end
 

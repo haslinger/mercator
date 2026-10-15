@@ -21,8 +21,8 @@ msgstr ""
 msgid "An account with this email already exists. We've sent a link to that address - confirm it to finish linking this provider to your account."
 msgstr ""
 
-#: lib/mercator_web/components/layouts.ex:535
-#: lib/mercator_web/components/layouts.ex:550
+#: lib/mercator_web/components/layouts.ex:539
+#: lib/mercator_web/components/layouts.ex:554
 #, elixir-autogen, elixir-format
 msgid "Attempting to reconnect"
 msgstr ""
@@ -32,7 +32,7 @@ msgstr ""
 msgid "Incorrect email or password."
 msgstr ""
 
-#: lib/mercator_web/components/layouts.ex:124
+#: lib/mercator_web/components/layouts.ex:127
 #, elixir-autogen, elixir-format
 msgid "Register"
 msgstr ""
@@ -42,26 +42,26 @@ msgstr ""
 msgid "Shop on your own or get advice from our consultants."
 msgstr ""
 
-#: lib/mercator_web/components/layouts.ex:114
 #: lib/mercator_web/components/layouts.ex:117
+#: lib/mercator_web/components/layouts.ex:120
 #: lib/mercator_web/live/payment_simulator_live.ex:289
 #, elixir-autogen, elixir-format
 msgid "Sign in"
 msgstr ""
 
-#: lib/mercator_web/components/layouts.ex:283
+#: lib/mercator_web/components/layouts.ex:287
 #: lib/mercator_web/live/sign_out_live.ex:18
 #: lib/mercator_web/live/sign_out_live.ex:21
 #, elixir-autogen, elixir-format
 msgid "Sign out"
 msgstr ""
 
-#: lib/mercator_web/components/layouts.ex:542
+#: lib/mercator_web/components/layouts.ex:546
 #, elixir-autogen, elixir-format
 msgid "Something went wrong!"
 msgstr ""
 
-#: lib/mercator_web/components/layouts.ex:527
+#: lib/mercator_web/components/layouts.ex:531
 #, elixir-autogen, elixir-format
 msgid "We can't find the internet"
 msgstr ""
@@ -96,32 +96,32 @@ msgstr ""
 msgid "close"
 msgstr ""
 
-#: lib/mercator_web/live/account_live.ex:76
+#: lib/mercator_web/live/account_live.ex:77
 #, elixir-autogen, elixir-format
 msgid "After changing your password you will be signed out on all devices."
 msgstr ""
 
-#: lib/mercator_web/live/account_live.ex:74
-#: lib/mercator_web/live/account_live.ex:100
+#: lib/mercator_web/live/account_live.ex:75
+#: lib/mercator_web/live/account_live.ex:105
 #, elixir-autogen, elixir-format
 msgid "Change password"
 msgstr ""
 
-#: lib/mercator_web/live/account_live.ex:87
+#: lib/mercator_web/live/account_live.ex:92
 #, elixir-autogen, elixir-format
 msgid "Current password"
 msgstr ""
 
-#: lib/mercator_web/components/layouts.ex:477
-#: lib/mercator_web/live/account_live.ex:62
+#: lib/mercator_web/components/layouts.ex:481
+#: lib/mercator_web/live/account_live.ex:63
 #: lib/mercator_web/live/admin/user_index_live.ex:48
 #, elixir-autogen, elixir-format
 msgid "Language"
 msgstr ""
 
-#: lib/mercator_web/components/layouts.ex:271
+#: lib/mercator_web/components/layouts.ex:275
 #: lib/mercator_web/live/account_live.ex:18
-#: lib/mercator_web/live/account_live.ex:33
+#: lib/mercator_web/live/account_live.ex:34
 #: lib/mercator_web/live/addresses_live.ex:100
 #: lib/mercator_web/live/offers_live.ex:37
 #: lib/mercator_web/live/orders_live.ex:36
@@ -130,7 +130,7 @@ msgid "My account"
 msgstr ""
 
 #: lib/mercator_web/components/auth_components.ex:21
-#: lib/mercator_web/live/account_live.ex:57
+#: lib/mercator_web/live/account_live.ex:58
 #: lib/mercator_web/live/addresses_live.ex:180
 #: lib/mercator_web/live/admin/category_tree_live.ex:295
 #: lib/mercator_web/live/admin/product_configurator_tab.ex:392
@@ -146,28 +146,28 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
-#: lib/mercator_web/live/account_live.ex:92
+#: lib/mercator_web/live/account_live.ex:97
 #, elixir-autogen, elixir-format
 msgid "New password"
 msgstr ""
 
-#: lib/mercator_web/live/account_live.ex:58
+#: lib/mercator_web/live/account_live.ex:59
 #: lib/mercator_web/live/chat_live.ex:417
 #, elixir-autogen, elixir-format
 msgid "Phone"
 msgstr ""
 
-#: lib/mercator_web/live/account_live.ex:50
+#: lib/mercator_web/live/account_live.ex:51
 #, elixir-autogen, elixir-format
 msgid "Profile"
 msgstr ""
 
-#: lib/mercator_web/live/account_live.ex:97
+#: lib/mercator_web/live/account_live.ex:102
 #, elixir-autogen, elixir-format
 msgid "Repeat new password"
 msgstr ""
 
-#: lib/mercator_web/live/account_live.ex:66
+#: lib/mercator_web/live/account_live.ex:67
 #: lib/mercator_web/live/addresses_live.ex:209
 #: lib/mercator_web/live/admin/category_tree_live.ex:315
 #: lib/mercator_web/live/admin/gtc_live.ex:209
@@ -183,17 +183,17 @@ msgstr ""
 #: lib/mercator_web/live/admin/product_variants_tab.ex:358
 #: lib/mercator_web/live/admin/product_variants_tab.ex:407
 #: lib/mercator_web/live/admin/tax_class_live.ex:164
-#: lib/mercator_web/live/admin/user_edit_live.ex:87
+#: lib/mercator_web/live/admin/user_edit_live.ex:93
 #, elixir-autogen, elixir-format
 msgid "Save"
 msgstr ""
 
-#: lib/mercator_web/live/account_live.ex:145
+#: lib/mercator_web/live/account_live.ex:150
 #, elixir-autogen, elixir-format
 msgid "Your password has been changed. Please sign in again."
 msgstr ""
 
-#: lib/mercator_web/live/account_live.ex:122
+#: lib/mercator_web/live/account_live.ex:127
 #, elixir-autogen, elixir-format
 msgid "Your profile has been saved."
 msgstr ""
@@ -220,7 +220,7 @@ msgstr ""
 msgid "Content manager"
 msgstr ""
 
-#: lib/mercator_web/live/admin/user_edit_live.ex:57
+#: lib/mercator_web/live/admin/user_edit_live.ex:58
 #, elixir-autogen, elixir-format
 msgid "Customers have no role. Staff members can have several roles."
 msgstr ""
@@ -248,13 +248,13 @@ msgstr ""
 msgid "Product manager"
 msgstr ""
 
-#: lib/mercator_web/live/admin/user_edit_live.ex:55
+#: lib/mercator_web/live/admin/user_edit_live.ex:56
 #: lib/mercator_web/live/admin/user_index_live.ex:47
 #, elixir-autogen, elixir-format
 msgid "Roles"
 msgstr ""
 
-#: lib/mercator_web/live/admin/user_edit_live.ex:130
+#: lib/mercator_web/live/admin/user_edit_live.ex:137
 #, elixir-autogen, elixir-format
 msgid "Roles saved."
 msgstr ""
@@ -270,13 +270,13 @@ msgstr ""
 msgid "Sales manager"
 msgstr ""
 
-#: lib/mercator_web/live/admin/user_edit_live.ex:31
+#: lib/mercator_web/live/admin/user_edit_live.ex:32
 #, elixir-autogen, elixir-format
 msgid "User not found."
 msgstr ""
 
 #: lib/mercator_web/admin_nav.ex:86
-#: lib/mercator_web/live/admin/user_edit_live.ex:47
+#: lib/mercator_web/live/admin/user_edit_live.ex:48
 #: lib/mercator_web/live/admin/user_index_live.ex:19
 #: lib/mercator_web/live/admin/user_index_live.ex:35
 #, elixir-autogen, elixir-format
@@ -596,9 +596,9 @@ msgstr[1] ""
 msgid "No products found."
 msgstr ""
 
-#: lib/mercator_web/components/layouts.ex:73
-#: lib/mercator_web/components/layouts.ex:74
-#: lib/mercator_web/components/layouts.ex:81
+#: lib/mercator_web/components/layouts.ex:76
+#: lib/mercator_web/components/layouts.ex:77
+#: lib/mercator_web/components/layouts.ex:84
 #: lib/mercator_web/live/search_live.ex:16
 #: lib/mercator_web/live/search_live.ex:62
 #, elixir-autogen, elixir-format
@@ -678,13 +678,13 @@ msgstr ""
 msgid "%{active} active, %{drafts} drafts"
 msgstr ""
 
-#: lib/mercator_web/components/layouts.ex:203
+#: lib/mercator_web/components/layouts.ex:206
 #, elixir-autogen, elixir-format
 msgid "Admin"
 msgstr ""
 
 #: lib/mercator_web/admin_nav.ex:77
-#: lib/mercator_web/components/layouts.ex:279
+#: lib/mercator_web/components/layouts.ex:283
 #, elixir-autogen, elixir-format
 msgid "Administration"
 msgstr ""
@@ -699,8 +699,8 @@ msgstr ""
 msgid "Categories"
 msgstr ""
 
-#: lib/mercator_web/components/layouts.ex:159
-#: lib/mercator_web/components/layouts.ex:227
+#: lib/mercator_web/components/layouts.ex:162
+#: lib/mercator_web/components/layouts.ex:231
 #, elixir-autogen, elixir-format
 msgid "Close menu"
 msgstr ""
@@ -712,8 +712,8 @@ msgstr ""
 msgid "Dashboard"
 msgstr ""
 
-#: lib/mercator_web/components/layouts.ex:53
-#: lib/mercator_web/components/layouts.ex:192
+#: lib/mercator_web/components/layouts.ex:55
+#: lib/mercator_web/components/layouts.ex:195
 #: lib/mercator_web/live/admin/page_edit_live.ex:487
 #, elixir-autogen, elixir-format
 msgid "Menu"
@@ -724,7 +724,7 @@ msgstr ""
 msgid "Overview"
 msgstr ""
 
-#: lib/mercator_web/components/layouts.ex:210
+#: lib/mercator_web/components/layouts.ex:214
 #, elixir-autogen, elixir-format
 msgid "Shop"
 msgstr ""
@@ -1702,7 +1702,7 @@ msgstr ""
 msgid "This tax class is still used by products."
 msgstr ""
 
-#: lib/mercator_web/components/layouts.ex:353
+#: lib/mercator_web/components/layouts.ex:357
 #, elixir-autogen, elixir-format
 msgctxt "shop navigation"
 msgid "Products"
@@ -1718,7 +1718,7 @@ msgstr ""
 msgid "Added to the basket."
 msgstr ""
 
-#: lib/mercator_web/components/layouts.ex:89
+#: lib/mercator_web/components/layouts.ex:92
 #: lib/mercator_web/live/admin/desk_live.ex:891
 #: lib/mercator_web/live/basket_live.ex:19
 #: lib/mercator_web/live/basket_live.ex:63
@@ -1955,7 +1955,7 @@ msgstr ""
 msgid "Malta"
 msgstr ""
 
-#: lib/mercator_web/live/account_live.ex:43
+#: lib/mercator_web/live/account_live.ex:44
 #: lib/mercator_web/live/addresses_live.ex:17
 #: lib/mercator_web/live/addresses_live.ex:103
 #, elixir-autogen, elixir-format
@@ -2054,17 +2054,17 @@ msgstr ""
 msgid "You have not saved any addresses yet."
 msgstr ""
 
-#: lib/mercator_web/live/admin/user_edit_live.ex:149
+#: lib/mercator_web/live/admin/user_edit_live.ex:157
 #, elixir-autogen, elixir-format
 msgid "Could not save the payment settings."
 msgstr ""
 
-#: lib/mercator_web/live/admin/user_edit_live.ex:107
+#: lib/mercator_web/live/admin/user_edit_live.ex:114
 #, elixir-autogen, elixir-format
 msgid "For known customers, e.g. trade customers. Others pay in advance or on pickup."
 msgstr ""
 
-#: lib/mercator_web/live/admin/user_edit_live.ex:104
+#: lib/mercator_web/live/admin/user_edit_live.ex:111
 #, elixir-autogen, elixir-format
 msgid "May pay by invoice"
 msgstr ""
@@ -2074,19 +2074,19 @@ msgstr ""
 #: lib/mercator_web/documents.ex:96
 #: lib/mercator_web/live/admin/order_index_live.ex:137
 #: lib/mercator_web/live/admin/order_show_live.ex:199
-#: lib/mercator_web/live/admin/user_edit_live.ex:95
+#: lib/mercator_web/live/admin/user_edit_live.ex:102
 #: lib/mercator_web/live/order_live.ex:136
 #, elixir-autogen, elixir-format
 msgid "Payment"
 msgstr ""
 
-#: lib/mercator_web/live/admin/user_edit_live.ex:146
+#: lib/mercator_web/live/admin/user_edit_live.ex:154
 #, elixir-autogen, elixir-format
 msgid "Payment settings saved."
 msgstr ""
 
 #: lib/mercator_web/admin_nav.ex:72
-#: lib/mercator_web/components/layouts.ex:144
+#: lib/mercator_web/components/layouts.ex:147
 #: lib/mercator_web/live/admin/gtc_live.ex:23
 #: lib/mercator_web/live/admin/gtc_live.ex:126
 #: lib/mercator_web/live/admin/gtc_live.ex:198
@@ -2454,8 +2454,8 @@ msgid_plural "%{count} items"
 msgstr[0] ""
 msgstr[1] ""
 
-#: lib/mercator_web/components/layouts.ex:273
-#: lib/mercator_web/live/account_live.ex:37
+#: lib/mercator_web/components/layouts.ex:277
+#: lib/mercator_web/live/account_live.ex:38
 #: lib/mercator_web/live/order_live.ex:107
 #: lib/mercator_web/live/orders_live.ex:20
 #: lib/mercator_web/live/orders_live.ex:38
@@ -2473,27 +2473,27 @@ msgstr ""
 msgid "You have not placed any orders yet."
 msgstr ""
 
-#: lib/mercator_web/components/layouts.ex:589
+#: lib/mercator_web/components/layouts.ex:593
 #, elixir-autogen, elixir-format
 msgid "Dark theme"
 msgstr ""
 
-#: lib/mercator_web/components/layouts.ex:580
+#: lib/mercator_web/components/layouts.ex:584
 #, elixir-autogen, elixir-format
 msgid "Light theme"
 msgstr ""
 
-#: lib/mercator_web/components/layouts.ex:469
+#: lib/mercator_web/components/layouts.ex:473
 #, elixir-autogen, elixir-format
 msgid "More"
 msgstr ""
 
-#: lib/mercator_web/components/layouts.ex:571
+#: lib/mercator_web/components/layouts.ex:575
 #, elixir-autogen, elixir-format
 msgid "System theme"
 msgstr ""
 
-#: lib/mercator_web/components/layouts.ex:481
+#: lib/mercator_web/components/layouts.ex:485
 #, elixir-autogen, elixir-format
 msgid "Theme"
 msgstr ""
@@ -2530,6 +2530,7 @@ msgstr ""
 msgid "Confirm"
 msgstr ""
 
+#: lib/mercator_web/components/demo_components.ex:111
 #: lib/mercator_web/documents.ex:64
 #: lib/mercator_web/live/admin/conversation_archive_live.ex:129
 #: lib/mercator_web/live/admin/desk_live.ex:1035
@@ -2710,8 +2711,8 @@ msgctxt "order state"
 msgid "Ready for pickup"
 msgstr ""
 
-#: lib/mercator_web/components/layouts.ex:299
-#: lib/mercator_web/components/layouts.ex:300
+#: lib/mercator_web/components/layouts.ex:303
+#: lib/mercator_web/components/layouts.ex:304
 #: lib/mercator_web/live/payment_simulator_live.ex:267
 #: lib/mercator_web/live/payment_simulator_live.ex:288
 #: lib/mercator_web/live/payment_simulator_live.ex:326
@@ -3450,7 +3451,7 @@ msgstr ""
 msgid "Icon in the navigation"
 msgstr ""
 
-#: lib/mercator_web/components/layouts.ex:378
+#: lib/mercator_web/components/layouts.ex:382
 #, elixir-autogen, elixir-format
 msgid "Information"
 msgstr ""
@@ -4226,8 +4227,8 @@ msgstr ""
 msgid "Back to the offer"
 msgstr ""
 
-#: lib/mercator_web/components/layouts.ex:276
-#: lib/mercator_web/live/account_live.ex:40
+#: lib/mercator_web/components/layouts.ex:280
+#: lib/mercator_web/live/account_live.ex:41
 #: lib/mercator_web/live/offer_live.ex:48
 #: lib/mercator_web/live/offers_live.ex:21
 #: lib/mercator_web/live/offers_live.ex:39
@@ -4903,6 +4904,7 @@ msgstr ""
 msgid "This provider cannot be used."
 msgstr ""
 
+#: lib/mercator_web/components/demo_components.ex:82
 #: lib/mercator_web/live/admin/payment_provider_live.ex:117
 #, elixir-autogen, elixir-format
 msgid "Use"
@@ -5166,4 +5168,44 @@ msgstr ""
 #: lib/mercator_web/live/payment_simulator_live.ex:114
 #, elixir-autogen, elixir-format
 msgid "User number or PIN is wrong. Please use the test login."
+msgstr ""
+
+#: lib/mercator_web/components/demo_components.ex:110
+#, elixir-autogen, elixir-format
+msgid "Customer, English"
+msgstr ""
+
+#: lib/mercator_web/components/demo_components.ex:25
+#, elixir-autogen, elixir-format
+msgid "Demo"
+msgstr ""
+
+#: lib/mercator_web/components/demo_components.ex:22
+#, elixir-autogen, elixir-format
+msgid "Demo shop: no real orders, everything is reset every night"
+msgstr ""
+
+#: lib/mercator_web/components/demo_components.ex:53
+#, elixir-autogen, elixir-format
+msgid "Everything is reset every night at 3 o'clock, including accounts you register. Orders are not delivered and payments are simulated."
+msgstr ""
+
+#: lib/mercator_web/live/account_live.ex:80
+#, elixir-autogen, elixir-format
+msgid "The password of a demo account cannot be changed."
+msgstr ""
+
+#: lib/mercator_web/live/admin/user_edit_live.ex:62
+#, elixir-autogen, elixir-format
+msgid "The roles of a public demo account cannot be changed."
+msgstr ""
+
+#: lib/mercator_web/components/demo_components.ex:50
+#, elixir-autogen, elixir-format
+msgid "This is a demo"
+msgstr ""
+
+#: lib/mercator_web/components/demo_components.ex:59
+#, elixir-autogen, elixir-format
+msgid "Try one of the demo accounts, password:"
 msgstr ""

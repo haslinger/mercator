@@ -144,6 +144,7 @@ defmodule MercatorWeb.Router do
 
     # Remove these if you'd like to use your own authentication views
     sign_in_route register_path: "/register",
+                  live_view: MercatorWeb.SignInLive,
                   reset_path: "/reset",
                   auth_routes_prefix: "/auth",
                   gettext_backend: {MercatorWeb.Gettext, "auth"},

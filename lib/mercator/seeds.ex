@@ -6,7 +6,9 @@ defmodule Mercator.Seeds do
   created again, only their demo name is brought up to date, so
   `mix run priv/repo/seeds.exs` can run any number of times.
 
-  All demo users share the password `demo_password/0` and are confirmed.
+  All demo users share the password `demo_password/0` and are confirmed;
+  `run(admin_password: …)` gives administrators a different one (the demo,
+  #45).
   The demo catalogue comes from `Mercator.Seeds.BiberHolz`, demo addresses
   and orders from `Mercator.Seeds.Orders`, CMS pages from `Mercator.Seeds.Pages`,
   conversations and offers from `Mercator.Seeds.Consulting`.
@@ -60,10 +62,15 @@ defmodule Mercator.Seeds do
   @doc "The demo users as attribute maps."
   def demo_users, do: @demo_users
 
-  @doc "Seeds all demo data. Returns the demo users."
-  def run do
+  @doc """
+  Seeds all demo data. Returns the demo users.
+
+  Option `:admin_password`: the password of newly created administrators
+  (default `demo_password/0`).
+  """
+  def run(opts \\ []) do
     Enum.each(@tax_classes, &ensure_tax_class/1)
-    users = Enum.map(@demo_users, &ensure_user/1)
+    users = Enum.map(@demo_users, &ensure_user(&1, opts))
     BiberHolz.run()
     ensure_gtc()
     Orders.run()
@@ -88,12 +95,12 @@ defmodule Mercator.Seeds do
     end
   end
 
-  defp ensure_user(%{email: email} = attrs) do
+  defp ensure_user(%{email: email} = attrs, opts) do
     User
     |> Ash.Query.filter(email == ^email)
     |> Ash.read_one!(authorize?: false)
     |> case do
-      nil -> create_user(attrs)
+      nil -> create_user(attrs, password(attrs, opts))
       user -> sync_user(user, attrs)
     end
   end
@@ -106,14 +113,20 @@ defmodule Mercator.Seeds do
       else: Ash.Seed.update!(user, changes)
   end
 
+  defp password(%{roles: roles}, opts) do
+    if :administrator in roles,
+      do: Keyword.get(opts, :admin_password) || @demo_password,
+      else: @demo_password
+  end
+
   # Seeds bypass the registration action (no confirmation email, no token)
   # and write confirmed users directly.
-  defp create_user(attrs) do
+  defp create_user(attrs, password) do
     Ash.Seed.seed!(
       User,
       Map.merge(
         %{
-          hashed_password: Bcrypt.hash_pwd_salt(@demo_password),
+          hashed_password: Bcrypt.hash_pwd_salt(password),
           confirmed_at: DateTime.utc_now(),
           locale: :de
         },

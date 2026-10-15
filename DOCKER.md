@@ -51,8 +51,8 @@ In `.env` set at least:
 * `BRAND`: one of the brands in `config/brands/`, e.g. `biberholz` (name,
   logo, colours, contact data); empty for the neutral Mercator look.
 * For the demo: `MERCATOR_MODE=demo` and `DEMO_ADMIN_PASSWORD` (the
-  administrator's password, never published). For a customer's shop leave
-  `MERCATOR_MODE` empty.
+  administrator's password, never published; at least 8 characters, and
+  not `change-me`). For a customer's shop leave `MERCATOR_MODE` empty.
 
 `.env` is gitignored, so `git pull` never touches it. It is read when the
 containers start; after changing it, `docker compose up -d` is enough.
@@ -107,17 +107,26 @@ database starts empty and is migrated automatically.
 
 ### Demo data
 
-Until demo mode seeds by itself (phase 8, step 2), seed once by hand:
+With `MERCATOR_MODE=demo` the app seeds itself when it starts with an empty
+database (watch `docker compose logs -f app`; the photos take a minute): the
+Biber Holz catalogue with photos, pages, orders, conversations and offers,
+and the demo users. The administrator `admin@mittenin.at` gets
+`DEMO_ADMIN_PASSWORD` (the app does not start without it); all other demo
+users have the public password `mercator-demo` and are listed on the sign-in
+page. They cannot change their password or roles or reset their password.
+The payment simulator is the active payment provider.
+
+Every night at 03:00 (shop time) the demo is reset: all tables are emptied
+(accounts visitors registered included), uploads are deleted and the demo
+data is seeded again. To reset by hand:
 
 ```sh
-docker compose exec app bin/mercator rpc "Mercator.Release.seed()"
+docker compose exec app bin/mercator rpc "Mercator.Demo.reset()"
 ```
 
-(`rpc` runs it inside the running app; `eval` would start a second one.)
-This creates the Biber Holz catalogue with photos, pages, orders,
-conversations and offers, and the demo users (password `mercator-demo`, see
-README). Change the administrator's password right after, or wait for step 2,
-which takes it from `DEMO_ADMIN_PASSWORD`.
+To seed again without emptying (idempotent):
+`docker compose exec app bin/mercator rpc "Mercator.Release.seed()"`
+(`rpc` runs it inside the running app; `eval` would start a second one).
 
 ## 🔍 Verify
 

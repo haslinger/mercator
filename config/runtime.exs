@@ -36,6 +36,33 @@ end
 
 if time_zone = System.get_env("SHOP_TIME_ZONE") do
   config :mercator, :time_zone, time_zone
+  config :mercator, Oban, timezone: time_zone
+end
+
+# Demo mode (#48, Mercator.Demo): MERCATOR_MODE=demo, empty for a real shop
+case System.get_env("MERCATOR_MODE", "") do
+  "" ->
+    :ok
+
+  "demo" ->
+    config :mercator, :demo_mode, true
+
+    # no real payment in the demo: the simulator is registered (and activated by seeding)
+    providers = Application.get_env(:mercator, :payment_providers, [])
+    config :mercator, :payment_providers, Enum.uniq([Mercator.Payments.Simulator | providers])
+
+    if config_env() == :prod do
+      # the administrator's password is never published (#45)
+      password = System.get_env("DEMO_ADMIN_PASSWORD", "")
+
+      if String.length(password) < 8 or password == "change-me",
+        do: raise("DEMO_ADMIN_PASSWORD must be set (at least 8 characters, not change-me).")
+
+      config :mercator, :demo_admin_password, password
+    end
+
+  other ->
+    raise "unknown MERCATOR_MODE #{inspect(other)}; use demo or leave it empty"
 end
 
 if proxies = System.get_env("TRUSTED_PROXIES") do

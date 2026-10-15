@@ -171,6 +171,12 @@ defmodule Mercator.Payments.Simulator do
     end
   end
 
+  @doc "Forgets all payments (the nightly demo reset)."
+  def clear do
+    if available?(), do: :ets.delete_all_objects(@table)
+    :ok
+  end
+
   # --- the process owning the table ---
 
   @doc false

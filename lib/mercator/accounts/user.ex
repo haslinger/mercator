@@ -79,6 +79,7 @@ defmodule Mercator.Accounts.User do
       require_atomic? false
       accept [:roles]
       validate Mercator.Accounts.Validations.KeepOwnAdminRole
+      validate {Mercator.Accounts.Validations.NotPublicDemoAccount, field: :roles}
     end
 
     update :set_invoice_allowed do
@@ -108,6 +109,7 @@ defmodule Mercator.Accounts.User do
 
       argument :password_confirmation, :string, sensitive?: true, allow_nil?: false
 
+      validate {Mercator.Accounts.Validations.NotPublicDemoAccount, field: :current_password}
       validate confirm(:password, :password_confirmation)
 
       validate {AshAuthentication.Strategy.Password.PasswordValidation,
@@ -219,6 +221,7 @@ defmodule Mercator.Accounts.User do
       end
 
       prepare {Mercator.Accounts.Preparations.RateLimit, bucket: :auth_email}
+      prepare Mercator.Accounts.Preparations.NotPublicDemoAccount
 
       # creates a reset token and invokes the relevant senders
       run {AshAuthentication.Strategy.Password.RequestPasswordReset, action: :get_by_email}

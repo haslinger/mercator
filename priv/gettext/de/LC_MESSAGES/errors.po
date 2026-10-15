@@ -226,3 +226,9 @@ msgstr "muss eine Shop-Seite oder eine http(s)-Adresse sein"
 #, elixir-autogen, elixir-format
 msgid "a simple product has one variant; delete the others first"
 msgstr "ein einfaches Produkt hat eine Variante; löschen Sie zuerst die anderen"
+
+#: lib/mercator/accounts/preparations/not_public_demo_account.ex:18
+#: lib/mercator/accounts/validations/not_public_demo_account.ex:18
+#, elixir-autogen, elixir-format
+msgid "demo accounts cannot be changed"
+msgstr "Demo-Konten können nicht geändert werden"

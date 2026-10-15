@@ -13,10 +13,13 @@ config :mercator, Oban,
   queues: [default: 10],
   lifeline: [rescue_after: {2, :hours}],
   pruner: [max_age: {1, :day}],
-  # times in UTC
+  # times in the shop's time zone (:time_zone; SHOP_TIME_ZONE sets both)
+  timezone: "Europe/Vienna",
   crontab: [
     {"30 2 * * *", Mercator.Sales.Workers.DeleteAbandonedBaskets},
-    {"5 0 * * *", Mercator.Consulting.Workers.ExpireOffers}
+    {"5 0 * * *", Mercator.Consulting.Workers.ExpireOffers},
+    # only does something in demo mode (Mercator.Demo)
+    {"0 3 * * *", Mercator.Demo.Workers.Reset}
   ],
   repo: Mercator.Repo
 

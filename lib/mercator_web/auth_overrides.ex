@@ -26,6 +26,9 @@ defmodule MercatorWeb.AuthOverrides do
 
   # --- Pages -----------------------------------------------------------------
 
+  @doc "CSS class of the pages' root element (also `MercatorWeb.SignInLive`)."
+  def page_class, do: @page
+
   for live <- [SignInLive, ResetLive, ConfirmLive, MagicSignInLive] do
     override live do
       set :root_class, @page

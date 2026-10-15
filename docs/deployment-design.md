@@ -73,8 +73,12 @@ emails become incidents (failed Oban jobs, #105).
 1. Release: `Mercator.Release` (migrate, seed), `Dockerfile`, `.dockerignore`,
    `docker-compose.yml`, `.env.example`, `DOCKER.md`; SMTP in `runtime.exs`; build and run
    the image locally.
-2. Demo mode: `Mercator.Demo`, seeding at start, login page, protection, badge,
-   simulator, nightly reset.
+2. ~~Demo mode~~ *(done 2026-10-15)*: `Mercator.Demo`, seeding at start (a task
+   in the supervision tree), login page (`MercatorWeb.SignInLive` with
+   `MercatorWeb.DemoComponents`), protection (validation/preparation
+   `NotPublicDemoAccount`), badge, simulator registered by runtime.exs and
+   activated by seeding, nightly reset (`Mercator.Demo.Workers.Reset`; Oban cron
+   now runs in the shop's time zone).
 3. On the home server: checkout, `.env`, reverse proxy entry, `docker compose up -d`
    (done by you, with `DOCKER.md`); smoke test.
 4. Phase 7 step 3: Mollie with webhooks against the real domain.

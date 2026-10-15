@@ -5,6 +5,8 @@ defmodule MercatorWeb.Layouts do
   """
   use MercatorWeb, :html
 
+  import MercatorWeb.DemoComponents, only: [demo_badge: 1]
+
   # Embed all files in layouts/* within this module.
   # The default root.html.heex file contains the HTML
   # skeleton of your application, namely HTML headers
@@ -62,6 +64,7 @@ defmodule MercatorWeb.Layouts do
                 {Mercator.Brand.name()}
               </span>
             </.link>
+            <.demo_badge />
           </div>
           <div class="flex-none flex items-center gap-0.5 md:gap-2">
             <form action={~p"/search"} method="get" class="hidden lg:block" id="navbar-search">
@@ -203,6 +206,7 @@ defmodule MercatorWeb.Layouts do
                 {gettext("Admin")}
               </span>
             </.link>
+            <.demo_badge id="admin-demo-badge" />
           </div>
           <div class="flex-none flex items-center gap-0.5 md:gap-2">
             <.link navigate={~p"/"} class="btn btn-ghost btn-sm" id="to-shop">

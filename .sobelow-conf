@@ -3,7 +3,8 @@
 # .sobelow-skips (file paths built by the shop itself, not from requests;
 # uploads are resolved by Mercator.Uploads.resolve/1; Markdown is sanitized;
 # the Content-Security-Policy is set by MercatorWeb.Plugs.ContentSecurityPolicy
-# in its own pipeline). New findings fail the check.
+# in its own pipeline; the demo reset truncates table names read from pg_tables
+# with quote_ident). New findings fail the check.
 [
   verbose: false,
   private: false,

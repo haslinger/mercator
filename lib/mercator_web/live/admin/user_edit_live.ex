@@ -23,6 +23,7 @@ defmodule MercatorWeb.Admin.UserEditLive do
          |> assign(:page_title, to_string(user.email))
          |> assign(:user, user)
          |> assign(:selected_roles, user.roles)
+         |> assign(:demo_account?, Mercator.Demo.public_account?(user))
          |> assign_form()}
 
       {:error, _} ->
@@ -57,35 +58,41 @@ defmodule MercatorWeb.Admin.UserEditLive do
             {gettext("Customers have no role. Staff members can have several roles.")}
           </p>
 
+          <p :if={@demo_account?} class="alert alert-info text-sm" id="demo-roles-note">
+            {gettext("The roles of a public demo account cannot be changed.")}
+          </p>
+
           <.form for={@form} id="roles-form" phx-change="validate" phx-submit="save">
-            <%!-- the hidden field keeps "no roles" submittable --%>
-            <input type="hidden" name="form[roles][]" value="" />
-            <%!-- DaisyUI's .label is inline-flex, so stack the labels explicitly --%>
-            <div class="flex flex-col gap-2 mt-2" id="role-checkboxes">
-              <label :for={role <- Role.values()} class="label text-base-content">
-                <input
-                  type="checkbox"
-                  name="form[roles][]"
-                  value={role}
-                  checked={role in @selected_roles}
-                  class="checkbox checkbox-sm"
-                  id={"role-#{role}"}
-                />
-                {role_label(role)}
-              </label>
-            </div>
+            <fieldset disabled={@demo_account?} class="contents">
+              <%!-- the hidden field keeps "no roles" submittable --%>
+              <input type="hidden" name="form[roles][]" value="" />
+              <%!-- DaisyUI's .label is inline-flex, so stack the labels explicitly --%>
+              <div class="flex flex-col gap-2 mt-2" id="role-checkboxes">
+                <label :for={role <- Role.values()} class="label text-base-content">
+                  <input
+                    type="checkbox"
+                    name="form[roles][]"
+                    value={role}
+                    checked={role in @selected_roles}
+                    class="checkbox checkbox-sm"
+                    id={"role-#{role}"}
+                  />
+                  {role_label(role)}
+                </label>
+              </div>
 
-            <p
-              :for={msg <- Enum.map(@form[:roles].errors, &translate_error/1)}
-              class="mt-2 text-sm text-error"
-              id="roles-error"
-            >
-              {msg}
-            </p>
+              <p
+                :for={msg <- Enum.map(@form[:roles].errors, &translate_error/1)}
+                class="mt-2 text-sm text-error"
+                id="roles-error"
+              >
+                {msg}
+              </p>
 
-            <button type="submit" class="btn btn-primary mt-4" id="save-roles">
-              {gettext("Save")}
-            </button>
+              <button type="submit" class="btn btn-primary mt-4" id="save-roles">
+                {gettext("Save")}
+              </button>
+            </fieldset>
           </.form>
         </div>
       </section>
@@ -130,6 +137,7 @@ defmodule MercatorWeb.Admin.UserEditLive do
          |> put_flash(:info, gettext("Roles saved."))
          |> assign(:user, user)
          |> assign(:selected_roles, user.roles)
+         |> assign(:demo_account?, Mercator.Demo.public_account?(user))
          |> assign_form()}
 
       {:error, form} ->

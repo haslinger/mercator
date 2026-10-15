@@ -233,3 +233,9 @@ msgstr ""
 #, elixir-autogen, elixir-format
 msgid "a simple product has one variant; delete the others first"
 msgstr ""
+
+#: lib/mercator/accounts/preparations/not_public_demo_account.ex:18
+#: lib/mercator/accounts/validations/not_public_demo_account.ex:18
+#, elixir-autogen, elixir-format
+msgid "demo accounts cannot be changed"
+msgstr ""
