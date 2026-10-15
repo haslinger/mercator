@@ -17,7 +17,7 @@ defmodule Mercator.Accounts.User.Senders.SendNewUserConfirmationEmail do
     |> to(to_string(user.email))
     |> subject(subject(opts))
     |> html_body(body(token, opts))
-    |> Mailer.deliver!()
+    |> Mailer.deliver_or_report(:confirmation, user.id)
   end
 
   # `opts[:confirmation_type]` is `:identity_link` when an OAuth2/OIDC

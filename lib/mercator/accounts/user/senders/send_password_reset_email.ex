@@ -17,7 +17,7 @@ defmodule Mercator.Accounts.User.Senders.SendPasswordResetEmail do
     |> to(to_string(user.email))
     |> subject("Reset your password")
     |> html_body(body(token: token))
-    |> Mailer.deliver!()
+    |> Mailer.deliver_or_report(:password_reset, user.id)
   end
 
   defp body(params) do

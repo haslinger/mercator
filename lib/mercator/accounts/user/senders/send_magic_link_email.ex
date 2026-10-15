@@ -25,7 +25,7 @@ defmodule Mercator.Accounts.User.Senders.SendMagicLinkEmail do
     |> to(to_string(email))
     |> subject("Your login link")
     |> html_body(body(token: token, email: email))
-    |> Mailer.deliver!()
+    |> Mailer.deliver_or_report(:magic_link, user_id(user_or_email))
   end
 
   defp body(params) do
@@ -36,4 +36,7 @@ defmodule Mercator.Accounts.User.Senders.SendMagicLinkEmail do
     <p><a href="#{url(~p"/magic_link/#{params[:token]}")}">#{url(~p"/magic_link/#{params[:token]}")}</a></p>
     """
   end
+
+  defp user_id(%{id: id}), do: id
+  defp user_id(_email), do: nil
 end

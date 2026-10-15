@@ -5209,3 +5209,23 @@ msgstr ""
 #, elixir-autogen, elixir-format
 msgid "Try one of the demo accounts, password:"
 msgstr ""
+
+#: lib/mercator/mailer.ex:50
+#, elixir-autogen, elixir-format
+msgid "Confirmation email could not be sent"
+msgstr ""
+
+#: lib/mercator/mailer.ex:40
+#, elixir-autogen, elixir-format
+msgid "Not sent to %{recipients}."
+msgstr ""
+
+#: lib/mercator/mailer.ex:51
+#, elixir-autogen, elixir-format
+msgid "Password reset email could not be sent"
+msgstr ""
+
+#: lib/mercator/mailer.ex:52
+#, elixir-autogen, elixir-format
+msgid "Sign-in link email could not be sent"
+msgstr ""
