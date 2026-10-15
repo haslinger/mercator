@@ -200,6 +200,9 @@ if config_env() == :prod do
         else: [
           verify: :verify_peer,
           cacerts: :public_key.cacerts_get(),
+          # gen_smtp defaults to depth 0 (no intermediate certificate), which
+          # rejects e.g. every Let's Encrypt chain (:max_path_length_reached)
+          depth: 10,
           server_name_indication: String.to_charlist(System.get_env("SMTP_RELAY")),
           customize_hostname_check: [
             match_fun: :public_key.pkix_verify_hostname_match_fun(:https)

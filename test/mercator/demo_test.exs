@@ -71,6 +71,12 @@ defmodule Mercator.DemoTest do
       assert Payments.active() == Simulator
     end
 
+    test "seeding leaves no background jobs (no emails)" do
+      Demo.seed()
+
+      assert all_enqueued() == []
+    end
+
     test "seed_if_empty seeds an empty database only" do
       assert :ok = Demo.seed_if_empty()
       count = length(Ash.read!(User, authorize?: false))

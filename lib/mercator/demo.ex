@@ -15,6 +15,8 @@ defmodule Mercator.Demo do
     * everything is reset every night (`reset/0`,
       `Mercator.Demo.Workers.Reset`).
   """
+  import Ecto.Query, only: [from: 2]
+
   require Logger
 
   alias Mercator.Accounts.User
@@ -55,8 +57,18 @@ defmodule Mercator.Demo do
   Seeds the demo data: users, catalogue, pages, orders, conversations and
   offers, the photos from `:demo_image_dir` if there are any, and activates
   the payment simulator. Idempotent. Returns the demo users.
+
+  Runs in one transaction: all or nothing, and the background jobs seeding
+  creates (emails about the demo conversations and offers) are deleted before
+  Oban can see them, so seeding sends no emails.
   """
   def seed do
+    {:ok, users} = Repo.transaction(&seed_data/0, timeout: :infinity)
+    users
+  end
+
+  defp seed_data do
+    last_job = Repo.one(from j in Oban.Job, select: max(j.id)) || 0
     users = Seeds.run(admin_password: Application.get_env(:mercator, :demo_admin_password))
 
     with dir when is_binary(dir) <- Application.get_env(:mercator, :demo_image_dir),
@@ -65,6 +77,7 @@ defmodule Mercator.Demo do
     end
 
     activate_simulator(users)
+    Repo.delete_all(from j in Oban.Job, where: j.id > ^last_job)
     users
   end
 
@@ -81,17 +94,26 @@ defmodule Mercator.Demo do
   end
 
   @doc """
-  Resets the demo: empties all tables (except the migrations and the
-  background jobs), deletes the uploads and seeds again. Accounts that
-  visitors registered are gone too. Other pending jobs are dropped, except
+  Resets the demo: deletes the uploads, empties all tables (except the
+  migrations and the background jobs) and seeds again, in one transaction
+  (visitors see the old data until it is done). Accounts that visitors
+  registered are gone too. Other pending jobs are dropped, except
   `keep_job_id` (the job running the reset).
   """
   def reset(keep_job_id \\ nil) do
-    Repo.query!("TRUNCATE #{Enum.join(tables(), ", ")} RESTART IDENTITY CASCADE")
-    drop_jobs(keep_job_id)
     clear_uploads()
     Simulator.clear()
-    seed()
+
+    {:ok, _users} =
+      Repo.transaction(
+        fn ->
+          Repo.query!("TRUNCATE #{Enum.join(tables(), ", ")} RESTART IDENTITY CASCADE")
+          drop_jobs(keep_job_id)
+          seed_data()
+        end,
+        timeout: :infinity
+      )
+
     :ok
   end
 
