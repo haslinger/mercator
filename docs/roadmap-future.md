@@ -6,15 +6,17 @@ Questions are numbered globally (`#N`); the numbering is never restarted. When a
 
 ## Next phases
 
-6. **Guided selling** – done 2026-10-15 (see [roadmap-history.md](roadmap-history.md)); still open from it:
-   - postponed: audio/video and screen sharing (#100; possible self-hosted with `ex_webrtc`)
-7. **Online payment – done** (2026-10-15, [payment-design.md](payment-design.md), #108–#113, #128–#130: Mollie only, hosted payment page). Tested by hand on biber.mittenin.at with Mollie's test mode: paying, expiry by webhook, refund on cancel and with the "Erstatten" button, the "payment received" and cancellation emails. Mesonic, Icecat and Bechlem are out of scope (#15).
-8. **Deployment and demo mode – done** (2026-10-15, [deployment-design.md](deployment-design.md), #114–#120): the demo runs at https://biber.mittenin.at on the home server. Smoke test passed: registration with confirmation email (SMTP), order paid with the simulator, the full advice process (chat, recommendation, offer, accepting it from the chat widget, print page). The offer PDF (Typst in the image) works too. Reverse proxy rate limits: see the README.
+Phases 1–8 are done (see [roadmap-history.md](roadmap-history.md)).
+
 9. **Documentation** – planned (#121–#125 decided): the documentation goes into the product itself, as Markdown in the repo (`priv/docs/<locale>/…`, versioned with the code, rendered by `MercatorWeb.Markdown`), German and English with German fallback.
    - **Admin area:** a "Hilfe" section in the sidebar (table of contents, search) plus a "?" on each admin page that opens the matching chapter. Audiences: the shop owner and staff (back office manual by role: administration, sales, sales management, content, products; chapters filtered by the user's roles), operators (deployment, updates, backups, demo; today `DOCKER.md`) and developers (architecture, porting conventions, designs; today `docs/*.md`).
    - Operator and developer chapters are visible to administrators only (#125).
    - **Shop:** generic help for visitors (ordering, account, payment, chat and offers) from the repo at `/help`, linked from the footer, the checkout and the chat; customer-specific content (delivery areas, FAQ, GTC) stays in the CMS (#125).
    - Sources to reuse: `README.md`, `DOCKER.md`, `docs/*-design.md`, the German Rails wiki (`mercator.wiki`, e.g. the sales-process diagram).
+
+## Postponed
+
+- **Audio/video and screen sharing** in the advice chat (#100, from phase 6); possible self-hosted with `ex_webrtc`.
 
 ## Backlog
 
