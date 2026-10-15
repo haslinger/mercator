@@ -755,6 +755,7 @@ msgid "Activate"
 msgstr "Aktivieren"
 
 #: lib/mercator_web/live/admin/category_tree_live.ex:266
+#: lib/mercator_web/live/admin/payment_provider_live.ex:108
 #: lib/mercator_web/live/admin/product_index_live.ex:373
 #: lib/mercator_web/live/admin/product_variants_tab.ex:353
 #, elixir-autogen, elixir-format
@@ -1688,7 +1689,7 @@ msgstr "Steuerklasse gelöscht."
 msgid "Tax class saved."
 msgstr "Steuerklasse gespeichert."
 
-#: lib/mercator_web/admin_nav.ex:88
+#: lib/mercator_web/admin_nav.ex:95
 #: lib/mercator_web/live/admin/tax_class_live.ex:19
 #: lib/mercator_web/live/admin/tax_class_live.ex:93
 #, elixir-autogen, elixir-format
@@ -2106,19 +2107,19 @@ msgstr "Die AGB wurden noch nicht veröffentlicht."
 msgid "Valid from %{date}"
 msgstr "Gültig ab %{date}"
 
-#: lib/mercator/sales/payment_method.ex:11
+#: lib/mercator/sales/payment_method.ex:13
 #, elixir-autogen, elixir-format
 msgctxt "payment method"
 msgid "Invoice"
 msgstr "Rechnung"
 
-#: lib/mercator/sales/payment_method.ex:12
+#: lib/mercator/sales/payment_method.ex:14
 #, elixir-autogen, elixir-format
 msgctxt "payment method"
 msgid "Payment on pickup"
 msgstr "Zahlung bei Abholung"
 
-#: lib/mercator/sales/payment_method.ex:10
+#: lib/mercator/sales/payment_method.ex:12
 #, elixir-autogen, elixir-format
 msgctxt "payment method"
 msgid "Prepayment"
@@ -2286,7 +2287,7 @@ msgstr "Bitte wählen Sie eine Zahlungsart."
 msgid "Please choose a shipping method."
 msgstr "Bitte wählen Sie eine Versandart."
 
-#: lib/mercator/sales/payment.ex:62
+#: lib/mercator/sales/payment.ex:73
 #, elixir-autogen, elixir-format
 msgid "Please pay when you pick up the goods, in cash or by card."
 msgstr "Bitte bezahlen Sie bei der Abholung, bar oder mit Karte."
@@ -2296,7 +2297,7 @@ msgstr "Bitte bezahlen Sie bei der Abholung, bar oder mit Karte."
 msgid "Please remove the items that are no longer available."
 msgstr "Bitte entfernen Sie die Artikel, die nicht mehr verfügbar sind."
 
-#: lib/mercator/sales/payment.ex:42
+#: lib/mercator/sales/payment.ex:53
 #, elixir-autogen, elixir-format
 msgid "Please transfer %{amount}, stating the order number %{number}, to:"
 msgstr "Bitte überweisen Sie %{amount} unter Angabe der Bestellnummer %{number} auf folgendes Konto:"
@@ -2330,7 +2331,7 @@ msgstr "Die genauen Frachtkosten bestätigen wir vor der Lieferung."
 msgid "We deliver to: %{countries}."
 msgstr "Wir liefern nach: %{countries}."
 
-#: lib/mercator/sales/payment.ex:37
+#: lib/mercator/sales/payment.ex:48
 #, elixir-autogen, elixir-format
 msgid "We will confirm the freight costs first. Then please transfer the final amount, stating the order number %{number}, to:"
 msgstr "Wir bestätigen zuerst die Frachtkosten. Bitte überweisen Sie danach den endgültigen Betrag unter Angabe der Bestellnummer %{number} auf folgendes Konto:"
@@ -2346,7 +2347,7 @@ msgstr "Ihre Bestellung finden Sie jederzeit in Ihrem Konto:"
 msgid "You sign in or register in the next step."
 msgstr "Im nächsten Schritt melden Sie sich an oder registrieren sich."
 
-#: lib/mercator/sales/payment.ex:59
+#: lib/mercator/sales/payment.ex:70
 #, elixir-autogen, elixir-format
 msgid "You will receive an invoice with the delivery, payable within 14 days."
 msgstr "Sie erhalten mit der Lieferung eine Rechnung, zahlbar innerhalb von 14 Tagen."
@@ -4833,7 +4834,80 @@ msgctxt "incident state"
 msgid "Resolved"
 msgstr "Erledigt"
 
-#: lib/mercator_web/admin_nav.ex:111
+#: lib/mercator_web/admin_nav.ex:118
 #, elixir-autogen, elixir-format
 msgid "Mailbox (dev)"
 msgstr "Postfach (Dev)"
+
+#: lib/mercator_web/live/admin/payment_provider_live.ex:58
+#, elixir-autogen, elixir-format
+msgid "Choose which provider customers pay online with. Providers are set up for this shop by its operator; payments already started keep their provider."
+msgstr "Wählen Sie, über welchen Anbieter Kunden online bezahlen. Die Anbieter richtet der Betreiber des Shops ein; bereits begonnene Zahlungen behalten ihren Anbieter."
+
+#: lib/mercator_web/live/admin/payment_provider_live.ex:67
+#, elixir-autogen, elixir-format
+msgid "Customers pay by the other payment methods only."
+msgstr "Kunden zahlen nur mit den anderen Zahlungsarten."
+
+#: lib/mercator_web/live/admin/payment_provider_live.ex:66
+#, elixir-autogen, elixir-format
+msgid "No online payment"
+msgstr "Keine Online-Zahlung"
+
+#: lib/mercator_web/live/admin/payment_provider_live.ex:81
+#, elixir-autogen, elixir-format
+msgid "No payment provider is set up for this shop."
+msgstr "Für diesen Shop ist kein Zahlungsanbieter eingerichtet."
+
+#: lib/mercator_web/live/admin/payment_provider_live.ex:106
+#, elixir-autogen, elixir-format
+msgid "Not set up"
+msgstr "Nicht eingerichtet"
+
+#: lib/mercator_web/live/admin/payment_provider_live.ex:37
+#, elixir-autogen, elixir-format
+msgid "Online payment is switched off."
+msgstr "Online-Zahlung ist ausgeschaltet."
+
+#: lib/mercator_web/live/admin/payment_provider_live.ex:36
+#, elixir-autogen, elixir-format
+msgid "Online payment now goes through %{name}."
+msgstr "Online-Zahlungen laufen jetzt über %{name}."
+
+#: lib/mercator/sales/payment.ex:41
+#, elixir-autogen, elixir-format
+msgid "Paid online."
+msgstr "Online bezahlt."
+
+#: lib/mercator_web/admin_nav.ex:88
+#: lib/mercator_web/live/admin/payment_provider_live.ex:17
+#: lib/mercator_web/live/admin/payment_provider_live.ex:56
+#, elixir-autogen, elixir-format
+msgid "Payment providers"
+msgstr "Zahlungsanbieter"
+
+#: lib/mercator/payments/simulator.ex:23
+#, elixir-autogen, elixir-format
+msgid "Simulator (no real payment)"
+msgstr "Simulator (keine echte Zahlung)"
+
+#: lib/mercator_web/live/admin/payment_provider_live.ex:42
+#, elixir-autogen, elixir-format
+msgid "This provider cannot be used."
+msgstr "Dieser Anbieter kann nicht verwendet werden."
+
+#: lib/mercator_web/live/admin/payment_provider_live.ex:117
+#, elixir-autogen, elixir-format
+msgid "Use"
+msgstr "Verwenden"
+
+#: lib/mercator/sales/payment.ex:35
+#, elixir-autogen, elixir-format
+msgid "You pay online with our payment provider. The order is paid as soon as the payment is confirmed."
+msgstr "Sie bezahlen online über unseren Zahlungsanbieter. Die Bestellung ist bezahlt, sobald die Zahlung bestätigt ist."
+
+#: lib/mercator/sales/payment_method.ex:11
+#, elixir-autogen, elixir-format
+msgctxt "payment method"
+msgid "Pay online"
+msgstr "Online bezahlen"

@@ -1,9 +1,10 @@
 defmodule Mercator.Sales.PaymentTest do
-  use ExUnit.Case, async: true
+  # the database: whether online payment is active is a setting (only read here)
+  use Mercator.DataCase, async: true
 
   alias Mercator.Sales.Payment
 
-  test "everybody can pay in advance, on pickup only when picking up" do
+  test "everybody can pay in advance, on pickup only when picking up (no online payment active)" do
     customer = %{invoice_allowed: false}
 
     assert Payment.methods_for(customer, :parcel) == [:prepayment]

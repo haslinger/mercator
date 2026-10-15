@@ -65,3 +65,6 @@ config :phoenix,
 
 # demo pages without photos in tests (Mercator.Seeds.Pages), much faster
 config :mercator, :seed_image_dir, nil
+
+# Online payment: the simulator (no real payment), see Mercator.Payments
+config :mercator, :payment_providers, [Mercator.Payments.Simulator]

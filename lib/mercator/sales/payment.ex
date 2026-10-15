@@ -3,6 +3,7 @@ defmodule Mercator.Sales.Payment do
   Payment methods offered at checkout (#64), configured per deployment with
   `config :mercator, :payment_methods, [:prepayment, :invoice, :on_pickup]`.
 
+  - `:online`: while a payment provider is active (`Mercator.Payments`, #110).
   - `:prepayment`: always; the bank account comes from the brand config.
   - `:invoice`: only for customers approved by staff (`invoice_allowed`).
   - `:on_pickup`: only with the shipping method `:pickup`.
@@ -29,6 +30,16 @@ defmodule Mercator.Sales.Payment do
   Payment instructions for an order, as lines of text in the current
   locale (confirmation page and email).
   """
+  def instructions(%{payment_method: :online, state: state}) when state in [:placed, :confirmed],
+    do: [
+      gettext(
+        "You pay online with our payment provider. The order is paid as soon as the payment is confirmed."
+      )
+    ]
+
+  def instructions(%{payment_method: :online, state: :cancelled}), do: []
+  def instructions(%{payment_method: :online}), do: [gettext("Paid online.")]
+
   def instructions(%{payment_method: :prepayment} = order) do
     amount = MercatorWeb.Format.money(order.gross, Gettext.get_locale(MercatorWeb.Gettext))
 
@@ -61,6 +72,7 @@ defmodule Mercator.Sales.Payment do
   def instructions(%{payment_method: :on_pickup}),
     do: [gettext("Please pay when you pick up the goods, in cash or by card.")]
 
+  defp allowed?(:online, _user, _shipping_method), do: Mercator.Payments.online?()
   defp allowed?(:prepayment, _user, _shipping_method), do: true
   defp allowed?(:invoice, user, _shipping_method), do: user.invoice_allowed == true
   defp allowed?(:on_pickup, _user, shipping_method), do: shipping_method == :pickup

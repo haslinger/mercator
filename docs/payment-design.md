@@ -30,12 +30,21 @@ A behaviour `Mercator.Payments.Provider`, implemented by `Mercator.Payments.Moll
 Statuses are mapped to our own: `open`, `pending`, `paid`, `failed`, `canceled`,
 `expired`, `refunded`.
 
-Config per deployment:
+Providers are registered per deployment in config, with their credentials from the
+environment; **administrators switch** between them in the back office
+(`/admin/payment-providers`, the runtime setting `payment_provider`), or switch online
+payment off. They do not configure anything there (2026-10-15). A payment keeps the
+provider it was started with, so switching never breaks open payments.
 
 ```elixir
-config :mercator, :payment_provider, Mercator.Payments.Mollie
+config :mercator, :payment_providers, [Mercator.Payments.Mollie]
 # runtime.exs: MOLLIE_API_KEY (test_… or live_…), never in the repository
 ```
+
+`Mercator.Payments.Simulator` is a provider without a provider: its payment page is
+part of the shop ("pay / fail / cancel"), payments live in memory. Registered only in
+dev, test and the demo, never in a real shop (customers could "pay" without paying).
+It replaces a separate fake provider in the tests.
 
 HTTP with `Req` (already a dependency); no provider SDK.
 
@@ -94,8 +103,8 @@ Kind `payment`, linked to the order and customer:
 
 ## 7. Testing
 
-- `Mercator.Payments.Fake` (config in tests): payments with scripted statuses, so
-  checkout, return, webhook and refund are tested end to end without network.
+- `Mercator.Payments.Simulator` (registered in tests): checkout, return, webhook and
+  refund are tested end to end without network.
 - The Mollie adapter is tested against stubbed HTTP responses (`Req.Test`).
 - Manually: Mollie test mode (test API key, Mollie's test page to choose "paid",
   "failed", "cancelled", …), first locally (return check), then on the home server
@@ -124,7 +133,8 @@ weight, by volume, with a maximum) can follow.
 ## 9. Steps (one commit each, with tests)
 
 0. Freight costs: fixed amount plus percentage (#112); Biber Holz without estimates.
-1. Provider behaviour, fake provider, `OnlinePayment`, payment method `:online`.
+1. Provider behaviour, simulator, `OnlinePayment`, payment method `:online`, switching
+   providers in the back office.
 2. Checkout redirect, return page, "Pay now" again; order paid by the system.
 3. Mollie adapter (create, fetch, webhook controller) with stubbed tests; manual test
    in test mode locally.

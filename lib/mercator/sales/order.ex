@@ -242,6 +242,12 @@ defmodule Mercator.Sales.Order do
       public? true
       sort inserted_at: :asc
     end
+
+    has_many :online_payments, Mercator.Sales.OnlinePayment do
+      description "Attempts to pay the order online (phase 7)."
+      public? true
+      sort inserted_at: :asc
+    end
   end
 
   aggregates do

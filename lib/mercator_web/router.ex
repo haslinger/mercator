@@ -110,6 +110,7 @@ defmodule MercatorWeb.Router do
       live "/admin/incidents", Admin.IncidentIndexLive, :index
       live "/admin/incidents/new", Admin.IncidentIndexLive, :new
       live "/admin/incidents/:id", Admin.IncidentLive
+      live "/admin/payment-providers", Admin.PaymentProviderLive
       live "/admin/users", Admin.UserIndexLive
       live "/admin/users/:id", Admin.UserEditLive
     end

@@ -33,6 +33,7 @@ defmodule Mercator.Sales do
     resource Mercator.Sales.OrderEvent
 
     resource Mercator.Sales.OrderItem
+    resource Mercator.Sales.OnlinePayment
 
     resource Mercator.Sales.Gtc do
       define :current_gtc, action: :current, not_found_error?: false

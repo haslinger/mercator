@@ -85,6 +85,13 @@ defmodule MercatorWeb.AdminNav do
          ),
          item(gettext("Users"), ~p"/admin/users", "hero-users", "users", [:administrator]),
          item(
+           gettext("Payment providers"),
+           ~p"/admin/payment-providers",
+           "hero-credit-card",
+           "payment-providers",
+           [:administrator]
+         ),
+         item(
            gettext("Tax classes"),
            ~p"/admin/tax-classes",
            "hero-receipt-percent",

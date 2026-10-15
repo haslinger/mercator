@@ -6,6 +6,9 @@ defmodule Mercator.Operations do
   incidents that someone looks into and resolves.
 
   The system reports through `Mercator.Operations.Incidents.report/1`.
+
+  Also the settings staff change at runtime (`Mercator.Operations.Settings`),
+  e.g. the active payment provider.
   """
   use Ash.Domain,
     otp_app: :mercator,
@@ -24,5 +27,7 @@ defmodule Mercator.Operations do
       define :resolve_incident, action: :resolve
       define :reopen_incident, action: :reopen
     end
+
+    resource Mercator.Operations.Setting
   end
 end

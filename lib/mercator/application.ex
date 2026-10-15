@@ -20,6 +20,8 @@ defmodule Mercator.Application do
       {Phoenix.PubSub, name: Mercator.PubSub},
       MercatorWeb.Presence,
       {Mercator.RateLimit, clean_period: :timer.minutes(10)},
+      # in-memory payments of the payment simulator (dev, tests, demo)
+      Mercator.Payments.Simulator,
       # Start a worker by calling: Mercator.Worker.start_link(arg)
       # {Mercator.Worker, arg},
       # Start to serve requests, typically the last entry
