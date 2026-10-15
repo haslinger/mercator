@@ -23,4 +23,4 @@ Smaller improvements noted along the way, not tied to a phase step.
 
 ## Open questions
 
-- *None right now.*
+- **#120** (2026-10-15) The authentication emails (confirmation, password reset, magic link) are sent synchronously inside the action: when SMTP fails, the registration is rolled back, the page crashes and no incident is recorded (seen on the home server). Options: (a) send them through Oban like all other emails (retries, incident at the end), with the token in the job args until pruned (≤ 1 day), or the job stores only the user and builds a fresh link; (b) keep sending directly, catch the error, show a message and report an incident.
