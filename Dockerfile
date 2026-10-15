@@ -44,6 +44,8 @@ RUN mix assets.setup
 
 COPY priv priv
 COPY lib lib
+# the documentation is compiled into the app (Mercator.Docs)
+COPY docs docs
 COPY assets/css assets/css
 COPY assets/js assets/js
 COPY assets/vendor assets/vendor

@@ -9,6 +9,7 @@ Traversal.FileModule: Directory Traversal in `File.mkdir_p!`,lib/mercator/pdf.ex
 Traversal.FileModule: Directory Traversal in `File.mkdir_p`,lib/mercator/catalog/image_processing.ex:23,2D18D66
 Traversal.FileModule: Directory Traversal in `File.open`,lib/mercator/content/changes/store_asset.ex:41,7AA74EF
 Traversal.FileModule: Directory Traversal in `File.open`,lib/mercator/content/file_types.ex:36,74BFAA4
+Traversal.FileModule: Directory Traversal in `File.read!` - lib/mercator/docs/loader.ex:38,lib/mercator/docs/loader.ex:38,694316D
 Traversal.FileModule: Directory Traversal in `File.read`,lib/mercator/pdf.ex:57,6CFFAA2
 Traversal.FileModule: Directory Traversal in `File.rm_rf`,lib/mercator/pdf.ex:28,7EC830
 Traversal.FileModule: Directory Traversal in `File.rm_rf`,lib/mercator/uploads.ex:33,12B6413
