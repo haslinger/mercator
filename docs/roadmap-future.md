@@ -24,7 +24,7 @@ Questions are numbered globally (`#N`); the numbering is never restarted. When a
 
 Smaller improvements noted along the way, not tied to a phase step.
 
-- *Empty right now.*
+- **Demo seeding warns about missed Ash notifications:** `Mercator.Demo.seed/0` runs in a plain `Repo.transaction`, so Ash cannot deliver the notifications of the actions inside (warning in the test output). Harmless for seeding; silence it, e.g. by gathering and dropping them.
 
 ## Open questions
 

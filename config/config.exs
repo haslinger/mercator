@@ -134,12 +134,14 @@ config :mercator, :content_locales, ~w(de en)
 config :elixir, :time_zone_database, Tz.TimeZoneDatabase
 config :mercator, :time_zone, "Europe/Vienna"
 
-# Rate limits (#87) as {count, period in ms}: sign-ins per email address,
-# password reset / magic link emails per address, contact form messages per
-# client IP. See Mercator.RateLimit.
+# Rate limits (#87, #126) as {count, period in ms}: sign-ins per email address
+# and client IP, and per IP; password reset / magic link emails per address and
+# IP, and per address; contact form messages per client IP. See Mercator.RateLimit.
 config :mercator, :rate_limits,
   sign_in: {10, :timer.minutes(15)},
+  sign_in_ip: {30, :timer.minutes(15)},
   auth_email: {3, :timer.minutes(15)},
+  auth_email_total: {10, :timer.hours(1)},
   contact: {5, :timer.hours(1)}
 
 # Guided selling (#95): seconds a customer waits for a consultant before the

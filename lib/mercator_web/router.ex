@@ -26,6 +26,11 @@ defmodule MercatorWeb.Router do
     plug MercatorWeb.Plugs.ContentSecurityPolicy
   end
 
+  # the client IP for the rate limits of sign-in and auth emails (#126)
+  pipeline :auth_context do
+    plug MercatorWeb.Plugs.AuthContext
+  end
+
   pipeline :api do
     plug :accepts, ["json"]
     plug :load_from_bearer
@@ -133,7 +138,7 @@ defmodule MercatorWeb.Router do
   end
 
   scope "/", MercatorWeb do
-    pipe_through [:browser, :csp]
+    pipe_through [:browser, :csp, :auth_context]
 
     get "/checkout/sign-in", CheckoutController, :sign_in
     auth_routes AuthController, Mercator.Accounts.User, path: "/auth"

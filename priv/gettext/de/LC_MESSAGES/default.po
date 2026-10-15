@@ -5229,3 +5229,28 @@ msgstr "E-Mail mit Anmeldelink konnte nicht gesendet werden"
 #, elixir-autogen, elixir-format
 msgid "Open PDF"
 msgstr "PDF öffnen"
+
+#: lib/mercator/accounts/preparations/rate_limit.ex:66
+#, elixir-autogen, elixir-format
+msgid "Last attempt for %{email}."
+msgstr "Letzter Versuch für %{email}."
+
+#: lib/mercator/accounts/preparations/rate_limit.ex:62
+#, elixir-autogen, elixir-format
+msgid "Rate limit reached: %{what} from %{ip}"
+msgstr "Limit erreicht: %{what} von %{ip}"
+
+#: lib/mercator/accounts/preparations/rate_limit.ex:73
+#, elixir-autogen, elixir-format
+msgid "sign-in attempts"
+msgstr "Anmeldeversuche"
+
+#: lib/mercator/accounts/preparations/rate_limit.ex:74
+#, elixir-autogen, elixir-format
+msgid "sign-in emails"
+msgstr "Anmelde-E-Mails"
+
+#: lib/mercator/accounts/preparations/rate_limit.ex:64
+#, elixir-autogen, elixir-format
+msgid "unknown IP"
+msgstr "unbekannter IP"

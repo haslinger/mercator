@@ -3,7 +3,8 @@ defmodule MercatorWeb.SignInLive do
   The sign-in, register and password-reset page: AshAuthentication's
   `SignIn` component (styled by `MercatorWeb.AuthOverrides`) plus, in demo
   mode, the public demo logins (`MercatorWeb.DemoComponents.demo_logins/1`).
-  Mounting and session handling are AshAuthentication's own.
+  Mounting and session handling are AshAuthentication's own; the client IP
+  is added to the forms' context for the rate limits (#126).
   """
   use MercatorWeb, :live_view
 
@@ -13,7 +14,12 @@ defmodule MercatorWeb.SignInLive do
   alias AshAuthentication.Phoenix.SignInLive, as: Base
 
   @impl true
-  defdelegate mount(params, session, socket), to: Base
+  def mount(params, session, socket) do
+    {:ok, socket} = Base.mount(params, session, socket)
+    # the client IP for the rate limits of sign-in and auth emails (#126)
+    client_ip = MercatorWeb.ClientIp.from_socket(socket)
+    {:ok, update(socket, :context, &Map.put(&1, :client_ip, client_ip))}
+  end
 
   @impl true
   defdelegate handle_params(params, uri, socket), to: Base

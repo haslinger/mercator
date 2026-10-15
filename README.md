@@ -104,7 +104,7 @@ Production is configured through environment variables, read in `config/runtime.
 
 ### Reverse proxy and rate limiting
 
-The app limits what it can tell apart itself (`Mercator.RateLimit`, limits in `config/config.exs`): sign-ins per email address, password reset and magic link emails per address, and contact form messages per client IP. Everything that is about the volume of traffic from one IP address belongs at the reverse proxy (e.g. nginx). Recommended there (details to be worked out per deployment):
+The app limits what it can tell apart itself (`Mercator.RateLimit`, limits in `config/config.exs`): sign-ins per email address and client IP (so a bot guessing passwords locks out only itself, not the account's owner, #126) and per client IP for all addresses, password reset and magic link emails per address and IP and per address in total, and contact form messages per client IP. Every limit reached becomes an incident with the client IP. The client IP is only right when `TRUSTED_PROXIES` covers the reverse proxy; otherwise all visitors share the proxy's address and its limits. Everything that is about the volume of traffic from one IP address belongs at the reverse proxy (e.g. nginx). Recommended there (details to be worked out per deployment):
 
 - **A general request rate per client IP** for all routes, with some burst, against floods and scrapers.
 - **A stricter rate per client IP for the authentication pages and endpoints:** `/sign-in`, `/register`, `/reset`, `/auth/…` and `/sign-out`. Registration in particular is only limited here.
