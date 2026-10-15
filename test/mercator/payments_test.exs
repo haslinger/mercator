@@ -62,7 +62,7 @@ defmodule Mercator.PaymentsTest do
       payment = start()
 
       assert payment.status == :open
-      assert payment.checkout_url == "/payments/simulator/#{payment.id}"
+      assert payment.checkout_url =~ ~r{^https?://.+/payments/simulator/#{payment.id}$}
       assert {:ok, %{status: :open}} = Simulator.fetch_payment(payment.id)
 
       assert {:ok, %{status: :paid, method: "eps"}} = Simulator.complete(payment.id, :paid, "eps")
@@ -79,6 +79,29 @@ defmodule Mercator.PaymentsTest do
       {:ok, _paid} = Simulator.complete(payment.id, :paid)
       assert :ok = Simulator.refund(payment.id, payment.amount)
       assert {:ok, %{status: :refunded}} = Simulator.fetch_payment(payment.id)
+    end
+
+    test "paying by card: test cards decide, the rest is checked" do
+      payment = start()
+
+      assert {:error, :unknown_card} = Simulator.pay_by_card(payment.id, "1234", "12/39", "123")
+
+      assert {:error, :invalid_expiry} =
+               Simulator.pay_by_card(payment.id, "4242424242424242", "13/39", "123")
+
+      assert {:error, :invalid_expiry} =
+               Simulator.pay_by_card(payment.id, "4242424242424242", "01/20", "123")
+
+      assert {:error, :invalid_cvc} =
+               Simulator.pay_by_card(payment.id, "4242424242424242", "12/39", "12")
+
+      assert {:ok, %{status: :open}} = Simulator.fetch_payment(payment.id)
+
+      assert {:ok, %{status: :failed}} =
+               Simulator.pay_by_card(payment.id, "4000 0000 0000 0002", "12/39", "123")
+
+      assert {:ok, %{status: :paid, method: "creditcard"}} =
+               Simulator.pay_by_card(start().id, "4242 4242 4242 4242", "12/39", "1234")
     end
 
     test "unknown payments" do

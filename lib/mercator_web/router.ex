@@ -40,6 +40,12 @@ defmodule MercatorWeb.Router do
     get "/*path", UploadController, :show
   end
 
+  # payment providers report status changes here (phase 7): no session, no
+  # CSRF token; the status is always fetched from the provider
+  scope "/payments", MercatorWeb do
+    post "/:provider/webhook", PaymentWebhookController, :create
+  end
+
   scope "/", MercatorWeb do
     pipe_through :browser
 
@@ -81,7 +87,11 @@ defmodule MercatorWeb.Router do
       live "/account/name", NameLive
       live "/account/addresses", AddressesLive
       live "/account/orders", OrdersLive
-      live "/account/orders/:number", OrderLive
+      live "/account/orders/:number", OrderLive, :show
+      # back from the payment provider (phase 7)
+      live "/account/orders/:number/payment", OrderLive, :payment
+      # the payment simulator's "payment page" (dev, tests, demo)
+      live "/payments/simulator/:id", PaymentSimulatorLive
       live "/account/offers", OffersLive
       live "/account/offers/:id", OfferLive
       live "/checkout", CheckoutLive

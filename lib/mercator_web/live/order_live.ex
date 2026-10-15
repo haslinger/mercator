@@ -3,12 +3,16 @@ defmodule MercatorWeb.OrderLive do
   An order of the signed-in customer (`/account/orders/:number`): items,
   totals, payment instructions and addresses. Also the confirmation page
   after checkout.
+
+  Orders paid online (phase 7) can be paid (again) from here; the provider
+  sends the customer back to `/account/orders/:number/payment`, where the
+  status is fetched from the provider before showing the order.
   """
   use MercatorWeb, :live_view
 
   import MercatorWeb.OrderComponents
 
-  alias Mercator.Sales
+  alias Mercator.{Payments, Sales}
   alias Mercator.Sales.Payment
   alias MercatorWeb.Format
 
@@ -16,9 +20,9 @@ defmodule MercatorWeb.OrderLive do
 
   @impl true
   def mount(%{"number" => number}, _session, socket) do
-    case Sales.get_order_by_number(number, actor: socket.assigns.current_user, load: [:items]) do
+    case load_order(number, socket.assigns.current_user) do
       {:ok, order} ->
-        {:ok, socket |> assign(:page_title, order.number) |> assign(:order, order)}
+        {:ok, socket |> assign(:page_title, order.number) |> assign_order(order)}
 
       {:error, _} ->
         {:ok,
@@ -27,6 +31,67 @@ defmodule MercatorWeb.OrderLive do
          |> push_navigate(to: ~p"/account/orders")}
     end
   end
+
+  # back from the payment provider: ask it how the payment ended
+  @impl true
+  def handle_params(_params, _uri, %{assigns: %{live_action: :payment, order: order}} = socket) do
+    if connected?(socket), do: back_from_payment(socket, order), else: {:noreply, socket}
+  end
+
+  def handle_params(_params, _uri, socket), do: {:noreply, socket}
+
+  defp back_from_payment(socket, order) do
+    payment = Payments.sync_latest(order)
+    {:ok, order} = load_order(order.number, socket.assigns.current_user)
+
+    {:noreply,
+     socket
+     |> assign_order(order)
+     |> payment_flash(payment)
+     |> push_patch(to: ~p"/account/orders/#{order.number}", replace: true)}
+  end
+
+  @impl true
+  def handle_event("pay", _params, socket) do
+    case Payments.start(socket.assigns.order) do
+      {:ok, checkout_url} ->
+        {:noreply, redirect(socket, external: checkout_url)}
+
+      {:error, _reason} ->
+        {:noreply,
+         put_flash(
+           socket,
+           :error,
+           gettext("The payment could not be started. Please try again later.")
+         )}
+    end
+  end
+
+  defp load_order(number, user),
+    do: Sales.get_order_by_number(number, actor: user, load: [:items])
+
+  defp assign_order(socket, order) do
+    socket
+    |> assign(:order, order)
+    |> assign(:payable?, Payments.payable?(order))
+    |> assign(:last_payment, Payments.latest(order))
+  end
+
+  defp payment_flash(socket, %{status: :paid}),
+    do: put_flash(socket, :info, gettext("Thank you, your payment has been received."))
+
+  defp payment_flash(socket, %{status: status}) when status in [:open, :pending],
+    do:
+      put_flash(
+        socket,
+        :info,
+        gettext("Your payment is being processed. We will confirm it by email.")
+      )
+
+  defp payment_flash(socket, %{status: _failed}),
+    do: put_flash(socket, :error, gettext("The payment was not completed. You can try again."))
+
+  defp payment_flash(socket, nil), do: socket
 
   @impl true
   def render(assigns) do
@@ -70,6 +135,25 @@ defmodule MercatorWeb.OrderLive do
             <div class="card-body gap-1">
               <h2 class="card-title">{gettext("Payment")}: {Payment.label(@order.payment_method)}</h2>
               <p :for={line <- Payment.instructions(@order)} class="first:mb-1">{line}</p>
+              <p
+                :if={
+                  (@payable? and @last_payment) &&
+                    @last_payment.status in [:failed, :canceled, :expired]
+                }
+                class="text-sm text-error"
+                id="payment-not-completed"
+              >
+                {gettext("The last payment was not completed.")}
+              </p>
+              <button
+                :if={@payable?}
+                type="button"
+                phx-click="pay"
+                class="btn btn-primary mt-2 w-fit"
+                id="pay-now"
+              >
+                <.icon name="hero-credit-card" class="size-5" /> {gettext("Pay now")}
+              </button>
             </div>
           </section>
 

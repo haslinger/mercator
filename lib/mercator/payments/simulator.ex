@@ -12,6 +12,7 @@ defmodule Mercator.Payments.Simulator do
 
   use GenServer
   use Gettext, backend: MercatorWeb.Gettext
+  use MercatorWeb, :verified_routes
 
   @table __MODULE__
   @outcomes [:paid, :failed, :canceled, :expired]
@@ -39,7 +40,8 @@ defmodule Mercator.Payments.Simulator do
       method: nil,
       order_number: order.number,
       return_url: urls.return,
-      checkout_url: "/payments/simulator/#{id}"
+      # absolute, like a real provider's page
+      checkout_url: url(~p"/payments/simulator/#{id}")
     }
 
     :ets.insert(@table, {id, payment})
@@ -71,6 +73,51 @@ defmodule Mercator.Payments.Simulator do
 
   @doc "The outcomes one can choose on the simulator page."
   def outcomes, do: @outcomes
+
+  # test card numbers (the same as Stripe's) and how a payment with them ends
+  @test_cards [{"4242424242424242", :paid}, {"4000000000000002", :failed}]
+
+  @doc "The test cards: `[{number, outcome}]`, shown on the simulator page."
+  def test_cards, do: @test_cards
+
+  @doc """
+  Pays an open payment by card (the simulator page): a test card decides
+  the outcome (`test_cards/0`); any other number is `{:error, :unknown_card}`
+  and the payment stays open. Expiry (`MM/YY`, not in the past) and the
+  security code (3 or 4 digits) are checked like a real page would.
+  """
+  def pay_by_card(id, number, expiry, cvc) do
+    number = String.replace(number || "", ~r/\D/, "")
+
+    with :ok <- valid_expiry(expiry),
+         :ok <- valid_cvc(cvc),
+         {:ok, outcome} <- card_outcome(number) do
+      complete(id, outcome, "creditcard")
+    end
+  end
+
+  defp card_outcome(number) do
+    case List.keyfind(@test_cards, number, 0) do
+      {^number, outcome} -> {:ok, outcome}
+      nil -> {:error, :unknown_card}
+    end
+  end
+
+  defp valid_expiry(expiry) do
+    with [_all, month, year] <- Regex.run(~r/^\s*(\d{2})\s*\/\s*(\d{2})\s*$/, expiry || ""),
+         {month, ""} when month in 1..12 <- Integer.parse(month),
+         {year, ""} <- Integer.parse(year),
+         today = Mercator.Clock.today(),
+         false <- {2000 + year, month} < {today.year, today.month} do
+      :ok
+    else
+      _ -> {:error, :invalid_expiry}
+    end
+  end
+
+  defp valid_cvc(cvc) do
+    if Regex.match?(~r/^\s*\d{3,4}\s*$/, cvc || ""), do: :ok, else: {:error, :invalid_cvc}
+  end
 
   @doc """
   Decides an open payment (the simulator page): `:paid` (with a payment

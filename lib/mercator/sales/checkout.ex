@@ -53,7 +53,12 @@ defmodule Mercator.Sales.Checkout do
       Enum.map(shipping_methods, &{&1, shipping_cost(&1, delivery_address, pricing)})
 
     shipping_cost = shipping_cost(shipping_method, shipping_address, pricing)
-    payment_methods = Payment.methods_for(user, shipping_method)
+
+    payment_methods =
+      user
+      |> Payment.methods_for(shipping_method)
+      # online only when the total is final (#112)
+      |> Enum.reject(&(&1 == :online and estimate?(shipping_cost)))
 
     %{
       offer: offer(source),
@@ -333,6 +338,9 @@ defmodule Mercator.Sales.Checkout do
   defp pick(records, id, default?) do
     Enum.find(records, &(&1.id == id)) || Enum.find(records, default?) || List.first(records)
   end
+
+  defp estimate?(%{estimate?: true}), do: true
+  defp estimate?(_shipping_cost), do: false
 
   defp pick_value(values, value) do
     Enum.find(values, &(to_string(&1) == value)) || List.first(values)

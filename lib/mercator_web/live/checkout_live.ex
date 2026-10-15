@@ -86,6 +86,9 @@ defmodule MercatorWeb.CheckoutLive do
     socket = assign(socket, params: params, submitted?: true)
 
     case Checkout.place(socket.assigns.current_user, params, socket.assigns.source) do
+      {:ok, %{payment_method: :online} = order} ->
+        {:noreply, to_payment(socket, order)}
+
       {:ok, order} ->
         {:noreply,
          socket
@@ -94,6 +97,25 @@ defmodule MercatorWeb.CheckoutLive do
 
       {:error, _problems} ->
         {:noreply, load(socket)}
+    end
+  end
+
+  # the order is placed (goods reserved); now to the provider's payment page,
+  # or to the order, where the customer can try again
+  defp to_payment(socket, order) do
+    case Mercator.Payments.start(order) do
+      {:ok, checkout_url} ->
+        redirect(socket, external: checkout_url)
+
+      {:error, _reason} ->
+        socket
+        |> put_flash(
+          :error,
+          gettext(
+            "Your order is placed, but the payment could not be started. Please try again on this page."
+          )
+        )
+        |> push_navigate(to: ~p"/account/orders/#{order.number}")
     end
   end
 
