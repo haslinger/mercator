@@ -54,7 +54,7 @@ defmodule MercatorWeb.AccountLive do
               phx-change="validate_profile"
               phx-submit="save_profile"
             >
-              <.input field={@profile_form[:name]} type="text" label={gettext("Name")} />
+              <.input field={@profile_form[:name]} type="text" label={gettext("Name")} required />
               <.input field={@profile_form[:phone]} type="tel" label={gettext("Phone")} />
               <.input
                 field={@profile_form[:locale]}

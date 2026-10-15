@@ -61,6 +61,19 @@ defmodule MercatorWeb.LiveUserAuth do
     end
   end
 
+  # A signed-in user without a name (signed up by magic link) enters it
+  # first (#102); everything else in the live session waits. The chat panel
+  # (rendered inside every page) is left alone; the page redirects.
+  def on_mount(:require_name, _params, _session, socket) do
+    case socket.assigns[:current_user] do
+      %{name: nil} when socket.view not in [MercatorWeb.NameLive, MercatorWeb.ChatLive] ->
+        {:halt, Phoenix.LiveView.redirect(socket, to: ~p"/account/name")}
+
+      _user_with_name_or_nobody ->
+        {:cont, socket}
+    end
+  end
+
   def on_mount(:live_no_user, _params, _session, socket) do
     if socket.assigns[:current_user] do
       {:halt, Phoenix.LiveView.redirect(socket, to: ~p"/")}
@@ -68,6 +81,13 @@ defmodule MercatorWeb.LiveUserAuth do
       {:cont, assign(socket, :current_user, nil)}
     end
   end
+
+  @doc "`path` if it is a path within the shop (no other host), else `/`."
+  def local_path("/" <> rest = path) do
+    if String.starts_with?(rest, ["/", "\\"]), do: "/", else: path
+  end
+
+  def local_path(_path), do: "/"
 
   defp forbidden(socket) do
     {:halt,

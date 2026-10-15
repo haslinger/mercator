@@ -5,10 +5,10 @@ defmodule Mercator.Accounts.UserProfileTest do
 
   alias Mercator.Accounts
 
-  test "new users have no name or phone and German as language" do
-    user = user_fixture()
+  test "new users have their name, no phone and German as language" do
+    user = user_fixture(name: "Karl Luchs")
 
-    assert is_nil(user.name)
+    assert user.name == "Karl Luchs"
     assert is_nil(user.phone)
     assert user.locale == :de
   end
@@ -26,6 +26,13 @@ defmodule Mercator.Accounts.UserProfileTest do
     assert updated.name == "Maria Huber"
     assert updated.phone == "+43 1 234 56 78"
     assert updated.locale == :en
+  end
+
+  test "the name is mandatory (#102)" do
+    user = user_fixture()
+
+    assert {:error, %Ash.Error.Invalid{}} =
+             Accounts.update_profile(user, %{name: " "}, actor: user)
   end
 
   test "unsupported languages are rejected" do

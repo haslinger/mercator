@@ -49,7 +49,7 @@ defmodule MercatorWeb.Router do
 
     ash_authentication_live_session :authenticated_routes,
       on_mount_prepend: [{MercatorWeb.Locale, :default}, {MercatorWeb.Navigation, :default}],
-      on_mount: [{MercatorWeb.BasketSession, :default}] do
+      on_mount: [{MercatorWeb.BasketSession, :default}, {MercatorWeb.LiveUserAuth, :require_name}] do
       # in each liveview, add one of the following at the top of the module:
       #
       # If an authenticated user must be present:
@@ -70,6 +70,7 @@ defmodule MercatorWeb.Router do
       live "/pages/*path", PageLive
 
       live "/account", AccountLive
+      live "/account/name", NameLive
       live "/account/addresses", AddressesLive
       live "/account/orders", OrdersLive
       live "/account/orders/:number", OrderLive

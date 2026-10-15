@@ -70,6 +70,8 @@ defmodule Mercator.Accounts.User do
     update :update_profile do
       description "Update one's own name, phone number and language."
       accept [:name, :phone, :locale]
+      # the name is mandatory (#102); accounts from a magic link get it afterwards
+      validate present(:name)
     end
 
     update :set_roles do
@@ -186,6 +188,10 @@ defmodule Mercator.Accounts.User do
         allow_nil? false
         sensitive? true
       end
+
+      # the name is mandatory (#102): staff address customers by name, documents need it
+      accept [:name]
+      validate present(:name)
 
       # Sets the email from the argument
       change set_attribute(:email, arg(:email))
@@ -326,7 +332,11 @@ defmodule Mercator.Accounts.User do
     attribute :confirmed_at, :utc_datetime_usec
 
     attribute :name, :string do
-      description "Full name, as the person wants to be addressed."
+      description """
+      Full name, as the person wants to be addressed. Mandatory (#102), but
+      nil until a user who signed up by magic link has entered it.
+      """
+
       public? true
       constraints max_length: 200
     end

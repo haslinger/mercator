@@ -26,8 +26,12 @@ defmodule MercatorWeb.AuthController do
     # If your resource has a different name, update the assign name here (i.e :current_admin)
     |> assign(:current_user, user)
     |> put_flash(:info, message)
-    |> redirect(to: return_to)
+    |> redirect(to: after_sign_in(user, return_to))
   end
+
+  # a new user from a magic link enters their name first (#102)
+  defp after_sign_in(%{name: nil}, return_to), do: ~p"/account/name?#{[return_to: return_to]}"
+  defp after_sign_in(_user, return_to), do: return_to
 
   def failure(conn, activity, reason) do
     message =

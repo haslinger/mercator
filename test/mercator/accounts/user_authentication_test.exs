@@ -21,9 +21,10 @@ defmodule Mercator.Accounts.UserAuthenticationTest do
     end
   end
 
-  defp register(email \\ "kunde@example.com") do
+  defp register(email \\ "kunde@example.com", name \\ "Karl Luchs") do
     Strategy.action(strategy(:password), :register, %{
       "email" => email,
+      "name" => name,
       "password" => @password,
       "password_confirmation" => @password
     })
@@ -49,15 +50,22 @@ defmodule Mercator.Accounts.UserAuthenticationTest do
       assert {:error, _} =
                Strategy.action(strategy(:password), :register, %{
                  "email" => "kunde@example.com",
+                 "name" => "Karl Luchs",
                  "password" => @password,
                  "password_confirmation" => "something else"
                })
+    end
+
+    test "stores the name and rejects a registration without one (#102)" do
+      assert {:ok, %{name: "Karl Luchs"}} = register()
+      assert {:error, _} = register("lena@example.com", "")
     end
 
     test "rejects passwords shorter than 8 characters" do
       assert {:error, _} =
                Strategy.action(strategy(:password), :register, %{
                  "email" => "kunde@example.com",
+                 "name" => "Karl Luchs",
                  "password" => "short",
                  "password_confirmation" => "short"
                })

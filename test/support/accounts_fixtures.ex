@@ -12,11 +12,12 @@ defmodule Mercator.AccountsFixtures do
 
   def unique_email, do: "user#{System.unique_integer([:positive])}@example.com"
 
-  @doc "Registers a user via the password strategy, optionally with staff roles."
+  @doc "Registers a user via the password strategy, optionally with name, email and staff roles."
   def user_fixture(opts \\ []) do
     {:ok, user} =
       Strategy.action(Info.strategy!(User, :password), :register, %{
         "email" => Keyword.get(opts, :email, unique_email()),
+        "name" => Keyword.get(opts, :name, "Erika Muster"),
         "password" => @password,
         "password_confirmation" => @password
       })

@@ -89,6 +89,16 @@ defmodule MercatorWeb.AuthOverrides do
     set :root_class, nil
     set :interstitial_class, "flex flex-wrap justify-between gap-2 mt-4 text-sm"
     set :toggler_class, "link link-primary"
+    # the mandatory name (#102), shown first (see the register form below)
+    set :register_extra_component, &MercatorWeb.AuthComponents.name_field/1
+    set :slot_class, "order-first"
+  end
+
+  # the slot (name field, links) takes part in the form's flex layout, so the
+  # name field can move above the email
+  override Components.Password.RegisterForm do
+    set :form_class, "flex flex-col"
+    set :slot_class, "contents"
   end
 
   for form <- [
