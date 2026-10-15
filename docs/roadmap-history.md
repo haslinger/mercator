@@ -102,6 +102,9 @@ This makes it the test case for **configurable material**: wood species, dimensi
 - **#108** (2026-10-15) **Online payment with Mollie first** (the easier integration: hosted page, webhook sends only an id), Stripe later. Liberapay is not suitable (donations, not shop payments) and dropped; mPAY24 is not used. Test mode costs nothing.
 - **#109** (2026-10-15) The provider's **hosted payment page** first; an embedded payment form later, shown as if it were a third provider.
 - **#110** (2026-10-15) Online payment is **one more payment method** next to prepayment, invoice and payment on pickup; the concrete methods (cards, EPS, …) are chosen in the provider's dashboard. Webhooks are tested on the home server deployment (phase 8). Design: [payment-design.md](payment-design.md).
+- **#111** (2026-10-15) Unpaid online orders are left to staff: no automatic cancellation; goods stay reserved until the order is cancelled.
+- **#112** (2026-10-15) **Freight costs are calculated**, by country zone with a configurable model; first a fixed amount plus a percentage of the goods value. The total is final at checkout, so freight orders can be paid online. Estimates (`estimate: true`) stay possible per deployment, without online payment.
+- **#113** (2026-10-15) Refunds: full refunds on cancellation through the provider; partial refunds in the provider's dashboard.
 - (2026-10-14) **Chat messages are sent with the button only**, not with Enter: many people don't know Shift+Enter for a new line. Enter makes a new line (customer chat and sales desk).
 
 ## Answered questions

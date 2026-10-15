@@ -1,10 +1,11 @@
 # Online payment (phase 7) – design
 
-Draft of 2026-10-15, for discussion. Decisions so far: #108 Mollie first (the easier
+Agreed 2026-10-15. Decisions: #108 Mollie first (the easier
 integration), Stripe later; #109 the provider's hosted payment page first, an embedded
 payment form later (as if it were a third provider); #110 online payment is one more
 payment method, the concrete methods (cards, EPS, …) are chosen in the provider's
-dashboard. mPAY24 and Liberapay are not used.
+dashboard; #111 unpaid orders are left to staff; #112 freight costs are calculated
+(final, not estimated); #113 full refunds only. mPAY24 and Liberapay are not used.
 
 ## 1. Goals
 
@@ -64,7 +65,10 @@ HTTP with `Req` (already a dependency); no provider SDK.
 4. **Paid**: payment `paid`, order `mark_paid`, the order page and the back office show
    it; the customer gets an email "payment received".
 5. **Failed / cancelled / expired**: the order stays `placed`; the order page offers
-   "Pay now" again (a new attempt).
+   "Pay now" again (a new attempt). The order is never cancelled automatically: as
+   long as it is not cancelled, its goods stay reserved; staff decide (#111).
+6. Online payment is offered only when the total is final, i.e. the shipping costs
+   are not an estimate (#112).
 
 Webhooks need a public URL: they are tested on the home server deployment (phase 8);
 locally the return check (2.) is enough to go through the whole flow.
@@ -74,7 +78,8 @@ locally the return check (2.) is enough to go through the whole flow.
 - The order page shows the payment attempts (status, method, provider id with a link
   to the provider's dashboard).
 - Cancelling a paid online order offers "refund" (full amount) through the provider;
-  the refund is recorded on the payment.
+  the refund is recorded on the payment. Partial refunds are done in the provider's
+  dashboard (#113).
 - Unpaid online orders are visible as such in the order list (filter).
 
 ## 6. Incidents (#105)
@@ -96,8 +101,29 @@ Kind `payment`, linked to the order and customer:
   "failed", "cancelled", …), first locally (return check), then on the home server
   with webhooks.
 
-## 8. Steps (one commit each, with tests)
+## 8. Freight costs (#112)
 
+Freight costs are calculated per country zone, so the total is final at checkout and
+can be paid online. First model: a fixed amount plus a percentage of the goods value
+(gross), per rate:
+
+```elixir
+freight: [
+  rates: [
+    %{countries: ~w(AT), gross: "89", percent: "2"},
+    %{countries: ~w(DE IT), gross: "189", percent: "3"}
+  ]
+]
+```
+
+`percent` works for every shipping method (parcel too) and is optional; `free_from`
+stays. `estimate: true` remains possible per deployment; then online payment is not
+offered for those orders, and staff confirm the costs as today. Later models (by
+weight, by volume, with a maximum) can follow.
+
+## 9. Steps (one commit each, with tests)
+
+0. Freight costs: fixed amount plus percentage (#112); Biber Holz without estimates.
 1. Provider behaviour, fake provider, `OnlinePayment`, payment method `:online`.
 2. Checkout redirect, return page, "Pay now" again; order paid by the system.
 3. Mollie adapter (create, fetch, webhook controller) with stubbed tests; manual test
@@ -107,14 +133,13 @@ Kind `payment`, linked to the order and customer:
 5. Phase 8 (Docker on the home server), then the webhook test there.
 6. Later: Stripe; the embedded payment form.
 
-## 9. Open questions
+## 10. Questions (answered 2026-10-15)
 
-- **#111 Unpaid online orders:** the stock is reserved while the customer pays. If a
-  payment never succeeds, cancel the order automatically after a while (e.g. 2 days,
-  configurable, with an email) or leave it to staff?
-- **#112 Freight orders** have only estimated shipping costs at checkout. Offer online
-  payment only when the total is final, and for freight let the customer pay online
-  after staff confirmed the costs ("Pay now" in the confirmation email and on the
-  order page)?
-- **#113 Refunds:** full refunds only (on cancellation), and partial refunds stay in
-  the provider's dashboard?
+- ~~**#111 Unpaid online orders**~~ *(left to staff)* No automatic cancellation; as
+  long as an order is not cancelled, its goods stay reserved. The order list can show
+  unpaid online orders.
+- ~~**#112 Freight orders**~~ *(calculate them)* Freight costs are derived
+  automatically by country with a configurable model, first a fixed amount plus a
+  percentage (section 8), so the total is final and can be paid online.
+- ~~**#113 Refunds**~~ *(yes)* Full refunds on cancellation; partial refunds in the
+  provider's dashboard.
