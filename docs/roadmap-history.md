@@ -105,6 +105,10 @@ This makes it the test case for **configurable material**: wood species, dimensi
 - **#111** (2026-10-15) Unpaid online orders are left to staff: no automatic cancellation; goods stay reserved until the order is cancelled.
 - **#112** (2026-10-15) **Freight costs are calculated**, by country zone with a configurable model; first a fixed amount plus a percentage of the goods value. The total is final at checkout, so freight orders can be paid online. Estimates (`estimate: true`) stay possible per deployment, without online payment.
 - **#113** (2026-10-15) Refunds: full refunds on cancellation through the provider; partial refunds in the provider's dashboard.
+- **#114** (2026-10-15) The home server's **existing reverse proxy** does HTTPS for biber.mittenin.at; the container publishes HTTP only.
+- **#115** (2026-10-15) Emails are **really sent by SMTP**, also in the demo.
+- **#116** (2026-10-15) The image is **built on the server** from a git checkout (like pan), no registry.
+- **#117** (2026-10-15) The home server is x86_64 with Ubuntu 24.04 and Docker Compose v2. Design: [deployment-design.md](deployment-design.md).
 - (2026-10-14) **Chat messages are sent with the button only**, not with Enter: many people don't know Shift+Enter for a new line. Enter makes a new line (customer chat and sales desk).
 
 ## Answered questions

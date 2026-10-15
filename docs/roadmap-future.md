@@ -13,7 +13,7 @@ Questions are numbered globally (`#N`); the numbering is never restarted. When a
    - step 4: back office (payment attempts on the order, refund on cancel, unpaid filter), "payment received" email
    - later: Stripe; an embedded payment form as a third provider (#109)
    - Mesonic, Icecat and Bechlem are out of scope (#15).
-8. **Deployment and demo mode:** a Mix release in a **Docker** image with `typst` and a sans font (#24, #104; details such as the Postgres setup and the image registry to be decided in this phase), demo mode `MERCATOR_MODE=demo` with public demo accounts and nightly reset (#44–#48), production email delivery, reverse proxy rate limits (README).
+8. **Deployment and demo mode** – design in progress ([deployment-design.md](deployment-design.md), #114–#117 decided, #118–#119 open): Docker image with `typst` and fonts, built on the home server, behind its reverse proxy; demo mode `MERCATOR_MODE=demo` with public demo accounts and nightly reset (#44–#48); SMTP; reverse proxy rate limits (README).
 
 ## Backlog
 
@@ -23,4 +23,4 @@ Smaller improvements noted along the way, not tied to a phase step.
 
 ## Open questions
 
-- *No open questions right now.*
+- #118–#119 (deployment): see [deployment-design.md](deployment-design.md#7-open-questions).
