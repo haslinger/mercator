@@ -223,7 +223,8 @@ defmodule MercatorWeb.CoreComponents do
           disabled={@rest[:disabled]}
           form={@rest[:form]}
         />
-        <span class="label">
+        <%!-- daisyUI's label does not wrap; long labels must --%>
+        <span class="label whitespace-normal">
           <input
             type="checkbox"
             id={@id}
