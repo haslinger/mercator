@@ -164,12 +164,11 @@ defmodule MercatorWeb.Admin.OrderShowLive do
         </.link>
         <.link
           href={~p"/admin/orders/#{@order.number}/pdf"}
+          target="_blank"
           class="link ml-2"
           id="order-pdf"
         >
-          <.icon name="hero-document-arrow-down" class="size-4" /> {gettext(
-            "Order confirmation (PDF)"
-          )}
+          <.icon name="hero-document-text" class="size-4" /> {gettext("Order confirmation (PDF)")}
         </.link>
         <.link
           navigate={~p"/admin/incidents/new?#{%{order: @order.number}}"}

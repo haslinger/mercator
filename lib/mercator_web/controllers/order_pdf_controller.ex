@@ -18,10 +18,14 @@ defmodule MercatorWeb.OrderPdfController do
   defp send_pdf(conn, {:ok, order}) do
     case Documents.order_pdf(order) do
       {:ok, pdf} ->
-        send_download(conn, {:binary, pdf},
+        # shown in the browser's PDF viewer (a new tab), not saved silently;
+        # the shop's CSP (object-src 'none') would block that viewer
+        conn
+        |> delete_resp_header("content-security-policy")
+        |> send_download({:binary, pdf},
           filename: Documents.order_filename(order),
           content_type: "application/pdf",
-          disposition: :attachment
+          disposition: :inline
         )
 
       {:error, message} ->

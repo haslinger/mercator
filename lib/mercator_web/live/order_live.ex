@@ -120,12 +120,11 @@ defmodule MercatorWeb.OrderLive do
         {gettext("Ordered on %{date}", date: Format.date(@order.inserted_at))}
         <.link
           href={~p"/account/orders/#{@order.number}/pdf"}
+          target="_blank"
           class="link ml-2"
           id="order-pdf"
         >
-          <.icon name="hero-document-arrow-down" class="size-4" /> {gettext(
-            "Order confirmation (PDF)"
-          )}
+          <.icon name="hero-document-text" class="size-4" /> {gettext("Order confirmation (PDF)")}
         </.link>
       </p>
 

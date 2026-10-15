@@ -433,10 +433,11 @@ defmodule MercatorWeb.Admin.OfferEditLive do
               </.link>
               <.link
                 href={~p"/admin/offers/#{@offer.id}/pdf"}
+                target="_blank"
                 class="link"
                 id="pdf-link"
               >
-                <.icon name="hero-document-arrow-down" class="size-4" /> {gettext("Download PDF")}
+                <.icon name="hero-document-text" class="size-4" /> {gettext("Open PDF")}
               </.link>
               <.link
                 navigate={~p"/admin/incidents/new?#{%{offer: @offer.id}}"}

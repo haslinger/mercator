@@ -25,7 +25,10 @@ defmodule MercatorWeb.OrderPdfControllerTest do
     assert "%PDF-" <> _ = response(conn, 200)
 
     assert get_resp_header(conn, "content-disposition") ==
-             [~s(attachment; filename="Auftragsbestaetigung-#{context.order.number}.pdf")]
+             [~s(inline; filename="Auftragsbestaetigung-#{context.order.number}.pdf")]
+
+    # opens in the browser's PDF viewer, which the shop's CSP would block
+    assert get_resp_header(conn, "content-security-policy") == []
   end
 
   test "staff download any order; others get nothing", %{conn: conn} = context do

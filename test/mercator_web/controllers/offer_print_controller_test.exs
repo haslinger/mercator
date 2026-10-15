@@ -62,7 +62,10 @@ defmodule MercatorWeb.OfferPrintControllerTest do
       assert response_content_type(conn, :pdf) =~ "application/pdf"
 
       assert get_resp_header(conn, "content-disposition") ==
-               [~s(attachment; filename="Angebot-#{offer.number}.pdf")]
+               [~s(inline; filename="Angebot-#{offer.number}.pdf")]
+
+      # opens in the browser's PDF viewer, which the shop's CSP would block
+      assert get_resp_header(conn, "content-security-policy") == []
     end
 
     test "staff download drafts; customers cannot use the staff route", %{conn: conn} = context do
