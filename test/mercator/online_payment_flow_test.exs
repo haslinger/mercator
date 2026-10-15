@@ -102,6 +102,40 @@ defmodule Mercator.OnlinePaymentFlowTest do
     assert title =~ "stornierte"
   end
 
+  describe "refund/2" do
+    setup %{order: order} do
+      {:ok, _url} = Payments.start(order)
+      {:ok, _paid} = Simulator.complete(payment_id(order), :paid)
+      {:ok, payment} = Payments.notify(:simulator, payment_id(order))
+      %{payment: payment}
+    end
+
+    test "sales staff refund a paid payment in full", %{order: order, payment: payment} do
+      sales = user_fixture(roles: [:sales])
+
+      assert {:ok, %{status: :refunded, refunded_at: %DateTime{}}} =
+               Payments.refund(payment, sales)
+
+      assert {:ok, %{status: :refunded}} = Simulator.fetch_payment(payment.provider_id)
+      assert {:error, :not_paid} = Payments.refund(Payments.latest(order), sales)
+    end
+
+    test "others may not, and no money moves", %{order: order, payment: payment} do
+      for roles <- [[], [:productmanager]] do
+        assert {:error, :forbidden} = Payments.refund(payment, user_fixture(roles: roles))
+      end
+
+      assert {:error, :forbidden} =
+               Payments.refund(
+                 payment,
+                 order |> Ash.load!(:user, authorize?: false) |> Map.fetch!(:user)
+               )
+
+      assert {:ok, %{status: :paid}} = Simulator.fetch_payment(payment.provider_id)
+      assert %{status: :paid} = Payments.latest(order)
+    end
+  end
+
   test "notifications about unknown payments are incidents" do
     assert {:error, :unknown_payment} = Payments.notify(:simulator, "sim_unknown")
     assert [%{kind: :payment}] = incidents()

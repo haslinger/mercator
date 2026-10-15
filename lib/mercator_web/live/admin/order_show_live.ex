@@ -9,7 +9,7 @@ defmodule MercatorWeb.Admin.OrderShowLive do
 
   import MercatorWeb.OrderComponents
 
-  alias Mercator.Sales
+  alias Mercator.{Payments, Sales}
   alias Mercator.Sales.Changes.RecordStateChange
   alias Mercator.Sales.Payment
   alias MercatorWeb.Format
@@ -58,6 +58,7 @@ defmodule MercatorWeb.Admin.OrderShowLive do
     socket
     |> assign(:order, order)
     |> assign(:email_states, RecordStateChange.email_states())
+    |> assign(:paid_payment, Enum.find(order.online_payments, &(&1.status == :paid)))
     |> assign(
       :next_states,
       Enum.filter(
@@ -67,7 +68,9 @@ defmodule MercatorWeb.Admin.OrderShowLive do
     )
     |> assign(
       :form,
-      to_form(%{"note" => "", "shipping_gross" => "", "notify" => "true"}, as: :change)
+      to_form(%{"note" => "", "shipping_gross" => "", "notify" => "true", "refund" => "true"},
+        as: :change
+      )
     )
   end
 
@@ -81,14 +84,15 @@ defmodule MercatorWeb.Admin.OrderShowLive do
          {:ok, args} <- transition_args(state, order, input),
          {:ok, _order} <-
            apply(Sales, @transitions[state], [order, args, [actor: socket.assigns.current_user]]) do
+      refunded = refund_on_cancel(state, input, socket)
       {:ok, order} = load_order(order.number, socket.assigns.current_user)
+
+      changed =
+        gettext("Order is now: %{state}", state: state_label(state, order.shipping_method))
 
       {:noreply,
        socket
-       |> put_flash(
-         :info,
-         gettext("Order is now: %{state}", state: state_label(state, order.shipping_method))
-       )
+       |> refund_flash(refunded, changed)
        |> assign_order(order)}
     else
       {:error, message} when is_binary(message) ->
@@ -101,6 +105,45 @@ defmodule MercatorWeb.Admin.OrderShowLive do
         {:noreply, put_flash(socket, :error, gettext("The state could not be changed."))}
     end
   end
+
+  def handle_event("refund", %{"id" => id}, socket) do
+    %{order: order, paid_payment: payment, current_user: actor} = socket.assigns
+
+    if (order.state == :cancelled and payment) && payment.id == id do
+      refunded = Payments.refund(payment, actor)
+      {:ok, order} = load_order(order.number, actor)
+
+      {:noreply,
+       socket
+       |> refund_flash(refunded, nil)
+       |> assign_order(order)}
+    else
+      {:noreply, put_flash(socket, :error, gettext("This payment cannot be refunded."))}
+    end
+  end
+
+  # cancelling a paid online order refunds it, unless staff unticked that
+  defp refund_on_cancel(:cancelled, %{"refund" => "false"}, _socket), do: :none
+
+  defp refund_on_cancel(:cancelled, _input, %{assigns: %{paid_payment: %{} = payment}} = socket),
+    do: Payments.refund(payment, socket.assigns.current_user)
+
+  defp refund_on_cancel(_state, _input, _socket), do: :none
+
+  defp refund_flash(socket, refunded, message) do
+    {kind, refund_message} = refund_message(refunded)
+    put_flash(socket, kind, Enum.join(Enum.reject([message, refund_message], &is_nil/1), " "))
+  end
+
+  defp refund_message(:none), do: {:info, nil}
+  defp refund_message({:ok, _payment}), do: {:info, gettext("The online payment was refunded.")}
+
+  defp refund_message({:error, _reason}),
+    do:
+      {:error,
+       gettext(
+         "The online payment could not be refunded; please refund it in the provider's dashboard."
+       )}
 
   defp check_state(nil), do: {:error, gettext("This state change is not possible.")}
   defp check_state(state), do: {:ok, state}
@@ -230,6 +273,7 @@ defmodule MercatorWeb.Admin.OrderShowLive do
                       <th>{gettext("Method")}</th>
                       <th class="text-right">{gettext("Amount")}</th>
                       <th>{gettext("Provider")}</th>
+                      <th></th>
                     </tr>
                   </thead>
                   <tbody>
@@ -267,6 +311,23 @@ defmodule MercatorWeb.Admin.OrderShowLive do
                           {provider_name(payment.provider)}
                         </span>
                       </td>
+                      <td class="text-right">
+                        <button
+                          :if={@order.state == :cancelled and payment.status == :paid}
+                          type="button"
+                          class="btn btn-xs btn-warning"
+                          phx-click="refund"
+                          phx-value-id={payment.id}
+                          data-confirm={
+                            gettext("Refund %{amount} to the customer?",
+                              amount: Format.money(payment.amount, @locale)
+                            )
+                          }
+                          id={"refund-#{payment.id}"}
+                        >
+                          {gettext("Refund")}
+                        </button>
+                      </td>
                     </tr>
                   </tbody>
                 </table>
@@ -299,6 +360,16 @@ defmodule MercatorWeb.Admin.OrderShowLive do
                     "Notes are internal; only the reason for a cancellation is sent to the customer."
                   )}
                 </p>
+                <.input
+                  :if={@paid_payment && :cancelled in @next_states}
+                  field={@form[:refund]}
+                  type="checkbox"
+                  label={
+                    gettext("When cancelling: refund the online payment (%{amount})",
+                      amount: Format.money(@paid_payment.amount, @locale)
+                    )
+                  }
+                />
                 <.input
                   :if={Enum.any?(@next_states, &(&1 in @email_states))}
                   field={@form[:notify]}

@@ -44,7 +44,9 @@ defmodule Mercator.Sales.OnlinePayment do
     end
 
     update :mark_refunded do
+      description "Recorded after the provider accepted the refund (`Mercator.Payments.refund/2`)."
       accept []
+      validate attribute_equals(:status, :paid), message: "only a paid payment can be refunded"
       change set_attribute(:status, :refunded)
       change set_attribute(:refunded_at, &DateTime.utc_now/0)
     end
@@ -57,6 +59,12 @@ defmodule Mercator.Sales.OnlinePayment do
 
     policy action_type(:read) do
       authorize_if expr(order.user_id == ^actor(:id))
+      authorize_if {ActorHasRole, role: :sales}
+      authorize_if {ActorHasRole, role: :sales_manager}
+    end
+
+    # refunds go with cancelling orders, which sales staff do
+    policy action(:mark_refunded) do
       authorize_if {ActorHasRole, role: :sales}
       authorize_if {ActorHasRole, role: :sales_manager}
     end

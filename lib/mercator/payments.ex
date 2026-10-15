@@ -204,7 +204,7 @@ defmodule Mercator.Payments do
   defp store(payment, remote) do
     changes =
       %{
-        status: remote.status,
+        status: status(payment.status, remote.status),
         method: remote[:method],
         dashboard_url: remote[:dashboard_url] || payment.dashboard_url
       }
@@ -215,6 +215,10 @@ defmodule Mercator.Payments do
       Ash.update!(payment, changes, action: :set_status, authorize?: false)
     end
   end
+
+  # a refund is our decision; the provider may still say "paid" until it is processed
+  defp status(:refunded, :paid), do: :refunded
+  defp status(_ours, remote), do: remote
 
   defp settle(%OnlinePayment{status: :paid} = payment) do
     order = Ash.get!(Order, payment.order_id, authorize?: false)
@@ -241,6 +245,39 @@ defmodule Mercator.Payments do
   end
 
   defp settle(payment), do: payment
+
+  @doc """
+  Refunds a paid payment in full through its provider (#113) and records it.
+  The actor must be allowed to (staff who cancel orders); that is checked
+  before any money moves. A refund the provider refuses is reported as an
+  incident and returns `{:error, :provider}`.
+  """
+  def refund(%OnlinePayment{status: :paid} = payment, actor) do
+    with true <- Ash.can?({payment, :mark_refunded}, actor) || {:error, :forbidden},
+         provider when not is_nil(provider) <- provider(payment.provider),
+         :ok <- refund_at_provider(provider, payment) do
+      Ash.update(payment, %{}, action: :mark_refunded, actor: actor)
+    else
+      nil -> {:error, :provider}
+      error -> error
+    end
+  end
+
+  def refund(%OnlinePayment{}, _actor), do: {:error, :not_paid}
+
+  defp refund_at_provider(provider, payment) do
+    case provider.refund(payment.provider_id, payment.amount) do
+      :ok ->
+        :ok
+
+      {:error, reason} ->
+        payment.order_id
+        |> then(&Ash.get!(Order, &1, authorize?: false))
+        |> report(:refund_failed, reason)
+
+        {:error, :provider}
+    end
+  end
 
   # order events are read by staff: in the shop's language
   defp paid_note(payment), do: Incidents.in_shop_locale(fn -> paid_text(payment) end)
@@ -273,6 +310,7 @@ defmodule Mercator.Payments do
   defp title(:fetch_failed), do: gettext("A payment status could not be fetched")
   defp title(:amount_differs), do: gettext("Paid amount differs from the order total")
   defp title(:cancelled_order_paid), do: gettext("Payment for a cancelled order")
+  defp title(:refund_failed), do: gettext("A payment could not be refunded")
 
   defp description(:cancelled_order_paid, order),
     do:
@@ -283,6 +321,13 @@ defmodule Mercator.Payments do
   defp description(:start_failed, order),
     do:
       gettext("The customer could not pay order %{number} online; it is waiting for payment.",
+        number: order.number
+      )
+
+  defp description(:refund_failed, order),
+    do:
+      gettext(
+        "The payment of order %{number} could not be refunded; please refund it in the provider's dashboard.",
         number: order.number
       )
 

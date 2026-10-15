@@ -6,6 +6,7 @@ defmodule MercatorWeb.MollieWebhookTest do
   import Mercator.CatalogFixtures
   import Mercator.SalesFixtures
 
+  alias Mercator.Operations.Incident
   alias Mercator.{Payments, Sales}
   alias Mercator.Payments.{Mollie, Simulator}
 
@@ -54,6 +55,47 @@ defmodule MercatorWeb.MollieWebhookTest do
     order = Sales.get_order_by_number!(order.number, authorize?: false)
     assert order.state == :paid
     assert %{provider: "mollie", status: :paid, method: "creditcard"} = Payments.latest(order)
+  end
+
+  test "refunded: a later webhook that still says paid changes nothing", ctx do
+    %{conn: conn, order: order} = ctx
+    mollie(order, "open")
+    {:ok, _url} = Payments.start(order)
+    mollie(order, "paid")
+    post(conn, ~p"/payments/mollie/webhook", %{"id" => "tr_flow"})
+
+    sales = user_fixture(roles: [:sales])
+    order = Sales.get_order_by_number!(order.number, authorize?: false)
+    Sales.cancel_order!(order, %{note: "Kunde storniert", notify: false}, actor: sales)
+
+    # Mollie accepts the refund but reports the payment "paid" until it is processed
+    mollie(order, "paid")
+    assert {:ok, %{status: :refunded}} = Payments.refund(Payments.latest(order), sales)
+
+    conn = post(build_conn(), ~p"/payments/mollie/webhook", %{"id" => "tr_flow"})
+    assert response(conn, 200)
+    assert %{status: :refunded} = Payments.latest(order)
+    assert Ash.read!(Incident, authorize?: false) == []
+  end
+
+  test "a refund Mollie refuses is an incident", %{conn: conn, order: order} do
+    mollie(order, "open")
+    {:ok, _url} = Payments.start(order)
+    mollie(order, "paid")
+    post(conn, ~p"/payments/mollie/webhook", %{"id" => "tr_flow"})
+
+    Req.Test.stub(Mollie, fn conn ->
+      conn
+      |> Plug.Conn.put_status(422)
+      |> Req.Test.json(%{"status" => 422, "detail" => "The payment is already refunded"})
+    end)
+
+    assert {:error, :provider} =
+             Payments.refund(Payments.latest(order), user_fixture(roles: [:sales]))
+
+    assert %{status: :paid} = Payments.latest(order)
+    assert [%{kind: :payment, order_id: order_id}] = Ash.read!(Incident, authorize?: false)
+    assert order_id == order.id
   end
 
   test "a webhook for an unknown payment is accepted and changes nothing", %{conn: conn} do

@@ -65,4 +65,44 @@ defmodule MercatorWeb.Admin.OrderPaymentsLiveTest do
       refute has_element?(view, "#order-payments")
     end
   end
+
+  describe "refunds" do
+    setup %{order: order} do
+      %{payment: pay(order, :paid, "eps")}
+    end
+
+    test "cancelling a paid order refunds it", %{conn: conn, order: order, payment: payment} do
+      {:ok, view, _html} = live(conn, ~p"/admin/orders/#{order.number}")
+      assert has_element?(view, ~s(#transition-form input[name="change[refund]"][type=checkbox]))
+
+      view
+      |> form("#transition-form", change: %{note: "Kunde storniert"})
+      |> render_submit(%{"to" => "cancelled"})
+
+      assert has_element?(view, "#order-state", "Storniert")
+      assert has_element?(view, "#payment-#{payment.id}", "Erstattet")
+      refute has_element?(view, "#refund-#{payment.id}")
+      assert {:ok, %{status: :refunded}} = Simulator.fetch_payment(payment.provider_id)
+    end
+
+    test "unticked: no refund, it can be done later", %{
+      conn: conn,
+      order: order,
+      payment: payment
+    } do
+      {:ok, view, _html} = live(conn, ~p"/admin/orders/#{order.number}")
+      refute has_element?(view, "#refund-#{payment.id}")
+
+      view
+      |> form("#transition-form", change: %{note: "Kunde storniert", refund: "false"})
+      |> render_submit(%{"to" => "cancelled"})
+
+      assert has_element?(view, "#payment-#{payment.id}", "Bezahlt")
+      assert {:ok, %{status: :paid}} = Simulator.fetch_payment(payment.provider_id)
+
+      view |> element("#refund-#{payment.id}") |> render_click()
+      assert has_element?(view, "#payment-#{payment.id}", "Erstattet")
+      assert {:ok, %{status: :refunded}} = Simulator.fetch_payment(payment.provider_id)
+    end
+  end
 end
