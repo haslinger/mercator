@@ -8,7 +8,11 @@ Questions are numbered globally (`#N`); the numbering is never restarted. When a
 
 6. **Guided selling** – done 2026-10-15 (see [roadmap-history.md](roadmap-history.md)); still open from it:
    - postponed: audio/video and screen sharing (#100; possible self-hosted with `ex_webrtc`)
-7. **Online payment** – design agreed ([payment-design.md](payment-design.md), #108–#113), implementing section 9 step by step: Mollie first, Stripe later; webhooks are tested after phase 8 on the home server. Mesonic, Icecat and Bechlem are out of scope (#15).
+7. **Online payment** – working with the payment simulator (steps 0–2 of [payment-design.md](payment-design.md) done, #108–#113). Still to do, after phase 8:
+   - step 3: Mollie adapter (needs a Mollie account and `MOLLIE_API_KEY`), webhook test on the home server
+   - step 4: back office (payment attempts on the order, refund on cancel, unpaid filter), "payment received" email
+   - later: Stripe; an embedded payment form as a third provider (#109)
+   - Mesonic, Icecat and Bechlem are out of scope (#15).
 8. **Deployment and demo mode:** a Mix release in a **Docker** image with `typst` and a sans font (#24, #104; details such as the Postgres setup and the image registry to be decided in this phase), demo mode `MERCATOR_MODE=demo` with public demo accounts and nightly reset (#44–#48), production email delivery, reverse proxy rate limits (README).
 
 ## Backlog
