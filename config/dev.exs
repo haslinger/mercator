@@ -83,6 +83,10 @@ config :phoenix_live_view,
 # Disable swoosh api client as it is only required for production adapters.
 config :swoosh, :api_client, false
 
+# The making-of (session logs and metrics, #132) is shown in demo mode;
+# in development always, to see it while working on it
+config :mercator, :making_of, true
+
 # Online payment: the simulator (no real payment) and Mollie (with
 # MOLLIE_API_KEY=test_… in the shell; no webhooks locally), see Mercator.Payments
 config :mercator, :payment_providers, [Mercator.Payments.Simulator, Mercator.Payments.Mollie]

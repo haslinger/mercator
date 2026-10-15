@@ -245,6 +245,17 @@
 }
 .markdown a.anchor::before { content: "#"; }
 .markdown :is(h1, h2, h3, h4):hover a.anchor { opacity: 0.5; }
+/* the making-of sessions: who speaks */
+.markdown.session h3 {
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 2em;
+  padding-top: 0.75em;
+  border-top: 1px solid var(--color-base-300);
+}
+.markdown.session h3[id^="user"] { color: var(--color-primary); }
+.markdown.session h3[id^="claude"] { color: var(--color-secondary); }
 
 /* Markdown editor (OverType): colours of the preview mode from the theme
    (OverType's default is dark blue) and the shop's font instead of Georgia */

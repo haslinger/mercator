@@ -96,6 +96,9 @@ defmodule MercatorWeb.Router do
       # help for shop visitors (phase 9, #125)
       live "/help", HelpLive, :index
       live "/help/:slug", HelpLive, :show
+      # how Mercator was ported with AI (phase 9, #132; demo only)
+      live "/making-of", MakingOfLive, :index
+      live "/making-of/:slug", MakingOfLive, :show
       live "/pages/*path", PageLive
 
       live "/account", AccountLive

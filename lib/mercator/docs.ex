@@ -33,6 +33,17 @@ defmodule Mercator.Docs do
   # a new or deleted source file recompiles the module, too
   def __mix_recompile__?, do: Enum.map(Sources.all(), &elem(&1, 2)) != @source_paths
 
+  @doc """
+  Whether the making-of (#132) is shown: `config :mercator, :making_of`
+  when set, else in demo mode only. Customer shops do not show it.
+  """
+  def making_of? do
+    case Application.get_env(:mercator, :making_of) do
+      nil -> Mercator.Demo.enabled?()
+      enabled? -> enabled?
+    end
+  end
+
   @doc "The parts of the documentation."
   def parts, do: @parts
 

@@ -146,6 +146,14 @@ defmodule MercatorWeb.Layouts do
             <.link navigate={~p"/help"} class="link link-hover" id="help-link">
               {gettext("Help")}
             </.link>
+            <.link
+              :if={Mercator.Docs.making_of?()}
+              navigate={~p"/making-of"}
+              class="link link-hover"
+              id="making-of-link"
+            >
+              Making-of
+            </.link>
             <.link navigate={~p"/terms"} class="link link-hover" id="gtc-link">
               {gettext("Terms and conditions")}
             </.link>
