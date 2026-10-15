@@ -25,19 +25,42 @@ defmodule MercatorWeb.ClientIp do
       "10.0.0.2"
       iex> MercatorWeb.ClientIp.resolve({198, 51, 100, 1}, [{"x-forwarded-for", "203.0.113.7"}])
       "198.51.100.1"
+
+  IPv4 clients of an app listening on IPv6 arrive IPv4-mapped; they count
+  as IPv4 (here the Docker gateway, trusted by default in production):
+
+      iex> MercatorWeb.ClientIp.resolve({0, 0, 0, 0, 0, 0xFFFF, 0x7F00, 1}, [{"x-forwarded-for", "203.0.113.7"}])
+      "203.0.113.7"
+      iex> MercatorWeb.ClientIp.resolve({0, 0, 0, 0, 0, 0xFFFF, 0xC633, 0x6401}, [])
+      "198.51.100.1"
   """
   def resolve(peer, headers) do
-    peer = peer |> :inet.ntoa() |> to_string()
+    peer = peer |> ipv4() |> :inet.ntoa() |> to_string()
 
     if trusted?(peer) do
       headers
       |> Enum.filter(fn {name, _value} -> name == "x-forwarded-for" end)
       |> Enum.flat_map(fn {_name, value} -> String.split(value, ",") end)
-      |> Enum.map(&String.trim/1)
+      |> Enum.map(&(&1 |> String.trim() |> normalize()))
       |> Enum.reject(&trusted?/1)
       |> List.last(peer)
     else
       peer
+    end
+  end
+
+  # The app listens on IPv6 (`::`), so IPv4 clients arrive as IPv4-mapped
+  # IPv6 addresses (`::ffff:172.20.0.1`); written that way they match no IPv4
+  # entry of `:trusted_proxies` (#126). Compare and report them as IPv4.
+  defp ipv4({0, 0, 0, 0, 0, 0xFFFF, ab, cd}),
+    do: {Bitwise.bsr(ab, 8), Bitwise.band(ab, 0xFF), Bitwise.bsr(cd, 8), Bitwise.band(cd, 0xFF)}
+
+  defp ipv4(address), do: address
+
+  defp normalize(ip) do
+    case :inet.parse_address(String.to_charlist(ip)) do
+      {:ok, address} -> address |> ipv4() |> :inet.ntoa() |> to_string()
+      {:error, _} -> ip
     end
   end
 
