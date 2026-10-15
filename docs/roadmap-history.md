@@ -17,6 +17,7 @@ Status as of 2026-10-15:
 
 Small improvements done along the way (from the backlog):
 
+- ~~**Variants combined with a configurator**~~ *(dropped 2026-10-15)*: not done at all; a product is either variants or configurable (#39/#55). For a panel in stock that can also be cut to size, use two related products.
 - ~~**Sign-out confirmation page**~~ *(done 2026-10-14)*: the user menu signs out directly with `DELETE /sign-out`; the confirmation page for `GET /sign-out` is our own translated `MercatorWeb.SignOutLive`.
 
 ## Demo customer: Biber Holz
