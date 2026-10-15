@@ -62,7 +62,7 @@ defmodule MercatorWeb.OfferPrintControllerTest do
       assert response_content_type(conn, :pdf) =~ "application/pdf"
 
       assert get_resp_header(conn, "content-disposition") ==
-               [~s(inline; filename="Angebot-#{offer.number}.pdf")]
+               [~s(attachment; filename="Angebot-#{offer.number}.pdf")]
     end
 
     test "staff download drafts; customers cannot use the staff route", %{conn: conn} = context do
@@ -78,7 +78,7 @@ defmodule MercatorWeb.OfferPrintControllerTest do
 
       assert data.title == "Angebot #{offer.number}"
       assert "Biberweg 7" in data.recipient
-      assert data.intro == "Wie besprochen."
+      assert data.intro == ["Wie besprochen."]
       assert [[_pos, _qty, %{title: "Zirbenbrett"}, _unit, _amount]] = data.rows
       assert %{label: "Gesamt", value: total, strong: true} = List.last(data.sums)
       assert total =~ "240,00"

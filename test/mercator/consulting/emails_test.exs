@@ -118,6 +118,12 @@ defmodule Mercator.Consulting.EmailsTest do
         assert email.to == [{"", to_string(context.customer.email)}]
         assert email.subject =~ offer.number
         assert email.text_body =~ "/account/offers/#{offer.id}"
+
+        # the offer as PDF (#17)
+        assert [%{filename: filename, content_type: "application/pdf", data: "%PDF-" <> _}] =
+                 email.attachments
+
+        assert filename =~ ".pdf"
       end)
     end
 

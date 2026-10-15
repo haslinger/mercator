@@ -17,6 +17,7 @@ Status as of 2026-10-15:
 
 Small improvements done along the way (from the backlog):
 
+- ~~**PDF documents with Typst**~~ *(done 2026-10-15, #17, #104)*: offer PDF ("Download PDF" next to "Drucken") and order confirmation PDF (account and back office order pages), both attached to their emails; rendering errors are logged and the email goes out without the PDF.
 - ~~**Product editor: tabs by product kind**~~ *(done 2026-10-15, #103)*: the kind is changed in its own dialog and saved at once (`Product :change_kind`), so the tabs follow immediately. Simple: "Preis & Lager" with exactly one variant; variants: as before; configurable: "Artikel & Lieferzeit" without prices, plus the configurator.
 - ~~**Start page key for content managers**~~ *(done 2026-10-15)*: the page editor has "Als Startseite verwenden" for published pages (action `:make_start_page`, which moves the key `home` from the previous start page in one transaction). Other keys stay with administrators.
 - ~~**Active entry in the shop sidebar**~~ *(done 2026-10-15)*: the sidebar highlights the page shown (or its closest menu page) and the main category of category and product pages; `@nav` carries the current path and the category trail (`MercatorWeb.Navigation`).

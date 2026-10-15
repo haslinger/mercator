@@ -1,7 +1,7 @@
 defmodule Mercator.Sales.OrderEmail do
   @moduledoc """
   Emails to the customer about an order, in the customer's language (text
-  and HTML, no PDF): the order confirmation (#70) and state changes by staff
+  and HTML; the PDF is attached by the worker): the order confirmation (#70) and state changes by staff
   (#74).
   """
 

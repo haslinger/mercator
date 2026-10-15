@@ -156,6 +156,15 @@ defmodule MercatorWeb.Admin.OrderShowLive do
         >
           {gettext("from an offer")}
         </.link>
+        <.link
+          href={~p"/admin/orders/#{@order.number}/pdf"}
+          class="link ml-2"
+          id="order-pdf"
+        >
+          <.icon name="hero-document-arrow-down" class="size-4" /> {gettext(
+            "Order confirmation (PDF)"
+          )}
+        </.link>
       </p>
 
       <div class="grid gap-6 lg:grid-cols-[1fr_22rem]">

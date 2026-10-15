@@ -102,11 +102,10 @@ defmodule MercatorWeb.OfferLive do
             </.link>
             <.link
               href={~p"/account/offers/#{@offer.id}/pdf"}
-              target="_blank"
               class="btn btn-ghost btn-sm"
               id="pdf-link"
             >
-              <.icon name="hero-document-arrow-down" class="size-4" /> {gettext("Create PDF")}
+              <.icon name="hero-document-arrow-down" class="size-4" /> {gettext("Download PDF")}
             </.link>
             <.link
               :if={@offer.order}

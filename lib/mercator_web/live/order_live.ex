@@ -53,6 +53,15 @@ defmodule MercatorWeb.OrderLive do
       </div>
       <p class="text-sm text-base-content/70">
         {gettext("Ordered on %{date}", date: Format.date(@order.inserted_at))}
+        <.link
+          href={~p"/account/orders/#{@order.number}/pdf"}
+          class="link ml-2"
+          id="order-pdf"
+        >
+          <.icon name="hero-document-arrow-down" class="size-4" /> {gettext(
+            "Order confirmation (PDF)"
+          )}
+        </.link>
       </p>
 
       <div class="grid gap-6 lg:grid-cols-[1fr_22rem]">

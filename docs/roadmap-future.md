@@ -15,7 +15,6 @@ Questions are numbered globally (`#N`); the numbering is never restarted. When a
 
 Smaller improvements noted along the way, not tied to a phase step.
 
-- **PDF documents with Typst** (#17, #104), in progress: offer PDF with "PDF erstellen" next to "Drucken" done; next the order confirmation PDF and the PDFs attached to the offer and confirmation emails.
 
 ## Open questions
 

@@ -43,11 +43,13 @@ defmodule MercatorWeb.Router do
   scope "/", MercatorWeb do
     pipe_through :browser
 
-    # printable offers (#99) and offer PDFs (#17)
+    # printable offers (#99), offer and order PDFs (#17)
     get "/account/offers/:id/print", OfferPrintController, :customer
     get "/account/offers/:id/pdf", OfferPrintController, :customer_pdf
     get "/admin/offers/:id/print", OfferPrintController, :staff
     get "/admin/offers/:id/pdf", OfferPrintController, :staff_pdf
+    get "/account/orders/:number/pdf", OrderPdfController, :show
+    get "/admin/orders/:number/pdf", OrderPdfController, :show
 
     ash_authentication_live_session :authenticated_routes,
       on_mount_prepend: [{MercatorWeb.Locale, :default}, {MercatorWeb.Navigation, :default}],

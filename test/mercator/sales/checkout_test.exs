@@ -94,7 +94,11 @@ defmodule Mercator.Sales.CheckoutTest do
 
     assert_enqueued worker: SendOrderConfirmation, args: %{order_id: order.id}
     assert :ok = perform_job(SendOrderConfirmation, %{order_id: order.id})
-    assert Enum.any?(sent_emails(), &(&1.subject =~ order.number))
+    email = Enum.find(sent_emails(), &(&1.subject =~ order.number))
+
+    # the order confirmation as PDF (#17)
+    assert [%{filename: filename, data: "%PDF-" <> _}] = email.attachments
+    assert filename == "Auftragsbestaetigung-#{order.number}.pdf"
   end
 
   test "order numbers are sequential", %{user: user, board: board} do

@@ -63,7 +63,7 @@ defmodule MercatorWeb.OfferPrintController do
         send_download(conn, {:binary, pdf},
           filename: Documents.offer_filename(offer),
           content_type: "application/pdf",
-          disposition: :inline
+          disposition: :attachment
         )
 
       {:error, message} ->

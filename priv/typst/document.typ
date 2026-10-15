@@ -51,9 +51,11 @@
 #v(1cm)
 #text(size: 16pt, weight: "bold", data.title)
 
-#if data.at("intro", default: none) != none {
+// a text, or lines of text
+#let intro = data.at("intro", default: none)
+#if intro != none {
   v(0.3em)
-  data.intro
+  if type(intro) == array { intro.join(linebreak()) } else { intro }
 }
 
 #v(0.6cm)
@@ -85,13 +87,22 @@
       .map(sum => if sum.at("strong", default: false) {
         (
           grid.hline(stroke: 0.8pt + luma(160)),
-          strong(sum.label),
-          strong(sum.value),
+          grid.cell(inset: (top: 0.45em), strong(sum.label)),
+          grid.cell(inset: (top: 0.45em), strong(sum.value)),
         )
       } else { (sum.label, sum.value) })
       .flatten(),
   )
 }))
+
+// further information, e.g. payment and delivery: a heading and lines
+#for section in data.at("sections", default: ()) {
+  v(0.6cm)
+  block(breakable: false, {
+    strong(section.heading)
+    for line in section.lines [ \ #line ]
+  })
+}
 
 #v(1fr)
 #set text(size: 8pt)

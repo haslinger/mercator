@@ -1,7 +1,7 @@
 defmodule Mercator.Consulting.Workers.SendOfferEmail do
   @moduledoc """
-  Emails about an offer: `"sent"` to the customer, `"approval"` to the
-  sales managers (#98).
+  Emails about an offer: `"sent"` to the customer, with the offer as PDF
+  (#17), `"approval"` to the sales managers (#98).
   """
   use Oban.Worker, queue: :default, max_attempts: 5
 
@@ -9,6 +9,7 @@ defmodule Mercator.Consulting.Workers.SendOfferEmail do
 
   alias Mercator.Accounts.User
   alias Mercator.Consulting.{ConsultingEmail, Offer}
+  alias MercatorWeb.Documents
 
   @doc "Schedules an email about an offer: `:sent` or `:approval`."
   def enqueue(offer_id, kind) when kind in [:sent, :approval],
@@ -16,7 +17,7 @@ defmodule Mercator.Consulting.Workers.SendOfferEmail do
 
   @impl Oban.Worker
   def perform(%Oban.Job{args: %{"offer_id" => id, "kind" => kind}}) do
-    offer = Ash.get!(Offer, id, load: [:customer, :consultant], authorize?: false)
+    offer = Ash.get!(Offer, id, load: [:customer, :consultant, :items], authorize?: false)
 
     case email(offer, kind) do
       nil -> :ok
@@ -24,7 +25,11 @@ defmodule Mercator.Consulting.Workers.SendOfferEmail do
     end
   end
 
-  defp email(%{state: :sent} = offer, "sent"), do: ConsultingEmail.offer_sent(offer)
+  defp email(%{state: :sent} = offer, "sent") do
+    offer
+    |> ConsultingEmail.offer_sent()
+    |> Documents.attach_pdf(Documents.offer_pdf(offer), Documents.offer_filename(offer))
+  end
 
   defp email(%{state: :pending_approval} = offer, "approval") do
     case sales_managers() do
