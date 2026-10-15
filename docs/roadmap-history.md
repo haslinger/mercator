@@ -15,6 +15,8 @@ Status as of 2026-10-15:
 - Also done along the way: header for phones (#72), back button, English routes (#88).
 - **6 Guided selling, done** ([guided-selling-design.md](guided-selling-design.md), #94–#101): chat for customers and visitors, sales desk with availability, countdown and callback requests, customer context, recommendations, links and files as cards, offers (editor, approval above 10 %, revisions, copies, expiry), offers ordered through the checkout, emails, printable offer page, ratings, Biber Holz demo conversations and offers. Postponed: audio/video (#100).
 
+- **7 Online payment, steps 0–3 done** ([payment-design.md](payment-design.md), #108–#113, #128): payment simulator and the Mollie adapter (`Mercator.Payments.Mollie`, API v2 with Req, b957486). Manual test with the test key on 2026-10-15: EPS paid, locally and on biber.mittenin.at. An EPS payment marked "failed" on the server stayed open at Mollie (the customer may try another method) and expired after its one-hour validity. Mollie then called `POST /payments/mollie/webhook` (about 5 minutes after expiry, answered 200), and the customer's order page showed "Die letzte Zahlung wurde nicht abgeschlossen." with "Jetzt bezahlen". Locally there are no webhooks (Mollie refuses `localhost`); the return page syncs the status instead.
+
 Small improvements done along the way (from the backlog):
 
 - ~~**PDF documents with Typst**~~ *(done 2026-10-15, #17, #104)*: offer PDF ("Download PDF" next to "Drucken") and order confirmation PDF (account and back office order pages), both attached to their emails; rendering errors are logged and the email goes out without the PDF.
@@ -100,6 +102,7 @@ This makes it the test case for **configurable material**: wood species, dimensi
 - **#106** (2026-10-15) Administrators see all incidents; sales staff those about a customer, order, offer or conversation, and the ones they reported.
 - **#107** (2026-10-15) Staff can also record incidents by hand.
 - **#108** (2026-10-15) **Online payment with Mollie first** (the easier integration: hosted page, webhook sends only an id), Stripe later. Liberapay is not suitable (donations, not shop payments) and dropped; mPAY24 is not used. Test mode costs nothing.
+- **#128** (2026-10-15) **Mollie is the only payment provider, with its hosted payment page.** Stripe and the embedded payment form are dropped: after the test on biber.mittenin.at, Mollie's integration, webhooks, payment page and dashboard all look professional. Replaces "Stripe later" in #108 and "embedded form later" in #109.
 - **#109** (2026-10-15) The provider's **hosted payment page** first; an embedded payment form later, shown as if it were a third provider.
 - **#110** (2026-10-15) Online payment is **one more payment method** next to prepayment, invoice and payment on pickup; the concrete methods (cards, EPS, …) are chosen in the provider's dashboard. Webhooks are tested on the home server deployment (phase 8). Design: [payment-design.md](payment-design.md).
 - **#111** (2026-10-15) Unpaid online orders are left to staff: no automatic cancellation; goods stay reserved until the order is cancelled.

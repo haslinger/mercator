@@ -1,8 +1,8 @@
 # Online payment (phase 7) – design
 
 Agreed 2026-10-15. Decisions: #108 Mollie first (the easier
-integration), Stripe later; #109 the provider's hosted payment page first, an embedded
-payment form later (as if it were a third provider); #110 online payment is one more
+integration); #109 the provider's hosted payment page; #128 Mollie only: Stripe and
+an embedded payment form are dropped; #110 online payment is one more
 payment method, the concrete methods (cards, EPS, …) are chosen in the provider's
 dashboard; #111 unpaid orders are left to staff; #112 freight costs are calculated
 (final, not estimated); #113 full refunds only. mPAY24 and Liberapay are not used.
@@ -20,7 +20,7 @@ dashboard; #111 unpaid orders are left to staff; #112 freight costs are calculat
 ## 2. Provider interface
 
 A behaviour `Mercator.Payments.Provider`, implemented by `Mercator.Payments.Mollie`
-(later `Stripe`, and the embedded variant):
+and by the simulator (dev, tests, demo):
 
 - `create_payment(order, urls)` → `{:ok, %{id, checkout_url, status}}`
   (`urls`: where the customer comes back, where the webhook goes)
@@ -145,12 +145,12 @@ weight, by volume, with a maximum) can follow.
    refunded payment → refunded), registered in config.exs (dev: next to the
    simulator), key from `MOLLIE_API_KEY`; without a public HTTPS webhook URL
    (development) the payment is created without one. Tests with `Req.Test` stubs and
-   an end-to-end webhook test. Still to do: the manual test with the test key, first
-   locally (return page), then on the home server with webhooks.
+   an end-to-end webhook test. Tested by hand with the test key on 2026-10-15,
+   locally (return page) and on biber.mittenin.at (webhook on paid and on expiry).
 4. Back office: payment attempts on the order, refund on cancel, list filter;
    incidents; "payment received" email.
-5. Phase 8 (Docker on the home server), then the webhook test there.
-6. Later: Stripe; the embedded payment form.
+5. ~~Phase 8 (Docker on the home server), then the webhook test there~~ *(done
+   2026-10-15)*.
 
 ## 10. Questions (answered 2026-10-15)
 

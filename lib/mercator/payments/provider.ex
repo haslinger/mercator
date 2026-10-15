@@ -1,7 +1,7 @@
 defmodule Mercator.Payments.Provider do
   @moduledoc """
-  A payment provider (docs/payment-design.md, section 2): Mollie, Stripe, the
-  simulator, … The shop talks to providers only through these callbacks;
+  A payment provider (docs/payment-design.md, section 2): Mollie and the
+  simulator. The shop talks to providers only through these callbacks;
   statuses are mapped to `t:status/0`.
   """
 

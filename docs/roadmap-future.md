@@ -8,12 +8,10 @@ Questions are numbered globally (`#N`); the numbering is never restarted. When a
 
 6. **Guided selling** – done 2026-10-15 (see [roadmap-history.md](roadmap-history.md)); still open from it:
    - postponed: audio/video and screen sharing (#100; possible self-hosted with `ex_webrtc`)
-7. **Online payment** – working with the payment simulator (steps 0–2 of [payment-design.md](payment-design.md) done, #108–#113). Still to do, after phase 8:
-   - step 3: Mollie adapter built (`Mercator.Payments.Mollie`, stubbed tests); still to do: the manual test with the test key, locally and on the home server with webhooks
+7. **Online payment** – working with Mollie's hosted payment page and the payment simulator (steps 0–3 of [payment-design.md](payment-design.md) done, #108–#113; Mollie only, no Stripe and no embedded form, #128). Still to do:
    - step 4: back office (payment attempts on the order, refund on cancel, unpaid filter), "payment received" email
-   - later: Stripe; an embedded payment form as a third provider (#109)
    - Mesonic, Icecat and Bechlem are out of scope (#15).
-8. **Deployment and demo mode – done** (2026-10-15, [deployment-design.md](deployment-design.md), #114–#120): the demo runs at https://biber.mittenin.at on the home server. Smoke test passed: registration with confirmation email (SMTP), order paid with the simulator, the full advice process (chat, recommendation, offer, accepting it from the chat widget, print page). The offer PDF (Typst in the image) works too. Next: phase 7 step 3, Mollie with webhooks against the real domain. Reverse proxy rate limits: see the README.
+8. **Deployment and demo mode – done** (2026-10-15, [deployment-design.md](deployment-design.md), #114–#120): the demo runs at https://biber.mittenin.at on the home server. Smoke test passed: registration with confirmation email (SMTP), order paid with the simulator, the full advice process (chat, recommendation, offer, accepting it from the chat widget, print page). The offer PDF (Typst in the image) works too. Reverse proxy rate limits: see the README.
 9. **Documentation** – planned (#121–#125 decided): the documentation goes into the product itself, as Markdown in the repo (`priv/docs/<locale>/…`, versioned with the code, rendered by `MercatorWeb.Markdown`), German and English with German fallback.
    - **Admin area:** a "Hilfe" section in the sidebar (table of contents, search) plus a "?" on each admin page that opens the matching chapter. Audiences: the shop owner and staff (back office manual by role: administration, sales, sales management, content, products; chapters filtered by the user's roles), operators (deployment, updates, backups, demo; today `DOCKER.md`) and developers (architecture, porting conventions, designs; today `docs/*.md`).
    - Operator and developer chapters are visible to administrators only (#125).
