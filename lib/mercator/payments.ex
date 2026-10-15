@@ -233,7 +233,7 @@ defmodule Mercator.Payments do
       order.state in @unpaid_states ->
         Sales.mark_order_paid!(
           order,
-          %{note: paid_note(payment), notify: false},
+          %{note: paid_note(payment), notify: true},
           authorize?: false
         )
 

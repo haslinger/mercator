@@ -181,7 +181,7 @@ defmodule Mercator.Sales.OrderManagementTest do
       |> Enum.find(&(&1.to_state == state))
     end
 
-    test "confirmation, shipping and cancellation are emailed", %{
+    test "confirmation, payment, shipping and cancellation are emailed", %{
       board: board,
       sales: sales,
       customer: customer
@@ -201,7 +201,13 @@ defmodule Mercator.Sales.OrderManagementTest do
       refute email.text_body =~ "Stammkunde"
 
       order = Sales.mark_order_paid!(order, actor: sales)
-      refute event(order, sales, :paid).customer_notified
+      paid = event(order, sales, :paid)
+      assert paid.customer_notified
+      assert :ok = perform_job(SendOrderStatusEmail, %{event_id: paid.id})
+      [email] = emails()
+      assert email.subject =~ "Zahlung"
+      assert email.subject =~ order.number
+      assert email.text_body =~ "Zahlung über"
 
       order = Sales.ship_order!(order, actor: sales)
 

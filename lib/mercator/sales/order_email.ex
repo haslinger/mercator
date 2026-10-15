@@ -32,8 +32,8 @@ defmodule Mercator.Sales.OrderEmail do
   end
 
   @doc """
-  Builds the email about a state change (`:confirmed`, `:shipped` or
-  `:cancelled`); `note` is the reason of a cancellation.
+  Builds the email about a state change (`:confirmed`, `:paid`, `:shipped`
+  or `:cancelled`); `note` is the reason of a cancellation.
   """
   def status_change(order, state, note \\ nil) do
     Gettext.with_locale(MercatorWeb.Gettext, order.locale, fn ->
@@ -59,6 +59,9 @@ defmodule Mercator.Sales.OrderEmail do
   defp status_subject(order, :confirmed),
     do: gettext("Your order %{number} is confirmed", number: order.number)
 
+  defp status_subject(order, :paid),
+    do: gettext("Payment received for your order %{number}", number: order.number)
+
   defp status_subject(%{shipping_method: :pickup} = order, :shipped),
     do: gettext("Your order %{number} is ready for pickup", number: order.number)
 
@@ -77,6 +80,16 @@ defmodule Mercator.Sales.OrderEmail do
       "",
       "#{gettext("Payment")}: #{Payment.label(order.payment_method)}"
     ] ++ Payment.instructions(order)
+  end
+
+  # also after shipping or pickup, so nothing about what comes next
+  defp status_lines(order, :paid, _note) do
+    [
+      gettext("We have received your payment of %{amount} for order %{number}. Thank you!",
+        amount: Format.money(order.gross, order.locale),
+        number: order.number
+      )
+    ]
   end
 
   defp status_lines(%{shipping_method: :pickup} = order, :shipped, _note) do

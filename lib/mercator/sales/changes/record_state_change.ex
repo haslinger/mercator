@@ -2,8 +2,8 @@ defmodule Mercator.Sales.Changes.RecordStateChange do
   @moduledoc """
   Writes a `Mercator.Sales.OrderEvent` for a state transition, with the
   action's `note` argument and the acting staff member, and emails the
-  customer about confirmation, shipping and cancellation (#74) unless the
-  `notify` argument is false. For pickup orders "shipped" means ready for
+  customer about confirmation, payment, shipping and cancellation (#74)
+  unless the `notify` argument is false. For pickup orders "shipped" means ready for
   pickup (#75).
   """
   use Ash.Resource.Change
@@ -40,5 +40,5 @@ defmodule Mercator.Sales.Changes.RecordStateChange do
   end
 
   @doc "States the customer is emailed about."
-  def email_states, do: [:confirmed, :shipped, :cancelled]
+  def email_states, do: [:confirmed, :paid, :shipped, :cancelled]
 end

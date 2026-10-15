@@ -45,7 +45,7 @@ defmodule Mercator.OnlinePaymentFlowTest do
 
     order = reload(order)
     assert order.state == :paid
-    assert [%{to_state: :paid, user_id: nil, note: note}] = order.events
+    assert [%{to_state: :paid, user_id: nil, note: note, customer_notified: true}] = order.events
     assert note =~ "eps"
     refute Payments.payable?(order)
 

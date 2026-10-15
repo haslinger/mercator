@@ -94,8 +94,9 @@ defmodule MercatorWeb.Admin.OrderAdminLiveTest do
       assert has_element?(view, "#order-state", "Abholbereit")
       assert has_element?(view, "#order-history", "Kunde informiert")
 
-      # only "completed" is left, which sends no email
-      refute has_element?(view, "#change_notify")
+      # paying at pickup is still emailed, so the checkbox stays
+      assert has_element?(view, "#to-paid")
+      assert has_element?(view, "#change_notify")
     end
 
     test "staff can skip the customer email", %{conn: conn, board: board, sales: sales} do
