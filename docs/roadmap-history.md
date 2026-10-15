@@ -109,6 +109,8 @@ This makes it the test case for **configurable material**: wood species, dimensi
 - **#115** (2026-10-15) Emails are **really sent by SMTP**, also in the demo.
 - **#116** (2026-10-15) The image is **built on the server** from a git checkout (like pan), no registry.
 - **#117** (2026-10-15) The home server is x86_64 with Ubuntu 24.04 and Docker Compose v2. Design: [deployment-design.md](deployment-design.md).
+- **#118** (2026-10-15) Emails are sent by the **mittenin.at mail server** (`box.mittenin.at`, port 465 with TLS), like pan.
+- **#119** (2026-10-15) New dependency **`gen_smtp`** for Swoosh's SMTP adapter.
 - (2026-10-14) **Chat messages are sent with the button only**, not with Enter: many people don't know Shift+Enter for a new line. Enter makes a new line (customer chat and sales desk).
 
 ## Answered questions

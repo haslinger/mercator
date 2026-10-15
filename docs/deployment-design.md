@@ -44,9 +44,10 @@ an nginx example.
 
 ## 4. Email (#115)
 
-Swoosh's SMTP adapter, which needs the `gen_smtp` library (a new dependency):
-`SMTP_HOST`, `SMTP_PORT` (587, STARTTLS), `SMTP_USERNAME`, `SMTP_PASSWORD`. Without
-`SMTP_HOST` the release refuses to start (no silently lost emails). Undeliverable
+Swoosh's SMTP adapter with the `gen_smtp` library (#119): `SMTP_RELAY`, `SMTP_PORT`
+(465 with TLS, the default, or 587 with STARTTLS), `SMTP_USERNAME`, `SMTP_PASSWORD`;
+the server certificate is verified unless `SMTP_TLS_VERIFY=false`. Without
+`SMTP_RELAY` the release refuses to start (no silently lost emails). Undeliverable
 emails become incidents (failed Oban jobs, #105).
 
 ## 5. Demo mode (#44–#48)
@@ -83,9 +84,8 @@ emails become incidents (failed Oban jobs, #105).
    (done by you, with `DOCKER.md`); smoke test.
 4. Phase 7 step 3: Mollie with webhooks against the real domain.
 
-## 7. Open questions
+## 7. Answered questions
 
-- **#118 SMTP account:** which mail server sends (e.g. the one of mittenin.at, or a
-  service like Brevo/Mailjet)? Only the values go into `.env`; I need to know whether
-  it uses port 587 with STARTTLS (assumed) or 465 with TLS.
-- **#119 New dependency `gen_smtp`** for Swoosh's SMTP adapter: OK to add?
+- **#118** (2026-10-15) Emails are sent by the mittenin.at mail server
+  (`box.mittenin.at`, port 465 with TLS), like pan.
+- **#119** (2026-10-15) `gen_smtp` added as a dependency for Swoosh's SMTP adapter.
