@@ -17,6 +17,6 @@ Traversal.FileModule: Directory Traversal in `File.write!`,lib/mercator/pdf.ex:2
 Traversal.SendFile: Directory Traversal in `send_file`,lib/mercator_web/controllers/upload_controller.ex:31,161DB4C
 XSS.ContentType: XSS in `put_resp_content_type`,lib/mercator_web/controllers/upload_controller.ex:25,728A32
 XSS.Raw: XSS,lib/mercator_web/components/markdown_components.ex:22,360245B
-XSS.Raw: XSS - lib/mercator_web/live/admin/help_live.ex:157,lib/mercator_web/live/admin/help_live.ex:157,34D41B2
-XSS.Raw: XSS - lib/mercator_web/live/admin/help_live.ex:170,lib/mercator_web/live/admin/help_live.ex:170,64E7960
+XSS.Raw: XSS - lib/mercator_web/components/docs_components.ex:20,lib/mercator_web/components/docs_components.ex:20,3F98095
+XSS.Raw: XSS - lib/mercator_web/components/docs_components.ex:38,lib/mercator_web/components/docs_components.ex:38,3B395EC
 XSS.SendResp: XSS in `send_resp`,lib/mercator_web/controllers/sitemap_controller.ex:18,17C004

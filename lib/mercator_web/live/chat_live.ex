@@ -236,6 +236,10 @@ defmodule MercatorWeb.ChatLive do
           </p>
           <div :if={!@conversation and !@rating_for} class="space-y-2 text-sm" id="chat-intro">
             <p>{gettext("Our experts are happy to help you choose – just ask your question.")}</p>
+            <p class="text-xs opacity-70" id="chat-help">
+              {gettext("Answers to common questions are also in the")}
+              <a href={~p"/help"} class="link">{gettext("help")}</a>.
+            </p>
             <p :if={@context[:subject]} class="badge badge-ghost h-auto py-1">
               {gettext("About: %{subject}", subject: @context[:subject])}
             </p>

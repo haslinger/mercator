@@ -93,6 +93,9 @@ defmodule MercatorWeb.Router do
       live "/search", SearchLive
       live "/basket", BasketLive
       live "/terms", GtcLive
+      # help for shop visitors (phase 9, #125)
+      live "/help", HelpLive, :index
+      live "/help/:slug", HelpLive, :show
       live "/pages/*path", PageLive
 
       live "/account", AccountLive

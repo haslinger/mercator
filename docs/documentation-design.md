@@ -100,7 +100,7 @@ the public demo domain and demo accounts (the demo password is public anyway).
 3. ~~Admin "Hilfe" (table of contents, chapter, search, role filter) and the "?" links~~
    *(done 2026-10-15; the "?" finds its chapter from the page's route,
    `MercatorWeb.HelpLink`)*.
-4. Shop `/help` and the links from footer, checkout and chat.
+4. ~~Shop `/help` and the links from footer, checkout and chat~~ *(done 2026-10-15)*.
 5. Making-of (`/making-of`, introduction, metrics, sessions; demo only).
 6. Content: back office manual by role, operating (from `DOCKER.md`), developer
    overview, shop help, in German and English. The largest step, possibly split.

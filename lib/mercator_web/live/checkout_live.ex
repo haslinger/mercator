@@ -130,6 +130,10 @@ defmodule MercatorWeb.CheckoutLive do
       basket_count={@basket_count}
     >
       <h1 class="text-3xl font-bold">{gettext("Checkout")}</h1>
+      <p class="text-sm text-base-content/70" id="checkout-help">
+        {gettext("Questions about ordering, shipping or payment?")}
+        <.link navigate={~p"/help"} class="link link-primary">{gettext("Help")}</.link>
+      </p>
       <p :if={@checkout.offer} class="text-base-content/70" id="checkout-offer">
         {gettext("You are ordering offer %{number}.", number: Offer.display_number(@checkout.offer))}
       </p>

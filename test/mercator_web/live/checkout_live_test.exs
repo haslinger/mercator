@@ -51,6 +51,7 @@ defmodule MercatorWeb.CheckoutLiveTest do
     Baskets.add({:user, user}, variant.id, 1)
     {:ok, view, _html} = live(conn, ~p"/checkout")
 
+    assert has_element?(view, ~s(#checkout-help a[href="/help"]))
     assert has_element?(view, "#shipping-parcel[checked]")
     assert has_element?(view, "#checkout-total", "129,90")
 

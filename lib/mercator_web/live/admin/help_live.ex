@@ -8,6 +8,8 @@ defmodule MercatorWeb.Admin.HelpLive do
   """
   use MercatorWeb, :live_view
 
+  import MercatorWeb.DocsComponents
+
   alias Mercator.Docs
 
   on_mount {MercatorWeb.LiveUserAuth, :require_staff}
@@ -154,23 +156,14 @@ defmodule MercatorWeb.Admin.HelpLive do
             <p :if={@chapter.locale != @locale} class="text-sm text-base-content/60" id="help-locale">
               {gettext("This chapter is only available in another language.")}
             </p>
-            <div class="markdown mt-2">{raw(@chapter.html)}</div>
+            <.chapter_html chapter={@chapter} class="mt-2" />
           </div>
         </article>
 
         <aside :if={@chapter.toc != []} class="hidden lg:block" id="help-toc">
-          <nav class="sticky top-4 card card-sm bg-base-100 shadow-sm">
-            <div class="card-body gap-1">
-              <p class="menu-title px-0">{gettext("Contents")}</p>
-              <a
-                :for={{level, id, text} <- @chapter.toc}
-                href={"#" <> id}
-                class={["link link-hover text-sm", level == 3 && "pl-3"]}
-              >
-                {raw(text)}
-              </a>
-            </div>
-          </nav>
+          <div class="sticky top-4 card card-sm bg-base-100 shadow-sm">
+            <.chapter_toc chapter={@chapter} class="card-body gap-1" />
+          </div>
         </aside>
       </div>
     </Layouts.admin>

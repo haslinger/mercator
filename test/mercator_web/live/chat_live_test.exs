@@ -28,6 +28,7 @@ defmodule MercatorWeb.ChatLiveTest do
     view |> element("#chat-toggle") |> render_click()
     refute has_element?(view, "#chat-panel.hidden")
     assert has_element?(view, "#chat-intro")
+    assert has_element?(view, ~s(#chat-help a[href="/help"]))
 
     view
     |> form("#chat-form", chat: %{body: "Wie viel Lärche für 40 m²?"})

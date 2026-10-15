@@ -143,6 +143,9 @@ defmodule MercatorWeb.Layouts do
             <p :if={Mercator.Brand.get(:email)}>{Mercator.Brand.get(:email)}</p>
           </aside>
           <nav>
+            <.link navigate={~p"/help"} class="link link-hover" id="help-link">
+              {gettext("Help")}
+            </.link>
             <.link navigate={~p"/terms"} class="link link-hover" id="gtc-link">
               {gettext("Terms and conditions")}
             </.link>
