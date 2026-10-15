@@ -161,7 +161,7 @@ msgstr "bitte eine Zahl eingeben"
 msgid "please enter a value"
 msgstr "bitte einen Wert eingeben"
 
-#: lib/mercator/catalog/product.ex:147
+#: lib/mercator/catalog/product.ex:162
 #, elixir-autogen, elixir-format
 msgid "configurable products need a pricing model"
 msgstr "konfigurierbare Produkte brauchen ein Preismodell"
@@ -221,3 +221,8 @@ msgstr "muss ausgefüllt werden"
 #, elixir-autogen, elixir-format
 msgid "must be a shop page or an http(s) address"
 msgstr "muss eine Shop-Seite oder eine http(s)-Adresse sein"
+
+#: lib/mercator/catalog/validations/kind_fits_variants.ex:25
+#, elixir-autogen, elixir-format
+msgid "a simple product has one variant; delete the others first"
+msgstr "ein einfaches Produkt hat eine Variante; löschen Sie zuerst die anderen"

@@ -3,6 +3,9 @@ defmodule MercatorWeb.Admin.ProductEditLive do
   Product editor (back office step 4) with tabs. This module holds the frame
   (header, state, tabs) and the "general" tab: texts, highlights, master
   data and categories.
+
+  The tabs follow the product kind (#103); the kind is changed in its own
+  dialog and saved at once, so the tabs change with it.
   """
   use MercatorWeb, :live_view
 
@@ -34,6 +37,7 @@ defmodule MercatorWeb.Admin.ProductEditLive do
            :tax_classes,
            Catalog.list_tax_classes!(actor: actor, query: [sort: [position: :asc]])
          )
+         |> assign(:kind_form, nil)
          |> assign_general_form()}
 
       {:error, _} ->
@@ -46,8 +50,12 @@ defmodule MercatorWeb.Admin.ProductEditLive do
 
   @impl true
   def handle_params(params, _uri, socket) do
-    tab = if params["tab"] in @tabs, do: params["tab"], else: "general"
-    {:noreply, assign(socket, :tab, tab)}
+    {:noreply, assign(socket, :tab, tab(params["tab"], socket.assigns.product))}
+  end
+
+  # a tab of the product's kind, else "general"
+  defp tab(tab, product) do
+    if tab in @tabs and List.keymember?(tabs(product), tab, 0), do: tab, else: "general"
   end
 
   defp assign_general_form(socket) do
@@ -127,6 +135,37 @@ defmodule MercatorWeb.Admin.ProductEditLive do
     end
   end
 
+  def handle_event("open_kind", _params, socket),
+    do:
+      {:noreply,
+       assign(
+         socket,
+         :kind_form,
+         to_form(%{"kind" => to_string(socket.assigns.product.kind)}, as: :kind)
+       )}
+
+  def handle_event("close_kind", _params, socket), do: {:noreply, assign(socket, :kind_form, nil)}
+
+  def handle_event("change_kind", %{"kind" => %{"kind" => kind}}, socket) do
+    actor = socket.assigns.current_user
+
+    case Catalog.change_product_kind(socket.assigns.product, kind, actor: actor) do
+      {:ok, product} ->
+        product = Catalog.get_product!(product.id, actor: actor, load: [:categories, :variants])
+
+        {:noreply,
+         socket
+         |> assign(:product, product)
+         |> assign(:kind_form, nil)
+         |> assign(:tab, tab(socket.assigns.tab, product))
+         |> assign_general_form()
+         |> put_flash(:info, gettext("Kind changed."))}
+
+      {:error, error} ->
+        {:noreply, put_flash(socket, :error, error_message(error))}
+    end
+  end
+
   def handle_event("transition", %{"to" => to}, socket) do
     actor = socket.assigns.current_user
     product = socket.assigns.product
@@ -152,6 +191,13 @@ defmodule MercatorWeb.Admin.ProductEditLive do
   end
 
   # flash messages from the tab components
+  defp error_message(%Ash.Error.Invalid{errors: [%{message: message} = error | _]}) do
+    vars = Map.new(error.vars || [])
+    Gettext.dgettext(MercatorWeb.Gettext, "errors", message, vars)
+  end
+
+  defp error_message(_error), do: gettext("The kind could not be changed.")
+
   @impl true
   def handle_info({:flash, kind, message}, socket),
     do: {:noreply, put_flash(socket, kind, message)}
@@ -217,8 +263,11 @@ defmodule MercatorWeb.Admin.ProductEditLive do
         </.link>
       </div>
 
+      <.kind_modal :if={@kind_form} form={@kind_form} />
+
       <.general_tab
         :if={@tab == "general"}
+        product={@product}
         form={@form}
         highlights={@highlights}
         categories={@categories}
@@ -275,19 +324,79 @@ defmodule MercatorWeb.Admin.ProductEditLive do
     """
   end
 
-  defp tabs(%{kind: :configurable}), do: all_tabs()
-  defp tabs(_product), do: Enum.reject(all_tabs(), &(elem(&1, 0) == "configurator"))
-
-  defp all_tabs,
-    do: [
+  # the tabs of a kind (#103); the variants tab is named after what it holds
+  defp tabs(%{kind: kind}) do
+    [
       {"general", gettext("General")},
-      {"variants", gettext("Variants & prices")},
+      {"variants", variants_label(kind)},
       {"images", gettext("Images")},
       {"properties", gettext("Properties")},
       {"relations", gettext("Relations")},
-      {"configurator", gettext("Configurator")}
+      kind == :configurable && {"configurator", gettext("Configurator")}
     ]
+    |> Enum.filter(& &1)
+  end
 
+  defp variants_label(:simple), do: gettext("Price & stock")
+  defp variants_label(:variants), do: gettext("Variants & prices")
+  defp variants_label(:configurable), do: gettext("Article & delivery time")
+
+  attr :form, :any, required: true
+
+  defp kind_modal(assigns) do
+    ~H"""
+    <div class="modal modal-open" id="kind-modal">
+      <div class="modal-box">
+        <h2 class="text-xl font-bold">{gettext("Change kind")}</h2>
+        <.form for={@form} id="kind-form" phx-submit="change_kind" class="mt-4 space-y-3">
+          <label
+            :for={{kind, text} <- kind_descriptions()}
+            class="flex cursor-pointer items-start gap-3 rounded-box border border-base-300 p-3"
+          >
+            <input
+              type="radio"
+              name={@form[:kind].name}
+              value={kind}
+              checked={@form[:kind].value == to_string(kind)}
+              class="radio radio-sm mt-1"
+              id={"kind-#{kind}"}
+            />
+            <span>
+              <span class="font-medium">{ProductIndexLive.kind_label(kind)}</span>
+              <span class="block text-sm text-base-content/70">{text}</span>
+            </span>
+          </label>
+          <p class="text-sm text-base-content/70">
+            {gettext(
+              "Nothing is deleted: prices, variants or configurator settings that the new kind does not use are kept and come back when you switch back."
+            )}
+          </p>
+          <div class="modal-action">
+            <button type="button" phx-click="close_kind" class="btn btn-ghost">
+              {gettext("Cancel")}
+            </button>
+            <button type="submit" class="btn btn-primary" id="save-kind">{gettext("Change")}</button>
+          </div>
+        </.form>
+      </div>
+      <div class="modal-backdrop" phx-click="close_kind"></div>
+    </div>
+    """
+  end
+
+  defp kind_descriptions do
+    [
+      simple: gettext("One article with one price, e.g. a stool or a sack of pellets."),
+      variants:
+        gettext(
+          "Several articles with their own number, stock and price, e.g. lengths of a board."
+        ),
+      configurable:
+        gettext("The customer enters dimensions and options; the price is calculated.")
+    ]
+  end
+
+  attr :product, :any, required: true
   attr :form, :any, required: true
   attr :highlights, :map, required: true
   attr :categories, :list, required: true
@@ -342,14 +451,20 @@ defmodule MercatorWeb.Admin.ProductEditLive do
               <h2 class="card-title">{gettext("Master data")}</h2>
               <.input field={@form[:number]} label={gettext("Article no.")} />
               <.input field={@form[:slug]} label={gettext("URL name (slug)")} />
-              <.input
-                field={@form[:kind]}
-                type="select"
-                label={gettext("Kind")}
-                options={
-                  Enum.map(~w(simple variants configurable)a, &{ProductIndexLive.kind_label(&1), &1})
-                }
-              />
+              <fieldset class="fieldset">
+                <legend class="fieldset-legend">{gettext("Kind")}</legend>
+                <div class="flex items-center justify-between gap-2">
+                  <span id="product-kind">{ProductIndexLive.kind_label(@product.kind)}</span>
+                  <button
+                    type="button"
+                    phx-click="open_kind"
+                    class="btn btn-ghost btn-xs"
+                    id="change-kind"
+                  >
+                    <.icon name="hero-arrows-right-left" class="size-4" /> {gettext("Change")}
+                  </button>
+                </div>
+              </fieldset>
               <.input
                 field={@form[:tax_class_id]}
                 type="select"

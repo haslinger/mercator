@@ -95,6 +95,7 @@ defmodule Mercator.Catalog do
       define :get_product_by_number, action: :read, get_by: [:number]
       define :create_product, action: :create
       define :update_product, action: :update
+      define :change_product_kind, action: :change_kind, args: [:kind]
       define :activate_product, action: :activate
       define :discontinue_product, action: :discontinue
       define :destroy_product, action: :destroy

@@ -4,6 +4,11 @@ defmodule MercatorWeb.Admin.ProductVariantsTab do
   (number, name, unit, stock, delivery time, weight, active), sortable by
   drag & drop, and their price rows (net, graduated, time-limited, promotion).
 
+  By product kind (#103): a simple product has exactly one variant ("price &
+  stock"); a configurable one has one variant without prices (the
+  configurator calculates them; prices from an earlier kind are kept but
+  hidden).
+
   A LiveComponent because the tab keeps its own editing state and events.
   """
   use MercatorWeb, :live_component
@@ -166,12 +171,16 @@ defmodule MercatorWeb.Admin.ProductVariantsTab do
     ~H"""
     <div id={@id} class="space-y-4">
       <div class="flex items-center justify-between">
-        <p class="text-sm text-base-content/70">
+        <p :if={prices?(@product)} class="text-sm text-base-content/70">
           {gettext("Prices are net; the shop shows them with %{rate} % VAT.",
             rate: Format.percent(@product.tax_class.rate)
           )}
         </p>
+        <p :if={!prices?(@product)} class="text-sm text-base-content/70" id="configurator-price-note">
+          {gettext("The price is calculated by the configurator.")}
+        </p>
         <button
+          :if={@product.kind == :variants or @product.variants == []}
           type="button"
           phx-click="new_variant"
           phx-target={@myself}
@@ -199,6 +208,7 @@ defmodule MercatorWeb.Admin.ProductVariantsTab do
             <div class="card-body gap-3 p-4">
               <div class="flex flex-wrap items-center gap-3">
                 <span
+                  :if={@product.kind == :variants}
                   data-sortable-handle
                   class="cursor-grab text-base-content/40"
                   title={gettext("Drag")}
@@ -237,7 +247,7 @@ defmodule MercatorWeb.Admin.ProductVariantsTab do
                 </div>
               </div>
 
-              <table class="table table-sm" id={"prices-#{variant.id}"}>
+              <table :if={prices?(@product)} class="table table-sm" id={"prices-#{variant.id}"}>
                 <thead>
                   <tr>
                     <th>{gettext("from quantity")}</th>
@@ -278,7 +288,7 @@ defmodule MercatorWeb.Admin.ProductVariantsTab do
                   </tr>
                 </tbody>
               </table>
-              <div>
+              <div :if={prices?(@product)}>
                 <button
                   type="button"
                   phx-click="new_price"
@@ -300,6 +310,9 @@ defmodule MercatorWeb.Admin.ProductVariantsTab do
     </div>
     """
   end
+
+  # configurable products get their price from the configurator
+  defp prices?(product), do: product.kind != :configurable
 
   attr :form, :any, required: true
   attr :myself, :any, required: true

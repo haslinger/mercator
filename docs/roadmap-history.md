@@ -17,6 +17,7 @@ Status as of 2026-10-15:
 
 Small improvements done along the way (from the backlog):
 
+- ~~**Product editor: tabs by product kind**~~ *(done 2026-10-15, #103)*: the kind is changed in its own dialog and saved at once (`Product :change_kind`), so the tabs follow immediately. Simple: "Preis & Lager" with exactly one variant; variants: as before; configurable: "Artikel & Lieferzeit" without prices, plus the configurator.
 - ~~**Start page key for content managers**~~ *(done 2026-10-15)*: the page editor has "Als Startseite verwenden" for published pages (action `:make_start_page`, which moves the key `home` from the previous start page in one transaction). Other keys stay with administrators.
 - ~~**Active entry in the shop sidebar**~~ *(done 2026-10-15)*: the sidebar highlights the page shown (or its closest menu page) and the main category of category and product pages; `@nav` carries the current path and the category trail (`MercatorWeb.Navigation`).
 - ~~**Variants combined with a configurator**~~ *(dropped 2026-10-15)*: not done at all; a product is either variants or configurable (#39/#55). For a panel in stock that can also be cut to size, use two related products.
@@ -92,6 +93,7 @@ This makes it the test case for **configurable material**: wood species, dimensi
 - **#18** (2026-10-14) **No Twitter integration, no podcasts and no blog** – ever. News go on a normal CMS page that editors keep up to date. Comments (they belonged to blog and podcasts) and Gravatar (no profile pictures are shown) are not needed either. Visitor tracking: see the analytics part of #18 above.
 - **#17** (2026-10-14) **PDF documents with Typst** for **offers and order confirmations**. No contracts (#19) and **no invoices**: Mercator is not an accounting system (FI/CO); invoices come from the customer's accounting, also for the payment method "invoice". Typst is Apache 2.0, compatible with our GPL-3.0-or-later; called as a separate program, its license does not touch Mercator at all, and the documents produced are ours. Comes with the printable offer page (#99).
 - **#102** (2026-10-15) The user's **name is mandatory**: staff address customers by name, and offers and orders need it. The registration form asks for it (an extra field via the `register_extra_component` override); users who sign up by magic link enter it on `/account/name` right after sign-in, and every page of the live session sends them there until they have (`LiveUserAuth :require_name`). The column stays nullable only for that moment.
+- **#103** (2026-10-15) **Changing a product's kind keeps all data**: prices of a now-configurable product and configurator options of other kinds stay in the database, unused and hidden, so switching back restores them. Only variants → simple is refused while there is more than one variant (delete the others first). Switching to configurable starts with pricing per piece.
 - (2026-10-14) **Chat messages are sent with the button only**, not with Enter: many people don't know Shift+Enter for a new line. Enter makes a new line (customer chat and sales desk).
 
 ## Answered questions

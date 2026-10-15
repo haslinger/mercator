@@ -111,8 +111,23 @@ defmodule Mercator.Catalog.Product do
     update :update do
       primary? true
       require_atomic? false
-      accept @editable
+      accept @editable -- [:kind]
       change {SetSlug, from: :title}
+    end
+
+    update :change_kind do
+      description """
+      Changes the kind (#103). Data that no longer fits stays but is not used
+      (prices of a configurable product, options of other kinds), so switching
+      back restores it. A configurable product starts with pricing per piece.
+      """
+
+      require_atomic? false
+      accept [:kind]
+      validate Mercator.Catalog.Validations.KindFitsVariants
+
+      change set_attribute(:pricing, :per_unit),
+        where: [attribute_equals(:kind, :configurable), attribute_equals(:pricing, nil)]
     end
 
     update :activate do
