@@ -103,6 +103,7 @@ This makes it the test case for **configurable material**: wood species, dimensi
 - **#106** (2026-10-15) Administrators see all incidents; sales staff those about a customer, order, offer or conversation, and the ones they reported.
 - **#107** (2026-10-15) Staff can also record incidents by hand.
 - **#108** (2026-10-15) **Online payment with Mollie first** (the easier integration: hosted page, webhook sends only an id), Stripe later. Liberapay is not suitable (donations, not shop payments) and dropped; mPAY24 is not used. Test mode costs nothing.
+- **#129** (2026-10-15) The shop does **not track refunds** after Mollie accepted them (pending, paid out, failed). Staff check them in Mollie's dashboard through the link on the payment attempt; the shop does not copy Mollie's refund logic.
 - **#128** (2026-10-15) **Mollie is the only payment provider, with its hosted payment page.** Stripe and the embedded payment form are dropped: after the test on biber.mittenin.at, Mollie's integration, webhooks, payment page and dashboard all look professional. Replaces "Stripe later" in #108 and "embedded form later" in #109.
 - **#109** (2026-10-15) The provider's **hosted payment page** first; an embedded payment form later, shown as if it were a third provider.
 - **#110** (2026-10-15) Online payment is **one more payment method** next to prepayment, invoice and payment on pickup; the concrete methods (cards, EPS, …) are chosen in the provider's dashboard. Webhooks are tested on the home server deployment (phase 8). Design: [payment-design.md](payment-design.md).
