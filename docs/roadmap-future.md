@@ -15,6 +15,7 @@ Questions are numbered globally (`#N`); the numbering is never restarted. When a
 
 Smaller improvements noted along the way, not tied to a phase step.
 
+- *Empty right now.*
 
 ## Open questions
 
