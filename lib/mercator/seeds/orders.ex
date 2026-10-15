@@ -191,7 +191,11 @@ defmodule Mercator.Seeds.Orders do
   defp line({number, quantity}), do: {number, quantity, %{}}
   defp line({_number, _quantity, _selections} = line), do: line
 
-  defp backdate(order, placed_at, step_days) do
+  @doc """
+  Moves an order to `placed_at` and its events (in their order) to the
+  given days after it, a few hours apart.
+  """
+  def backdate(order, placed_at, step_days) do
     Repo.update_all(from(o in "orders", where: o.id == type(^order.id, :binary_id)),
       set: [inserted_at: placed_at, updated_at: placed_at]
     )

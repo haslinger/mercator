@@ -82,7 +82,7 @@ defmodule Mercator.Consulting.Conversation do
       description "The customer rates a closed conversation (#101): 1 to 5 stars, a comment."
       accept [:rating, :rating_comment]
       validate attribute_equals(:state, :closed)
-      validate attribute_equals(:rated_at, nil), message: "has already been rated"
+      validate absent(:rated_at), message: "has already been rated"
       validate present(:rating)
       change set_attribute(:rated_at, &DateTime.utc_now/0)
     end
