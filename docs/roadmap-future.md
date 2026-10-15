@@ -14,9 +14,10 @@ Questions are numbered globally (`#N`); the numbering is never restarted. When a
    - later: Stripe; an embedded payment form as a third provider (#109)
    - Mesonic, Icecat and Bechlem are out of scope (#15).
 8. **Deployment and demo mode – done** (2026-10-15, [deployment-design.md](deployment-design.md), #114–#120): the demo runs at https://biber.mittenin.at on the home server. Smoke test passed: registration with confirmation email (SMTP), order paid with the simulator, the full advice process (chat, recommendation, offer, accepting it from the chat widget, print page). The offer PDF (Typst in the image) works too. Next: phase 7 step 3, Mollie with webhooks against the real domain. Reverse proxy rate limits: see the README.
-9. **Documentation** – planned (#121–#125): the documentation goes into the product itself, as Markdown in the repo (`priv/docs/<locale>/…`, versioned with the code, rendered by `MercatorWeb.Markdown`), German and English with German fallback.
+9. **Documentation** – planned (#121–#125 decided): the documentation goes into the product itself, as Markdown in the repo (`priv/docs/<locale>/…`, versioned with the code, rendered by `MercatorWeb.Markdown`), German and English with German fallback.
    - **Admin area:** a "Hilfe" section in the sidebar (table of contents, search) plus a "?" on each admin page that opens the matching chapter. Audiences: the shop owner and staff (back office manual by role: administration, sales, sales management, content, products; chapters filtered by the user's roles), operators (deployment, updates, backups, demo; today `DOCKER.md`) and developers (architecture, porting conventions, designs; today `docs/*.md`).
-   - **Shop:** help for visitors (ordering, account, payment, chat and offers), see #125.
+   - Operator and developer chapters are visible to administrators only (#125).
+   - **Shop:** generic help for visitors (ordering, account, payment, chat and offers) from the repo at `/help`, linked from the footer, the checkout and the chat; customer-specific content (delivery areas, FAQ, GTC) stays in the CMS (#125).
    - Sources to reuse: `README.md`, `DOCKER.md`, `docs/*-design.md`, the German Rails wiki (`mercator.wiki`, e.g. the sales-process diagram).
 
 ## Backlog
@@ -27,4 +28,4 @@ Smaller improvements noted along the way, not tied to a phase step.
 
 ## Open questions
 
-- **#125** (2026-10-15) Help for shop visitors: generic help from the repo (ordering, account, payment, chat, offers) at a shop route like `/help`, linked from the footer and from the pages where it matters (checkout, chat), while customer-specific content (delivery areas, FAQ, GTC) stays in the CMS? And should operator and developer chapters in the admin area be visible to administrators only?
+- *None right now.*

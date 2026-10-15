@@ -115,6 +115,7 @@ This makes it the test case for **configurable material**: wood species, dimensi
 - **#122** (2026-10-15) The documentation is **Markdown in the repo**, versioned with the code and the same for every customer.
 - **#123** (2026-10-15) Documentation in **German and English**, German first, shown in the user's language with German fallback.
 - **#124** (2026-10-15) Admin area: a **"Hilfe" section** (table of contents, search) plus **context links** ("?") from each admin page to its chapter, chapters filtered by role.
+- **#125** (2026-10-15) Help for **shop visitors** is generic help from the repo at `/help` (ordering, account, payment, chat, offers), linked from the footer, the checkout and the chat; customer-specific content (delivery areas, FAQ, GTC) stays in the CMS. Operator and developer chapters in the admin area are for **administrators only**.
 - **#120** (2026-10-15) The **sign-in emails** (confirmation, password reset, magic link) stay sent directly, not by Oban: if delivery fails, the error is logged and reported as an incident (`Mercator.Mailer.deliver_or_report/3`), and the action (e.g. the registration) still succeeds. The page cannot show a message: AshAuthentication ignores what a sender returns.
 - (2026-10-14) **Chat messages are sent with the button only**, not with Enter: many people don't know Shift+Enter for a new line. Enter makes a new line (customer chat and sales desk).
 
