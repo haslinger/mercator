@@ -24,12 +24,19 @@ defmodule Mercator.Accounts.Preparations.RateLimit do
   @impl true
   def supports(_opts), do: [Ash.Query, Ash.ActionInput]
 
+  # Counted in a before-action hook, i.e. only when the action runs: the
+  # sign-in forms validate on every keystroke, which builds the query and
+  # runs preparations, so counting here would count typing as attempts.
   @impl true
   def prepare(subject, opts, _context) do
+    before_action(subject, &check(&1, opts[:bucket]), prepend?: true)
+  end
+
+  defp check(subject, bucket) do
     email = subject |> argument(:email) |> to_string() |> String.downcase()
     ip = subject.context[:client_ip]
 
-    opts[:bucket]
+    bucket
     |> checks(email, ip)
     |> Enum.find(fn {bucket, key} -> Mercator.RateLimit.check(bucket, key) != :ok end)
     |> case do
@@ -75,6 +82,12 @@ defmodule Mercator.Accounts.Preparations.RateLimit do
 
   defp argument(%Ash.Query{} = query, name), do: Ash.Query.get_argument(query, name)
   defp argument(%Ash.ActionInput{} = input, name), do: Ash.ActionInput.get_argument(input, name)
+
+  defp before_action(%Ash.Query{} = query, fun, opts),
+    do: Ash.Query.before_action(query, fun, opts)
+
+  defp before_action(%Ash.ActionInput{} = input, fun, opts),
+    do: Ash.ActionInput.before_action(input, fun, opts)
 
   defp add_error(%Ash.Query{} = query, error), do: Ash.Query.add_error(query, error)
   defp add_error(%Ash.ActionInput{} = input, error), do: Ash.ActionInput.add_error(input, error)

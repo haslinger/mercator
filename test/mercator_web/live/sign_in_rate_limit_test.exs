@@ -32,4 +32,24 @@ defmodule MercatorWeb.SignInRateLimitTest do
     assert is_binary(submit(view, email, valid_password()))
     assert has_element?(view, "#{@form} .text-error")
   end
+
+  test "typing in the forms is not counted, only submitting", %{conn: conn} do
+    user = user_fixture()
+    email = to_string(user.email)
+    {:ok, view, _html} = live(conn, ~p"/sign-in")
+
+    for password <- Enum.map(1..12, &String.duplicate("x", &1)) do
+      view |> form(@form, user: %{email: email, password: password}) |> render_change()
+    end
+
+    for _ <- 1..5 do
+      view
+      |> form("#user-magic-link-request-magic-link", user: %{email: email})
+      |> render_change()
+    end
+
+    assert {:allow, 1} = Mercator.RateLimit.hit("sign_in:#{email}|127.0.0.1", 900_000, 100)
+    assert {:allow, 1} = Mercator.RateLimit.hit("auth_email:#{email}|127.0.0.1", 900_000, 100)
+    assert {:error, {:redirect, _}} = submit(view, email, valid_password())
+  end
 end
