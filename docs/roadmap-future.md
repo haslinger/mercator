@@ -13,7 +13,7 @@ Questions are numbered globally (`#N`); the numbering is never restarted. When a
    - step 4: back office (payment attempts on the order, refund on cancel, unpaid filter), "payment received" email
    - later: Stripe; an embedded payment form as a third provider (#109)
    - Mesonic, Icecat and Bechlem are out of scope (#15).
-8. **Deployment and demo mode** ([deployment-design.md](deployment-design.md), #114–#119 decided): steps 1 (Docker image, compose, SMTP, DOCKER.md) and 2 (demo mode `MERCATOR_MODE=demo`: seeding at start, public demo logins on the sign-in page, protected demo accounts, badge, simulator, nightly reset; #44–#48) done. Next: step 3, deployment on the home server (by you, with DOCKER.md), then step 4 Mollie (phase 7 step 3); reverse proxy rate limits (README).
+8. **Deployment and demo mode – done** (2026-10-15, [deployment-design.md](deployment-design.md), #114–#120): the demo runs at https://biber.mittenin.at on the home server. Smoke test passed: registration with confirmation email (SMTP), order paid with the simulator, the full advice process (chat, recommendation, offer, accepting it from the chat widget, print page). Still to check once: the offer PDF (Typst in the image). Next: phase 7 step 3, Mollie with webhooks against the real domain. Reverse proxy rate limits: see the README.
 
 ## Backlog
 

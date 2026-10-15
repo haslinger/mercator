@@ -80,8 +80,10 @@ emails become incidents (failed Oban jobs, #105).
    `NotPublicDemoAccount`), badge, simulator registered by runtime.exs and
    activated by seeding, nightly reset (`Mercator.Demo.Workers.Reset`; Oban cron
    now runs in the shop's time zone).
-3. On the home server: checkout, `.env`, reverse proxy entry, `docker compose up -d`
-   (done by you, with `DOCKER.md`); smoke test.
+3. ~~On the home server~~ *(done 2026-10-15)*: checkout, `.env`, reverse proxy entry,
+   `docker compose up -d` (done by you, with `DOCKER.md`); smoke test. Lessons: the
+   Fritzbox and ufw need port 80 as well (certificates); gen_smtp needed `depth`
+   for TLS (fixed); seeding must not send emails (one transaction, fixed).
 4. Phase 7 step 3: Mollie with webhooks against the real domain.
 
 ## 7. Answered questions
