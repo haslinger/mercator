@@ -104,6 +104,28 @@ German is complete; English uses the msgids, which are English.
 |---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | 90 | 136 | 40 | 13 | 130 | 10 | 15 | 9 (52) | 12 | 7 |
 
+## Documentation
+
+Phase 9, as of commit `8cd6127`: the documentation compiled into the app
+(`Mercator.Docs`), counted as shown there (plain text, without front matter).
+
+| Part | Language | Chapters | Words |
+|---|---|---:|---:|
+| Back office manual (by role) | de / en | 16 / 16 | 3,671 / 3,845 |
+| Operating guide | de / en | 5 / 5 | 822 / 891 |
+| Shop help | de / en | 5 / 5 | 1,019 / 1,083 |
+| Developers: overview and workflow | en | 2 | 822 |
+| Developers: design documents and roadmap | en | 9 | 15,493 |
+| Making-of: introduction and metrics | en | 2 | 724 |
+| Making-of: session logs | en | 6 | 75,868 |
+| **Total** | | **71** | **104,238** |
+
+About 300 printed pages at 350 words each, three quarters of it the session
+logs. Written for the app in phase 9: 12,153 words (manual, operating guide,
+shop help and developer overview in both languages); the design documents,
+roadmap and session logs grew along with the work and are shown as they are.
+Every admin page (27 routes) has a manual chapter behind its "?".
+
 ## Compared with the Rails original
 
 The Rails/Hobo shop (`mercator-src/mercator`), for orientation only. It also
@@ -141,7 +163,18 @@ Phoenix.Router.routes(MercatorWeb.Router) |> length()
 
 Demo data counts are from the dev database after `mix run priv/repo/seeds.exs`.
 
+The documentation numbers come from `Mercator.Docs` (words of each chapter's
+plain text, chapters in their own language only):
+
+```elixir
+admin = %{roles: [:administrator]}
+for part <- Mercator.Docs.parts(), locale <- ["de", "en"] do
+  chapters = part |> Mercator.Docs.chapters(locale, admin) |> Enum.filter(&(&1.locale == locale))
+  {part, locale, length(chapters), chapters |> Enum.map(&length(String.split(&1.text))) |> Enum.sum()}
+end
+```
+
 Session durations come from the `timestamp` of every entry in the transcripts
-(`~/.claude/projects/-daten-DATA-phoenix-mercator/*.jsonl`): the span is first
+(`~/.claude/projects/<project>/*.jsonl`): the span is first
 to last entry; active time sums the gaps between consecutive entries that are
 at most 15 minutes long.

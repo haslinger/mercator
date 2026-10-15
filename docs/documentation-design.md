@@ -103,5 +103,7 @@ the public demo domain and demo accounts (the demo password is public anyway).
 4. ~~Shop `/help` and the links from footer, checkout and chat~~ *(done 2026-10-15)*.
 5. ~~Making-of (`/making-of`, introduction, metrics, sessions; demo only)~~ *(done
    2026-10-15; `config :mercator, :making_of` overrides demo mode, on in dev)*.
-6. Content: back office manual by role, operating (from `DOCKER.md`), developer
-   overview, shop help, in German and English. The largest step, possibly split.
+6. ~~Content: back office manual by role, operating (from `DOCKER.md`), developer
+   overview, shop help, in German and English~~ *(done 2026-10-15 in four commits;
+   the product catalogue and configurator in three chapters; sizes in
+   `docs/metrics.md`)*.
