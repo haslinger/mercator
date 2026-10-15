@@ -17,6 +17,8 @@ defmodule Mercator.Demo do
   """
   import Ecto.Query, only: [from: 2]
 
+  require Ash.Query
+
   require Logger
 
   alias Mercator.Accounts.User
@@ -36,6 +38,27 @@ defmodule Mercator.Demo do
     |> Enum.reject(&(:administrator in &1.roles))
     |> Enum.map(&Map.merge(%{locale: :de}, Map.take(&1, [:email, :name, :roles, :locale])))
   end
+
+  @doc """
+  The user of a public demo login by its key (the local part of the email,
+  e.g. `"sales"`), for the one-click demo sign-in; nil outside demo mode,
+  for unknown keys and for administrators.
+  """
+  def login_user(key) when is_binary(key) do
+    with true <- enabled?(),
+         %{email: email} <- Enum.find(public_logins(), &(login_key(&1) == key)) do
+      User
+      |> Ash.Query.filter(email == ^email)
+      |> Ash.read_one!(authorize?: false)
+    else
+      _ -> nil
+    end
+  end
+
+  def login_user(_key), do: nil
+
+  @doc "The key of a demo login (the local part of its email), used in forms and DOM ids."
+  def login_key(%{email: email}), do: email |> String.split("@") |> hd()
 
   @doc "The password of the public demo logins."
   def password, do: Seeds.demo_password()

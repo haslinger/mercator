@@ -196,7 +196,7 @@ msgstr ""
 msgid "is neither an image nor a PDF"
 msgstr ""
 
-#: lib/mercator/accounts/preparations/rate_limit.ex:44
+#: lib/mercator/accounts/preparations/rate_limit.ex:51
 #, elixir-autogen, elixir-format
 msgid "too many attempts, please try again later"
 msgstr ""

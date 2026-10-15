@@ -1,10 +1,11 @@
 defmodule MercatorWeb.DemoComponents do
   @moduledoc """
   What demo mode shows (`Mercator.Demo`): the "Demo" badge in the headers and
-  the public demo logins on the sign-in page.
+  the one-click demo sign-in on the sign-in page.
   """
   use Phoenix.Component
   use Gettext, backend: MercatorWeb.Gettext
+  use MercatorWeb, :verified_routes
 
   import MercatorWeb.CoreComponents, only: [icon: 1]
   import MercatorWeb.RoleComponents, only: [role_label: 1]
@@ -32,13 +33,14 @@ defmodule MercatorWeb.DemoComponents do
     doc: "list the demo logins (sign-in), or only the reset hint (register, reset)"
 
   @doc """
-  The demo hint card of the sign-in pages: the public demo logins with a
-  button that fills in the sign-in form, and that everything is reset at
-  night (nothing outside demo mode).
+  The demo hint card of the sign-in pages: one-click sign-in buttons for
+  the public demo accounts, and that everything is reset at night (nothing
+  outside demo mode). The buttons post only the login key (`/demo/sign-in`,
+  `MercatorWeb.AuthController.demo_sign_in/2`): no email address or password
+  appears on the page, so nothing can be harvested for spam.
   """
   def demo_logins(assigns) do
-    assigns =
-      assign(assigns, logins: Demo.public_logins(), password: Demo.password())
+    assigns = assign(assigns, :logins, Demo.public_logins())
 
     ~H"""
     <section
@@ -55,54 +57,31 @@ defmodule MercatorWeb.DemoComponents do
         )}
       </p>
       <div :if={@logins?} class="mt-4">
-        <p class="text-sm">
-          {gettext("Try one of the demo accounts, password:")}
-          <code class="font-mono font-semibold" id="demo-password">{@password}</code>
-        </p>
+        <p class="text-sm">{gettext("Sign in with one of the demo accounts:")}</p>
         <ul class="mt-2 divide-y divide-base-200" id="demo-login-list">
           <li
             :for={login <- @logins}
             class="flex items-center justify-between gap-2 py-2"
-            id={"demo-login-#{login.email |> String.split("@") |> hd()}"}
+            id={"demo-login-#{Demo.login_key(login)}"}
           >
             <div class="min-w-0">
               <p class="font-medium truncate">{login.name}</p>
-              <p class="text-xs text-base-content/60 truncate">
-                {role_text(login)} · <span class="font-mono">{login.email}</span>
-              </p>
+              <p class="text-xs text-base-content/60 truncate">{role_text(login)}</p>
             </div>
-            <button
-              type="button"
-              class="btn btn-ghost btn-xs shrink-0"
-              phx-hook=".DemoLogin"
-              id={"demo-fill-#{login.email |> String.split("@") |> hd()}"}
-              data-email={login.email}
-              data-password={@password}
+            <.form
+              for={%{}}
+              action={~p"/demo/sign-in"}
+              method="post"
+              id={"demo-sign-in-#{Demo.login_key(login)}"}
             >
-              {gettext("Use")}
-            </button>
+              <input type="hidden" name="login" value={Demo.login_key(login)} />
+              <button type="submit" class="btn btn-primary btn-sm btn-outline shrink-0">
+                {gettext("Sign in")}
+              </button>
+            </.form>
           </li>
         </ul>
       </div>
-      <script :type={Phoenix.LiveView.ColocatedHook} name=".DemoLogin">
-        export default {
-          mounted() {
-            this.el.addEventListener("click", () => {
-              const form = document.getElementById("user-password-sign-in-with-password")
-              if (!form) return
-              const fill = (name, value) => {
-                const input = form.querySelector(`input[name="user[${name}]"]`)
-                if (!input) return
-                input.value = value
-                input.dispatchEvent(new Event("input", {bubbles: true}))
-              }
-              fill("email", this.el.dataset.email)
-              fill("password", this.el.dataset.password)
-              form.querySelector("button[type=submit], input[type=submit]")?.focus()
-            })
-          }
-        }
-      </script>
     </section>
     """
   end

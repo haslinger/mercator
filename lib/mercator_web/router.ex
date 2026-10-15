@@ -141,6 +141,8 @@ defmodule MercatorWeb.Router do
     pipe_through [:browser, :csp, :auth_context]
 
     get "/checkout/sign-in", CheckoutController, :sign_in
+    # one-click sign-in to a public demo account (demo mode only)
+    post "/demo/sign-in", AuthController, :demo_sign_in
     auth_routes AuthController, Mercator.Accounts.User, path: "/auth"
 
     sign_out_route AuthController, "/sign-out",

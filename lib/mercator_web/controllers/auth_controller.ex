@@ -29,6 +29,23 @@ defmodule MercatorWeb.AuthController do
     |> redirect(to: after_sign_in(user, return_to))
   end
 
+  @doc """
+  One-click sign-in to a public demo account (demo mode only): the sign-in
+  page shows buttons instead of the demo addresses, so they cannot be
+  harvested for spam. The account is signed in like after a password
+  sign-in (`success/4`).
+  """
+  def demo_sign_in(conn, %{"login" => key}) do
+    with %{} = user <- Mercator.Demo.login_user(key),
+         {:ok, token, _claims} <- AshAuthentication.Jwt.token_for_user(user) do
+      success(conn, {:demo, :sign_in}, Ash.Resource.put_metadata(user, :token, token), token)
+    else
+      _ -> conn |> put_status(:not_found) |> text("Not found")
+    end
+  end
+
+  def demo_sign_in(conn, _params), do: conn |> put_status(:not_found) |> text("Not found")
+
   # a new user from a magic link enters their name first (#102)
   defp after_sign_in(%{name: nil}, return_to), do: ~p"/account/name?#{[return_to: return_to]}"
   defp after_sign_in(_user, return_to), do: return_to

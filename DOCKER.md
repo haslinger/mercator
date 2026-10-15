@@ -128,8 +128,10 @@ database (watch `docker compose logs -f app`; the photos take a minute): the
 Biber Holz catalogue with photos, pages, orders, conversations and offers,
 and the demo users. The administrator `admin@mittenin.at` gets
 `DEMO_ADMIN_PASSWORD` (the app does not start without it); all other demo
-users have the public password `mercator-demo` and are listed on the sign-in
-page. They cannot change their password or roles or reset their password.
+users have the password `mercator-demo`. The sign-in page offers them as
+one-click "Anmelden" buttons, without showing their addresses or the password
+(so spam bots cannot harvest them). They cannot change their password or
+roles or reset their password.
 The payment simulator is the active payment provider.
 
 Every night at 03:00 (shop time) the demo is reset: all tables are emptied

@@ -28,4 +28,4 @@ Smaller improvements noted along the way, not tied to a phase step.
 
 ## Open questions
 
-- *None right now.*
+- **#127** (2026-10-15) Emails the demo shop sends to the demo accounts (order confirmations, offers, staff notifications): (a) not sent at all in demo mode (only logged), (b) all redirected to one inbox (`DEMO_MAIL_TO` in `.env`), or (c) sent to the demo addresses as now? With (a) or (b) the demo accounts could move to an undeliverable address (e.g. `@demo.mittenin.at` without MX), so mail to harvested addresses goes nowhere. Proposed: (b).

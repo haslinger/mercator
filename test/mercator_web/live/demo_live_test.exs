@@ -16,6 +16,12 @@ defmodule MercatorWeb.DemoLiveTest do
   end
 
   describe "outside demo mode" do
+    test "there is no demo sign-in", %{conn: conn} do
+      demo_sales()
+
+      assert conn |> post(~p"/demo/sign-in", %{"login" => "sales"}) |> response(404)
+    end
+
     test "the sign-in page has no demo logins and the shop no badge", %{conn: conn} do
       {:ok, view, _html} = live(conn, ~p"/sign-in")
       assert has_element?(view, "#user-password-sign-in-with-password")
@@ -29,14 +35,34 @@ defmodule MercatorWeb.DemoLiveTest do
   describe "in demo mode" do
     setup :demo_mode
 
-    test "the sign-in page lists the public demo logins", %{conn: conn} do
-      {:ok, view, _html} = live(conn, ~p"/sign-in")
+    test "the sign-in page offers one-click demo sign-ins without addresses", %{conn: conn} do
+      {:ok, view, html} = live(conn, ~p"/sign-in")
 
       assert has_element?(view, "#user-password-sign-in-with-password")
-      assert has_element?(view, "#demo-password", Mercator.Demo.password())
-      assert has_element?(view, "#demo-login-sales", "sales@mittenin.at")
-      assert has_element?(view, "#demo-fill-sales[data-email='sales@mittenin.at']")
+      assert has_element?(view, "#demo-sign-in-sales input[name=login][value=sales]")
       refute has_element?(view, "#demo-login-admin")
+      # nothing to harvest for spam
+      refute html =~ "@mittenin.at"
+      refute html =~ Mercator.Demo.password()
+    end
+
+    test "a demo sign-in button signs in the demo account", %{conn: conn} do
+      sales = demo_sales()
+
+      conn = post(conn, ~p"/demo/sign-in", %{"login" => "sales"})
+      assert redirected_to(conn) == ~p"/"
+
+      {:ok, view, _html} = live(recycle(conn), ~p"/account")
+      assert has_element?(view, "#account-email", to_string(sales.email))
+    end
+
+    test "administrators and unknown keys cannot be signed in by button", %{conn: conn} do
+      [email: "admin@mittenin.at"]
+      |> user_fixture()
+      |> Ash.Seed.update!(%{roles: [:administrator]})
+
+      assert conn |> post(~p"/demo/sign-in", %{"login" => "admin"}) |> response(404)
+      assert build_conn() |> post(~p"/demo/sign-in", %{"login" => "nobody"}) |> response(404)
     end
 
     test "the register page only says that everything is reset", %{conn: conn} do

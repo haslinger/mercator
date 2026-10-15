@@ -16,7 +16,7 @@ msgstr ""
 msgid "Actions"
 msgstr "Aktionen"
 
-#: lib/mercator_web/controllers/auth_controller.ex:54
+#: lib/mercator_web/controllers/auth_controller.ex:71
 #, elixir-autogen, elixir-format
 msgid "An account with this email already exists. We've sent a link to that address - confirm it to finish linking this provider to your account."
 msgstr "Ein Konto mit dieser E-Mail-Adresse existiert bereits. Wir haben einen Link an diese Adresse gesendet – bestätigen Sie ihn, um die Verknüpfung abzuschließen."
@@ -27,7 +27,7 @@ msgstr "Ein Konto mit dieser E-Mail-Adresse existiert bereits. Wir haben einen L
 msgid "Attempting to reconnect"
 msgstr "Verbindung wird wiederhergestellt"
 
-#: lib/mercator_web/controllers/auth_controller.ex:60
+#: lib/mercator_web/controllers/auth_controller.ex:77
 #, elixir-autogen, elixir-format
 msgid "Incorrect email or password."
 msgstr "E-Mail oder Passwort ist falsch."
@@ -42,6 +42,7 @@ msgstr "Registrieren"
 msgid "Shop on your own or get advice from our consultants."
 msgstr "Kaufen Sie selbständig ein oder lassen Sie sich von unseren Beraterinnen und Beratern unterstützen."
 
+#: lib/mercator_web/components/demo_components.ex:79
 #: lib/mercator_web/components/layouts.ex:117
 #: lib/mercator_web/components/layouts.ex:120
 #: lib/mercator_web/live/payment_simulator_live.ex:289
@@ -71,12 +72,12 @@ msgstr "Keine Internetverbindung"
 msgid "You are now signed in."
 msgstr "Sie sind jetzt angemeldet."
 
-#: lib/mercator_web/controllers/auth_controller.ex:75
+#: lib/mercator_web/controllers/auth_controller.ex:92
 #, elixir-autogen, elixir-format
 msgid "You are now signed out."
 msgstr "Sie sind jetzt abgemeldet."
 
-#: lib/mercator_web/controllers/auth_controller.ex:45
+#: lib/mercator_web/controllers/auth_controller.ex:62
 #, elixir-autogen, elixir-format
 msgid "You have already signed in another way, but have not confirmed your account. You can confirm your account using the link we sent to you, or by resetting your password."
 msgstr "Sie haben sich bereits auf andere Weise angemeldet, Ihr Konto aber noch nicht bestätigt. Bestätigen Sie es über den Link, den wir Ihnen gesendet haben, oder setzen Sie Ihr Passwort zurück."
@@ -2530,7 +2531,7 @@ msgstr "Abschließen"
 msgid "Confirm"
 msgstr "Bestätigen"
 
-#: lib/mercator_web/components/demo_components.ex:111
+#: lib/mercator_web/components/demo_components.ex:90
 #: lib/mercator_web/documents.ex:64
 #: lib/mercator_web/live/admin/conversation_archive_live.ex:129
 #: lib/mercator_web/live/admin/desk_live.ex:1035
@@ -4898,7 +4899,6 @@ msgstr "Simulator (keine echte Zahlung)"
 msgid "This provider cannot be used."
 msgstr "Dieser Anbieter kann nicht verwendet werden."
 
-#: lib/mercator_web/components/demo_components.ex:82
 #: lib/mercator_web/live/admin/payment_provider_live.ex:117
 #, elixir-autogen, elixir-format
 msgid "Use"
@@ -5164,22 +5164,22 @@ msgstr "Verfügernummer"
 msgid "User number or PIN is wrong. Please use the test login."
 msgstr "Verfügernummer oder PIN ist falsch. Bitte verwenden Sie den Test-Zugang."
 
-#: lib/mercator_web/components/demo_components.ex:110
+#: lib/mercator_web/components/demo_components.ex:89
 #, elixir-autogen, elixir-format
 msgid "Customer, English"
 msgstr "Kunde, Englisch"
 
-#: lib/mercator_web/components/demo_components.ex:25
+#: lib/mercator_web/components/demo_components.ex:26
 #, elixir-autogen, elixir-format
 msgid "Demo"
 msgstr "Demo"
 
-#: lib/mercator_web/components/demo_components.ex:22
+#: lib/mercator_web/components/demo_components.ex:23
 #, elixir-autogen, elixir-format
 msgid "Demo shop: no real orders, everything is reset every night"
 msgstr "Demo-Shop: keine echten Bestellungen, alles wird jede Nacht zurückgesetzt"
 
-#: lib/mercator_web/components/demo_components.ex:53
+#: lib/mercator_web/components/demo_components.ex:55
 #, elixir-autogen, elixir-format
 msgid "Everything is reset every night at 3 o'clock, including accounts you register. Orders are not delivered and payments are simulated."
 msgstr "Alles wird jede Nacht um 3 Uhr zurückgesetzt, auch Konten, die Sie registrieren. Bestellungen werden nicht geliefert, Zahlungen nur simuliert."
@@ -5194,15 +5194,10 @@ msgstr "Das Passwort eines Demo-Kontos kann nicht geändert werden."
 msgid "The roles of a public demo account cannot be changed."
 msgstr "Die Rollen eines öffentlichen Demo-Kontos können nicht geändert werden."
 
-#: lib/mercator_web/components/demo_components.ex:50
+#: lib/mercator_web/components/demo_components.ex:52
 #, elixir-autogen, elixir-format
 msgid "This is a demo"
 msgstr "Das ist eine Demo"
-
-#: lib/mercator_web/components/demo_components.ex:59
-#, elixir-autogen, elixir-format
-msgid "Try one of the demo accounts, password:"
-msgstr "Probieren Sie eines der Demo-Konten, Passwort:"
 
 #: lib/mercator/mailer.ex:50
 #, elixir-autogen, elixir-format
@@ -5230,27 +5225,32 @@ msgstr "E-Mail mit Anmeldelink konnte nicht gesendet werden"
 msgid "Open PDF"
 msgstr "PDF öffnen"
 
-#: lib/mercator/accounts/preparations/rate_limit.ex:66
+#: lib/mercator/accounts/preparations/rate_limit.ex:73
 #, elixir-autogen, elixir-format
 msgid "Last attempt for %{email}."
 msgstr "Letzter Versuch für %{email}."
 
-#: lib/mercator/accounts/preparations/rate_limit.ex:62
+#: lib/mercator/accounts/preparations/rate_limit.ex:69
 #, elixir-autogen, elixir-format
 msgid "Rate limit reached: %{what} from %{ip}"
 msgstr "Limit erreicht: %{what} von %{ip}"
 
-#: lib/mercator/accounts/preparations/rate_limit.ex:73
+#: lib/mercator/accounts/preparations/rate_limit.ex:80
 #, elixir-autogen, elixir-format
 msgid "sign-in attempts"
 msgstr "Anmeldeversuche"
 
-#: lib/mercator/accounts/preparations/rate_limit.ex:74
+#: lib/mercator/accounts/preparations/rate_limit.ex:81
 #, elixir-autogen, elixir-format
 msgid "sign-in emails"
 msgstr "Anmelde-E-Mails"
 
-#: lib/mercator/accounts/preparations/rate_limit.ex:64
+#: lib/mercator/accounts/preparations/rate_limit.ex:71
 #, elixir-autogen, elixir-format
 msgid "unknown IP"
 msgstr "unbekannter IP"
+
+#: lib/mercator_web/components/demo_components.ex:60
+#, elixir-autogen, elixir-format
+msgid "Sign in with one of the demo accounts:"
+msgstr "Melden Sie sich mit einem der Demo-Konten an:"
