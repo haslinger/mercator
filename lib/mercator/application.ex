@@ -5,8 +5,13 @@ defmodule Mercator.Application do
 
   use Application
 
+  alias Mercator.Operations.JobFailures
+
   @impl true
   def start(_type, _args) do
+    # background jobs that fail for good become incidents (#105)
+    JobFailures.attach()
+
     children = [
       MercatorWeb.Telemetry,
       Mercator.Repo,

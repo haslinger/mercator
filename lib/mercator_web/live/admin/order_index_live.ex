@@ -82,7 +82,13 @@ defmodule MercatorWeb.Admin.OrderIndexLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <Layouts.admin flash={@flash} current_user={@current_user} locale={@locale} active="orders">
+    <Layouts.admin
+      flash={@flash}
+      current_user={@current_user}
+      open_incidents={@open_incidents}
+      locale={@locale}
+      active="orders"
+    >
       <div class="flex flex-wrap items-baseline justify-between gap-2">
         <h1 class="text-3xl font-bold">{gettext("Orders")}</h1>
         <span class="text-sm text-base-content/70" id="order-count">

@@ -82,7 +82,13 @@ defmodule MercatorWeb.Admin.TaxClassLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <Layouts.admin flash={@flash} current_user={@current_user} locale={@locale} active="tax-classes">
+    <Layouts.admin
+      flash={@flash}
+      current_user={@current_user}
+      open_incidents={@open_incidents}
+      locale={@locale}
+      active="tax-classes"
+    >
       <div class="flex items-center justify-between">
         <h1 class="text-3xl font-bold">{gettext("Tax classes")}</h1>
         <button type="button" phx-click="new" class="btn btn-primary" id="new-tax-class">

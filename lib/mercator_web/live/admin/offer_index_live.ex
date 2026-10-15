@@ -84,7 +84,13 @@ defmodule MercatorWeb.Admin.OfferIndexLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <Layouts.admin flash={@flash} current_user={@current_user} locale={@locale} active="offers">
+    <Layouts.admin
+      flash={@flash}
+      current_user={@current_user}
+      open_incidents={@open_incidents}
+      locale={@locale}
+      active="offers"
+    >
       <div class="flex flex-wrap items-baseline justify-between gap-2">
         <h1 class="text-3xl font-bold">{gettext("Offers")}</h1>
         <div class="flex items-center gap-3">

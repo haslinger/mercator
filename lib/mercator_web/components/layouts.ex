@@ -169,6 +169,11 @@ defmodule MercatorWeb.Layouts do
   attr :locale, :string, default: nil
   attr :active, :string, default: nil, doc: "id of the active navigation entry"
   attr :wide, :boolean, default: false, doc: "use the full width (e.g. the sales desk)"
+
+  attr :open_incidents, :integer,
+    default: nil,
+    doc: "open incidents for the sidebar badge, see MercatorWeb.IncidentBadge"
+
   slot :inner_block, required: true
 
   @doc "Layout of the admin area (#16): top bar plus a sidebar filtered by role."
@@ -231,6 +236,13 @@ defmodule MercatorWeb.Layouts do
                   id={"admin-nav-#{item.id}"}
                 >
                   <.icon name={item.icon} class="size-5" /> {item.label}
+                  <span
+                    :if={item.id == "incidents" and (@open_incidents || 0) > 0}
+                    class="badge badge-error badge-sm ml-auto"
+                    id="open-incidents-badge"
+                  >
+                    {@open_incidents}
+                  </span>
                 </.link>
               </li>
             </ul>

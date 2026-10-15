@@ -296,7 +296,13 @@ defmodule MercatorWeb.Admin.PageEditLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <Layouts.admin flash={@flash} current_user={@current_user} locale={@locale} active="pages">
+    <Layouts.admin
+      flash={@flash}
+      current_user={@current_user}
+      open_incidents={@open_incidents}
+      locale={@locale}
+      active="pages"
+    >
       <.link navigate={~p"/admin/pages"} class="link link-hover text-sm w-fit" id="back-to-pages">
         <.icon name="hero-arrow-left" class="size-4" /> {gettext("Pages")}
       </.link>

@@ -132,7 +132,13 @@ defmodule MercatorWeb.Admin.CategoryTreeLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <Layouts.admin flash={@flash} current_user={@current_user} locale={@locale} active="categories">
+    <Layouts.admin
+      flash={@flash}
+      current_user={@current_user}
+      open_incidents={@open_incidents}
+      locale={@locale}
+      active="categories"
+    >
       <div class="flex flex-wrap items-center justify-between gap-2">
         <h1 class="text-3xl font-bold">{gettext("Categories")}</h1>
         <.link patch={~p"/admin/categories/new"} class="btn btn-primary" id="new-category">

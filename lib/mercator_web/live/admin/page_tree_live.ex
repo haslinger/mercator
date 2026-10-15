@@ -114,7 +114,13 @@ defmodule MercatorWeb.Admin.PageTreeLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <Layouts.admin flash={@flash} current_user={@current_user} locale={@locale} active="pages">
+    <Layouts.admin
+      flash={@flash}
+      current_user={@current_user}
+      open_incidents={@open_incidents}
+      locale={@locale}
+      active="pages"
+    >
       <div class="flex flex-wrap items-center justify-between gap-2">
         <h1 class="text-3xl font-bold">{gettext("Pages")}</h1>
         <.link patch={~p"/admin/pages/new"} class="btn btn-primary" id="new-page">

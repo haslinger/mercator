@@ -24,7 +24,13 @@ defmodule MercatorWeb.Admin.UserIndexLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <Layouts.admin flash={@flash} current_user={@current_user} locale={@locale} active="users">
+    <Layouts.admin
+      flash={@flash}
+      current_user={@current_user}
+      open_incidents={@open_incidents}
+      locale={@locale}
+      active="users"
+    >
       <div class="flex items-baseline justify-between">
         <h1 class="text-3xl font-bold">{gettext("Users")}</h1>
         <span class="text-base-content/70" id="user-count">

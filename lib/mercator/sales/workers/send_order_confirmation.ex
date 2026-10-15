@@ -12,7 +12,10 @@ defmodule Mercator.Sales.Workers.SendOrderConfirmation do
     email =
       order
       |> OrderEmail.confirmation()
-      |> Documents.attach_pdf(Documents.order_pdf(order), Documents.order_filename(order))
+      |> Documents.attach_pdf(Documents.order_pdf(order), Documents.order_filename(order), %{
+        order_id: order.id,
+        customer_id: order.user_id
+      })
 
     with {:ok, _} <- Mercator.Mailer.deliver(email), do: :ok
   end

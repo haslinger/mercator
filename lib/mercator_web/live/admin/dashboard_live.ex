@@ -26,7 +26,13 @@ defmodule MercatorWeb.Admin.DashboardLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <Layouts.admin flash={@flash} current_user={@current_user} locale={@locale} active="dashboard">
+    <Layouts.admin
+      flash={@flash}
+      current_user={@current_user}
+      open_incidents={@open_incidents}
+      locale={@locale}
+      active="dashboard"
+    >
       <h1 class="text-3xl font-bold">{gettext("Dashboard")}</h1>
       <p class="text-base-content/70">
         {gettext("Welcome, %{name}.", name: @current_user.name || @current_user.email)}

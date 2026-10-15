@@ -73,7 +73,13 @@ defmodule MercatorWeb.Admin.ConversationArchiveLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <Layouts.admin flash={@flash} current_user={@current_user} locale={@locale} active="desk">
+    <Layouts.admin
+      flash={@flash}
+      current_user={@current_user}
+      open_incidents={@open_incidents}
+      locale={@locale}
+      active="desk"
+    >
       <div class="flex flex-wrap items-baseline justify-between gap-2">
         <div>
           <.link navigate={~p"/admin/desk"} class="link text-sm">← {gettext("Sales desk")}</.link>

@@ -8,8 +8,6 @@ defmodule MercatorWeb.OrderPdfController do
   alias Mercator.Sales
   alias MercatorWeb.Documents
 
-  require Logger
-
   def show(conn, %{"number" => number}) do
     case conn.assigns[:current_user] do
       nil -> redirect(conn, to: ~p"/sign-in")
@@ -27,7 +25,12 @@ defmodule MercatorWeb.OrderPdfController do
         )
 
       {:error, message} ->
-        Logger.error("Order PDF #{order.number} failed: #{message}")
+        Documents.report_failure(
+          Documents.order_filename(order),
+          message,
+          %{order_id: order.id, customer_id: order.user_id},
+          :download
+        )
 
         conn
         |> put_status(:internal_server_error)

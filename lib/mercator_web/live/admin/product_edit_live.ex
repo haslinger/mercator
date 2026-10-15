@@ -207,7 +207,13 @@ defmodule MercatorWeb.Admin.ProductEditLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <Layouts.admin flash={@flash} current_user={@current_user} locale={@locale} active="products">
+    <Layouts.admin
+      flash={@flash}
+      current_user={@current_user}
+      open_incidents={@open_incidents}
+      locale={@locale}
+      active="products"
+    >
       <.link navigate={~p"/admin/products"} class="link link-hover text-sm" id="back-to-products">
         <.icon name="hero-arrow-left" class="size-4" /> {gettext("Products")}
       </.link>

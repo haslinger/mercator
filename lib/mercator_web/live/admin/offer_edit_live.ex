@@ -287,7 +287,13 @@ defmodule MercatorWeb.Admin.OfferEditLive do
       )
 
     ~H"""
-    <Layouts.admin flash={@flash} current_user={@current_user} locale={@locale} active="offers">
+    <Layouts.admin
+      flash={@flash}
+      current_user={@current_user}
+      open_incidents={@open_incidents}
+      locale={@locale}
+      active="offers"
+    >
       <div class="flex flex-wrap items-center justify-between gap-2">
         <div>
           <.link navigate={~p"/admin/offers"} class="link text-sm">← {gettext("Offers")}</.link>
@@ -431,6 +437,13 @@ defmodule MercatorWeb.Admin.OfferEditLive do
                 id="pdf-link"
               >
                 <.icon name="hero-document-arrow-down" class="size-4" /> {gettext("Download PDF")}
+              </.link>
+              <.link
+                navigate={~p"/admin/incidents/new?#{%{offer: @offer.id}}"}
+                class="link"
+                id="report-incident"
+              >
+                <.icon name="hero-exclamation-triangle" class="size-4" /> {gettext("Report incident")}
               </.link>
               <.link
                 :if={@offer.order}

@@ -14,6 +14,7 @@ defmodule MercatorWeb.Documents do
   alias Mercator.{Brand, Countries, Translated}
   alias Mercator.Catalog.Unit
   alias Mercator.Consulting.{Desk, Offer, OfferTotals}
+  alias Mercator.Operations.Incidents
   alias Mercator.Sales.{Order, Payment, Shipping}
   alias MercatorWeb.Format
 
@@ -165,21 +166,48 @@ defmodule MercatorWeb.Documents do
 
   @doc """
   Attaches a rendered PDF (`{:ok, pdf}` from `offer_pdf/1` or `order_pdf/1`)
-  to an email. If rendering failed, the email goes without it and the error
-  is logged: the customer still gets the information, and the document can
-  be downloaded from the account.
+  to an email. If rendering failed, the email goes without it and an
+  incident is reported (#105) with `links` (e.g. `%{order_id: id}`): the
+  customer still gets the information, and staff can send the document.
   """
-  def attach_pdf(email, {:ok, pdf}, filename) do
+  def attach_pdf(email, result, filename, links \\ %{})
+
+  def attach_pdf(email, {:ok, pdf}, filename, _links) do
     Swoosh.Email.attachment(
       email,
       Swoosh.Attachment.new({:data, pdf}, filename: filename, content_type: "application/pdf")
     )
   end
 
-  def attach_pdf(email, {:error, message}, filename) do
-    Logger.error("PDF #{filename} could not be attached: #{message}")
+  def attach_pdf(email, {:error, message}, filename, links) do
+    report_failure(filename, message, links, :email)
     email
   end
+
+  @doc """
+  Reports a PDF that could not be created as an incident (#105). `context`
+  is `:email` (sent without it) or `:download`.
+  """
+  def report_failure(filename, message, links, context) do
+    Logger.error("PDF #{filename} failed: #{message}")
+
+    Incidents.in_shop_locale(fn ->
+      links
+      |> Map.merge(%{
+        kind: :pdf,
+        title: gettext("PDF %{filename} could not be created", filename: filename),
+        description: failure_description(context),
+        details: message
+      })
+      |> Incidents.report()
+    end)
+  end
+
+  defp failure_description(:email),
+    do: gettext("The email was sent without the PDF. Please send the document to the customer.")
+
+  defp failure_description(:download),
+    do: gettext("Downloading the PDF failed.")
 
   @doc "The customer's address for documents: the default billing address, else the first."
   def billing_address(user_id) do

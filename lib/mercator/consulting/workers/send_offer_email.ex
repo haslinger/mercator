@@ -28,7 +28,10 @@ defmodule Mercator.Consulting.Workers.SendOfferEmail do
   defp email(%{state: :sent} = offer, "sent") do
     offer
     |> ConsultingEmail.offer_sent()
-    |> Documents.attach_pdf(Documents.offer_pdf(offer), Documents.offer_filename(offer))
+    |> Documents.attach_pdf(Documents.offer_pdf(offer), Documents.offer_filename(offer), %{
+      offer_id: offer.id,
+      customer_id: offer.customer_id
+    })
   end
 
   defp email(%{state: :pending_approval} = offer, "approval") do

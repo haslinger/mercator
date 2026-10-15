@@ -365,7 +365,14 @@ defmodule MercatorWeb.Admin.DeskLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <Layouts.admin flash={@flash} current_user={@current_user} locale={@locale} active="desk" wide>
+    <Layouts.admin
+      flash={@flash}
+      current_user={@current_user}
+      open_incidents={@open_incidents}
+      locale={@locale}
+      active="desk"
+      wide
+    >
       <div class="flex flex-wrap items-center justify-between gap-2" id="desk" phx-hook=".DeskNotify">
         <h1 class="text-3xl font-bold">{gettext("Sales desk")}</h1>
         <.link navigate={~p"/admin/conversations"} class="btn btn-ghost ml-auto" id="to-archive">
@@ -491,6 +498,15 @@ defmodule MercatorWeb.Admin.DeskLive do
             >
               {gettext("End")}
             </button>
+            <.link
+              navigate={~p"/admin/incidents/new?#{%{conversation: @selected.id}}"}
+              class="btn btn-ghost btn-sm btn-square"
+              title={gettext("Report incident")}
+              aria-label={gettext("Report incident")}
+              id="report-incident"
+            >
+              <.icon name="hero-exclamation-triangle" class="size-4" />
+            </.link>
           </header>
 
           <div class="flex-1 overflow-y-auto p-4" id="desk-scroll" phx-hook=".DeskScroll">

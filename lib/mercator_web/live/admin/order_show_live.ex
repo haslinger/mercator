@@ -131,7 +131,13 @@ defmodule MercatorWeb.Admin.OrderShowLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <Layouts.admin flash={@flash} current_user={@current_user} locale={@locale} active="orders">
+    <Layouts.admin
+      flash={@flash}
+      current_user={@current_user}
+      open_incidents={@open_incidents}
+      locale={@locale}
+      active="orders"
+    >
       <.link navigate={~p"/admin/orders"} class="link link-hover text-sm w-fit" id="back-to-orders">
         <.icon name="hero-arrow-left" class="size-4" /> {gettext("Orders")}
       </.link>
@@ -164,6 +170,13 @@ defmodule MercatorWeb.Admin.OrderShowLive do
           <.icon name="hero-document-arrow-down" class="size-4" /> {gettext(
             "Order confirmation (PDF)"
           )}
+        </.link>
+        <.link
+          navigate={~p"/admin/incidents/new?#{%{order: @order.number}}"}
+          class="link ml-2"
+          id="report-incident"
+        >
+          <.icon name="hero-exclamation-triangle" class="size-4" /> {gettext("Report incident")}
         </.link>
       </p>
 

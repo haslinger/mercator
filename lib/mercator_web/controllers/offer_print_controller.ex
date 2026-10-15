@@ -9,8 +9,6 @@ defmodule MercatorWeb.OfferPrintController do
   alias Mercator.Consulting.{Offer, Offers, OfferTotals}
   alias MercatorWeb.Documents
 
-  require Logger
-
   @staff [:sales, :sales_manager, :administrator]
 
   def customer(conn, %{"id" => id}), do: as_customer(conn, id, &show/2)
@@ -67,7 +65,12 @@ defmodule MercatorWeb.OfferPrintController do
         )
 
       {:error, message} ->
-        Logger.error("Offer PDF #{offer.id} failed: #{message}")
+        Documents.report_failure(
+          Documents.offer_filename(offer),
+          message,
+          %{offer_id: offer.id, customer_id: offer.customer_id},
+          :download
+        )
 
         conn
         |> put_status(:internal_server_error)

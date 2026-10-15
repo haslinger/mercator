@@ -88,7 +88,8 @@ config :mercator,
     Mercator.Catalog,
     Mercator.Sales,
     Mercator.Content,
-    Mercator.Consulting
+    Mercator.Consulting,
+    Mercator.Operations
   ],
   ash_authentication: [return_error_on_invalid_magic_link_token?: true]
 

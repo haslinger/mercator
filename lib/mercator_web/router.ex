@@ -53,7 +53,11 @@ defmodule MercatorWeb.Router do
 
     ash_authentication_live_session :authenticated_routes,
       on_mount_prepend: [{MercatorWeb.Locale, :default}, {MercatorWeb.Navigation, :default}],
-      on_mount: [{MercatorWeb.BasketSession, :default}, {MercatorWeb.LiveUserAuth, :require_name}] do
+      on_mount: [
+        {MercatorWeb.BasketSession, :default},
+        {MercatorWeb.LiveUserAuth, :require_name},
+        {MercatorWeb.IncidentBadge, :default}
+      ] do
       # in each liveview, add one of the following at the top of the module:
       #
       # If an authenticated user must be present:
@@ -103,6 +107,9 @@ defmodule MercatorWeb.Router do
       live "/admin/submissions", Admin.SubmissionLive
       live "/admin/terms", Admin.GtcLive
       live "/admin/tax-classes", Admin.TaxClassLive
+      live "/admin/incidents", Admin.IncidentIndexLive, :index
+      live "/admin/incidents/new", Admin.IncidentIndexLive, :new
+      live "/admin/incidents/:id", Admin.IncidentLive
       live "/admin/users", Admin.UserIndexLive
       live "/admin/users/:id", Admin.UserEditLive
     end

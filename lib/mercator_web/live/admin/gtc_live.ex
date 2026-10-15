@@ -115,7 +115,13 @@ defmodule MercatorWeb.Admin.GtcLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <Layouts.admin flash={@flash} current_user={@current_user} locale={@locale} active="terms">
+    <Layouts.admin
+      flash={@flash}
+      current_user={@current_user}
+      open_incidents={@open_incidents}
+      locale={@locale}
+      active="terms"
+    >
       <div class="flex flex-wrap items-center justify-between gap-2">
         <h1 class="text-3xl font-bold">{gettext("Terms and conditions")}</h1>
         <button type="button" phx-click="new" class="btn btn-primary" id="new-gtc">

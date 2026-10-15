@@ -49,7 +49,13 @@ defmodule MercatorWeb.Admin.SubmissionLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <Layouts.admin flash={@flash} current_user={@current_user} locale={@locale} active="submissions">
+    <Layouts.admin
+      flash={@flash}
+      current_user={@current_user}
+      open_incidents={@open_incidents}
+      locale={@locale}
+      active="submissions"
+    >
       <div class="flex flex-wrap items-center justify-between gap-2">
         <h1 class="text-3xl font-bold">{gettext("Contact requests")}</h1>
         <div class="join">

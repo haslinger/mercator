@@ -153,7 +153,13 @@ defmodule MercatorWeb.Admin.ProductIndexLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <Layouts.admin flash={@flash} current_user={@current_user} locale={@locale} active="products">
+    <Layouts.admin
+      flash={@flash}
+      current_user={@current_user}
+      open_incidents={@open_incidents}
+      locale={@locale}
+      active="products"
+    >
       <div class="flex flex-wrap items-center justify-between gap-2">
         <h1 class="text-3xl font-bold">{gettext("Products")}</h1>
         <.link patch={~p"/admin/products/new?#{@filters}"} class="btn btn-primary" id="new-product">

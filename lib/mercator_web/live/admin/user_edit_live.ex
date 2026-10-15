@@ -36,7 +36,13 @@ defmodule MercatorWeb.Admin.UserEditLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <Layouts.admin flash={@flash} current_user={@current_user} locale={@locale} active="users">
+    <Layouts.admin
+      flash={@flash}
+      current_user={@current_user}
+      open_incidents={@open_incidents}
+      locale={@locale}
+      active="users"
+    >
       <.link navigate={~p"/admin/users"} class="link link-hover text-sm" id="back-to-users">
         <.icon name="hero-arrow-left" class="size-4" /> {gettext("Users")}
       </.link>
