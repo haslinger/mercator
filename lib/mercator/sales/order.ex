@@ -91,7 +91,17 @@ defmodule Mercator.Sales.Order do
       argument :to, :date
       argument :query, :string
 
+      argument :unpaid_online, :boolean,
+        default: false,
+        description: "Only orders for online payment that are not paid yet (#111)."
+
       filter expr(is_nil(^arg(:state)) or state == ^arg(:state))
+
+      filter expr(
+               not (^arg(:unpaid_online)) or
+                 (payment_method == :online and state in [:placed, :confirmed])
+             )
+
       prepare Mercator.Sales.Preparations.SearchOrders
       prepare build(sort: [inserted_at: :desc])
       pagination offset?: true, countable: true, default_limit: 25, required?: false

@@ -1,8 +1,8 @@
 defmodule MercatorWeb.Admin.OrderIndexLive do
   @moduledoc """
   Order list in the back office (`/admin/orders`, checkout step 6): filters
-  by state, period and text (order number, customer name, company, email),
-  newest first, 25 per page. Filtering happens in the database.
+  by state, period, text (order number, customer name, company, email) and
+  unpaid online orders (#111), newest first, 25 per page. Filtering happens in the database.
   """
   use MercatorWeb, :live_view
 
@@ -15,7 +15,7 @@ defmodule MercatorWeb.Admin.OrderIndexLive do
   on_mount {MercatorWeb.LiveUserAuth,
             {:require_any_role, [:sales, :sales_manager, :administrator]}}
 
-  @filters ~w(q state from to)
+  @filters ~w(q state from to unpaid)
   @per_page 25
 
   @impl true
@@ -49,7 +49,8 @@ defmodule MercatorWeb.Admin.OrderIndexLive do
       query: filters["q"],
       state: Enum.find(states(), &(to_string(&1) == filters["state"])),
       from: parse_date(filters["from"]),
-      to: parse_date(filters["to"])
+      to: parse_date(filters["to"]),
+      unpaid_online: filters["unpaid"] == "true"
     }
   end
 
@@ -126,6 +127,17 @@ defmodule MercatorWeb.Admin.OrderIndexLive do
           <span class="label">{pgettext("date range", "to")}</span>
           <input type="date" name="to" value={@filters["to"]} id="filter-to" />
         </label>
+        <label class="label cursor-pointer gap-2 text-sm">
+          <input
+            type="checkbox"
+            name="unpaid"
+            value="true"
+            checked={@filters["unpaid"] == "true"}
+            class="toggle toggle-sm"
+            id="filter-unpaid"
+          />
+          {gettext("Unpaid online")}
+        </label>
       </form>
 
       <div class="overflow-x-auto rounded-box bg-base-100 shadow-sm">
@@ -162,7 +174,15 @@ defmodule MercatorWeb.Admin.OrderIndexLive do
                 <div>{order.billing_address["company"] || order.billing_address["name"]}</div>
                 <div class="text-xs text-base-content/70">{order.email}</div>
               </td>
-              <td class="hidden md:table-cell">{Payment.label(order.payment_method)}</td>
+              <td class="hidden md:table-cell">
+                {Payment.label(order.payment_method)}
+                <span
+                  :if={order.payment_method == :online and order.state in [:placed, :confirmed]}
+                  class="badge badge-sm badge-warning badge-outline ml-1"
+                >
+                  {gettext("unpaid")}
+                </span>
+              </td>
               <td><.state_badge state={order.state} shipping_method={order.shipping_method} /></td>
               <td class="text-right font-semibold whitespace-nowrap">
                 {Format.money(order.gross, @locale)}

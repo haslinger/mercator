@@ -105,4 +105,22 @@ defmodule MercatorWeb.Admin.OrderPaymentsLiveTest do
       assert {:ok, %{status: :refunded}} = Simulator.fetch_payment(payment.provider_id)
     end
   end
+
+  describe "order list" do
+    test "filters unpaid online orders", %{conn: conn, order: unpaid} do
+      [variant] = Ash.load!(product_fixture(), :variants).variants
+      paid = order_fixture(customer_fixture(), variant, %{"payment_method" => "online"})
+      pay(paid, :paid)
+      prepayment = order_fixture(customer_fixture(), variant, %{"payment_method" => "prepayment"})
+
+      {:ok, view, _html} = live(conn, ~p"/admin/orders")
+      assert has_element?(view, "#orders-#{prepayment.id}")
+
+      view |> element("#order-filters") |> render_change(%{"unpaid" => "true"})
+      assert_patch(view, ~p"/admin/orders?unpaid=true")
+      assert has_element?(view, "#orders-#{unpaid.id}", "unbezahlt")
+      refute has_element?(view, "#orders-#{paid.id}")
+      refute has_element?(view, "#orders-#{prepayment.id}")
+    end
+  end
 end
