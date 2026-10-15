@@ -72,7 +72,7 @@ defmodule MercatorWeb.ClientIp do
          {:ok, network} <- :inet.parse_address(String.to_charlist(network)),
          true <- tuple_size(address) == tuple_size(network),
          size = if(tuple_size(address) == 4, do: 8, else: 16),
-         {bits, ""} when bits in 0..(size * tuple_size(address)) <- Integer.parse(bits) do
+         {bits, ""} when bits in 0..(size * tuple_size(address))//1 <- Integer.parse(bits) do
       prefix(address, size, bits) == prefix(network, size, bits)
     else
       _ -> false
@@ -82,7 +82,7 @@ defmodule MercatorWeb.ClientIp do
   # the first `bits` bits of an address
   defp prefix(address, size, bits) do
     binary = address |> Tuple.to_list() |> Enum.map(&<<&1::size(size)>>) |> IO.iodata_to_binary()
-    <<prefix::bitstring-size(bits), _rest::bitstring>> = binary
+    <<prefix::bitstring-size(^bits), _rest::bitstring>> = binary
     prefix
   end
 end
