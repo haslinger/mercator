@@ -21,7 +21,8 @@ defmodule MercatorWeb.AdminNav do
     [
       {gettext("Overview"),
        [
-         item(gettext("Dashboard"), ~p"/admin", "hero-home", "dashboard", :all)
+         item(gettext("Dashboard"), ~p"/admin", "hero-home", "dashboard", :all),
+         item(gettext("Help"), ~p"/admin/help", "hero-question-mark-circle", "help", :all)
        ]},
       {gettext("Sales"),
        [

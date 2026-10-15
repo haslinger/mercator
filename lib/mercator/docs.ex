@@ -39,6 +39,9 @@ defmodule Mercator.Docs do
   @doc "The URL path where a part is shown."
   defdelegate path(part), to: Sources
 
+  @doc "The URL of a chapter."
+  def link(%Chapter{part: part, slug: slug}), do: Sources.link({part, slug})
+
   @doc """
   The chapters of a part the actor may see, in `locale` (with fallback),
   in their order.

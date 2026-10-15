@@ -177,6 +177,10 @@ defmodule MercatorWeb.Layouts do
     default: nil,
     doc: "open incidents for the sidebar badge, see MercatorWeb.IncidentBadge"
 
+  attr :help, :any,
+    default: nil,
+    doc: "the documentation chapter for this page's \"?\", see MercatorWeb.HelpLink"
+
   slot :inner_block, required: true
 
   @doc "Layout of the admin area (#16): top bar plus a sidebar filtered by role."
@@ -209,6 +213,16 @@ defmodule MercatorWeb.Layouts do
             <.demo_badge id="admin-demo-badge" />
           </div>
           <div class="flex-none flex items-center gap-0.5 md:gap-2">
+            <.link
+              :if={@help}
+              navigate={Mercator.Docs.link(@help)}
+              class="btn btn-ghost btn-sm btn-circle"
+              id="page-help"
+              title={gettext("Help for this page")}
+              aria-label={gettext("Help for this page")}
+            >
+              <.icon name="hero-question-mark-circle" class="size-5" />
+            </.link>
             <.link navigate={~p"/"} class="btn btn-ghost btn-sm" id="to-shop">
               <.icon name="hero-building-storefront" class="size-5" />
               <span class="hidden sm:inline">{gettext("Shop")}</span>

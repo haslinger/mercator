@@ -5,7 +5,8 @@
 # the Content-Security-Policy is set by MercatorWeb.Plugs.ContentSecurityPolicy
 # in its own pipeline; the demo reset truncates table names read from pg_tables
 # with quote_ident; Mercator.Docs.Loader reads the repository's own
-# documentation files at compile time). New findings fail the check.
+# documentation files at compile time, and the admin help shows that HTML,
+# rendered with raw HTML escaped). New findings fail the check.
 [
   verbose: false,
   private: false,

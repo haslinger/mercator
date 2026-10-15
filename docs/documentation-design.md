@@ -97,7 +97,9 @@ the public demo domain and demo accounts (the demo password is public anyway).
 1. ~~Clean the session logs and extend the export script~~ *(done 2026-10-15)*.
 2. ~~`Mercator.Docs` (compile-time loading, front matter, rendering, search) with tests~~
    *(done 2026-10-15; starter pages for every part in `priv/docs/`)*.
-3. Admin "Hilfe" (table of contents, chapter, search, role filter) and the "?" links.
+3. ~~Admin "Hilfe" (table of contents, chapter, search, role filter) and the "?" links~~
+   *(done 2026-10-15; the "?" finds its chapter from the page's route,
+   `MercatorWeb.HelpLink`)*.
 4. Shop `/help` and the links from footer, checkout and chat.
 5. Making-of (`/making-of`, introduction, metrics, sessions; demo only).
 6. Content: back office manual by role, operating (from `DOCKER.md`), developer

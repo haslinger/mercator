@@ -300,6 +300,7 @@ defmodule MercatorWeb.Admin.PageEditLive do
       flash={@flash}
       current_user={@current_user}
       open_incidents={@open_incidents}
+      help={@help_chapter}
       locale={@locale}
       active="pages"
     >

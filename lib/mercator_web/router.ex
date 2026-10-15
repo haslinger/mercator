@@ -73,7 +73,8 @@ defmodule MercatorWeb.Router do
       on_mount: [
         {MercatorWeb.BasketSession, :default},
         {MercatorWeb.LiveUserAuth, :require_name},
-        {MercatorWeb.IncidentBadge, :default}
+        {MercatorWeb.IncidentBadge, :default},
+        {MercatorWeb.HelpLink, :default}
       ] do
       # in each liveview, add one of the following at the top of the module:
       #
@@ -134,6 +135,9 @@ defmodule MercatorWeb.Router do
       live "/admin/payment-providers", Admin.PaymentProviderLive
       live "/admin/users", Admin.UserIndexLive
       live "/admin/users/:id", Admin.UserEditLive
+      # the documentation (phase 9)
+      live "/admin/help", Admin.HelpLive, :index
+      live "/admin/help/:part/:slug", Admin.HelpLive, :show
     end
   end
 
