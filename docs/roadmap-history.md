@@ -8,12 +8,12 @@ Questions are numbered globally (`#N`); the numbering is never restarted. Design
 
 ## Done
 
-Status as of 2026-10-14:
+Status as of 2026-10-15:
 
 - **Done:** 1 Foundation, 2 Catalogue, 3 Basket and checkout (steps 1–7 of [checkout-design.md](checkout-design.md), incl. back office orders, status emails #74, pickup = "ready for pickup" #75, local times #73), 4 Back office (catalogue, orders).
 - **5 CMS, done** ([cms-design.md](cms-design.md)): Markdown with the OverType editor, pages with working copy, publishing and history, page tree and editor, media library, 13 block types incl. shared blocks and the contact form, start page from the CMS, shop navigation as a sidebar with page icons (#93), SEO basics (#91), rate limiting with Hammer (#87, proxy recommendations in the README), Biber Holz demo pages, GTC editor with fixed versions in force (#92).
 - Also done along the way: header for phones (#72), back button, English routes (#88).
-- **6 Guided selling, in progress:** see [roadmap-future.md](roadmap-future.md).
+- **6 Guided selling, done** ([guided-selling-design.md](guided-selling-design.md), #94–#101): chat for customers and visitors, sales desk with availability, countdown and callback requests, customer context, recommendations, links and files as cards, offers (editor, approval above 10 %, revisions, copies, expiry), offers ordered through the checkout, emails, printable offer page, ratings, Biber Holz demo conversations and offers. Postponed: audio/video (#100).
 
 Small improvements done along the way (from the backlog):
 
