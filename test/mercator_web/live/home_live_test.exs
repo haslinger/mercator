@@ -131,4 +131,29 @@ defmodule MercatorWeb.HomeLiveTest do
     assert has_element?(view, "#shop-nav ul.menu > li > #nav-page-#{parent.id}")
     assert has_element?(view, "#shop-nav ul.menu > li > ul > li > #nav-page-#{child.id}")
   end
+
+  test "the sidebar highlights the page shown, or its closest menu page", %{conn: conn} do
+    editor = user_fixture(roles: [:contentmanager])
+
+    publish = fn attrs ->
+      attrs
+      |> Mercator.Content.create_page!(actor: editor)
+      |> Mercator.Content.publish_page!(actor: editor)
+    end
+
+    parent = publish.(%{title: %{"de" => "Wege"}, menu: :main})
+    child = publish.(%{title: %{"de" => "Anfahrt"}, parent_id: parent.id, menu: :main})
+    hidden = publish.(%{title: %{"de" => "Parken"}, parent_id: parent.id})
+
+    {:ok, view, _html} = live(conn, ~p"/pages/wege/anfahrt")
+    assert has_element?(view, ~s(#nav-page-#{child.id}.menu-active[aria-current="page"]))
+    refute has_element?(view, "#nav-page-#{parent.id}.menu-active")
+
+    # a subpage that is not in the menu highlights its parent
+    {:ok, view, _html} = live(conn, ~p"/pages/wege/#{hidden.slug}")
+    assert has_element?(view, "#nav-page-#{parent.id}.menu-active")
+
+    {:ok, view, _html} = live(conn, ~p"/")
+    refute has_element?(view, "#shop-nav .menu-active")
+  end
 end

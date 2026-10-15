@@ -56,6 +56,17 @@ defmodule MercatorWeb.CatalogLiveTest do
     %{root: root, child: child, batten: batten, beam: beam, draft: draft}
   end
 
+  test "the sidebar highlights the main category of category and product pages", ctx do
+    {:ok, view, _html} = live(ctx.conn, ~p"/categories/latten")
+    assert has_element?(view, ~s(#nav-bauholz.menu-active[aria-current="page"]))
+
+    {:ok, view, _html} = live(ctx.conn, ~p"/products/#{ctx.batten.slug}")
+    assert has_element?(view, "#nav-bauholz.menu-active")
+
+    {:ok, view, _html} = live(ctx.conn, ~p"/search")
+    refute has_element?(view, "#shop-nav .menu-active")
+  end
+
   describe "category page" do
     test "shows breadcrumb, active subcategories and the products of the subtree", ctx do
       {:ok, view, _html} = live(ctx.conn, ~p"/categories/bauholz")

@@ -12,6 +12,7 @@ defmodule MercatorWeb.CategoryLive do
   alias Mercator.Catalog
   alias Mercator.Catalog.Listing
   alias Mercator.Translated
+  alias MercatorWeb.Navigation
 
   on_mount {MercatorWeb.LiveUserAuth, :live_user_optional}
 
@@ -42,6 +43,7 @@ defmodule MercatorWeb.CategoryLive do
          )
          |> assign(:category, category)
          |> assign(:ancestors, Catalog.list_category_ancestors!(category.id, actor: actor))
+         |> then(&Navigation.put_category_trail(&1, &1.assigns.ancestors ++ [category]))
          |> assign(:children, active_children(category, actor))
          |> assign(:products, products)
          |> stream_configure(:entries,

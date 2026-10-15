@@ -15,6 +15,7 @@ defmodule MercatorWeb.ProductLive do
   alias Mercator.Sales.Baskets
   alias Mercator.Translated
   alias MercatorWeb.Format
+  alias MercatorWeb.Navigation
 
   on_mount {MercatorWeb.LiveUserAuth, :live_user_optional}
 
@@ -45,6 +46,7 @@ defmodule MercatorWeb.ProductLive do
          )
          |> assign(:product, product)
          |> assign(:trail, trail(product, actor))
+         |> then(&Navigation.put_category_trail(&1, &1.assigns.trail))
          |> assign(:quantity, "1")
          |> assign(:quantity_error, nil)
          |> assign_configuration(product)}

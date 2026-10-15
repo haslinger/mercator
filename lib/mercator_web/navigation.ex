@@ -6,6 +6,9 @@ defmodule MercatorWeb.Navigation do
     * `categories` – the active top-level categories
     * `main` – published pages marked for the main navigation (#93)
     * `footer` – published pages marked for the footer
+    * `path` – the current path, to highlight the active entry
+    * `category_slugs` – the category trail of a category or product page
+      (`put_category_trail/2`), so its main category is highlighted
 
   Pages are shown with their published title.
   """
@@ -17,11 +20,28 @@ defmodule MercatorWeb.Navigation do
   def init(opts), do: opts
 
   @impl Plug
-  def call(conn, _opts), do: Plug.Conn.assign(conn, :nav, load())
+  def call(conn, _opts),
+    do: Plug.Conn.assign(conn, :nav, Map.put(load(), :path, conn.request_path))
+
+  # the chat panel is rendered inside every page and has no URL of its own
+  def on_mount(:default, _params, _session, %{view: MercatorWeb.ChatLive} = socket),
+    do: {:cont, Phoenix.Component.assign_new(socket, :nav, &load/0)}
 
   def on_mount(:default, _params, _session, socket) do
-    {:cont, Phoenix.Component.assign_new(socket, :nav, &load/0)}
+    {:cont,
+     socket
+     |> Phoenix.Component.assign_new(:nav, &load/0)
+     |> Phoenix.LiveView.attach_hook(:nav_path, :handle_params, fn _params, uri, socket ->
+       {:cont, put_nav(socket, :path, URI.parse(uri).path)}
+     end)}
   end
+
+  @doc "Highlights the main category of these categories (a trail from the root)."
+  def put_category_trail(socket, categories),
+    do: put_nav(socket, :category_slugs, Enum.map(categories, & &1.slug))
+
+  defp put_nav(socket, key, value),
+    do: Phoenix.Component.update(socket, :nav, &Map.put(&1, key, value))
 
   @doc "The navigation map, see the module doc."
   def load do

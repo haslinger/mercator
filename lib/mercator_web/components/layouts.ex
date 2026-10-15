@@ -320,8 +320,15 @@ defmodule MercatorWeb.Layouts do
   attr :locale, :string, default: nil
 
   # The shop navigation (#93): main categories with their photo as icon and
-  # the pages of the main navigation with their icon.
+  # the pages of the main navigation with their icon. The entry of the
+  # current page (or of its main category) is highlighted.
   defp shop_sidebar(assigns) do
+    assigns =
+      assign(assigns,
+        active_category: active_category(assigns.nav),
+        active_page_id: active_page_id(assigns.nav)
+      )
+
     ~H"""
     <%!-- vertically centred; my-auto (not justify-center) keeps the top reachable when it is taller than the screen --%>
     <nav class="flex min-h-full w-64 flex-col bg-base-100 p-4" id="shop-nav">
@@ -330,7 +337,12 @@ defmodule MercatorWeb.Layouts do
           <p class="menu-title px-2">{pgettext("shop navigation", "Products")}</p>
           <ul class="menu w-full">
             <li :for={category <- @nav.categories}>
-              <.link navigate={~p"/categories/#{category.slug}"} id={"nav-#{category.slug}"}>
+              <.link
+                navigate={~p"/categories/#{category.slug}"}
+                id={"nav-#{category.slug}"}
+                class={[@active_category == category.slug && "menu-active"]}
+                aria-current={@active_category == category.slug && "page"}
+              >
                 <%= case MercatorWeb.CatalogComponents.first_image(category) do %>
                   <% nil -> %>
                     <.icon name="hero-squares-2x2" class="size-5" />
@@ -348,7 +360,12 @@ defmodule MercatorWeb.Layouts do
         </div>
         <div :if={@nav.main != []}>
           <p class="menu-title px-2">{gettext("Information")}</p>
-          <.page_menu tree={page_tree(@nav.main)} parent_id={:root} locale={@locale} />
+          <.page_menu
+            tree={page_tree(@nav.main)}
+            parent_id={:root}
+            locale={@locale}
+            active_id={@active_page_id}
+          />
         </div>
       </div>
     </nav>
@@ -358,6 +375,7 @@ defmodule MercatorWeb.Layouts do
   attr :tree, :map, required: true
   attr :parent_id, :any, required: true
   attr :locale, :string, default: nil
+  attr :active_id, :any, default: nil
 
   # pages of the main navigation, subpages nested below their parent
   defp page_menu(assigns) do
@@ -366,7 +384,12 @@ defmodule MercatorWeb.Layouts do
     ~H"""
     <ul class={[@parent_id == :root && "menu w-full"]}>
       <li :for={page <- @pages}>
-        <.link navigate={page_path(page)} id={"nav-page-#{page.id}"}>
+        <.link
+          navigate={page_path(page)}
+          id={"nav-page-#{page.id}"}
+          class={[@active_id == page.id && "menu-active"]}
+          aria-current={@active_id == page.id && "page"}
+        >
           <.icon name={page.icon || "hero-document-text"} class="size-5" />
           {page_title(page, @locale)}
         </.link>
@@ -375,11 +398,31 @@ defmodule MercatorWeb.Layouts do
           tree={@tree}
           parent_id={page.id}
           locale={@locale}
+          active_id={@active_id}
         />
       </li>
     </ul>
     """
   end
+
+  # the main category: the first of the trail of a category or product page
+  defp active_category(%{category_slugs: [root | _]}), do: root
+  defp active_category(_nav), do: nil
+
+  # the menu page shown, or the closest menu page above it (a subpage not in the menu)
+  defp active_page_id(%{path: path, main: pages}) when is_binary(path) do
+    pages
+    |> Enum.filter(&within?(path, page_path(&1)))
+    |> Enum.max_by(&String.length(page_path(&1)), fn -> nil end)
+    |> then(&(&1 && &1.id))
+  end
+
+  defp active_page_id(_nav), do: nil
+
+  defp within?(path, "/"), do: path == "/"
+
+  defp within?(path, page_path),
+    do: path == page_path or String.starts_with?(path, page_path <> "/")
 
   # groups menu pages by parent; a page whose parent is not in the menu is a root
   defp page_tree(pages) do
