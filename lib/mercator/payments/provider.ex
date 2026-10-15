@@ -12,7 +12,8 @@ defmodule Mercator.Payments.Provider do
           required(:status) => status(),
           optional(:checkout_url) => String.t(),
           optional(:amount) => Decimal.t(),
-          optional(:method) => String.t() | nil
+          optional(:method) => String.t() | nil,
+          optional(:dashboard_url) => String.t() | nil
         }
 
   @doc "The key stored with payments and in the setting, e.g. `:mollie`."

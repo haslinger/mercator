@@ -45,7 +45,10 @@ defmodule MercatorWeb.Admin.OrderShowLive do
 
   defp load_order(number, actor) do
     with {:ok, order} <-
-           Sales.get_order_by_number(number, actor: actor, load: [:items, :events]) do
+           Sales.get_order_by_number(number,
+             actor: actor,
+             load: [:items, :events, :online_payments]
+           ) do
       # Staff may not read user records; only the name of whoever made a change is shown.
       {:ok, Ash.load!(order, [events: [:user], user: []], authorize?: false)}
     end
@@ -210,6 +213,66 @@ defmodule MercatorWeb.Admin.OrderShowLive do
           </section>
 
           <.order_addresses order={@order} />
+
+          <section
+            :if={@order.online_payments != []}
+            class="card bg-base-100 shadow-sm"
+            id="order-payments"
+          >
+            <div class="card-body gap-2">
+              <h2 class="card-title">{gettext("Online payment attempts")}</h2>
+              <div class="overflow-x-auto">
+                <table class="table table-sm">
+                  <thead>
+                    <tr>
+                      <th>{gettext("Started")}</th>
+                      <th>{gettext("Status")}</th>
+                      <th>{gettext("Method")}</th>
+                      <th class="text-right">{gettext("Amount")}</th>
+                      <th>{gettext("Provider")}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr :for={payment <- @order.online_payments} id={"payment-#{payment.id}"}>
+                      <td class="whitespace-nowrap">{Format.datetime(payment.inserted_at)}</td>
+                      <td>
+                        <.payment_status_badge status={payment.status} />
+                        <span
+                          :if={payment.refunded_at}
+                          class="block text-xs text-base-content/60"
+                        >
+                          {Format.datetime(payment.refunded_at)}
+                        </span>
+                      </td>
+                      <td>{payment.method || "–"}</td>
+                      <td class="text-right whitespace-nowrap">
+                        {Format.money(payment.amount, @locale)}
+                      </td>
+                      <td class="whitespace-nowrap">
+                        <a
+                          :if={payment.dashboard_url}
+                          href={payment.dashboard_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          class="link"
+                          id={"payment-dashboard-#{payment.id}"}
+                        >
+                          {payment.provider_id}
+                          <.icon name="hero-arrow-top-right-on-square" class="size-3" />
+                        </a>
+                        <span :if={!payment.dashboard_url} class="font-mono text-xs">
+                          {payment.provider_id}
+                        </span>
+                        <span class="block text-xs text-base-content/60">
+                          {provider_name(payment.provider)}
+                        </span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
         </div>
 
         <div class="space-y-6">
@@ -300,6 +363,14 @@ defmodule MercatorWeb.Admin.OrderShowLive do
       </div>
     </Layouts.admin>
     """
+  end
+
+  # a provider no longer registered still shows its key
+  defp provider_name(key) do
+    case Mercator.Payments.provider(key) do
+      nil -> key
+      provider -> provider.name()
+    end
   end
 
   defp action_label(:confirmed, _shipping_method), do: gettext("Confirm")

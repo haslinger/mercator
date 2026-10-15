@@ -19,7 +19,8 @@ defmodule Mercator.Payments.MollieTest do
         "amount" => %{"currency" => "EUR", "value" => "123.40"},
         "method" => nil,
         "_links" => %{
-          "checkout" => %{"href" => "https://www.mollie.com/checkout/test-mode?tr_test123"}
+          "checkout" => %{"href" => "https://www.mollie.com/checkout/test-mode?tr_test123"},
+          "dashboard" => %{"href" => "https://my.mollie.com/dashboard/org_1/payments/tr_test123"}
         }
       },
       attrs
@@ -51,6 +52,7 @@ defmodule Mercator.Payments.MollieTest do
       assert payment.id == "tr_test123"
       assert payment.status == :open
       assert payment.checkout_url =~ "mollie.com/checkout"
+      assert payment.dashboard_url == "https://my.mollie.com/dashboard/org_1/payments/tr_test123"
       assert Decimal.equal?(payment.amount, "123.40")
     end
 

@@ -97,7 +97,9 @@ defmodule Mercator.Payments.Mollie do
       status: status(payment, amount),
       amount: amount,
       method: payment["method"],
-      checkout_url: get_in(payment, ["_links", "checkout", "href"])
+      checkout_url: get_in(payment, ["_links", "checkout", "href"]),
+      # the payment in Mollie's dashboard (the link contains the organisation)
+      dashboard_url: get_in(payment, ["_links", "dashboard", "href"])
     }
   end
 

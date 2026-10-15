@@ -109,7 +109,8 @@ defmodule Mercator.Payments do
                provider_id: payment.id,
                status: payment.status,
                amount: order.gross,
-               checkout_url: payment.checkout_url
+               checkout_url: payment.checkout_url,
+               dashboard_url: payment[:dashboard_url]
              },
              action: :start,
              authorize?: false
@@ -201,13 +202,17 @@ defmodule Mercator.Payments do
   end
 
   defp store(payment, remote) do
-    if payment.status == remote.status and payment.method == remote[:method] do
+    changes =
+      %{
+        status: remote.status,
+        method: remote[:method],
+        dashboard_url: remote[:dashboard_url] || payment.dashboard_url
+      }
+
+    if Map.take(payment, Map.keys(changes)) == changes do
       payment
     else
-      Ash.update!(payment, %{status: remote.status, method: remote[:method]},
-        action: :set_status,
-        authorize?: false
-      )
+      Ash.update!(payment, changes, action: :set_status, authorize?: false)
     end
   end
 

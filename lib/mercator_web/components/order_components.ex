@@ -137,6 +137,35 @@ defmodule MercatorWeb.OrderComponents do
   @doc "All order states in their usual order."
   def states, do: [:placed, :confirmed, :paid, :shipped, :completed, :cancelled]
 
+  attr :status, :atom, required: true
+  attr :id, :string, default: nil
+
+  @doc "The status of an online payment attempt (phase 7)."
+  def payment_status_badge(assigns) do
+    ~H"""
+    <span class={["badge badge-sm", payment_status_class(@status)]} id={@id}>
+      {payment_status_label(@status)}
+    </span>
+    """
+  end
+
+  @doc "The translated name of an online payment status."
+  def payment_status_label(:open), do: pgettext("payment status", "Open")
+  def payment_status_label(:pending), do: pgettext("payment status", "Processing")
+  def payment_status_label(:paid), do: pgettext("payment status", "Paid")
+  def payment_status_label(:failed), do: pgettext("payment status", "Failed")
+  def payment_status_label(:canceled), do: pgettext("payment status", "Cancelled")
+  def payment_status_label(:expired), do: pgettext("payment status", "Expired")
+  def payment_status_label(:refunded), do: pgettext("payment status", "Refunded")
+
+  defp payment_status_class(:paid), do: "badge-success"
+  defp payment_status_class(:refunded), do: "badge-warning"
+
+  defp payment_status_class(status) when status in [:open, :pending],
+    do: "badge-info badge-outline"
+
+  defp payment_status_class(_not_paid), do: "badge-error badge-outline"
+
   defp state_class(:placed), do: "badge-primary"
   defp state_class(:cancelled), do: "badge-error badge-outline"
   defp state_class(:completed), do: "badge-success badge-outline"

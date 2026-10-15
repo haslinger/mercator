@@ -35,12 +35,12 @@ defmodule Mercator.Sales.OnlinePayment do
     defaults [:read]
 
     create :start do
-      accept [:order_id, :provider, :provider_id, :status, :amount, :checkout_url]
+      accept [:order_id, :provider, :provider_id, :status, :amount, :checkout_url, :dashboard_url]
     end
 
     update :set_status do
       description "The status the provider reported, with the payment method used."
-      accept [:status, :method]
+      accept [:status, :method, :dashboard_url]
     end
 
     update :mark_refunded do
@@ -92,6 +92,12 @@ defmodule Mercator.Sales.OnlinePayment do
     end
 
     attribute :checkout_url, :string, public?: true
+
+    attribute :dashboard_url, :string do
+      description "The payment in the provider's dashboard, for staff (if the provider has one)."
+      public? true
+    end
+
     attribute :refunded_at, :utc_datetime_usec, public?: true
     timestamps()
   end
