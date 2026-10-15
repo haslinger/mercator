@@ -1,0 +1,20 @@
+# Sobelow (security checks, run by `mix precommit`). Findings reviewed
+# 2026-10-15 and accepted as false positives are fingerprinted in
+# .sobelow-skips (file paths built by the shop itself, not from requests;
+# uploads are resolved by Mercator.Uploads.resolve/1; Markdown is sanitized;
+# the Content-Security-Policy is set by MercatorWeb.Plugs.ContentSecurityPolicy
+# in its own pipeline). New findings fail the check.
+[
+  verbose: false,
+  private: false,
+  skip: true,
+  router: "",
+  exit: "low",
+  format: "compact",
+  out: "",
+  threshold: "low",
+  # dependency advisories are reported by `mix deps.get` (hex.audit)
+  ignore: ["Vuln"],
+  ignore_files: [],
+  version: false
+]

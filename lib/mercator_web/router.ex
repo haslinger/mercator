@@ -20,6 +20,12 @@ defmodule MercatorWeb.Router do
     plug MercatorWeb.BasketSession
   end
 
+  # Content-Security-Policy for the shop and the admin area; not for the dev
+  # tools (LiveDashboard, mailbox), which bring their own inline scripts
+  pipeline :csp do
+    plug MercatorWeb.Plugs.ContentSecurityPolicy
+  end
+
   pipeline :api do
     plug :accepts, ["json"]
     plug :load_from_bearer
@@ -47,7 +53,7 @@ defmodule MercatorWeb.Router do
   end
 
   scope "/", MercatorWeb do
-    pipe_through :browser
+    pipe_through [:browser, :csp]
 
     # printable offers (#99), offer and order PDFs (#17)
     get "/account/offers/:id/print", OfferPrintController, :customer
@@ -127,7 +133,7 @@ defmodule MercatorWeb.Router do
   end
 
   scope "/", MercatorWeb do
-    pipe_through :browser
+    pipe_through [:browser, :csp]
 
     get "/checkout/sign-in", CheckoutController, :sign_in
     auth_routes AuthController, Mercator.Accounts.User, path: "/auth"

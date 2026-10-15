@@ -25,7 +25,8 @@
     <link phx-track-static rel="stylesheet" href={~p"/assets/css/app.css"} />
     <script defer phx-track-static type="text/javascript" src={~p"/assets/js/app.js"}>
     </script>
-    <script>
+    <%!-- allowed by the Content-Security-Policy through its nonce --%>
+    <script nonce={@conn.assigns[:csp_nonce]}>
       (() => {
         // The toggle chooses a mode (system/light/dark); the brand decides
         // which DaisyUI theme belongs to each mode (data-light-theme/-dark-theme).

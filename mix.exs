@@ -70,6 +70,8 @@ defmodule Mercator.MixProject do
       {:picosat_elixir, "~> 0.2"},
       {:sourceror, "~> 1.8", only: [:dev, :test]},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
+      # security checks for Phoenix (XSS, SQL injection, configuration, …)
+      {:sobelow, "~> 0.14", only: [:dev, :test], runtime: false},
       {:oban, "~> 2.0"},
       {:ash_paper_trail, "~> 0.8"},
       {:ash_state_machine, "~> 0.2"},
@@ -104,6 +106,8 @@ defmodule Mercator.MixProject do
        compile: false,
        depth: 1},
       {:swoosh, "~> 1.16"},
+      # SMTP adapter of Swoosh (#115, #119)
+      {:gen_smtp, "~> 1.3"},
       {:hammer, "~> 7.5"},
       {:mdex, "~> 0.14.2"},
       {:req, "~> 0.5"},
@@ -141,6 +145,8 @@ defmodule Mercator.MixProject do
         "deps.unlock --unused",
         "format",
         "credo --strict",
+        # security checks, see .sobelow-conf
+        "sobelow --config",
         "test"
       ]
     ]
