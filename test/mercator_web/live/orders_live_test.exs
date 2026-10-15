@@ -10,7 +10,7 @@ defmodule MercatorWeb.OrdersLiveTest do
 
   setup %{conn: conn} do
     user = customer_fixture()
-    Ash.Seed.seed!(Sales.Gtc, %{version: ~D[2026-10-01], text: %{"de" => "AGB"}})
+    Mercator.SalesFixtures.gtc_fixture()
     [variant] = Ash.load!(product_fixture(), :variants).variants
 
     %{conn: log_in_user(conn, user), user: user, variant: variant}

@@ -21,6 +21,9 @@ Status as of 2026-10-15:
 
 Small improvements done along the way (from the backlog):
 
+- ~~**Missed Ash notifications in demo seeding**~~ *(done 2026-10-15)*: `Mercator.Demo` (seed and reset) and the seeded orders run in `Ash.transact/3` instead of a plain `Repo.transaction`; Ash collects the notifications and seeding drops them (nobody to notify). The test output no longer shows hundreds of warnings.
+- ~~**Flaky test: deadlock on the offer number counter**~~ *(done 2026-10-15)*: the PostgreSQL log showed the other side, `products_unique_slug_index`: `product_fixture` derived the slug from fixed titles ("Zirbenbrett" in three async modules), so parallel tests waited for each other's uncommitted product while one of them held the offer counter. The fixture now gives each product a unique slug, and `gtc_fixture` a unique date (the GTC version is unique too). Eight full runs without a deadlock.
+
 - ~~**PDF documents with Typst**~~ *(done 2026-10-15, #17, #104)*: offer PDF ("Download PDF" next to "Drucken") and order confirmation PDF (account and back office order pages), both attached to their emails; rendering errors are logged and the email goes out without the PDF.
 - ~~**Product editor: tabs by product kind**~~ *(done 2026-10-15, #103)*: the kind is changed in its own dialog and saved at once (`Product :change_kind`), so the tabs follow immediately. Simple: "Preis & Lager" with exactly one variant; variants: as before; configurable: "Artikel & Lieferzeit" without prices, plus the configurator.
 - ~~**Start page key for content managers**~~ *(done 2026-10-15)*: the page editor has "Als Startseite verwenden" for published pages (action `:make_start_page`, which moves the key `home` from the previous start page in one transaction). Other keys stay with administrators.

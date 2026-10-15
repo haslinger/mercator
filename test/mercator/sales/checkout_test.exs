@@ -20,7 +20,7 @@ defmodule Mercator.Sales.CheckoutTest do
   setup do
     user = user_fixture()
     {:ok, address} = Accounts.create_address(@address, actor: user)
-    Ash.Seed.seed!(Sales.Gtc, %{version: ~D[2026-10-01], text: %{"de" => "AGB"}})
+    gtc = Mercator.SalesFixtures.gtc_fixture()
 
     board = product_fixture(variants: [%{number: "BRETT", stock: 10, prices: [%{amount: "100"}]}])
     [board_variant] = Ash.load!(board, :variants).variants
@@ -33,7 +33,7 @@ defmodule Mercator.Sales.CheckoutTest do
 
     [firewood_variant] = Ash.load!(firewood, :variants).variants
 
-    %{user: user, address: address, board: board_variant, firewood: firewood_variant}
+    %{user: user, address: address, board: board_variant, firewood: firewood_variant, gtc: gtc}
   end
 
   defp sent_emails do
@@ -69,7 +69,8 @@ defmodule Mercator.Sales.CheckoutTest do
   test "places an order: snapshot, stock, empty basket, email", %{
     user: user,
     board: board,
-    firewood: firewood
+    firewood: firewood,
+    gtc: gtc
   } do
     Baskets.add({:user, user}, board.id, 2)
     Baskets.add({:user, user}, firewood.id, "1.5")
@@ -82,7 +83,7 @@ defmodule Mercator.Sales.CheckoutTest do
     assert order.billing_address["city"] == "Innsbruck"
     assert order.shipping_method == :parcel
     assert order.note == "Bitte anrufen"
-    assert order.gtc_version == ~D[2026-10-01]
+    assert order.gtc_version == gtc.version
     # 240 + 169.50 goods, free parcel from 250
     assert Decimal.equal?(order.gross, "409.50")
     assert Decimal.equal?(order.shipping_gross, 0)

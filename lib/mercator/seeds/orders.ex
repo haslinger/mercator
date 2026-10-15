@@ -162,30 +162,34 @@ defmodule Mercator.Seeds.Orders do
   end
 
   # Places the order and drops its confirmation email job in the same
-  # transaction, so seeding sends no emails.
+  # transaction, so seeding sends no emails (nor notifications).
   defp place(spec, user) do
-    Repo.transaction(fn ->
-      Baskets.clear({:user, user})
+    Ash.transact(
+      Mercator.Sales.Order,
+      fn ->
+        Baskets.clear({:user, user})
 
-      for line <- spec.lines do
-        {number, quantity, selections} = line(line)
-        variant = Catalog.get_variant_by_number!(number, authorize?: false)
-        {:ok, _item} = Baskets.add({:user, user}, variant.id, quantity, selections)
-      end
+        for line <- spec.lines do
+          {number, quantity, selections} = line(line)
+          variant = Catalog.get_variant_by_number!(number, authorize?: false)
+          {:ok, _item} = Baskets.add({:user, user}, variant.id, quantity, selections)
+        end
 
-      params = Map.merge(spec.params, %{"gtc" => "true", "note" => spec.note})
-      {:ok, order} = Checkout.place(user, params)
+        params = Map.merge(spec.params, %{"gtc" => "true", "note" => spec.note})
+        {:ok, order} = Checkout.place(user, params)
 
-      Repo.delete_all(
-        from j in Oban.Job,
-          where:
-            j.worker == "Mercator.Sales.Workers.SendOrderConfirmation" and
-              fragment("?->>'order_id' = ?", j.args, ^order.id)
-      )
+        Repo.delete_all(
+          from j in Oban.Job,
+            where:
+              j.worker == "Mercator.Sales.Workers.SendOrderConfirmation" and
+                fragment("?->>'order_id' = ?", j.args, ^order.id)
+        )
 
-      order
-    end)
-    |> then(fn {:ok, order} -> order end)
+        order
+      end,
+      return_notifications?: true
+    )
+    |> then(fn {:ok, order, _notifications} -> order end)
   end
 
   defp line({number, quantity}), do: {number, quantity, %{}}

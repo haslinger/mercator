@@ -21,7 +21,10 @@ defmodule Mercator.SalesFixtures do
 
   @doc "The current GTC, needed to place orders."
   def gtc_fixture do
-    Ash.Seed.seed!(Sales.Gtc, %{version: ~D[2026-10-01], text: %{"de" => "AGB"}})
+    # a date of its own per call: the version is unique, and async tests
+    # inserting the same one wait for each other (and can deadlock)
+    version = Date.add(~D[2026-10-01], -System.unique_integer([:positive]))
+    Ash.Seed.seed!(Sales.Gtc, %{version: version, text: %{"de" => "AGB"}})
   end
 
   @doc """

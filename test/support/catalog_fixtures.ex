@@ -49,6 +49,9 @@ defmodule Mercator.CatalogFixtures do
       attrs
       |> Map.put_new(:number, "P-#{n}")
       |> Map.put_new(:title, %{"de" => "Produkt #{n}", "en" => "Product #{n}"})
+      # unique, also for fixed titles: async tests inserting the same slug
+      # wait for each other and can deadlock (e.g. with the offer counter)
+      |> Map.put_new(:slug, "p-#{n}")
       |> Map.put_new_lazy(:tax_class_id, fn -> tax_class_fixture().id end)
       |> Catalog.create_product!(authorize?: false)
 

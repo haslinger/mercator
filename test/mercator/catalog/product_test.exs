@@ -13,6 +13,8 @@ defmodule Mercator.Catalog.ProductTest do
           state: :draft,
           number: "BH-KVH-001",
           title: %{"de" => "Konstruktionsvollholz Fichte", "en" => "Structural timber spruce"},
+          # no slug given: the fixture's own one would win
+          slug: nil,
           highlights: [%{"de" => "technisch getrocknet"}, %{"de" => "keilgezinkt"}]
         )
 

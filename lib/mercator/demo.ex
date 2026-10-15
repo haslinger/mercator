@@ -86,8 +86,17 @@ defmodule Mercator.Demo do
   Oban can see them, so seeding sends no emails.
   """
   def seed do
-    {:ok, users} = Repo.transaction(&seed_data/0, timeout: :infinity)
+    {:ok, users} = transact(&seed_data/0)
     users
+  end
+
+  # One transaction for all of seeding. Ash collects the notifications of
+  # the actions inside; seeding has nobody to notify, so they are dropped.
+  defp transact(fun) do
+    {:ok, result, _notifications} =
+      Ash.transact(User, fun, timeout: :infinity, return_notifications?: true)
+
+    {:ok, result}
   end
 
   defp seed_data do
@@ -128,14 +137,11 @@ defmodule Mercator.Demo do
     Simulator.clear()
 
     {:ok, _users} =
-      Repo.transaction(
-        fn ->
-          Repo.query!("TRUNCATE #{Enum.join(tables(), ", ")} RESTART IDENTITY CASCADE")
-          drop_jobs(keep_job_id)
-          seed_data()
-        end,
-        timeout: :infinity
-      )
+      transact(fn ->
+        Repo.query!("TRUNCATE #{Enum.join(tables(), ", ")} RESTART IDENTITY CASCADE")
+        drop_jobs(keep_job_id)
+        seed_data()
+      end)
 
     :ok
   end

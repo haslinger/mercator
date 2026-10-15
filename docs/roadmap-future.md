@@ -22,8 +22,7 @@ Phases 1–8 are done (see [roadmap-history.md](roadmap-history.md)).
 
 Smaller improvements noted along the way, not tied to a phase step.
 
-- **Flaky test: deadlock on the offer number counter.** Async tests creating offers can deadlock on `offer_number_counters` (seen once in `OfferCheckoutTest`, 2026-10-15): the sandbox keeps each test's transaction open, so the counter row lock and other locks meet in different orders. Not a problem in production (short transactions). Fix if it recurs, e.g. run the offer-creating test modules synchronously.
-- **Demo seeding warns about missed Ash notifications:** `Mercator.Demo.seed/0` runs in a plain `Repo.transaction`, so Ash cannot deliver the notifications of the actions inside (warning in the test output). Harmless for seeding; silence it, e.g. by gathering and dropping them.
+- *Empty right now.*
 
 ## Open questions
 

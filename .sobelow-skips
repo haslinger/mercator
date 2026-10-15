@@ -1,6 +1,6 @@
 CI.System: Command Injection via `System` function,lib/mercator/pdf.ex:56,73CD82C
 Config.CSP: Missing Content-Security-Policy,lib/mercator_web/router.ex:16,1133DC0
-SQL.Query: SQL injection - lib/mercator/demo.ex:133,lib/mercator/demo.ex:133,4C2E357
+SQL.Query: SQL injection - lib/mercator/demo.ex:141,lib/mercator/demo.ex:141,70C5605
 Traversal.FileModule: Directory Traversal in `File.cp!`,lib/mercator/content/changes/store_asset.ex:72,15E9849
 Traversal.FileModule: Directory Traversal in `File.cp!`,lib/mercator/pdf.ex:23,750373
 Traversal.FileModule: Directory Traversal in `File.cp`,lib/mercator/pdf.ex:42,1BFE4AE
