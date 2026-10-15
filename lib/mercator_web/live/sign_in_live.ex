@@ -21,7 +21,12 @@ defmodule MercatorWeb.SignInLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <div class={[MercatorWeb.AuthOverrides.page_class(), "gap-6"]}>
+    <%!-- centered as a block; the demo card goes right of the form on wide screens --%>
+    <div class={[
+      MercatorWeb.AuthOverrides.page_class(),
+      "content-center justify-center gap-6 grid-cols-[minmax(0,28rem)]",
+      Mercator.Demo.enabled?() && "lg:grid-cols-[28rem_28rem] lg:items-start"
+    ]}>
       <.live_component
         module={SignIn}
         otp_app={@otp_app}
