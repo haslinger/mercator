@@ -9,7 +9,7 @@ defmodule Mercator.OnlinePaymentFlowTest do
   alias Mercator.Operations.Incident
   alias Mercator.{Payments, Sales}
   alias Mercator.Payments.Simulator
-  alias Mercator.Sales.{Baskets, Checkout, OnlinePayment}
+  alias Mercator.Sales.{Baskets, Checkout, OnlinePayment, OrderEmail}
 
   @moduletag :capture_log
 
@@ -118,6 +118,25 @@ defmodule Mercator.OnlinePaymentFlowTest do
 
       assert {:ok, %{status: :refunded}} = Simulator.fetch_payment(payment.provider_id)
       assert {:error, :not_paid} = Payments.refund(Payments.latest(order), sales)
+    end
+
+    test "the cancellation email names the online payment (#130)", ctx do
+      %{order: order, payment: payment} = ctx
+      sales = user_fixture(roles: [:sales])
+      Sales.cancel_order!(reload(order), %{note: "Nicht lieferbar", notify: false}, actor: sales)
+
+      body = fn ->
+        order =
+          Sales.get_order_by_number!(order.number, authorize?: false, load: :online_payments)
+
+        OrderEmail.status_change(order, :cancelled, "Nicht lieferbar").text_body
+      end
+
+      # before and after the refund: the email may go out first
+      assert body.() =~ "Online-Zahlung über"
+      {:ok, _refunded} = Payments.refund(payment, sales)
+      assert body.() =~ "Online-Zahlung über"
+      refute body.() =~ "Falls Sie bereits bezahlt"
     end
 
     test "others may not, and no money moves", %{order: order, payment: payment} do

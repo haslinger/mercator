@@ -33,7 +33,9 @@ defmodule Mercator.Sales.OrderEmail do
 
   @doc """
   Builds the email about a state change (`:confirmed`, `:paid`, `:shipped`
-  or `:cancelled`); `note` is the reason of a cancellation.
+  or `:cancelled`); `note` is the reason of a cancellation. With the order's
+  `online_payments` loaded, a cancellation names the online payment that
+  will be refunded.
   """
   def status_change(order, state, note \\ nil) do
     Gettext.with_locale(MercatorWeb.Gettext, order.locale, fn ->
@@ -111,8 +113,23 @@ defmodule Mercator.Sales.OrderEmail do
   defp status_lines(order, :cancelled, note) do
     [gettext("We have cancelled your order %{number}.", number: order.number)] ++
       if(note, do: ["", "#{gettext("Reason")}: #{note}"], else: []) ++
-      ["", gettext("If you have already paid, we will refund the amount.")]
+      ["", refund_line(order)]
   end
+
+  # paid online (refunded or not yet: the email may go out before the refund, #130)
+  defp refund_line(%{online_payments: payments} = order) when is_list(payments) do
+    case Enum.find(payments, &(&1.status in [:paid, :refunded])) do
+      nil ->
+        refund_line(%{order | online_payments: nil})
+
+      payment ->
+        gettext("We will refund your online payment of %{amount} to the same payment method.",
+          amount: Format.money(payment.amount, order.locale)
+        )
+    end
+  end
+
+  defp refund_line(_order), do: gettext("If you have already paid, we will refund the amount.")
 
   defp lines(order) do
     locale = order.locale

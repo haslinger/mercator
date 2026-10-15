@@ -224,6 +224,7 @@ defmodule Mercator.Sales.OrderManagementTest do
       [email] = emails()
       assert email.subject =~ "storniert"
       assert email.text_body =~ "Nicht lieferbar"
+      assert email.text_body =~ "Falls Sie bereits bezahlt haben"
     end
 
     test "no email when staff opt out", %{board: board, sales: sales, customer: customer} do

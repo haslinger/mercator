@@ -11,7 +11,7 @@
 msgid ""
 msgstr ""
 
-#: lib/mercator_web/components/core_components.ex:377
+#: lib/mercator_web/components/core_components.ex:378
 #, elixir-autogen, elixir-format
 msgid "Actions"
 msgstr ""
@@ -524,8 +524,8 @@ msgstr ""
 msgid "Sort by"
 msgstr ""
 
-#: lib/mercator/sales/order_email.ex:79
-#: lib/mercator/sales/order_email.ex:130
+#: lib/mercator/sales/order_email.ex:81
+#: lib/mercator/sales/order_email.ex:147
 #: lib/mercator_web/components/offer_components.ex:113
 #: lib/mercator_web/components/order_components.ex:91
 #: lib/mercator_web/controllers/offer_print_html.ex:149
@@ -1452,7 +1452,7 @@ msgstr ""
 msgid "– or create a new one below –"
 msgstr ""
 
-#: lib/mercator/sales/order_email.ex:113
+#: lib/mercator/sales/order_email.ex:115
 #: lib/mercator_web/live/admin/offer_edit_live.ex:532
 #: lib/mercator_web/live/admin/product_relations_tab.ex:206
 #, elixir-autogen, elixir-format
@@ -2070,8 +2070,8 @@ msgstr ""
 msgid "May pay by invoice"
 msgstr ""
 
-#: lib/mercator/sales/order_email.ex:81
-#: lib/mercator/sales/order_email.ex:138
+#: lib/mercator/sales/order_email.ex:83
+#: lib/mercator/sales/order_email.ex:155
 #: lib/mercator_web/documents.ex:96
 #: lib/mercator_web/live/admin/order_index_live.ex:149
 #: lib/mercator_web/live/admin/order_show_live.ex:244
@@ -2161,7 +2161,7 @@ msgstr ""
 msgid "Checkout"
 msgstr ""
 
-#: lib/mercator/sales/order_email.ex:184
+#: lib/mercator/sales/order_email.ex:201
 #, elixir-autogen, elixir-format
 msgid "Delivery to: %{address}"
 msgstr ""
@@ -2223,7 +2223,7 @@ msgstr ""
 msgid "Order not found."
 msgstr ""
 
-#: lib/mercator/sales/order_email.ex:123
+#: lib/mercator/sales/order_email.ex:140
 #, elixir-autogen, elixir-format
 msgid "Order number: %{number}"
 msgstr ""
@@ -2249,13 +2249,13 @@ msgstr ""
 msgid "Payment method"
 msgstr ""
 
-#: lib/mercator/sales/order_email.ex:178
+#: lib/mercator/sales/order_email.ex:195
 #: lib/mercator_web/documents.ex:152
 #, elixir-autogen, elixir-format
 msgid "Pickup"
 msgstr ""
 
-#: lib/mercator/sales/order_email.ex:179
+#: lib/mercator/sales/order_email.ex:196
 #, elixir-autogen, elixir-format
 msgid "Pickup at %{address}"
 msgstr ""
@@ -2310,7 +2310,7 @@ msgstr ""
 msgid "Shipping method"
 msgstr ""
 
-#: lib/mercator/sales/order_email.ex:121
+#: lib/mercator/sales/order_email.ex:138
 #: lib/mercator_web/documents.ex:67
 #: lib/mercator_web/live/checkout_live.ex:95
 #, elixir-autogen, elixir-format
@@ -2339,8 +2339,8 @@ msgstr ""
 msgid "We will confirm the freight costs first. Then please transfer the final amount, stating the order number %{number}, to:"
 msgstr ""
 
-#: lib/mercator/sales/order_email.ex:44
-#: lib/mercator/sales/order_email.ex:144
+#: lib/mercator/sales/order_email.ex:46
+#: lib/mercator/sales/order_email.ex:161
 #, elixir-autogen, elixir-format
 msgid "You can see your order at any time in your account:"
 msgstr ""
@@ -2355,7 +2355,7 @@ msgstr ""
 msgid "You will receive an invoice with the delivery, payable within 14 days."
 msgstr ""
 
-#: lib/mercator/sales/order_email.ex:141
+#: lib/mercator/sales/order_email.ex:158
 #: lib/mercator_web/documents.ex:68
 #: lib/mercator_web/live/order_live.ex:164
 #, elixir-autogen, elixir-format
@@ -2372,7 +2372,7 @@ msgstr ""
 msgid "Your order %{number} at %{shop}"
 msgstr ""
 
-#: lib/mercator/sales/order_email.ex:170
+#: lib/mercator/sales/order_email.ex:187
 #: lib/mercator_web/components/order_components.ex:181
 #: lib/mercator_web/documents.ex:145
 #: lib/mercator_web/live/checkout_live.ex:459
@@ -2380,7 +2380,7 @@ msgstr ""
 msgid "free"
 msgstr ""
 
-#: lib/mercator/sales/order_email.ex:171
+#: lib/mercator/sales/order_email.ex:188
 #: lib/mercator_web/components/consulting_components.ex:86
 #: lib/mercator_web/components/order_components.ex:182
 #: lib/mercator_web/documents.ex:146
@@ -2396,7 +2396,7 @@ msgstr ""
 msgid "incl. VAT %{rate} %"
 msgstr ""
 
-#: lib/mercator/sales/order_email.ex:133
+#: lib/mercator/sales/order_email.ex:150
 #, elixir-autogen, elixir-format
 msgid "incl. VAT %{rate} %: %{amount}"
 msgstr ""
@@ -2646,7 +2646,7 @@ msgstr ""
 msgid "Customer informed"
 msgstr ""
 
-#: lib/mercator/sales/order_email.ex:114
+#: lib/mercator/sales/order_email.ex:132
 #, elixir-autogen, elixir-format
 msgid "If you have already paid, we will refund the amount."
 msgstr ""
@@ -2661,32 +2661,32 @@ msgstr ""
 msgid "Notes are internal; only the reason for a cancellation is sent to the customer."
 msgstr ""
 
-#: lib/mercator/sales/order_email.ex:112
+#: lib/mercator/sales/order_email.ex:114
 #, elixir-autogen, elixir-format
 msgid "We have cancelled your order %{number}."
 msgstr ""
 
-#: lib/mercator/sales/order_email.ex:76
+#: lib/mercator/sales/order_email.ex:78
 #, elixir-autogen, elixir-format
 msgid "We have checked your order %{number} and confirm it."
 msgstr ""
 
-#: lib/mercator/sales/order_email.ex:72
+#: lib/mercator/sales/order_email.ex:74
 #, elixir-autogen, elixir-format
 msgid "Your order %{number} has been cancelled"
 msgstr ""
 
-#: lib/mercator/sales/order_email.ex:105
+#: lib/mercator/sales/order_email.ex:107
 #, elixir-autogen, elixir-format
 msgid "Your order %{number} has been shipped."
 msgstr ""
 
-#: lib/mercator/sales/order_email.ex:60
+#: lib/mercator/sales/order_email.ex:62
 #, elixir-autogen, elixir-format
 msgid "Your order %{number} is confirmed"
 msgstr ""
 
-#: lib/mercator/sales/order_email.ex:69
+#: lib/mercator/sales/order_email.ex:71
 #, elixir-autogen, elixir-format
 msgid "Your order %{number} is on its way"
 msgstr ""
@@ -2696,12 +2696,12 @@ msgstr ""
 msgid "Report ready for pickup"
 msgstr ""
 
-#: lib/mercator/sales/order_email.ex:66
+#: lib/mercator/sales/order_email.ex:68
 #, elixir-autogen, elixir-format
 msgid "Your order %{number} is ready for pickup"
 msgstr ""
 
-#: lib/mercator/sales/order_email.ex:97
+#: lib/mercator/sales/order_email.ex:99
 #, elixir-autogen, elixir-format
 msgid "Your order %{number} is ready for pickup."
 msgstr ""
@@ -5378,12 +5378,12 @@ msgstr ""
 msgid "When cancelling: refund the online payment (%{amount})"
 msgstr ""
 
-#: lib/mercator/sales/order_email.ex:63
+#: lib/mercator/sales/order_email.ex:65
 #, elixir-autogen, elixir-format
 msgid "Payment received for your order %{number}"
 msgstr ""
 
-#: lib/mercator/sales/order_email.ex:88
+#: lib/mercator/sales/order_email.ex:90
 #, elixir-autogen, elixir-format
 msgid "We have received your payment of %{amount} for order %{number}. Thank you!"
 msgstr ""
@@ -5396,4 +5396,9 @@ msgstr ""
 #: lib/mercator_web/live/admin/order_index_live.ex:183
 #, elixir-autogen, elixir-format
 msgid "unpaid"
+msgstr ""
+
+#: lib/mercator/sales/order_email.ex:126
+#, elixir-autogen, elixir-format
+msgid "We will refund your online payment of %{amount} to the same payment method."
 msgstr ""

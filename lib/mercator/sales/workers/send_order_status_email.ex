@@ -6,7 +6,7 @@ defmodule Mercator.Sales.Workers.SendOrderStatusEmail do
 
   @impl Oban.Worker
   def perform(%Oban.Job{args: %{"event_id" => event_id}}) do
-    event = Ash.get!(OrderEvent, event_id, load: [:order], authorize?: false)
+    event = Ash.get!(OrderEvent, event_id, load: [order: :online_payments], authorize?: false)
     note = if event.to_state == :cancelled, do: event.note
 
     with {:ok, _} <-
