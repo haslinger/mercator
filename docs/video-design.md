@@ -73,8 +73,9 @@ RTCPeerConnection          ◀─UDP─▶ PeerConnection per      ◀─UDP─�
   the shop**, and the consultant can show a product page meanwhile. A full page load
   (sign-in, payment redirect, a plain link) ends the call; the hook warns before
   leaving the page during a call.
-- **The consultant side lives in `DeskLive`**, next to the conversation and the
-  customer context.
+- **The consultant side lives in `DeskLive`**, in a floating call card that stays
+  while the consultant switches conversations (#150), so the media keeps running;
+  a link leads back to the call's conversation. A consultant is in one call at a time.
 - **No renegotiation:** each connection has three channels in a fixed order, audio,
   camera and screen, negotiated once when the participant joins; the server always
   makes the offer. Turning the camera or a screen share on or off only replaces the
@@ -188,9 +189,9 @@ RTCPeerConnection          ◀─UDP─▶ PeerConnection per      ◀─UDP─�
    offer once, fills the fixed channels, mute and camera buttons, warns before leaving
    the page), `MercatorWeb.CallComponents.call_media/1`; the customer answers or
    declines in the chat panel (which opens when a call rings) and can ask for a call;
-   the consultant calls (audio or video) from the conversation's header. The call
-   belongs to the selected conversation on the desk: switching to another one hangs
-   up. A reload rejoins the call (the room replaces the connection). `WatchCall`
+   the consultant calls (audio or video) from the conversation's header. *(At first
+   the call belonged to the selected conversation and switching hung up; since #150
+   it lives in a floating card.)* A reload rejoins the call (the room replaces the connection). `WatchCall`
    (formerly `ExpireCall`) also ends active calls whose media room has been empty
    for more than 30 seconds after the answer. Tested by hand 2026-10-16: Firefox ↔ Chrome
    in both directions, on localhost (not inside the Tidewave page, whose frame blocks

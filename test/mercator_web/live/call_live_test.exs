@@ -32,7 +32,7 @@ defmodule MercatorWeb.CallLiveTest do
     %{chat: chat, desk: desk} = ctx
 
     desk |> element("#call-video") |> render_click()
-    assert has_element?(desk, "#desk-call-ringing", "Ruft")
+    assert has_element?(desk, "#desk-call", "Ruft")
 
     # the call rings in the customer's panel, which opens
     assert render(chat) && has_element?(chat, "#chat-call-ringing", "Sepp Fuchs")
@@ -110,22 +110,44 @@ defmodule MercatorWeb.CallLiveTest do
     assert_push_event(ctx.desk, "desk:notify", %{title: "Anruf erbeten"})
   end
 
-  test "colleagues see the call but cannot join it; leaving the conversation hangs up", ctx do
+  test "colleagues see the call but cannot join it", ctx do
     ctx.desk |> element("#call-audio") |> render_click()
     render(ctx.chat)
     ctx.chat |> element("#chat-accept-call") |> render_click()
 
     colleague = user_fixture(roles: [:sales])
-
-    {:ok, other_desk, _html} =
-      live(log_in_user(build_conn(), colleague), ~p"/admin/desk/#{ctx.conversation.id}")
+    path = ~p"/admin/desk/#{ctx.conversation.id}"
+    {:ok, other_desk, _html} = live(log_in_user(build_conn(), colleague), path)
 
     assert has_element?(other_desk, "#conversation-in-call")
     refute has_element?(other_desk, "#desk-call")
     render_hook(other_desk, "call_media_ready", %{})
     assert Calls.participants(ctx.conversation.id) == []
+  end
+
+  test "the call stays while the consultant looks at other conversations (#150)", ctx do
+    ctx.desk |> element("#call-audio") |> render_click()
+    render(ctx.chat)
+    ctx.chat |> element("#chat-accept-call") |> render_click()
+    render(ctx.desk)
+    assert has_element?(ctx.desk, "#desk-call #desk-call-media")
+    refute has_element?(ctx.desk, "#desk-call-conversation")
 
     render_patch(ctx.desk, ~p"/admin/desk")
-    assert Calls.open_call(ctx.conversation.id) == nil
+    assert has_element?(ctx.desk, "#desk-call #desk-call-media")
+
+    assert has_element?(
+             ctx.desk,
+             ~s(#desk-call-conversation[href="/admin/desk/#{ctx.conversation.id}"])
+           )
+
+    assert Calls.open_call(ctx.conversation.id).state == :active
+
+    # a reloaded desk finds the call again
+    {:ok, desk, _html} = live(log_in_user(build_conn(), ctx.consultant), ~p"/admin/desk")
+    assert has_element?(desk, "#desk-call #desk-call-media")
+
+    desk |> element("#desk-hang-up") |> render_click()
+    refute has_element?(desk, "#desk-call")
   end
 end

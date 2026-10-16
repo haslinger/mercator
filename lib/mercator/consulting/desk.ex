@@ -109,7 +109,8 @@ defmodule Mercator.Consulting.Desk do
 
   @doc """
   The consultant calls the customer (phase 10, #141): only in a conversation
-  they have taken, one call at a time. With `video?` the consultant's camera
+  they have taken, and only one call at a time, per conversation and per
+  consultant. With `video?` the consultant's camera
   is on (#142). The call rings until the customer answers, declines, or
   `Calls.ring_seconds/0` pass.
   """
@@ -120,7 +121,8 @@ defmodule Mercator.Consulting.Desk do
         %{id: id} = actor,
         video?
       ) do
-    with {:ok, call} <-
+    with nil <- Calls.consultant_call(actor.id),
+         {:ok, call} <-
            Ash.create(Call, %{conversation_id: conversation.id, video: video?},
              action: :start,
              actor: actor
@@ -128,6 +130,9 @@ defmodule Mercator.Consulting.Desk do
       WatchCall.enqueue(call.id)
       Calls.broadcast(call)
       {:ok, call}
+    else
+      %Call{} -> {:error, :in_another_call}
+      error -> error
     end
   end
 
@@ -146,6 +151,14 @@ defmodule Mercator.Consulting.Desk do
       _not_found_or_not_own ->
         {:error, :not_your_call}
     end
+  end
+
+  @doc "The name of the customer in a call, for the consultant's call card."
+  def call_peer(%Call{conversation_id: id}) do
+    Conversation
+    |> Ash.get!(id, load: [:customer], authorize?: false)
+    |> Map.get(:customer)
+    |> display_name()
   end
 
   defp end_reason(%Call{state: :ringing}), do: :cancelled

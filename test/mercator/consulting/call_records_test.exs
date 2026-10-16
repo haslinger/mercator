@@ -98,13 +98,20 @@ defmodule Mercator.Consulting.CallRecordsTest do
 
   test "one call at a time, only by the conversation's consultant", ctx do
     {:ok, _call} = Desk.call(ctx.conversation, ctx.consultant)
-    assert {:error, %Ash.Error.Invalid{}} = Desk.call(ctx.conversation, ctx.consultant)
+    assert {:error, :in_another_call} = Desk.call(ctx.conversation, ctx.consultant)
 
     colleague = user_fixture(roles: [:sales])
     assert {:error, :not_your_conversation} = Desk.call(ctx.conversation, colleague)
 
     {:ok, waiting} = Conversations.start(ctx.owner, "Noch eine Frage")
     assert {:error, :not_your_conversation} = Desk.call(waiting, ctx.consultant)
+
+    # a consultant is in one call at a time, also across conversations (#150)
+    other_owner = {:session, "token-#{System.unique_integer([:positive])}"}
+    {:ok, other} = Conversations.start(other_owner, "Und ich?")
+    {:ok, other} = Desk.take(other, ctx.consultant)
+    assert {:error, :in_another_call} = Desk.call(other, ctx.consultant)
+    assert Calls.consultant_call(ctx.consultant.id).conversation_id == ctx.conversation.id
   end
 
   test "customers cannot create calls themselves; staff read them", ctx do

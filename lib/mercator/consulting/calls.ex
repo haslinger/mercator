@@ -10,9 +10,10 @@ defmodule Mercator.Consulting.Calls do
   `finish/2` here. Who may join the media is decided by the callers of
   `join/3` (the LiveViews); the room only relays.
 
-  Changes are broadcast on `"conversation:<id>"` as `{:call, call}`, and a
-  customer's request for a call (#141) as `{:call_requested, conversation_id}`
-  on `"desk"`.
+  Changes are broadcast as `{:call, call}` on `"conversation:<id>"` (the
+  customer) and on `"desk"` (every desk follows its consultant's call, also
+  while another conversation is selected, #150), and a customer's request
+  for a call (#141) as `{:call_requested, conversation_id}` on `"desk"`.
 
   Configuration (`config :mercator, Mercator.Consulting.Calls`, set from the
   environment in `config/runtime.exs`):
@@ -35,6 +36,14 @@ defmodule Mercator.Consulting.Calls do
   def open_call(conversation_id) do
     Call
     |> Ash.Query.filter(conversation_id == ^conversation_id and state in [:ringing, :active])
+    |> Ash.read_one!(authorize?: false)
+  end
+
+  @doc "The consultant's ringing or active call, or nil: a consultant is in one call at a time."
+  def consultant_call(consultant_id) do
+    Call
+    |> Ash.Query.filter(consultant_id == ^consultant_id and state in [:ringing, :active])
+    |> Ash.Query.limit(1)
     |> Ash.read_one!(authorize?: false)
   end
 
@@ -72,8 +81,10 @@ defmodule Mercator.Consulting.Calls do
   defp clock(datetime), do: datetime |> Mercator.Clock.local() |> Calendar.strftime("%H:%M")
 
   @doc false
-  def broadcast(%Call{} = call),
-    do: Conversations.broadcast("conversation:#{call.conversation_id}", {:call, call})
+  def broadcast(%Call{} = call) do
+    Conversations.broadcast("conversation:#{call.conversation_id}", {:call, call})
+    Conversations.broadcast("desk", {:call, call})
+  end
 
   @doc """
   Joins `role` (`:customer` or `:consultant`) to the call of a conversation,
