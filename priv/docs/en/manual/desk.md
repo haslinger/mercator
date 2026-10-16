@@ -29,7 +29,9 @@ The notification shows the name and the start of the message and usually arrives
 4. On Android, exempt Chrome from **battery optimisation** (Settings → Apps → Chrome → Battery → "Unrestricted"). Otherwise the phone may delay notifications.
 5. On Android the **first notification may be flagged as possible spam**: Android hides it and asks whether you want to see it anyway. Show it, then confirm that it is **not spam**. After that, notifications arrive normally.
 
-On an iPhone this only works when the shop is added to the home screen (Share → "Add to Home Screen") and opened from there. Tapping the green button again switches notifications off for this device; signing out switches them off too. Delivery is not guaranteed: the tone at the desk and the callback after two minutes stay.
+On an iPhone this only works when the shop is added to the home screen (Share → "Add to Home Screen") and opened from there. Delivery is not guaranteed: the tone at the desk and the callback after two minutes stay.
+
+**Switching off:** tapping the green button **Notifications on** switches them off for this device again; signing out switches them off too. Each device has its own switch: you switch your phone and your computer on and off separately.
 
 ## Holding a conversation
 
