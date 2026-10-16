@@ -33,10 +33,12 @@ defmodule MercatorWeb.CallLiveTest do
 
     desk |> element("#call-video") |> render_click()
     assert has_element?(desk, "#desk-call", "Ruft")
+    assert has_element?(desk, ~s(#desk-call-ringback[phx-hook="Ringtone"][data-tone="ringback"]))
 
     # the call rings in the customer's panel, which opens
     assert render(chat) && has_element?(chat, "#chat-call-ringing", "Sepp Fuchs")
     refute has_element?(chat, "#chat-panel.hidden")
+    assert has_element?(chat, ~s(#chat-call-ringing[phx-hook="Ringtone"][data-tone="ring"]))
 
     chat |> element("#chat-accept-call") |> render_click()
     assert has_element?(chat, ~s(#chat-call-media[phx-hook="Call"][data-video="false"]))

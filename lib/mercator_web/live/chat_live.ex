@@ -552,6 +552,8 @@ defmodule MercatorWeb.ChatLive do
         :if={@call && @call.state == :ringing}
         class="flex items-center gap-3"
         id="chat-call-ringing"
+        phx-hook="Ringtone"
+        data-tone="ring"
       >
         <span class="relative flex size-10 items-center justify-center rounded-full bg-success text-success-content">
           <span class="absolute inline-flex size-full animate-ping rounded-full bg-success opacity-50"></span>

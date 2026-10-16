@@ -198,14 +198,18 @@ RTCPeerConnection          ◀─UDP─▶ PeerConnection per      ◀─UDP─�
    camera and microphone). The chat panel can now be resized at its top-left corner
    (kept per browser), for big screens.
 4. ✅ Screen sharing, device selection, speaking indicator, full-screen view. *Done
-   2026-10-16 (code and tests; by hand: partly):* screen sharing both ways through
+   2026-10-16 (code and tests; tested by hand):* screen sharing both ways through
    the third channel, the newest share wins (the room relays "screen on/off" between
    the participants, `Calls.screen_share/3` notes it on the call); microphone and
    camera chosen in a small device panel, switched live with `replaceTrack`; a ring
    around the call box while the other speaks, and around the mute button while one
    speaks (Web Audio level); the call box in full screen. The room's `join` waits up to
    20 s (creating the DTLS certificate is slow on a busy machine). Tested by hand
-   2026-10-16: screen sharing and full screen work.
+   2026-10-16: screen sharing and full screen work; switching the microphone during a
+   call works; switching conversations on the desk keeps the call connected (#150). The speaking
+   ring works. Added after the test: a ringtone for the customer while a call rings
+   and a ringback tone for the consultant (`assets/js/hooks/ringtone.js`, generated
+   with Web Audio, no audio file).
 5. Deployment: UDP range in Docker, STUN/public address, operating guide; tested on the
    demo server.
 6. Observability: WebRTC dashboard page, telemetry, incidents for failed calls.

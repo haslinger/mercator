@@ -15,8 +15,12 @@ defmodule Mercator.RateLimit do
   Counting sign-ins per address alone let anyone lock out an account by
   guessing wrong passwords for it (#126): with the client IP in the key, a
   bot only locks out itself.
+
+  Each key's window starts at its first hit (`:fix_window_per_key`), not at
+  a wall-clock boundary: with clock-aligned windows a counter could reset in
+  the middle of a burst (seen as a flaky test, 2026-10-16).
   """
-  use Hammer, backend: :ets
+  use Hammer, backend: :ets, algorithm: :fix_window_per_key
 
   @defaults [
     sign_in: {10, :timer.minutes(15)},

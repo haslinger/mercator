@@ -989,6 +989,9 @@ defmodule MercatorWeb.Admin.DeskLive do
             <span
               :if={@call.state == :ringing}
               class="loading loading-dots loading-sm text-success"
+              id="desk-call-ringback"
+              phx-hook="Ringtone"
+              data-tone="ringback"
             ></span>
             <.icon :if={@call.state == :active} name="hero-phone" class="size-4 text-success" />
             <p class="min-w-0 flex-1 truncate text-sm font-semibold">

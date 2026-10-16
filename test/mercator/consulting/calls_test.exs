@@ -13,7 +13,12 @@ defmodule Mercator.Consulting.CallsTest do
 
   defp call do
     id = Ecto.UUID.generate()
+    # the customer first: the browsers join in the background
     {:ok, customer} = FakeBrowser.start_link(id, :customer)
+
+    assert_receive {:browser, :customer, :signal, %{"type" => "state", "state" => "new"}},
+                   @timeout
+
     {:ok, consultant} = FakeBrowser.start_link(id, :consultant)
 
     assert_receive {:browser, :customer, :connected}, @timeout
