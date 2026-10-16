@@ -37,6 +37,7 @@ Then open [localhost:4000](http://localhost:4000).
 In development:
 
 - emails are not sent; they appear in the mailbox preview at [localhost:4000/dev/mailbox](http://localhost:4000/dev/mailbox)
+- the [Phoenix LiveDashboard](https://hexdocs.pm/phoenix_live_dashboard) is at [localhost:4000/admin/system](http://localhost:4000/admin/system) (administrators; in production too)
 - the [Tidewave](https://tidewave.ai) MCP server is at `localhost:4000/tidewave/mcp` (registered for Claude Code in `.mcp.json`)
 
 ## Branding

@@ -176,6 +176,10 @@ Then open `https://<your domain>`. Check an email (e.g. "forgot password") and
 a PDF (an offer's "Download PDF") once: both need the outside world (SMTP) and
 Typst in the image.
 
+Administrators also find the Phoenix LiveDashboard under Verwaltung → System
+(`/admin/system`): uptime, CPU, memory and disk space, response times and
+database query times of the running app.
+
 ## 🖥 Remote console
 
 ```sh
