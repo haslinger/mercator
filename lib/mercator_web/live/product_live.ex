@@ -333,6 +333,7 @@ defmodule MercatorWeb.ProductLive do
             }
             class="btn btn-outline"
             id="ask-consultant"
+            data-advice
           >
             <.icon name="hero-chat-bubble-left-right" class="size-5" /> {gettext("Get advice")}
           </button>

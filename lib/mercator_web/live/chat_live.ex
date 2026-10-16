@@ -60,6 +60,11 @@ defmodule MercatorWeb.ChatLive do
     |> stream(:messages, conversation.messages, reset: true)
   end
 
+  # While a conversation is waiting or running, the shop hides its "Get
+  # advice" buttons (`data-advice`, see app.css): they would do nothing.
+  defp in_conversation?(%{state: state}), do: state in [:waiting, :active]
+  defp in_conversation?(_conversation), do: false
+
   # #95: after the waiting time, or right away when nobody is at the desk
   defp waited_long_enough?(%{state: :waiting} = conversation) do
     MercatorWeb.Presence.available_count() == 0 or
@@ -294,6 +299,7 @@ defmodule MercatorWeb.ChatLive do
     <div
       id="chat-widget"
       phx-hook=".OpenChat"
+      data-in-conversation={in_conversation?(@conversation)}
       class="fixed right-4 bottom-4 z-30 flex flex-col items-end gap-3"
     >
       <%!-- always in the page (only hidden), so the message stream keeps its history --%>

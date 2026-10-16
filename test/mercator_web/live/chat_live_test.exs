@@ -102,6 +102,24 @@ defmodule MercatorWeb.ChatLiveTest do
     assert Conversations.current(owner).subject == "Gartenhaus Kompakt"
   end
 
+  test "while in a conversation the page is marked, so advice buttons hide", %{conn: conn} do
+    user = user_fixture()
+    {:ok, view, _html} = live_isolated(log_in_user(conn, user), ChatLive)
+    refute has_element?(view, "#chat-widget[data-in-conversation]")
+
+    view |> element("#chat-toggle") |> render_click()
+    view |> form("#chat-form", chat: %{body: "Hallo"}) |> render_submit()
+    assert has_element?(view, "#chat-widget[data-in-conversation]")
+
+    view |> element("#chat-end") |> render_click()
+    refute has_element?(view, "#chat-widget[data-in-conversation]")
+
+    # a reload during the conversation renders the mark right away
+    {:ok, _conversation} = Conversations.start({:user, user}, "Noch eine Frage")
+    {:ok, view, _html} = live_isolated(log_in_user(build_conn(), user), ChatLive)
+    assert has_element?(view, "#chat-widget[data-in-conversation]")
+  end
+
   test "signed-in customers chat under their account; ending closes it", %{conn: conn} do
     user = user_fixture()
     {:ok, view, _html} = live_isolated(log_in_user(conn, user), ChatLive)

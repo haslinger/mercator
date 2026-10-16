@@ -276,3 +276,9 @@
 .markdown-editor .overtype-container[data-mode="preview"] .overtype-wrapper .overtype-preview {
   font-family: var(--font-sans) !important;
 }
+
+/* While the customer is in a conversation (chat widget, MercatorWeb.ChatLive),
+   "Get advice" buttons would do nothing: hide them */
+html:has(#chat-widget[data-in-conversation]) [data-advice] {
+  display: none;
+}
