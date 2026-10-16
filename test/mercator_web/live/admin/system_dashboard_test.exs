@@ -19,11 +19,12 @@ defmodule MercatorWeb.Admin.SystemDashboardTest do
     assert html =~ "System information"
   end
 
-  test "leaves out the Ecto page, the request logger and the environment" do
+  test "shows OS data, leaves out the Ecto page, the request logger and the environment" do
     conn = log_in_user(build_conn(), user_fixture(roles: [:administrator]))
     {:ok, view, _html} = live(conn, "/admin/system/home")
 
     assert has_element?(view, ~s(a[href="/admin/system/metrics"]))
+    assert has_element?(view, ~s(a[href="/admin/system/os_mon"]))
     refute has_element?(view, ~s(a[href="/admin/system/ecto_stats"]))
     refute has_element?(view, ~s(a[href="/admin/system/request_logger"]))
     refute render(view) =~ "Environment"
