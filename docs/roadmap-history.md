@@ -142,6 +142,7 @@ This makes it the test case for **configurable material**: wood species, dimensi
 - **#134** (2026-10-16) The LiveDashboard gets its **database page** (`ecto_psql_extras`, `ecto_repos: [Mercator.Repo]`): table and index sizes, unused indexes, cache hit ratio, locks, long-running queries, vacuum statistics. The dashboard itself leaves out `kill_all` and `mandelbrot`. Query statistics (outliers, calls) would need the PostgreSQL extension `pg_stat_statements`, not set up.
 - **#135** (2026-10-16) **No metrics history** in the LiveDashboard: it would need our own buffer process (`metrics_history:`), not worth it; the charts start empty on each visit.
 - **#136** (2026-10-16) Every rate limit reached is also **logged as a warning** in a fixed format for fail2ban and `docker compose logs`: `rate limit reached: bucket=… ip=…`, without the email address (done in `Accounts.Preparations.RateLimit`).
+- **#137** (2026-10-16) **Bandit updated to 1.13.1** (with Thousand Island 1.6) for two advisories in 1.12.5: CVE-2026-105659 (HIGH, HTTP/2 send deadlines; the app speaks HTTP/1.1 behind the proxy) and CVE-2026-105660 (MEDIUM, HTTP/1 request target could set `conn.host`/`conn.port`). `mix deps.get` reports no advisories since.
 
 ## Answered questions
 

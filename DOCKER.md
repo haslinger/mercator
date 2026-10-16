@@ -113,8 +113,8 @@ network.
 
 The app believes `X-Forwarded-For` only from `TRUSTED_PROXIES` (default:
 Docker's networks `172.16.0.0/12`). The proxy should speak HTTP/1.1 to the app
-(as above): Bandit, the app's web server, has an open HTTP/2 issue that only
-matters when it serves HTTP/2 itself.
+(as above), which is the tested setup. (Bandit, the app's web server, had an
+HTTP/2 issue, CVE-2026-105659, fixed in 1.13; the app uses 1.13.1.)
 
 ## 🏗 Build and run
 
