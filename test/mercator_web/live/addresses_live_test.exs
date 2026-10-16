@@ -38,32 +38,6 @@ defmodule MercatorWeb.AddressesLiveTest do
     assert has_element?(view, "#address-#{address.id}", "Innsbruck")
   end
 
-  test "with return_to, opens the form for the first address and goes back after saving",
-       %{conn: conn} do
-    {:ok, view, _html} = live(conn, ~p"/account/addresses?#{[return_to: "/checkout"]}")
-    assert has_element?(view, "#address-form")
-    assert has_element?(view, ~s(#back-to-return[href="/checkout"]))
-
-    view
-    |> form("#address-form",
-      form: %{
-        name: "Karl Luchs",
-        street: "Waldweg 3",
-        postcode: "6020",
-        city: "Innsbruck",
-        country: "AT"
-      }
-    )
-    |> render_submit()
-
-    assert_redirect(view, "/checkout")
-  end
-
-  test "ignores a return_to that leads to another host", %{conn: conn} do
-    {:ok, view, _html} = live(conn, ~p"/account/addresses?#{[return_to: "//evil.example"]}")
-    assert has_element?(view, ~s(#back-to-return[href="/"]))
-  end
-
   test "shows validation errors", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/account/addresses")
     view |> element("#new-address") |> render_click()

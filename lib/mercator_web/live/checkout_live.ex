@@ -9,9 +9,9 @@ defmodule MercatorWeb.CheckoutLive do
   """
   use MercatorWeb, :live_view
 
-  import MercatorWeb.AddressesLive, only: [address_lines: 1]
+  import MercatorWeb.AddressComponents
 
-  alias Mercator.Brand
+  alias Mercator.{Brand, Countries}
   alias Mercator.Catalog.{Configurator, Unit}
   alias Mercator.Consulting.{Offer, OfferItem, Offers}
   alias Mercator.Sales.{Checkout, Payment, Shipping}
@@ -29,6 +29,7 @@ defmodule MercatorWeb.CheckoutLive do
           |> assign(:page_title, gettext("Checkout"))
           |> assign(:source, source)
           |> assign(:params, %{})
+          |> assign(address_form: nil, address_for: nil)
           |> assign(:problems, [])
           |> assign(:submitted?, false)
           |> load()
@@ -80,6 +81,49 @@ defmodule MercatorWeb.CheckoutLive do
   @impl true
   def handle_event("change", %{"checkout" => params}, socket) do
     {:noreply, socket |> assign(:params, params) |> load()}
+  end
+
+  # The address dialog: adding or editing an address
+  # keeps the page and its choices; the saved address is selected for the
+  # step it was opened from ("billing" or "delivery").
+  def handle_event("new_address", %{"for" => for_step}, socket)
+      when for_step in ~w(billing delivery) do
+    form = new_address_form(socket.assigns.current_user, socket.assigns.checkout.addresses == [])
+    {:noreply, assign(socket, address_form: form, address_for: for_step)}
+  end
+
+  def handle_event("edit_address", %{"id" => id, "for" => for_step}, socket)
+      when for_step in ~w(billing delivery) do
+    address = Enum.find(socket.assigns.checkout.addresses, &(&1.id == id))
+    form = edit_address_form(address, socket.assigns.current_user)
+    {:noreply, assign(socket, address_form: form, address_for: for_step)}
+  end
+
+  def handle_event("cancel_address", _params, socket),
+    do: {:noreply, assign(socket, address_form: nil, address_for: nil)}
+
+  def handle_event("validate_address", %{"form" => params}, socket) do
+    form = AshPhoenix.Form.validate(socket.assigns.address_form, params)
+    {:noreply, assign(socket, :address_form, form)}
+  end
+
+  def handle_event("save_address", %{"form" => params}, socket) do
+    case AshPhoenix.Form.submit(socket.assigns.address_form, params: params) do
+      {:ok, address} ->
+        key =
+          if socket.assigns.address_for == "billing",
+            do: "billing_address_id",
+            else: "shipping_address_id"
+
+        {:noreply,
+         socket
+         |> assign(address_form: nil, address_for: nil)
+         |> assign(:params, Map.put(socket.assigns.params, key, address.id))
+         |> load()}
+
+      {:error, form} ->
+        {:noreply, assign(socket, :address_form, form)}
+    end
   end
 
   def handle_event("place", %{"checkout" => params}, socket) do
@@ -154,7 +198,7 @@ defmodule MercatorWeb.CheckoutLive do
               name="checkout[billing_address_id]"
               prefix="billing"
             />
-            <.manage_addresses empty?={@checkout.addresses == []} return_to={return_path(@source)} />
+            <.add_address for="billing" empty?={@checkout.addresses == []} />
           </.step>
 
           <.step number={2} title={gettext("Shipping method")} id="shipping-step">
@@ -214,10 +258,7 @@ defmodule MercatorWeb.CheckoutLive do
             <p :if={@checkout.delivery_addresses == []} class="text-sm" id="no-delivery-address">
               {gettext("We deliver to: %{countries}.", countries: delivery_countries())}
             </p>
-            <.manage_addresses
-              empty?={@checkout.delivery_addresses == []}
-              return_to={return_path(@source)}
-            />
+            <.add_address for="delivery" empty?={@checkout.delivery_addresses == []} />
           </.step>
 
           <.step number={payment_step(@checkout)} title={gettext("Payment method")} id="payment-step">
@@ -346,6 +387,13 @@ defmodule MercatorWeb.CheckoutLive do
           </div>
         </aside>
       </.form>
+
+      <%!-- outside the checkout form: forms cannot be nested --%>
+      <.address_modal
+        :if={@address_form}
+        form={@address_form}
+        countries={if(@address_for == "delivery", do: Countries.delivery())}
+      />
     </Layouts.app>
     """
   end
@@ -419,47 +467,59 @@ defmodule MercatorWeb.CheckoutLive do
   defp address_choice(assigns) do
     ~H"""
     <div class="grid gap-2 sm:grid-cols-2">
-      <label
-        :for={address <- @addresses}
-        class={[
-          "flex items-start gap-3 rounded-box border p-3 cursor-pointer transition-colors",
+      <div :for={address <- @addresses} class="relative">
+        <label class={[
+          "flex h-full items-start gap-3 rounded-box border p-3 pr-16 cursor-pointer transition-colors",
           if(@selected && address.id == @selected.id,
             do: "border-primary bg-primary/5",
             else: "border-base-300 hover:border-primary/50"
           )
-        ]}
-      >
-        <input
-          type="radio"
-          name={@name}
-          value={address.id}
-          checked={@selected && address.id == @selected.id}
-          class="radio radio-primary radio-sm mt-1"
-          id={"#{@prefix}-#{address.id}"}
-        />
-        <.address_lines address={address} />
-      </label>
+        ]}>
+          <input
+            type="radio"
+            name={@name}
+            value={address.id}
+            checked={@selected && address.id == @selected.id}
+            class="radio radio-primary radio-sm mt-1"
+            id={"#{@prefix}-#{address.id}"}
+          />
+          <.address_lines address={address} />
+        </label>
+        <button
+          type="button"
+          phx-click="edit_address"
+          phx-value-id={address.id}
+          phx-value-for={@prefix}
+          class="btn btn-ghost btn-xs absolute top-2 right-2"
+          id={"edit-#{@prefix}-#{address.id}"}
+        >
+          {gettext("Edit")}
+        </button>
+      </div>
     </div>
     """
   end
 
+  attr :for, :string, required: true, doc: ~s("billing" or "delivery")
   attr :empty?, :boolean, required: true
-  attr :return_to, :string, required: true
 
-  defp manage_addresses(assigns) do
+  defp add_address(assigns) do
     ~H"""
-    <.link
-      navigate={~p"/account/addresses?#{[return_to: @return_to]}"}
-      class={["w-fit", if(@empty?, do: "btn btn-primary btn-sm", else: "link link-hover text-sm")]}
+    <button
+      type="button"
+      phx-click="new_address"
+      phx-value-for={@for}
+      class={[
+        "w-fit",
+        if(@empty?, do: "btn btn-primary btn-sm", else: "btn btn-ghost btn-sm")
+      ]}
+      id={"new-#{@for}-address"}
     >
-      {if(@empty?, do: gettext("Add an address"), else: gettext("Manage addresses"))}
-    </.link>
+      <.icon name="hero-plus" class="size-4" />
+      {if(@empty?, do: gettext("Add an address"), else: gettext("New address"))}
+    </button>
     """
   end
-
-  # Where the address book sends the customer back to after saving.
-  defp return_path({:offer, offer}), do: ~p"/checkout?#{[offer: offer.id]}"
-  defp return_path(:basket), do: ~p"/checkout"
 
   defp payment_step(%{shipping_method: :pickup}), do: 3
   defp payment_step(_checkout), do: 4

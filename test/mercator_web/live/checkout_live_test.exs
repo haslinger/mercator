@@ -47,14 +47,80 @@ defmodule MercatorWeb.CheckoutLiveTest do
     assert has_element?(view, ~s(#to-checkout[href="/checkout"]))
   end
 
-  test "the address book links back to the checkout", %{conn: conn, user: user, variant: variant} do
-    Baskets.add({:user, user}, variant.id, 1)
-    {:ok, view, _html} = live(conn, ~p"/checkout")
+  describe "address dialog" do
+    @new_address %{
+      name: "Karl Luchs",
+      street: "Sägewerkstraße 1",
+      postcode: "6060",
+      city: "Hall in Tirol",
+      country: "AT"
+    }
 
-    assert has_element?(
-             view,
-             ~s(#billing-step a[href="/account/addresses?return_to=%2Fcheckout"])
-           )
+    test "a new address keeps the choices made and is selected", %{
+      conn: conn,
+      user: user,
+      variant: variant
+    } do
+      Baskets.add({:user, user}, variant.id, 1)
+      {:ok, view, _html} = live(conn, ~p"/checkout")
+
+      view
+      |> form("#checkout-form", checkout: %{shipping_method: "pickup", note: "Bitte anrufen"})
+      |> render_change()
+
+      view |> element("#new-billing-address") |> render_click()
+      view |> form("#address-form", form: @new_address) |> render_submit()
+
+      refute has_element?(view, "#address-modal")
+
+      [address] =
+        Accounts.list_my_addresses!(actor: user) |> Enum.filter(&(&1.city == "Hall in Tirol"))
+
+      assert has_element?(view, "#billing-#{address.id}[checked]")
+      assert has_element?(view, "#shipping-pickup[checked]")
+      assert has_element?(view, "#checkout-note", "Bitte anrufen")
+    end
+
+    test "edits an address in place", %{conn: conn, user: user, variant: variant} do
+      Baskets.add({:user, user}, variant.id, 1)
+      [address] = Accounts.list_my_addresses!(actor: user)
+      {:ok, view, _html} = live(conn, ~p"/checkout")
+
+      view |> element("#edit-billing-#{address.id}") |> render_click()
+      view |> form("#address-form", form: %{city: "Hall in Tirol"}) |> render_submit()
+
+      assert has_element?(view, "#billing-step", "Hall in Tirol")
+      assert Accounts.get_address!(address.id, actor: user).city == "Hall in Tirol"
+    end
+
+    test "delivery addresses offer only delivery countries", %{
+      conn: conn,
+      user: user,
+      variant: variant
+    } do
+      Baskets.add({:user, user}, variant.id, 1)
+      {:ok, view, _html} = live(conn, ~p"/checkout")
+
+      view |> element("#new-delivery-address") |> render_click()
+      countries = Mercator.Countries.delivery()
+
+      for code <- Mercator.Countries.billing() -- countries do
+        refute has_element?(view, ~s(#address-form option[value="#{code}"]))
+      end
+
+      view |> element("#cancel-address") |> render_click()
+      refute has_element?(view, "#address-modal")
+    end
+
+    test "shows validation errors in the dialog", %{conn: conn, user: user, variant: variant} do
+      Baskets.add({:user, user}, variant.id, 1)
+      {:ok, view, _html} = live(conn, ~p"/checkout")
+
+      view |> element("#new-billing-address") |> render_click()
+      view |> form("#address-form", form: %{@new_address | postcode: "123"}) |> render_submit()
+
+      assert has_element?(view, "#address-modal")
+    end
   end
 
   test "places an order and shows the confirmation", %{conn: conn, user: user, variant: variant} do

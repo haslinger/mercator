@@ -18,10 +18,9 @@ Phases 1–9 are done (see [roadmap-history.md](roadmap-history.md)).
 
 Smaller improvements noted along the way, not tied to a phase step.
 
-- **Keep the checkout's choices across the address book:** going from the checkout to "Manage addresses" / "Add an address" and back starts the checkout afresh: the chosen addresses, shipping and payment method, the note and the GTC tick (`CheckoutLive` assigns `params`, only held in the LiveView) are gone. Also, a newly saved address that is not ticked as default is not preselected. Agreed fix (2026-10-16): add and edit addresses in a modal inside the checkout (reusing the address form of `AddressesLive` as a function component), so the page and its params stay and the new address is selected right away. (Reported 2026-10-16.)
 - **os_mon noise in the test output:** since `:os_mon` is started, every `mix test` run ends with "[os_mon] … Erlang has closed". Turn it off in the test environment (e.g. `config :os_mon, start_cpu_sup: false, start_memsup: false, start_disksup: false` in `config/test.exs`, or not starting the application) and adjust `system_dashboard_test.exs`, which expects the OS Data page link.
 - **Sobelow skips are fingerprinted by line:** an accepted finding (`.sobelow-skips`) reappears as soon as its line moves (seen in `router.ex` for the CSP finding and in `demo.ex`). Document in `.sobelow-conf` / the developer docs how to re-mark (`mix sobelow --config --mark-skip-all` after reviewing that only moved findings are new), or find a less fragile way.
 
 ## Open questions
 
-- *None right now.*
+- **#138 Checkout layout: wizard or collapsible steps?** The checkout page grows long. Recommendation: no multi-page wizard, but collapsible steps on the one page (checkout-design.md section 5 stays): a finished step collapses to a summary line with "Change", only the first unfinished step is open; returning customers with defaults see all steps collapsed, i.e. just the summary and "Place binding order"; on phones a sticky bottom bar with total and order button. Against a wizard: more clicks for the common case, back-button handling, totals and errors spread over pages.

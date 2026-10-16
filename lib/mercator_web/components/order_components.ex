@@ -6,7 +6,7 @@ defmodule MercatorWeb.OrderComponents do
   """
   use MercatorWeb, :html
 
-  import MercatorWeb.AddressesLive, only: [address_lines: 1]
+  import MercatorWeb.AddressComponents, only: [address_lines: 1]
 
   alias Mercator.{Brand, Translated}
   alias Mercator.Catalog.Unit

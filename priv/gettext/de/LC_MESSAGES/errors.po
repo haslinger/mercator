@@ -186,7 +186,7 @@ msgstr "ist keine gültige Postleitzahl für dieses Land"
 msgid "is neither an image nor a PDF"
 msgstr "ist weder ein Bild noch ein PDF"
 
-#: lib/mercator/accounts/preparations/rate_limit.ex:51
+#: lib/mercator/accounts/preparations/rate_limit.ex:56
 #, elixir-autogen, elixir-format
 msgid "too many attempts, please try again later"
 msgstr "zu viele Versuche, bitte später erneut versuchen"

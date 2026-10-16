@@ -2,7 +2,7 @@ defmodule MercatorWeb.OfferPrintHTML do
   @moduledoc "The printable offer document (`MercatorWeb.OfferPrintController`)."
   use MercatorWeb, :html
 
-  import MercatorWeb.AddressesLive, only: [address_lines: 1]
+  import MercatorWeb.AddressComponents, only: [address_lines: 1]
 
   alias Mercator.Brand
   alias Mercator.Catalog.Unit

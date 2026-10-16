@@ -18,7 +18,7 @@ On the product page you choose a variant if there are several (e.g. a length) an
 
 **Proceed to checkout** takes you to sign in if you are not signed in yet (an account is quickly made, see *Your account*). At checkout you choose:
 
-1. **Billing address** and **delivery address** from your addresses, or you add new ones.
+1. **Billing address** and **delivery address** from your addresses, or you add new ones or correct one ("Edit") right there, without leaving the checkout.
 2. **Shipping:** parcel, freight (for large and heavy goods) or pickup. Which are possible depends on the goods; the costs are shown with them.
 3. **Payment:** see *Paying*.
 4. Optionally a **note** about the order.

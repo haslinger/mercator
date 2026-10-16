@@ -18,7 +18,7 @@ Auf der Produktseite wählen Sie, falls es mehrere gibt, eine Variante (z. B. ei
 
 **Zur Kasse** führt zur Anmeldung, falls Sie noch nicht angemeldet sind (ein Konto ist schnell angelegt, siehe *Kundenkonto*). In der Kasse wählen Sie:
 
-1. **Rechnungsadresse** und **Lieferadresse** aus Ihren Adressen, oder Sie legen neue an.
+1. **Rechnungsadresse** und **Lieferadresse** aus Ihren Adressen, oder Sie legen gleich hier neue an oder korrigieren eine („Bearbeiten“), ohne die Kasse zu verlassen.
 2. **Versand:** Paketversand, Spedition (für große und schwere Waren) oder Abholung. Welche Arten möglich sind, hängt von den Waren ab; die Kosten stehen dabei.
 3. **Zahlung:** siehe *Bezahlen*.
 4. Auf Wunsch eine **Anmerkung** zur Bestellung.
