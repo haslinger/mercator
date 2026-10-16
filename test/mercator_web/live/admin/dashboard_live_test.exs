@@ -49,9 +49,13 @@ defmodule MercatorWeb.Admin.DashboardLiveTest do
     refute has_element?(view, "#shortcut-dashboard")
   end
 
-  test "the user menu links to the admin area for staff only", %{conn: conn} do
+  test "the user menu and the top bar link to the admin area for staff only", %{conn: conn} do
     html = conn |> log_in_user(user_fixture()) |> get(~p"/") |> html_response(200)
     refute html =~ ~s(id="admin-link")
+    refute html =~ ~s(id="to-admin")
+
+    html = build_conn() |> get(~p"/") |> html_response(200)
+    refute html =~ ~s(id="to-admin")
 
     html =
       build_conn()
@@ -60,5 +64,6 @@ defmodule MercatorWeb.Admin.DashboardLiveTest do
       |> html_response(200)
 
     assert html =~ ~s(id="admin-link")
+    assert html =~ ~s(id="to-admin")
   end
 end

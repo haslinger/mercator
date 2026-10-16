@@ -102,6 +102,17 @@ defmodule MercatorWeb.Layouts do
                 </span>
               </div>
             </.link>
+            <%!-- staff: back to the admin area, like "Shop" there --%>
+            <.link
+              :if={@current_user && MercatorWeb.AdminNav.staff?(@current_user)}
+              navigate={~p"/admin"}
+              class="btn btn-ghost btn-sm"
+              id="to-admin"
+              aria-label={gettext("Administration")}
+            >
+              <.icon name="hero-briefcase" class="size-5" />
+              <span class="hidden sm:inline">{gettext("Administration")}</span>
+            </.link>
             <div class="hidden items-center gap-2 md:flex">
               <.locale_switch locale={@locale} />
               <.theme_toggle />
