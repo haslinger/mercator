@@ -26,7 +26,7 @@ If the customer has left the shop, your answer reaches them by email after about
 
 ## Calling
 
-In a conversation you have taken, **Call** (audio only) or **Video call** (with your camera) calls the customer right in the shop; it rings in their chat. If the customer asks for a call, "Call requested" appears in the conversation and you hear a tone.
+In a conversation you have taken, **Call** (audio only) or **Video call** (with your camera) calls the customer right in the shop; it rings in their chat. If the customer asks for a call, "Call requested" appears in the conversation and you hear a tone. During the call, microphone, camera and screen sharing are **green** while they are on; a muted microphone is **red**.
 
 - **The call card** at the bottom right shows the call. It stays while you look at other conversations; **To the conversation** leads back. You are in one call at a time.
 - **During the call:** microphone and camera on and off, **Share screen** (e.g. a plan or the configurator; if the other side shares, your share ends), **Full screen**, and under the sliders icon the choice of microphone and camera. A green ring shows who is speaking.

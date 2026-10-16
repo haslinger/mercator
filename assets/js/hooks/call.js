@@ -68,6 +68,7 @@ export const CallHook = {
       this.local.audio = stream.getAudioTracks()[0] || null
       this.local.camera = stream.getVideoTracks()[0] || null
       this.showLocal()
+      this.showMicrophone()
       this.meter(this.local.audio, this.button("mute"))
       this.fillDevices()
       this.pushEvent("call_media_ready", {})
@@ -126,7 +127,14 @@ export const CallHook = {
     const track = this.local.audio
     if (!track) return
     track.enabled = !track.enabled
-    this.setPressed("mute", !track.enabled, "btn-error")
+    this.showMicrophone()
+  },
+
+  // green while the microphone is on, red while muted
+  showMicrophone() {
+    const on = Boolean(this.local.audio?.enabled)
+    this.setPressed("mute", !on, "btn-error")
+    this.button("mute")?.classList.toggle("btn-success", on)
   },
 
   async toggleCamera() {
@@ -220,7 +228,7 @@ export const CallHook = {
       // the browser's own "stop sharing" button
       this.local.screen.onended = () => this.stopScreen()
       await this.replace("screen", this.local.screen)
-      this.setPressed("screen", true, "btn-active")
+      this.setPressed("screen", true, "btn-success")
       this.pushEvent("call_screen", {on: true})
     } catch (_error) {
       // the choice was cancelled
@@ -233,7 +241,7 @@ export const CallHook = {
     this.local.screen.stop()
     this.local.screen = null
     await this.replace("screen", null)
-    this.setPressed("screen", false, "btn-active")
+    this.setPressed("screen", false, "btn-success")
     this.pushEvent("call_screen", {on: false})
   },
 
@@ -257,7 +265,7 @@ export const CallHook = {
     const video = this.el.querySelector("[data-local-camera]")
     video.srcObject = this.local.camera ? new MediaStream([this.local.camera]) : null
     video.classList.toggle("hidden", !this.local.camera)
-    this.setPressed("camera", Boolean(this.local.camera), "btn-active")
+    this.setPressed("camera", Boolean(this.local.camera), "btn-success")
   },
 
   // a remote track shows while media arrives (a camera that is off sends nothing)

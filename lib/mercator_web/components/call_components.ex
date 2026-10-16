@@ -101,14 +101,16 @@ defmodule MercatorWeb.CallComponents do
   attr :icon, :string, required: true
   attr :label, :string, required: true
 
-  # a round control, found by the hook through data-call-<name>
+  # A round control, found by the hook through data-call-<name>. The hook
+  # colours it: green while microphone, camera or screen sharing is on, red
+  # while muted; the speaking ring sits a little apart from the button.
   defp call_button(assigns) do
     ~H"""
     <button
       type="button"
       {%{"data-call-#{@name}" => true}}
       aria-pressed="false"
-      class="btn btn-sm btn-circle"
+      class="btn btn-sm btn-circle ring-offset-2 ring-offset-base-100"
       title={@label}
       aria-label={@label}
     >

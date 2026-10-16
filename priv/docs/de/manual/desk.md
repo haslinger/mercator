@@ -26,7 +26,7 @@ Ist die Kundin oder der Kunde nicht mehr im Shop, kommt Ihre Antwort nach etwa e
 
 ## Anrufen
 
-In einem Gespräch, das Sie übernommen haben, rufen Sie die Kundin oder den Kunden mit **Anrufen** (nur Ton) oder **Videoanruf** (mit Ihrer Kamera) direkt im Shop an; bei ihr oder ihm klingelt es im Chat. Bittet die Kundin oder der Kunde um einen Anruf, steht „Anruf erbeten“ im Gespräch, und Sie hören einen Ton.
+In einem Gespräch, das Sie übernommen haben, rufen Sie die Kundin oder den Kunden mit **Anrufen** (nur Ton) oder **Videoanruf** (mit Ihrer Kamera) direkt im Shop an; bei ihr oder ihm klingelt es im Chat. Bittet die Kundin oder der Kunde um einen Anruf, steht „Anruf erbeten“ im Gespräch, und Sie hören einen Ton. Während des Anrufs sind Mikrofon, Kamera und Bildschirmfreigabe **grün**, solange sie eingeschaltet sind; ein stummgeschaltetes Mikrofon ist **rot**.
 
 - **Die Anrufkarte** unten rechts zeigt den Anruf. Sie bleibt, während Sie andere Gespräche ansehen; **Zum Gespräch** führt zurück. Sie führen einen Anruf zur Zeit.
 - **Im Anruf:** Mikrofon und Kamera ein und aus, **Bildschirm teilen** (z. B. einen Plan oder den Konfigurator; teilt die andere Seite, endet Ihre Freigabe), **Vollbild**, und unter dem Regler-Symbol die Wahl von Mikrofon und Kamera. Ein grüner Rand zeigt, wer gerade spricht.
