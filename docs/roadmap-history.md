@@ -22,6 +22,8 @@ Status as of 2026-10-15:
 
 Small improvements done along the way (from the backlog):
 
+- ~~**Flash toasts cover the top bar**~~ *(done 2026-10-16)*: the flash group sits below the navbar (`top-20`).
+- ~~**Return to where we came from after editing addresses**~~ *(done 2026-10-16)*: the checkout links to the address book with `return_to` (the checkout path, including `?offer=`). After saving, the address book goes back there, and if there are no addresses yet it opens the form right away. Only local paths are accepted (`LiveUserAuth.local_path/1`).
 - ~~**Missed Ash notifications in demo seeding**~~ *(done 2026-10-15)*: `Mercator.Demo` (seed and reset) and the seeded orders run in `Ash.transact/3` instead of a plain `Repo.transaction`; Ash collects the notifications and seeding drops them (nobody to notify). The test output no longer shows hundreds of warnings.
 - ~~**Flaky test: deadlock on the offer number counter**~~ *(done 2026-10-15)*: the PostgreSQL log showed the other side, `products_unique_slug_index`: `product_fixture` derived the slug from fixed titles ("Zirbenbrett" in three async modules), so parallel tests waited for each other's uncommitted product while one of them held the offer counter. The fixture now gives each product a unique slug, and `gtc_fixture` a unique date (the GTC version is unique too). Eight full runs without a deadlock.
 

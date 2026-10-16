@@ -47,6 +47,16 @@ defmodule MercatorWeb.CheckoutLiveTest do
     assert has_element?(view, ~s(#to-checkout[href="/checkout"]))
   end
 
+  test "the address book links back to the checkout", %{conn: conn, user: user, variant: variant} do
+    Baskets.add({:user, user}, variant.id, 1)
+    {:ok, view, _html} = live(conn, ~p"/checkout")
+
+    assert has_element?(
+             view,
+             ~s(#billing-step a[href="/account/addresses?return_to=%2Fcheckout"])
+           )
+  end
+
   test "places an order and shows the confirmation", %{conn: conn, user: user, variant: variant} do
     Baskets.add({:user, user}, variant.id, 1)
     {:ok, view, _html} = live(conn, ~p"/checkout")

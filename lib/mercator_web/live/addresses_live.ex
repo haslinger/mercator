@@ -3,6 +3,10 @@ defmodule MercatorWeb.AddressesLive do
   The customer's address book (`/account/addresses`, checkout step 2):
   add, edit and delete addresses, choose default billing and delivery
   addresses.
+
+  With a `return_to` path (e.g. from the checkout) it sends the customer back
+  there after saving an address, and opens the form right away if there is no
+  address yet.
   """
   use MercatorWeb, :live_view
 
@@ -13,32 +17,49 @@ defmodule MercatorWeb.AddressesLive do
   on_mount {MercatorWeb.LiveUserAuth, :live_user_required}
 
   @impl true
-  def mount(_params, _session, socket) do
-    {:ok, socket |> assign(page_title: gettext("My addresses"), form: nil) |> load()}
+  def mount(params, _session, socket) do
+    socket =
+      socket
+      |> assign(page_title: gettext("My addresses"), form: nil)
+      |> assign(:return_to, return_to(params))
+      |> load()
+
+    if socket.assigns.return_to && socket.assigns.addresses == [] do
+      {:ok, assign(socket, :form, new_form(socket))}
+    else
+      {:ok, socket}
+    end
   end
+
+  defp return_to(%{"return_to" => path}) when is_binary(path),
+    do: MercatorWeb.LiveUserAuth.local_path(path)
+
+  defp return_to(_params), do: nil
 
   defp load(socket) do
     assign(socket, :addresses, Accounts.list_my_addresses!(actor: socket.assigns.current_user))
   end
 
-  @impl true
-  def handle_event("new", _params, socket) do
+  # The first address becomes the default for billing and delivery.
+  defp new_form(socket) do
     first? = socket.assigns.addresses == []
 
-    form =
-      Address
-      |> AshPhoenix.Form.for_create(:create,
-        actor: socket.assigns.current_user,
-        params: %{
-          "name" => socket.assigns.current_user.name,
-          "country" => "AT",
-          "default_billing" => first?,
-          "default_shipping" => first?
-        }
-      )
-      |> to_form()
+    Address
+    |> AshPhoenix.Form.for_create(:create,
+      actor: socket.assigns.current_user,
+      params: %{
+        "name" => socket.assigns.current_user.name,
+        "country" => "AT",
+        "default_billing" => first?,
+        "default_shipping" => first?
+      }
+    )
+    |> to_form()
+  end
 
-    {:noreply, assign(socket, :form, form)}
+  @impl true
+  def handle_event("new", _params, socket) do
+    {:noreply, assign(socket, :form, new_form(socket))}
   end
 
   def handle_event("edit", %{"id" => id}, socket) do
@@ -61,8 +82,13 @@ defmodule MercatorWeb.AddressesLive do
   def handle_event("save", %{"form" => params}, socket) do
     case AshPhoenix.Form.submit(socket.assigns.form, params: params) do
       {:ok, _} ->
-        {:noreply,
-         socket |> assign(:form, nil) |> put_flash(:info, gettext("Address saved.")) |> load()}
+        socket = put_flash(socket, :info, gettext("Address saved."))
+
+        if socket.assigns.return_to do
+          {:noreply, push_navigate(socket, to: socket.assigns.return_to)}
+        else
+          {:noreply, socket |> assign(:form, nil) |> load()}
+        end
 
       {:error, form} ->
         {:noreply, assign(socket, :form, form)}
@@ -96,7 +122,20 @@ defmodule MercatorWeb.AddressesLive do
       nav={@nav}
       basket_count={@basket_count}
     >
-      <.link navigate={~p"/account"} class="link link-hover text-sm" id="back-to-account">
+      <.link
+        :if={@return_to}
+        navigate={@return_to}
+        class="link link-hover text-sm"
+        id="back-to-return"
+      >
+        <.icon name="hero-arrow-left" class="size-4" /> {gettext("Back")}
+      </.link>
+      <.link
+        :if={!@return_to}
+        navigate={~p"/account"}
+        class="link link-hover text-sm"
+        id="back-to-account"
+      >
         <.icon name="hero-arrow-left" class="size-4" /> {gettext("My account")}
       </.link>
       <div class="flex items-center justify-between">

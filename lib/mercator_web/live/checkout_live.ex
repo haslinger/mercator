@@ -154,7 +154,7 @@ defmodule MercatorWeb.CheckoutLive do
               name="checkout[billing_address_id]"
               prefix="billing"
             />
-            <.manage_addresses empty?={@checkout.addresses == []} />
+            <.manage_addresses empty?={@checkout.addresses == []} return_to={return_path(@source)} />
           </.step>
 
           <.step number={2} title={gettext("Shipping method")} id="shipping-step">
@@ -214,7 +214,10 @@ defmodule MercatorWeb.CheckoutLive do
             <p :if={@checkout.delivery_addresses == []} class="text-sm" id="no-delivery-address">
               {gettext("We deliver to: %{countries}.", countries: delivery_countries())}
             </p>
-            <.manage_addresses empty?={@checkout.delivery_addresses == []} />
+            <.manage_addresses
+              empty?={@checkout.delivery_addresses == []}
+              return_to={return_path(@source)}
+            />
           </.step>
 
           <.step number={payment_step(@checkout)} title={gettext("Payment method")} id="payment-step">
@@ -441,17 +444,22 @@ defmodule MercatorWeb.CheckoutLive do
   end
 
   attr :empty?, :boolean, required: true
+  attr :return_to, :string, required: true
 
   defp manage_addresses(assigns) do
     ~H"""
     <.link
-      navigate={~p"/account/addresses"}
+      navigate={~p"/account/addresses?#{[return_to: @return_to]}"}
       class={["w-fit", if(@empty?, do: "btn btn-primary btn-sm", else: "link link-hover text-sm")]}
     >
       {if(@empty?, do: gettext("Add an address"), else: gettext("Manage addresses"))}
     </.link>
     """
   end
+
+  # Where the address book sends the customer back to after saving.
+  defp return_path({:offer, offer}), do: ~p"/checkout?#{[offer: offer.id]}"
+  defp return_path(:basket), do: ~p"/checkout"
 
   defp payment_step(%{shipping_method: :pickup}), do: 3
   defp payment_step(_checkout), do: 4
