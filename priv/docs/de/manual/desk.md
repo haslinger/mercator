@@ -14,6 +14,22 @@ Wartet jemand, erscheint oben ein **blinkendes rotes Licht** mit der Zahl der Wa
 
 Ist niemand verfügbar, sieht die Kundin oder der Kunde einen Countdown von zwei Minuten und kann dann um Antwort per E-Mail oder einen Rückruf bitten. Diese Gespräche tragen in der Liste das Zeichen **Rückruf** bzw. **Antwort per E-Mail**; der Shop schickt zusätzlich eine E-Mail an die Shop-Adresse.
 
+## Benachrichtigungen aufs Handy
+
+Mit **Dieses Gerät benachrichtigen** oben am Beratungsplatz meldet der Shop neue Gespräche auch, wenn der Beratungsplatz geschlossen ist: auf dem Handy, am Computer, auch bei geschlossenem Browser. Sie bekommen eine Benachrichtigung,
+
+- wenn jemand ein **neues Gespräch** beginnt (alle mit eingeschalteten Benachrichtigungen gleichzeitig), und
+- wenn in **Ihrem Gespräch** die Kundin oder der Kunde schreibt, außer Sie haben es gerade am Beratungsplatz offen.
+
+Ein Tipp darauf öffnet das Gespräch. So schalten Sie es ein:
+
+1. Öffnen Sie den Shop auf dem Gerät (am Handy in **Chrome**), melden Sie sich an und gehen Sie zum Beratungsplatz.
+2. Tippen Sie auf **Dieses Gerät benachrichtigen** und erlauben Sie Benachrichtigungen. Der Knopf wird grün: **Benachrichtigungen an**.
+3. Mit **Testen** schicken Sie sich eine Probe.
+4. Auf Android: nehmen Sie Chrome in den Einstellungen von der **Akku-Optimierung** aus (Einstellungen → Apps → Chrome → Akku → „Nicht eingeschränkt“). Sonst kann das Handy Benachrichtigungen verzögern.
+
+Am iPhone geht das nur, wenn der Shop zum Home-Bildschirm hinzugefügt ist (Teilen → „Zum Home-Bildschirm“), und von dort geöffnet wird. Ein zweiter Tipp auf den grünen Knopf schaltet die Benachrichtigungen für dieses Gerät aus; beim Abmelden gehen sie ebenfalls aus. Die Zustellung ist nicht garantiert: Der Ton am Beratungsplatz und der Rückruf nach zwei Minuten bleiben.
+
 ## Ein Gespräch führen
 
 - **Listen:** wartende Gespräche (die ältesten zuerst, mit Wartezeit), Ihre Gespräche und andere offene.

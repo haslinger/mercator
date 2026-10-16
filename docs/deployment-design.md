@@ -37,6 +37,7 @@ Two stages, like pan:
   `PHX_HOST`, `TRUSTED_PROXIES` (the reverse proxy, for client IPs and rate limits),
   `MAIL_FROM_ADDRESS`, the SMTP settings, `MERCATOR_MODE`, `DEMO_ADMIN_PASSWORD`, and
   later `MOLLIE_API_KEY`.
+  Optional: `VAPID_PUBLIC_KEY`/`VAPID_PRIVATE_KEY` for phone notifications (#151).
 
 The reverse proxy (#114) forwards `biber.mittenin.at` to the published port, with the
 headers `X-Forwarded-For`/`-Proto` and WebSocket upgrade for LiveView; `DOCKER.md` shows

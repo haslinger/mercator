@@ -3,6 +3,7 @@
   lang={assigns[:locale] || "de"}
   data-light-theme={Mercator.Brand.get(:light_theme)}
   data-dark-theme={Mercator.Brand.get(:dark_theme)}
+  data-signed-in={to_string(assigns[:current_user] != nil)}
 >
   <head>
     <meta charset="utf-8" />

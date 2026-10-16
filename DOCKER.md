@@ -165,6 +165,20 @@ Then switch Mollie on as administrator under Verwaltung → Zahlungsanbieter
 `https://<your domain>/payments/mollie/webhook`; the reverse proxy forwards it
 like every other request, nothing to configure at Mollie.
 
+### Phone notifications (Web Push)
+
+Consultants can get notified about new conversations on their phones (Verwaltung →
+Hilfe → Beratungsplatz). The shop needs its own key pair, generated once on a
+development machine:
+
+```sh
+mix mercator.gen.vapid
+```
+
+Put both lines into `.env` and restart with `docker compose up -d`. Nothing to
+register anywhere; the browsers' push services (Google, Mozilla, Apple) are free.
+A new key pair means everyone switches notifications on again at the desk.
+
 ### Video calls
 
 Consultants can call customers from the advice conversation (audio, video,

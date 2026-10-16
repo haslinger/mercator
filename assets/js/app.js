@@ -70,6 +70,16 @@ if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => navigator.serviceWorker.register("/sw.js"))
 }
 
+// Phone notifications (Web Push, #151) belong to the signed-in staff member:
+// once signed out, this device stops receiving them (the server deletes the
+// subscription when the push service reports it gone)
+if ("serviceWorker" in navigator && document.documentElement.dataset.signedIn !== "true") {
+  navigator.serviceWorker.getRegistration()
+    .then(registration => registration?.pushManager?.getSubscription())
+    .then(subscription => subscription?.unsubscribe())
+    .catch(() => {})
+}
+
 // expose liveSocket on window for web console debug logs and latency simulation:
 // >> liveSocket.enableDebug()
 // >> liveSocket.enableLatencySim(1000)  // enabled for duration of browser session

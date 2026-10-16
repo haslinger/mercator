@@ -19,7 +19,7 @@ defmodule MercatorWeb.Admin.DeskLive do
   import MercatorWeb.CallComponents, only: [call_media: 1]
 
   alias Mercator.{Catalog, Content}
-  alias Mercator.Consulting.{Call, Calls, Desk, Offer, Offers}
+  alias Mercator.Consulting.{Call, Calls, Desk, Offer, Offers, PhoneNotifications}
   alias Mercator.Content.FileTypes
   alias Mercator.Sales.Baskets
   alias MercatorWeb.{Format, Presence}
@@ -40,7 +40,8 @@ defmodule MercatorWeb.Admin.DeskLive do
 
       Presence.track(self(), Presence.topic(), user.id, %{
         available: false,
-        name: Desk.display_name(user)
+        name: Desk.display_name(user),
+        conversation_id: nil
       })
 
       # keeps the waiting times current
@@ -60,7 +61,11 @@ defmodule MercatorWeb.Admin.DeskLive do
        share_results: [],
        share_error: nil,
        form: new_form(),
-       sent: 0
+       sent: 0,
+       # phone notifications for this device (#151), reported by the .PushSwitch hook
+       push_key: Mercator.WebPush.public_key(),
+       push: :unknown,
+       push_endpoint: nil
      )
      |> allow_upload(:chat_file,
        accept: ~w(.jpg .jpeg .png .webp .pdf) ++ FileTypes.extensions(),
@@ -113,6 +118,7 @@ defmodule MercatorWeb.Admin.DeskLive do
 
     socket
     |> assign(:selected, Map.delete(conversation, :messages))
+    |> update_presence()
     |> assign(:selected_call, Calls.open_call(conversation.id))
     |> assign(:context, Desk.context(conversation, socket.assigns.current_user))
     |> assign(:title, conversation.subject || gettext("Sales desk"))
@@ -126,6 +132,7 @@ defmodule MercatorWeb.Admin.DeskLive do
 
     socket
     |> assign(selected: nil, selected_call: nil, context: nil, title: gettext("Sales desk"))
+    |> update_presence()
     |> assign_page_title()
     |> stream(:messages, [], reset: true)
   end
@@ -169,16 +176,25 @@ defmodule MercatorWeb.Admin.DeskLive do
   # Presence tells the shop whether someone is at the desk; the tab keeps
   # the choice in sessionStorage (event "desk:availability").
   defp set_available(socket, available?) do
-    user = socket.assigns.current_user
-
-    Presence.update(self(), Presence.topic(), user.id, %{
-      available: available?,
-      name: Desk.display_name(user)
-    })
-
     socket
     |> assign(:available?, available?)
+    |> update_presence()
     |> push_event("desk:availability", %{available: available?})
+  end
+
+  # the open conversation is part of it: no phone notification for it (#151)
+  defp update_presence(socket) do
+    if connected?(socket) do
+      user = socket.assigns.current_user
+
+      Presence.update(self(), Presence.topic(), user.id, %{
+        available: socket.assigns.available?,
+        name: Desk.display_name(user),
+        conversation_id: socket.assigns.selected && socket.assigns.selected.id
+      })
+    end
+
+    socket
   end
 
   # --- events ---
@@ -191,6 +207,38 @@ defmodule MercatorWeb.Admin.DeskLive do
   def handle_event("restore_availability", %{"available" => available?}, socket)
       when is_boolean(available?),
       do: {:noreply, set_available(socket, available?)}
+
+  # phone notifications for this device (#151): the .PushSwitch hook
+  # subscribes in the browser and reports here
+  def handle_event("push:subscribe", params, socket) do
+    case PhoneNotifications.subscribe(socket.assigns.current_user, params) do
+      {:ok, subscription} ->
+        {:noreply, assign(socket, push: :on, push_endpoint: subscription.endpoint)}
+
+      {:error, _error} ->
+        {:noreply,
+         socket
+         |> assign(push: :off, push_endpoint: nil)
+         |> put_flash(:error, gettext("Notifications could not be switched on."))}
+    end
+  end
+
+  def handle_event("push:unsubscribe", %{"endpoint" => endpoint}, socket) do
+    PhoneNotifications.unsubscribe(socket.assigns.current_user, endpoint)
+    {:noreply, assign(socket, push: :off, push_endpoint: nil)}
+  end
+
+  def handle_event("push:status", %{"status" => status}, socket)
+      when status in ~w(off denied unsupported),
+      do: {:noreply, assign(socket, push: String.to_existing_atom(status), push_endpoint: nil)}
+
+  def handle_event("push:test", _params, %{assigns: %{push_endpoint: endpoint}} = socket)
+      when is_binary(endpoint) do
+    PhoneNotifications.test(socket.assigns.current_user, endpoint)
+    {:noreply, put_flash(socket, :info, gettext("Test notification sent."))}
+  end
+
+  def handle_event("push:test", _params, socket), do: {:noreply, socket}
 
   def handle_event("take", _params, socket) do
     case Desk.take(socket.assigns.selected, socket.assigns.current_user) do
@@ -543,6 +591,7 @@ defmodule MercatorWeb.Admin.DeskLive do
         <.link navigate={~p"/admin/conversations"} class="btn btn-ghost ml-auto" id="to-archive">
           <.icon name="hero-archive-box" class="size-5" /> {pgettext("conversations", "Archive")}
         </.link>
+        <.push_switch :if={@push_key} key={@push_key} state={@push} />
         <button
           type="button"
           phx-click="availability"
@@ -1105,12 +1154,114 @@ defmodule MercatorWeb.Admin.DeskLive do
         }
       }
     </script>
+    <script :type={Phoenix.LiveView.ColocatedHook} name=".PushSwitch">
+      // Phone notifications for this device (Web Push, #151). The browser
+      // subscribes with the shop's public key; the server stores it.
+      const toBytes = (base64url) => {
+        const base64 = (base64url + "===".slice((base64url.length + 3) % 4)).replace(/-/g, "+").replace(/_/g, "/")
+        return Uint8Array.from(atob(base64), (c) => c.charCodeAt(0))
+      }
+      const sameKey = (a, b) => a && a.byteLength === b.byteLength && new Uint8Array(a).every((x, i) => x === b[i])
+
+      export default {
+        supported() {
+          return "serviceWorker" in navigator && "PushManager" in window && "Notification" in window
+        },
+        async subscription() {
+          const registration = await navigator.serviceWorker.ready
+          return registration.pushManager.getSubscription()
+        },
+        send(subscription) {
+          const {endpoint, keys} = subscription.toJSON()
+          this.pushEvent("push:subscribe", {endpoint, p256dh: keys.p256dh, auth: keys.auth, user_agent: navigator.userAgent})
+        },
+        // on every visit: re-sent, so it survives a reset of the database
+        async report() {
+          if (!this.supported()) return this.pushEvent("push:status", {status: "unsupported"})
+          if (Notification.permission === "denied") return this.pushEvent("push:status", {status: "denied"})
+          let subscription = await this.subscription()
+          // subscribed with an earlier key: start over
+          if (subscription && !sameKey(subscription.options.applicationServerKey, toBytes(this.el.dataset.key))) {
+            await subscription.unsubscribe()
+            subscription = null
+          }
+          subscription ? this.send(subscription) : this.pushEvent("push:status", {status: "off"})
+        },
+        async toggle() {
+          const current = await this.subscription()
+          if (current) {
+            await current.unsubscribe()
+            return this.pushEvent("push:unsubscribe", {endpoint: current.endpoint})
+          }
+          const permission = await Notification.requestPermission()
+          if (permission !== "granted") return this.pushEvent("push:status", {status: permission === "denied" ? "denied" : "off"})
+          try {
+            const registration = await navigator.serviceWorker.ready
+            this.send(await registration.pushManager.subscribe({userVisibleOnly: true, applicationServerKey: toBytes(this.el.dataset.key)}))
+          } catch (_e) {
+            this.pushEvent("push:status", {status: "off"})
+          }
+        },
+        mounted() {
+          this.el.addEventListener("click", (e) => { if (e.target.closest("#push-toggle")) this.toggle() })
+          this.report()
+        },
+        reconnected() { this.report() }
+      }
+    </script>
     <script :type={Phoenix.LiveView.ColocatedHook} name=".DeskScroll">
       export default {
         mounted() { this.el.scrollTop = this.el.scrollHeight },
         updated() { this.el.scrollTop = this.el.scrollHeight }
       }
     </script>
+    """
+  end
+
+  attr :key, :string, required: true
+  attr :state, :atom, required: true
+
+  # the switch for phone notifications on this device (#151); the
+  # .PushSwitch hook handles the click (the browser asks for permission)
+  defp push_switch(assigns) do
+    ~H"""
+    <div
+      :if={@state != :unsupported}
+      id="push-switch"
+      phx-hook=".PushSwitch"
+      data-key={@key}
+      class="join"
+    >
+      <button
+        type="button"
+        id="push-toggle"
+        disabled={@state in [:unknown, :denied]}
+        class={["btn join-item", if(@state == :on, do: "btn-success", else: "btn-outline")]}
+        title={
+          if(@state == :denied,
+            do: gettext("Notifications are blocked for this site in the browser settings."),
+            else: gettext("Notifications on this device, also when the desk is closed")
+          )
+        }
+      >
+        <.icon
+          name={if(@state == :on, do: "hero-bell-alert", else: "hero-bell-slash")}
+          class="size-5"
+        />
+        <span class="hidden sm:inline">
+          {if @state == :on, do: gettext("Notifications on"), else: gettext("Notify this device")}
+        </span>
+      </button>
+      <button
+        :if={@state == :on}
+        type="button"
+        id="push-test"
+        phx-click="push:test"
+        class="btn btn-success btn-soft join-item"
+      >
+        {gettext("Test")}
+      </button>
+    </div>
     """
   end
 

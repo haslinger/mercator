@@ -40,6 +40,10 @@ services:
       MERCATOR_MODE: ${MERCATOR_MODE:-}
       DEMO_ADMIN_PASSWORD: ${DEMO_ADMIN_PASSWORD:-}
       MOLLIE_API_KEY: ${MOLLIE_API_KEY:-}
+      # phone notifications (Web Push): `mix mercator.gen.vapid`
+      VAPID_PUBLIC_KEY: ${VAPID_PUBLIC_KEY:-}
+      VAPID_PRIVATE_KEY: ${VAPID_PRIVATE_KEY:-}
+      VAPID_SUBJECT: ${VAPID_SUBJECT:-}
       CALL_PORT_RANGE: ${CALL_PORT_RANGE:-50000-50049}
       # the public host name or IP the browsers reach for call media (usually
       # the same as PHX_HOST); without it calls work only inside the LAN

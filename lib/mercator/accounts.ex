@@ -21,6 +21,11 @@ defmodule Mercator.Accounts do
 
     resource Mercator.Accounts.Token
 
+    resource Mercator.Accounts.PushSubscription do
+      define :subscribe_push, action: :subscribe
+      define :list_my_push_subscriptions, action: :mine
+    end
+
     resource Mercator.Accounts.User do
       define :get_user, action: :read, get_by: [:id]
       define :list_users, action: :read

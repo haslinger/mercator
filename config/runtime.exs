@@ -73,6 +73,18 @@ if config_env() != :test do
   end
 end
 
+# Web Push (#151, Mercator.WebPush): the shop's key pair, from
+# `mix mercator.gen.vapid`; without it there are no phone notifications
+if config_env() == :prod do
+  with public when public not in [nil, ""] <- System.get_env("VAPID_PUBLIC_KEY"),
+       private when private not in [nil, ""] <- System.get_env("VAPID_PRIVATE_KEY") do
+    config :mercator, Mercator.WebPush,
+      public_key: public,
+      private_key: private,
+      subject: System.get_env("VAPID_SUBJECT")
+  end
+end
+
 # Demo mode (#48, Mercator.Demo): MERCATOR_MODE=demo, empty for a real shop
 case System.get_env("MERCATOR_MODE", "") do
   "" ->

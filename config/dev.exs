@@ -90,3 +90,10 @@ config :mercator, :making_of, true
 # Online payment: the simulator (no real payment) and Mollie (with
 # MOLLIE_API_KEY=test_… in the shell; no webhooks locally), see Mercator.Payments
 config :mercator, :payment_providers, [Mercator.Payments.Simulator, Mercator.Payments.Mollie]
+
+# Web Push (#151): a key pair for development only (browsers allow push on
+# localhost); production gets its own from VAPID_PUBLIC_KEY/VAPID_PRIVATE_KEY
+config :mercator, Mercator.WebPush,
+  public_key:
+    "BO_dK4tVLvTqle77LQE5TD9cuTA7XRc0hcEmClcifYczaCHSxFe9rbOFvRVDb7TE6Q0tP8t7NXTNwVi5zAfzIB0",
+  private_key: "qhxfytwQIaYJEcmLt7tmVQ61eNjUW21JHK3kvnEHnHA"

@@ -14,6 +14,22 @@ While someone is waiting, a **blinking red light** at the top shows how many are
 
 If nobody is available, the customer sees a two-minute countdown and can then ask for an answer by email or a phone callback. These conversations are marked **Callback** or **Reply by email** in the list, and the shop also emails its own address.
 
+## Notifications on your phone
+
+With **Notify this device** at the top of the desk, the shop tells you about new conversations even when the desk is closed: on your phone or computer, even with the browser closed. You get a notification
+
+- when someone starts a **new conversation** (everyone with notifications on, at the same time), and
+- when the customer writes in **your conversation**, unless you have it open at the desk.
+
+Tapping it opens the conversation. To switch it on:
+
+1. Open the shop on the device (on a phone in **Chrome**), sign in and go to the desk.
+2. Tap **Notify this device** and allow notifications. The button turns green: **Notifications on**.
+3. **Test** sends you a sample.
+4. On Android, exempt Chrome from **battery optimisation** (Settings → Apps → Chrome → Battery → "Unrestricted"). Otherwise the phone may delay notifications.
+
+On an iPhone this only works when the shop is added to the home screen (Share → "Add to Home Screen") and opened from there. Tapping the green button again switches notifications off for this device; signing out switches them off too. Delivery is not guaranteed: the tone at the desk and the callback after two minutes stay.
+
 ## Holding a conversation
 
 - **Lists:** waiting conversations (oldest first, with waiting time), yours, and other open ones.

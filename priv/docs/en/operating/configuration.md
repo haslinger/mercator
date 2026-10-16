@@ -17,6 +17,8 @@ Everything secret or specific to the installation is in the file `.env` next to 
 | `BRAND` | the brand (name, logo, colours, contact data) from `config/brands/`, e.g. `biberholz`; empty for the neutral Mercator look |
 | `SHOP_TIME_ZONE` | the shop's time zone (default `Europe/Vienna`): times on pages and in emails, "today" for price validity, the nightly jobs |
 | `MOLLIE_API_KEY` | Mollie for online payment: `test_…` simulates payments, `live_…` takes real money. Then switch it on under Administration → Payment providers |
+| `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY` | phone notifications (Web Push): the shop's key pair, generated with `mix mercator.gen.vapid`; free, no account needed. Without them there are no notifications. A new pair means everyone switches them on again at the desk |
+| `VAPID_SUBJECT` | optional: a contact for the push services, e.g. `mailto:shop@example.com` (default: `MAIL_FROM_ADDRESS`) |
 | `MERCATOR_MODE` | `demo` for the public demo, empty for a real shop (see [Demo mode](demo.md)) |
 | `DEMO_ADMIN_PASSWORD` | demo only: the administrator's password, at least 8 characters |
 | `CALL_PUBLIC_HOST` | video calls: the public host name (or IP) browsers reach the call media at, usually as `PHX_HOST`; without it calls only work inside the local network (see [Video calls](calls.md)) |

@@ -1,7 +1,8 @@
 defmodule MercatorWeb.Presence do
   @moduledoc """
   Who is at the sales desk (guided selling, #95): consultants with the desk
-  open are tracked on `"desk:presence"` with `%{available: boolean, name: ...}`.
+  open are tracked on `"desk:presence"` with `%{available: boolean, name: ...,
+  conversation_id: ...}` (the conversation they have open).
   Kept in memory across the cluster by Phoenix.Presence, not in the database.
   """
   use Phoenix.Presence, otp_app: :mercator, pubsub_server: Mercator.PubSub
@@ -15,6 +16,14 @@ defmodule MercatorWeb.Presence do
     @topic
     |> list()
     |> Enum.count(fn {_id, %{metas: metas}} -> Enum.any?(metas, & &1.available) end)
+  end
+
+  @doc "Whether the consultant has this conversation open at the desk (`conversation_id` in the meta)."
+  def viewing?(user_id, conversation_id) do
+    case get_by_key(@topic, user_id) do
+      %{metas: metas} -> Enum.any?(metas, &(&1[:conversation_id] == conversation_id))
+      _not_at_desk -> false
+    end
   end
 
   @chat_topic "chat:presence"

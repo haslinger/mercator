@@ -74,6 +74,13 @@ config :mercator, Mercator.Payments.Mollie,
   api_key: "test_dummy",
   req_options: [plug: {Req.Test, Mercator.Payments.Mollie}]
 
+# Web Push (#151) is tested against stubbed push services (Mercator.WebPushTest)
+config :mercator, Mercator.WebPush,
+  public_key:
+    "BNmFx-hPBTH8dvD1cDC4NbxkbkH872n4xF4HFXCa8KSI8QJP0LwTUw1cCy6d-u5CBbKRQZDq01ysa-2A3yheWEw",
+  private_key: "T6Buuq2DJhYhoDuwRZ3SNPZ_qVQG9G9Nfcmb5Y6y2CE",
+  req_options: [plug: {Req.Test, Mercator.WebPush}]
+
 # os_mon runs for the LiveDashboard's OS page; its port programs print
 # "Erlang has closed" when the test VM stops, so they stay off in tests
 config :os_mon, start_cpu_sup: false, start_memsup: false, start_disksup: false

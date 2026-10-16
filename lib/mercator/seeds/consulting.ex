@@ -36,6 +36,7 @@ defmodule Mercator.Seeds.Consulting do
     "Mercator.Consulting.Workers.SendCallbackRequest",
     "Mercator.Consulting.Workers.SendNewConversationNotice",
     "Mercator.Consulting.Workers.SendOfferEmail",
+    "Mercator.Consulting.Workers.SendPhoneNotification",
     "Mercator.Consulting.Workers.SendReplyNotice",
     "Mercator.Consulting.Workers.WatchCall",
     "Mercator.Sales.Workers.SendOrderConfirmation"

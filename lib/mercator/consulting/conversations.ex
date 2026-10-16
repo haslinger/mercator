@@ -17,7 +17,7 @@ defmodule Mercator.Consulting.Conversations do
   require Ash.Query
 
   alias Mercator.Catalog.Listing
-  alias Mercator.Consulting.{Call, Calls, Conversation, Message}
+  alias Mercator.Consulting.{Call, Calls, Conversation, Message, PhoneNotifications}
   alias Mercator.Consulting.Workers.{SendCallbackRequest, SendNewConversationNotice}
 
   @pubsub Mercator.PubSub
@@ -53,6 +53,7 @@ defmodule Mercator.Consulting.Conversations do
         do:
           %{conversation_id: conversation.id} |> SendNewConversationNotice.new() |> Oban.insert!()
 
+      PhoneNotifications.new_conversation(conversation.id)
       {:ok, conversation}
     end
   end
@@ -61,11 +62,15 @@ defmodule Mercator.Consulting.Conversations do
   def post(owner, conversation_id, body) do
     case get(owner, conversation_id) do
       %Conversation{} = conversation ->
-        create_message(conversation, %{
-          sender_kind: :customer,
-          sender_id: user_id(owner),
-          body: body
-        })
+        with {:ok, message} <-
+               create_message(conversation, %{
+                 sender_kind: :customer,
+                 sender_id: user_id(owner),
+                 body: body
+               }) do
+          PhoneNotifications.customer_message(conversation, message)
+          {:ok, message}
+        end
 
       nil ->
         {:error, :not_found}
