@@ -33,7 +33,8 @@ defmodule MercatorWeb.Admin.SystemDashboardTest do
   test "is linked in the admin area for administrators only" do
     conn = log_in_user(build_conn(), user_fixture(roles: [:administrator]))
     {:ok, view, _html} = live(conn, ~p"/admin")
-    assert has_element?(view, ~s(#admin-nav-system[href="/admin/system"]))
+    assert has_element?(view, ~s(#admin-nav-system[href="/admin/system"][target="_blank"]))
+    assert has_element?(view, ~s(#shortcut-system[href="/admin/system"][target="_blank"]))
 
     conn = log_in_user(build_conn(), user_fixture(roles: [:sales_manager]))
     {:ok, view, _html} = live(conn, ~p"/admin")

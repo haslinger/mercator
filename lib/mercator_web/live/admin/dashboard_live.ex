@@ -87,12 +87,19 @@ defmodule MercatorWeb.Admin.DashboardLive do
     <.link
       navigate={if(!@item.external?, do: @item.path)}
       href={if(@item.external?, do: @item.path)}
+      target={@item.external? && "_blank"}
+      rel={@item.external? && "noopener"}
       class="card bg-base-100 shadow-sm hover:shadow-md transition-shadow"
       id={"shortcut-#{@item.id}"}
     >
       <div class="card-body flex-row items-center gap-3">
         <.icon name={@item.icon} class="size-6 text-primary" />
         <span class="font-semibold">{@item.label}</span>
+        <.icon
+          :if={@item.external?}
+          name="hero-arrow-top-right-on-square"
+          class="ml-auto size-4 opacity-60"
+        />
         <span
           :if={@item.id == "incidents" and (@open_incidents || 0) > 0}
           class="badge badge-error ml-auto"

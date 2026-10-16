@@ -259,8 +259,16 @@ defmodule MercatorWeb.Layouts do
             <p class="menu-title px-2">{title}</p>
             <ul class="menu w-full">
               <li :for={item <- items}>
-                <.link :if={item.external?} href={item.path} id={"admin-nav-#{item.id}"}>
+                <%!-- own pages without the admin layout: in a new tab --%>
+                <.link
+                  :if={item.external?}
+                  href={item.path}
+                  target="_blank"
+                  rel="noopener"
+                  id={"admin-nav-#{item.id}"}
+                >
                   <.icon name={item.icon} class="size-5" /> {item.label}
+                  <.icon name="hero-arrow-top-right-on-square" class="ml-auto size-4 opacity-60" />
                 </.link>
                 <.link
                   :if={!item.external?}

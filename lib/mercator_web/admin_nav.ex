@@ -101,7 +101,7 @@ defmodule MercatorWeb.AdminNav do
              :administrator
            ]
          ),
-         # the LiveDashboard, its own live session: linked with href
+         # the LiveDashboard, its own live session and layout: a new tab
          %{
            item(gettext("System"), ~p"/admin/system", "hero-cpu-chip", "system", [
              :administrator
@@ -119,7 +119,7 @@ defmodule MercatorWeb.AdminNav do
     do: %{label: label, path: path, icon: icon, id: id, roles: roles, external?: false}
 
   # development only: the mailbox preview of sent emails, last in the
-  # "Administration" section (a plain page, not a LiveView: linked with href)
+  # "Administration" section (a plain page, not a LiveView: a new tab)
   if Application.compile_env(:mercator, :dev_routes) do
     defp add_dev_tools(sections) do
       mailbox = %{
