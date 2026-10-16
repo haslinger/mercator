@@ -53,7 +53,7 @@ When someone reaches a limit for sign-in attempts or sign-in emails, the log get
 
 ## System overview in the browser
 
-Administrators find the Phoenix LiveDashboard under **Administration → System** (`/admin/system`): memory, processes, load, operating system data (CPU, memory, disk space) and live metrics (response times, database queries) of the running app. It does not show environment variables and does not allow changes such as killing processes.
+Administrators find the Phoenix LiveDashboard under **Administration → System** (`/admin/system`): memory, processes, load, operating system data (CPU, memory, disk space), the database (table and index sizes, locks, long-running queries) and live metrics (response times, database queries) of the running app. It does not show environment variables and does not allow changes such as killing processes.
 
 ## Console
 

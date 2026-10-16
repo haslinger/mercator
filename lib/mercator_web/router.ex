@@ -202,9 +202,10 @@ defmodule MercatorWeb.Router do
   #   pipe_through :api
   # end
 
-  # LiveDashboard for administrators, also in production. Left out: the Ecto
-  # page (needs ecto_psql_extras), the request logger, environment variables
-  # and killing processes (allow_destructive_actions defaults to false).
+  # LiveDashboard for administrators, also in production; the Ecto page comes
+  # from ecto_psql_extras (#134). Left out: the request logger, environment
+  # variables and killing processes (allow_destructive_actions defaults to
+  # false).
   scope "/admin" do
     import Phoenix.LiveDashboard.Router
 
@@ -213,7 +214,7 @@ defmodule MercatorWeb.Router do
     live_dashboard "/system",
       metrics: MercatorWeb.Telemetry,
       csp_nonce_assign_key: :csp_nonce,
-      ecto_repos: [],
+      ecto_repos: [Mercator.Repo],
       request_logger: false,
       live_session_name: :admin_live_dashboard,
       on_mount: [

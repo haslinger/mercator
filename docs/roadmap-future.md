@@ -24,4 +24,4 @@ Smaller improvements noted along the way, not tied to a phase step.
 
 ## Open questions
 
-- **#134 Database page in the LiveDashboard:** add `ecto_psql_extras` (new dependency) so `/admin/system` shows slow queries, table and index sizes, index usage and locks? Read-only, administrators only; today the Ecto page is left out (`ecto_repos: []`).
+- *None right now.*

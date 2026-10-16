@@ -178,7 +178,8 @@ Typst in the image.
 
 Administrators also find the Phoenix LiveDashboard under Verwaltung → System
 (`/admin/system`): uptime, CPU, memory and disk space, response times and
-database query times of the running app.
+database query times of the running app, and database statistics (table and
+index sizes, locks, long-running queries).
 
 ## 🖥 Remote console
 

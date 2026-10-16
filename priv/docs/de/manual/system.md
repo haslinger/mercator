@@ -12,8 +12,9 @@ Die Werte sind live und werden nicht gespeichert: Die Diagramme beginnen leer, w
 | **Home** | Versionen (Elixir, Erlang, Phoenix), Laufzeit seit dem letzten Start, Speicher und Prozesse im Überblick | Läuft die App, seit wann? |
 | **OS Data** | CPU-Last, Arbeitsspeicher und Plattenplatz des Servers | Wird der Platz knapp (z. B. durch Uploads oder alte Docker-Images)? |
 | **Metrics** | Antwortzeiten der Seiten, Dauer der Datenbankabfragen, Speicher und Warteschlangen der Laufzeitumgebung | Ist der Shop langsam, und liegt es an der Datenbank? |
+| **Ecto Stats** | Die Datenbank: Größe der Tabellen und Indizes, ungenutzte Indizes, Cache-Trefferquote, Sperren, lang laufende Abfragen, Vacuum-Statistik | Wächst die Datenbank, fehlt ein Index, hängt eine Abfrage? |
 | **Memory Allocators**, **Applications**, **Processes**, **Ports**, **Sockets**, **ETS** | Interna der Laufzeitumgebung | Fehlersuche mit Entwicklern |
 
-Bewusst weggelassen: Umgebungsvariablen (sie enthalten Geheimnisse), der Request-Logger, die Datenbankstatistik und Eingriffe wie das Beenden von Prozessen. Das Dashboard verändert also nichts.
+Bewusst weggelassen: Umgebungsvariablen (sie enthalten Geheimnisse), der Request-Logger und Eingriffe wie das Beenden von Prozessen oder Datenbankverbindungen. Das Dashboard verändert also nichts.
 
 In Docker zeigt **OS Data** CPU und Arbeitsspeicher des Servers, die Platten so, wie der Container sie sieht. Wie Sie Platz schaffen, steht unter Betrieb → Wartung.

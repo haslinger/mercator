@@ -53,7 +53,7 @@ Erreicht jemand eine Grenze für Anmeldeversuche oder Anmelde-E-Mails, steht im 
 
 ## Systemübersicht im Browser
 
-Administratoren finden unter **Verwaltung → System** (`/admin/system`) das Phoenix LiveDashboard: Speicher, Prozesse, Auslastung, Betriebssystemdaten (CPU, Arbeitsspeicher, Plattenplatz) und laufende Messwerte (Antwortzeiten, Datenbankabfragen) der laufenden App. Es zeigt keine Umgebungsvariablen und erlaubt keine Eingriffe wie das Beenden von Prozessen.
+Administratoren finden unter **Verwaltung → System** (`/admin/system`) das Phoenix LiveDashboard: Speicher, Prozesse, Auslastung, Betriebssystemdaten (CPU, Arbeitsspeicher, Plattenplatz), die Datenbank (Größe von Tabellen und Indizes, Sperren, lang laufende Abfragen) und laufende Messwerte (Antwortzeiten, Datenbankabfragen) der laufenden App. Es zeigt keine Umgebungsvariablen und erlaubt keine Eingriffe wie das Beenden von Prozessen.
 
 ## Konsole
 

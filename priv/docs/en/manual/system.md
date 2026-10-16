@@ -12,8 +12,9 @@ The values are live and not stored: the charts start empty when you open the pag
 | **Home** | Versions (Elixir, Erlang, Phoenix), uptime since the last start, memory and processes at a glance | Is the app running, and since when? |
 | **OS Data** | CPU load, memory and disk space of the server | Is space running out (e.g. uploads or old Docker images)? |
 | **Metrics** | Page response times, database query times, memory and run queues of the runtime | Is the shop slow, and is it the database? |
+| **Ecto Stats** | The database: table and index sizes, unused indexes, cache hit ratio, locks, long-running queries, vacuum statistics | Is the database growing, is an index missing, is a query stuck? |
 | **Memory Allocators**, **Applications**, **Processes**, **Ports**, **Sockets**, **ETS** | Runtime internals | Troubleshooting with developers |
 
-Left out on purpose: environment variables (they hold secrets), the request logger, the database statistics, and actions such as killing processes. So the dashboard changes nothing.
+Left out on purpose: environment variables (they hold secrets), the request logger, and actions such as killing processes or database connections. So the dashboard changes nothing.
 
 In Docker, **OS Data** shows the server's CPU and memory, and the disks as the container sees them. How to free space is described under Operating → Maintenance.
