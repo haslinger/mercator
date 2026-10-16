@@ -100,7 +100,7 @@ defmodule MercatorWeb.AccountLiveTest do
       email = to_string(user.email)
 
       assert_received {:email,
-                       %{subject: "Reset your password", to: [{_, ^email}], html_body: body}}
+                       %{subject: "Passwort zurücksetzen", to: [{_, ^email}], html_body: body}}
 
       assert body =~ "/password-reset/"
       assert has_element?(view, "#send-reset-link[disabled]")

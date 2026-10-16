@@ -7,7 +7,7 @@ defmodule MercatorWeb.AuthController do
   alias MercatorWeb.BasketSession
 
   def success(conn, activity, user, _token) do
-    return_to = get_session(conn, :return_to) || ~p"/"
+    return_to = get_session(conn, :return_to) || start_page(user)
 
     message =
       case activity do
@@ -45,6 +45,17 @@ defmodule MercatorWeb.AuthController do
   end
 
   def demo_sign_in(conn, _params), do: conn |> put_status(:not_found) |> text("Not found")
+
+  # Staff start at their work place, unless a page asked for the sign-in
+  # (e.g. the checkout): consultants at the desk, available right away
+  # (they can still go away there), administrators in the back office.
+  defp start_page(%{roles: roles}) do
+    cond do
+      Enum.any?([:sales, :sales_manager], &(&1 in roles)) -> ~p"/admin/desk?available=true"
+      :administrator in roles -> ~p"/admin"
+      true -> ~p"/"
+    end
+  end
 
   # a new user from a magic link enters their name first (#102)
   defp after_sign_in(%{name: nil}, return_to), do: ~p"/account/name?#{[return_to: return_to]}"

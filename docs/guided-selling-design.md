@@ -34,7 +34,7 @@ From the models, the sales subsite and the sales process diagram (`mercator.wiki
 
 ### 3.2 The sales desk (back office)
 
-- `/admin/desk` for `sales` / `sales_manager`: a status switch **available / away**, the queue of waiting conversations, "my" conversations and all open ones.
+- `/admin/desk` for `sales` / `sales_manager`: a status switch **available / away**, the queue of waiting conversations, "my" conversations and all open ones. After signing in, consultants land on the desk and are available at once (`?available=true`); administrators without a sales role land on `/admin`. A page that asked for the sign-in (e.g. the checkout) wins.
 - **Assignment (#95):** a new conversation notifies all available consultants (sound + browser notification while the desk is open); the first one to take it gets it. Others can still join or take over.
 - **Conversation view** for the consultant: the chat, and next to it the customer context: **current page** in the shop (live), **basket** contents, previous **orders**, earlier conversations, addresses.
 - **Recommend a product:** search, then post it into the chat as a product card with "In den Warenkorb" (for configurable products with a prepared configuration).

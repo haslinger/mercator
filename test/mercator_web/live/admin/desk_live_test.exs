@@ -40,6 +40,19 @@ defmodule MercatorWeb.Admin.DeskLiveTest do
     assert_push_event(view, "desk:availability", %{available: true})
   end
 
+  test "coming from the sign-in, the consultant is available at once",
+       %{conn: conn, consultant: consultant} do
+    {:ok, view, _html} = live(conn, ~p"/admin/desk?available=true")
+
+    assert has_element?(view, "#availability", "Verfügbar")
+    assert %{metas: [%{available: true}]} = Presence.get_by_key(Presence.topic(), consultant.id)
+    assert_push_event(view, "desk:availability", %{available: true})
+
+    # and can go away
+    view |> element("#availability") |> render_click()
+    assert has_element?(view, "#availability", "Abwesend")
+  end
+
   test "a reloaded desk restores the tab's availability", %{conn: conn, consultant: consultant} do
     {:ok, view, _html} = live(conn, ~p"/admin/desk")
     assert has_element?(view, "#availability", "Abwesend")

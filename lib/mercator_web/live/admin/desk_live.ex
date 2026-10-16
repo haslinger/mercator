@@ -72,7 +72,23 @@ defmodule MercatorWeb.Admin.DeskLive do
      |> load_lists()}
   end
 
+  # Coming from the sign-in, the consultant is available at once; the
+  # parameter is dropped so that a reload keeps their later choice.
   @impl true
+  def handle_params(%{"available" => "true"} = params, _uri, socket) do
+    if connected?(socket) do
+      path =
+        case params do
+          %{"id" => id} -> ~p"/admin/desk/#{id}"
+          _ -> ~p"/admin/desk"
+        end
+
+      {:noreply, socket |> set_available(true) |> push_patch(to: path, replace: true)}
+    else
+      handle_params(Map.delete(params, "available"), nil, socket)
+    end
+  end
+
   def handle_params(%{"id" => id}, _uri, socket) do
     case Desk.get(id, socket.assigns.current_user) do
       {:ok, %{} = conversation} ->

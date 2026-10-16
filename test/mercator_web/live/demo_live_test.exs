@@ -50,7 +50,8 @@ defmodule MercatorWeb.DemoLiveTest do
       sales = demo_sales()
 
       conn = post(conn, ~p"/demo/sign-in", %{"login" => "sales"})
-      assert redirected_to(conn) == ~p"/"
+      # like every consultant: straight to the desk
+      assert redirected_to(conn) == ~p"/admin/desk?available=true"
 
       {:ok, view, _html} = live(recycle(conn), ~p"/account")
       assert has_element?(view, "#account-email", to_string(sales.email))
