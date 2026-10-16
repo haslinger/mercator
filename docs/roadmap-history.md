@@ -147,6 +147,7 @@ This makes it the test case for **configurable material**: wood species, dimensi
 - **#136** (2026-10-16) Every rate limit reached is also **logged as a warning** in a fixed format for fail2ban and `docker compose logs`: `rate limit reached: bucket=… ip=…`, without the email address (done in `Accounts.Preparations.RateLimit`).
 - **#137** (2026-10-16) **Bandit updated to 1.13.1** (with Thousand Island 1.6) for two advisories in 1.12.5: CVE-2026-105659 (HIGH, HTTP/2 send deadlines; the app speaks HTTP/1.1 behind the proxy) and CVE-2026-105660 (MEDIUM, HTTP/1 request target could set `conn.host`/`conn.port`). `mix deps.get` reports no advisories since.
 - **#138** (2026-10-16) The checkout **stays one page as it is**: no wizard and no collapsible steps. Tested again after the address dialog; with addresses added and edited on the page, the length is fine.
+- **#139** (2026-10-16) **Video advice becomes phase 10, built with `ex_webrtc`** inside the shop (an SFU in the release), not with an external service such as Jitsi: it keeps everything in the Elixir ecosystem and is meant as a showcase. Membrane is not needed for forwarding (it builds on `ex_webrtc` and stays an option for recording or processing); Fishjam is not used (its open-source server is unmaintained since 2024). Design: [video-design.md](video-design.md).
 
 ## Answered questions
 

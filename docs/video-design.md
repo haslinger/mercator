@@ -1,0 +1,191 @@
+# Video advice (phase 10) – design
+
+Status: **draft 2026-10-16**, for discussion. Decided so far: #139 phase 10 is
+self-hosted audio, video and screen sharing with Elixir WebRTC (`ex_webrtc`), inside
+the shop, instead of an external video service. Open questions: section 10.
+
+## 1. Goals
+
+- A consultant and a customer **talk, see each other and share a screen** inside an
+  advice conversation (#100), without a second tool, account or link.
+- The call belongs to the conversation: the same people may join, the chat stays
+  usable during the call, and the call appears in the conversation's history.
+- **Everything stays in the Elixir ecosystem**: the media relay runs in the Mercator
+  release itself, supervised like any other process. No separate media server.
+- A **showcase**: chat, video and screen sharing in one Phoenix app, with the call's
+  statistics in the LiveDashboard (`/admin/system`).
+
+Not goals: webinars or large meetings, recording, phone dial-in, mobile apps.
+
+## 2. What the Rails app did
+
+The Rails app linked to an external WebRTC service (palava) from the conversation.
+There was no integration beyond the link.
+
+## 3. Building blocks
+
+All by Software Mansion, Apache-2.0:
+
+| Package | Use here |
+|---|---|
+| `ex_webrtc` (0.17) | W3C WebRTC API in Elixir: one `ExWebRTC.PeerConnection` per participant on the server |
+| `ex_webrtc_dashboard` | WebRTC statistics as a LiveDashboard page |
+| Nexus (`elixir-webrtc/apps`) | Example SFU for video conferences in Phoenix; blueprint for the room process, not a dependency |
+| `live_ex_webrtc` | LiveView components for one-way publish/play; read for its JS hook, probably not used as is (we need two-way calls in an existing LiveView) |
+| `rel` | TURN/STUN server in Elixir; early stage, UDP only (#146) |
+
+**Membrane** is not needed: an SFU forwards encrypted media packets without decoding
+them, which `ex_webrtc` does alone. Membrane would come in for processing (recording,
+mixing, transcription); its WebRTC plugin is built on `ex_webrtc`, so that stays open.
+**Fishjam** is not used: its open-source server has not been maintained since 2024.
+
+## 4. Architecture
+
+```
+Browser (customer)                 Mercator release                     Browser (consultant)
+ChatLive + JS hook "Call"  ◀─LV─▶  Consulting.Calls.Room  ◀─LV─▶  DeskLive + JS hook "Call"
+RTCPeerConnection          ◀─UDP─▶ PeerConnection per      ◀─UDP─▶ RTCPeerConnection
+                                   participant (SFU)
+```
+
+- **SFU, not peer-to-peer.** Each browser connects to the server only. The server
+  forwards every track to the other participants. Peer-to-peer would be simpler for
+  two people, but the media would bypass Elixir entirely (no showcase, no statistics,
+  no third participant, and the customer's IP address would be shown to the
+  consultant's browser and vice versa).
+- **Room process:** `Mercator.Consulting.Calls.Room`, a GenServer per active call,
+  registered by conversation id (`Registry`) under a `DynamicSupervisor`. It owns one
+  `PeerConnection` per participant, maps each incoming track to outgoing tracks on the
+  others, forwards RTP packets and passes keyframe requests (PLI) back to the sender,
+  so a newly joined participant gets a picture at once. The room ends when the last
+  participant leaves, or after a grace period when only one is left.
+- **Signaling through the existing LiveViews.** SDP offers and answers and ICE
+  candidates travel as LiveView events (`push_event` / `this.pushEvent`) between the
+  browser's hook and the LiveView, which passes them to the room. No extra
+  Phoenix Channel or socket: authentication, the actor and the conversation are already
+  there.
+- **The customer side lives in `ChatLive`,** which is rendered from the root layout and
+  survives live navigation. So **the call keeps running while the customer browses
+  the shop**, and the consultant can show a product page meanwhile. A full page load
+  (sign-in, payment redirect, a plain link) ends the call; the hook warns before
+  leaving the page during a call.
+- **The consultant side lives in `DeskLive`**, next to the conversation and the
+  customer context.
+- **Renegotiation:** turning on the camera or starting a screen share adds a track,
+  which needs a new offer/answer round. The server side is the "polite" peer
+  (perfect negotiation), so glare (both sides offering at once) resolves itself.
+- **Domain:** calls are part of `Mercator.Consulting`; no new domain.
+
+## 5. Calls in the conversation
+
+- **Who:** the customer of the conversation and staff with a sales role (the assigned
+  consultant, colleagues who join from the desk). Checked by an Ash policy before the
+  LiveView may join the room; the room accepts only LiveView processes it was told
+  about. Visitors without an account: #140.
+- **Starting:** the consultant starts a call ("Anrufen": audio, or with video); the
+  customer's chat panel rings with "Annehmen" / "Ablehnen". The customer can ask for a
+  call with one button, which rings at the desk (#141).
+- **Media:** audio always; camera per side, the customer's camera off by default
+  (#142); screen sharing from either side, one share at a time (#143); up to four
+  participants (#144).
+- **Controls:** mute, camera on/off, share screen, choose microphone and camera,
+  hang up; an indicator for who is speaking; a full-screen view for a shared screen.
+- **History:** a `Call` resource (conversation, who started it, participants, started
+  and ended at, whether video and screen sharing were used, how it ended) plus a system
+  message in the chat: "Videoanruf, 14:05–14:20". Useful for the consultant, for
+  statistics and for diagnosing failed calls (#148).
+- **No recording** (#145). Media is encrypted on the way (DTLS-SRTP, mandatory in
+  WebRTC); the server decrypts and re-encrypts it to forward it, so the privacy notice
+  says calls go through the shop's server and are not recorded (#149).
+
+## 6. Networking and deployment
+
+- **HTTPS** is required for camera and microphone (except on `localhost`). The demo has
+  it; for testing from other devices on the LAN in development, `mix phx.gen.cert`.
+- **UDP ports:** media does not go through the reverse proxy. The app listens on a
+  fixed UDP range (`ice_port_range`, e.g. 50000–50049, set by an environment variable);
+  `docker-compose.yml` publishes it, and the router and firewall forward it to the
+  server (#147). Signaling stays on HTTPS/WebSocket through the proxy.
+- **Public address:** behind the router's NAT the app learns its public address from a
+  STUN server (`ice_servers`), or it is configured (`host_to_srflx_ip_mapper`), since
+  inside Docker the app only sees its container address (#147).
+- **TURN:** the server is reachable on public UDP ports, so most customers connect
+  directly, even behind home routers. Networks that block UDP entirely (some offices,
+  hotels) would need TURN over TCP/TLS; `ex_webrtc` has no ICE over TCP yet and `rel`
+  speaks UDP only. Proposal: no TURN at first; record failed connections in the
+  `Call` resource and add coturn (or `rel`, once it can) if they occur (#146).
+- **Bandwidth:** each participant's video is sent once to the server and once from the
+  server to each other participant. Two participants with video are about 2–4 Mbit/s
+  up and down at the server, a screen share more in bursts. Fine for the demo server;
+  worth stating in the operating guide.
+- **Codecs:** Opus and VP8 (all current browsers); H.264 as a fallback for older Safari.
+
+## 7. Operations and observability
+
+- `ex_webrtc_dashboard` as an additional page of the LiveDashboard (`/admin/system`):
+  live statistics per peer connection (bitrate, packet loss, round-trip time).
+- Telemetry from the room (calls started, ended, failed, duration) in the LiveDashboard
+  metrics.
+- A call whose connection fails (no media within some seconds) becomes an incident
+  (#105) with the ICE details, so blocked UDP shows up.
+- Operating guide: ports, firewall and router, bandwidth, how to test a call.
+
+## 8. Testing
+
+- **Room tests with two Elixir peers:** the tests start `ExWebRTC.PeerConnection`
+  clients that play the browsers, connect to a room over localhost, send RTP packets
+  and assert they arrive at the other participant. A real end-to-end test of the media
+  path without a browser.
+- **LiveView tests** for the call UI and signaling events (ringing, accept, decline,
+  hang up, permissions for customer, consultant, other customers and visitors).
+- **Policy tests** for who may start and join a call.
+- **By hand:** Chrome, Firefox and Safari, desktop and phone, on the demo server through
+  the real router; a call while browsing the shop; screen sharing both ways.
+
+## 9. Implementation order (one commit each, with tests)
+
+1. Dependency, room process and two-peer test: audio and video forwarded between two
+   Elixir peers; configuration (port range, ICE servers).
+2. `Call` resource, policies, start/accept/decline/hang up in the domain; system
+   messages in the chat.
+3. Browser side: the "Call" hook (getUserMedia, RTCPeerConnection, perfect
+   negotiation) and the call UI in the chat panel and the desk; audio first, then video.
+4. Screen sharing, device selection, speaking indicator, full-screen view.
+5. Third participant joining from the desk.
+6. Deployment: UDP range in Docker, STUN/public address, operating guide; tested on the
+   demo server.
+7. Observability: WebRTC dashboard page, telemetry, incidents for failed calls.
+8. Documentation (manual, help, operating) and the Biber Holz demo.
+
+## 10. Questions
+
+- **#140 Visitors:** may visitors without an account (who can chat today, #94) take a
+  call too? Recommendation: yes, the call is part of their conversation, and the
+  barrier should stay low; the consultant decides to call.
+- **#141 Who starts:** the consultant calls, the customer can ask for a call with a
+  button. Recommendation: as described; the customer cannot ring the desk directly,
+  so nobody is surprised by an incoming video call.
+- **#142 Camera defaults:** the customer joins with audio only and turns the camera on
+  if they want; the consultant's camera is on. Recommendation: yes.
+- **#143 Screen sharing:** both directions (the consultant shows a plan or the
+  configurator, the customer shows their sketch), one share at a time. Recommendation:
+  yes.
+- **#144 Participants:** up to four (customer, consultant, a colleague, maybe a second
+  person on the customer's side via the same conversation). Recommendation: the room
+  supports four from the start; the UI for a third participant is step 5.
+- **#145 Recording:** none. Recommendation: no recording at all (consent, storage,
+  GDPR); possible later with Membrane if ever needed.
+- **#146 TURN:** none at first, measure failed connections, then coturn (or `rel` once
+  it supports TCP/TLS). Alternatively `rel` from the start as part of the showcase, for
+  UDP-restricted networks only. Recommendation: none at first.
+- **#147 Docker networking:** a published UDP range (e.g. 50 ports) with the public
+  address from STUN or configuration, or `network_mode: host` for the app container
+  (simplest for WebRTC, but the app then shares the host's network and the database
+  must be reached differently). Recommendation: published range; this also means
+  forwarding the range in the router and opening it in the firewall of the demo
+  server.
+- **#148 History:** a `Call` resource plus a system message, as in section 5.
+  Recommendation: yes.
+- **#149 Privacy notice:** a short note before the first call ("Ihr Anruf läuft über
+  unseren Server und wird nicht aufgezeichnet.") and a paragraph for the privacy
+  policy page (CMS). Recommendation: yes.
