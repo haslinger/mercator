@@ -2,6 +2,9 @@ defmodule MercatorWeb.SignInRateLimitTest do
   # the sign-in page's client IP is always 127.0.0.1 in tests
   use MercatorWeb.ConnCase, async: false
 
+  # reaching a limit logs a warning (#136)
+  @moduletag :capture_log
+
   import Phoenix.LiveViewTest
   import Mercator.AccountsFixtures
 

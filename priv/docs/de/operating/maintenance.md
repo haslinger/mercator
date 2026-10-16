@@ -44,9 +44,12 @@ Der Build-Cache macht Builds schnell; leeren Sie ihn nur, wenn der Platz knapp w
 docker compose ps                 # beide Container laufen, die Datenbank "healthy"?
 docker compose logs -f app        # das Log der App, laufend
 docker compose logs app | grep -i error
+docker compose logs app | grep "rate limit reached"   # gesperrte Anmeldeversuche
 ```
 
 Erwartbare Probleme stehen zusätzlich als Vorfälle in der Verwaltung; das Log zeigt die technische Seite.
+
+Erreicht jemand eine Grenze für Anmeldeversuche oder Anmelde-E-Mails, steht im Log eine Zeile in festem Format, ohne E-Mail-Adresse, z. B. `rate limit reached: bucket=sign_in_ip ip=203.0.113.7`. Werkzeuge wie fail2ban können danach filtern und die IP am Server sperren.
 
 ## Systemübersicht im Browser
 

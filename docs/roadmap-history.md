@@ -139,6 +139,8 @@ This makes it the test case for **configurable material**: wood species, dimensi
 - **#125** (2026-10-15) Help for **shop visitors** is generic help from the repo at `/help` (ordering, account, payment, chat, offers), linked from the footer, the checkout and the chat; customer-specific content (delivery areas, FAQ, GTC) stays in the CMS. Operator and developer chapters in the admin area are for **administrators only**.
 - **#120** (2026-10-15) The **sign-in emails** (confirmation, password reset, magic link) stay sent directly, not by Oban: if delivery fails, the error is logged and reported as an incident (`Mercator.Mailer.deliver_or_report/3`), and the action (e.g. the registration) still succeeds. The page cannot show a message: AshAuthentication ignores what a sender returns.
 - (2026-10-14) **Chat messages are sent with the button only**, not with Enter: many people don't know Shift+Enter for a new line. Enter makes a new line (customer chat and sales desk).
+- **#135** (2026-10-16) **No metrics history** in the LiveDashboard: it would need our own buffer process (`metrics_history:`), not worth it; the charts start empty on each visit.
+- **#136** (2026-10-16) Every rate limit reached is also **logged as a warning** in a fixed format for fail2ban and `docker compose logs`: `rate limit reached: bucket=… ip=…`, without the email address (done in `Accounts.Preparations.RateLimit`).
 
 ## Answered questions
 

@@ -44,9 +44,12 @@ The build cache makes builds fast; prune it only when space is short. Never use 
 docker compose ps                 # both containers up, the database "healthy"?
 docker compose logs -f app        # the app's log, live
 docker compose logs app | grep -i error
+docker compose logs app | grep "rate limit reached"   # blocked sign-in attempts
 ```
 
 Expected problems are also recorded as incidents in the admin area; the log has the technical side.
+
+When someone reaches a limit for sign-in attempts or sign-in emails, the log gets a line in a fixed format, without the email address, e.g. `rate limit reached: bucket=sign_in_ip ip=203.0.113.7`. Tools like fail2ban can filter for it and block the IP on the server.
 
 ## System overview in the browser
 

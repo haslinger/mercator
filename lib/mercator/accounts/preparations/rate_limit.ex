@@ -12,12 +12,17 @@ defmodule Mercator.Accounts.Preparations.RateLimit do
   `MercatorWeb.SignInLive` and `MercatorWeb.Plugs.AuthContext`. Keyed by IP,
   failed attempts by a bot block only the bot, not the account's owner.
   Without an IP only the address is counted. Every limit reached is reported
-  as an incident, one per bucket and IP.
+  as an incident, one per bucket and IP, and logged as a warning (#136) in a
+  fixed format for tools like fail2ban, without the email address:
+
+      rate limit reached: bucket=sign_in_ip ip=203.0.113.7
 
   Works for read and generic actions.
   """
   use Ash.Resource.Preparation
   use Gettext, backend: MercatorWeb.Gettext
+
+  require Logger
 
   alias Mercator.Operations.Incidents
 
@@ -62,6 +67,8 @@ defmodule Mercator.Accounts.Preparations.RateLimit do
     do: [{:auth_email, "#{email}|#{ip}"}, {:auth_email_total, email}]
 
   defp report(bucket, email, ip) do
+    Logger.warning("rate limit reached: bucket=#{bucket} ip=#{ip || "unknown"}")
+
     Incidents.in_shop_locale(fn ->
       Incidents.report(%{
         kind: :other,

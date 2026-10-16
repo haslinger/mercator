@@ -1,6 +1,10 @@
 defmodule Mercator.Accounts.RateLimitTest do
   use Mercator.DataCase, async: true
 
+  # reaching a limit logs a warning (#136)
+  @moduletag :capture_log
+
+  import ExUnit.CaptureLog
   import Mercator.AccountsFixtures
 
   alias AshAuthentication.{Info, Strategy}
@@ -52,6 +56,18 @@ defmodule Mercator.Accounts.RateLimitTest do
 
     for _ <- 1..3, do: assert(:ok = Strategy.action(strategy, :request, %{"email" => email}))
     assert {:error, _} = Strategy.action(strategy, :request, %{"email" => email})
+  end
+
+  test "a limit reached is logged with bucket and IP, without the address (#136)" do
+    user = user_fixture()
+    email = to_string(user.email)
+    bot = unique_ip()
+
+    for _ <- 1..10, do: sign_in(email, "wrong password", bot)
+    log = capture_log(fn -> sign_in(email, "wrong password", bot) end)
+
+    assert log =~ "rate limit reached: bucket=sign_in ip=#{bot}"
+    refute log =~ email
   end
 
   describe "per client IP (#126)" do
