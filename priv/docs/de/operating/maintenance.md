@@ -24,6 +24,10 @@ docker compose logs app | grep -i error
 
 Erwartbare Probleme stehen zusätzlich als Vorfälle in der Verwaltung; das Log zeigt die technische Seite.
 
+## Systemübersicht im Browser
+
+Administratoren finden unter **Verwaltung → System** (`/admin/system`) das Phoenix LiveDashboard: Speicher, Prozesse, Auslastung und laufende Messwerte (Antwortzeiten, Datenbankabfragen) der laufenden App. Es zeigt keine Umgebungsvariablen und erlaubt keine Eingriffe wie das Beenden von Prozessen.
+
 ## Konsole
 
 ```sh

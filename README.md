@@ -37,7 +37,6 @@ Then open [localhost:4000](http://localhost:4000).
 In development:
 
 - emails are not sent; they appear in the mailbox preview at [localhost:4000/dev/mailbox](http://localhost:4000/dev/mailbox)
-- the LiveDashboard is at [localhost:4000/dev/dashboard](http://localhost:4000/dev/dashboard)
 - the [Tidewave](https://tidewave.ai) MCP server is at `localhost:4000/tidewave/mcp` (registered for Claude Code in `.mcp.json`)
 
 ## Branding

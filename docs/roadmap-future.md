@@ -18,7 +18,7 @@ Phases 1–9 are done (see [roadmap-history.md](roadmap-history.md)).
 
 Smaller improvements noted along the way, not tied to a phase step.
 
-- **Phoenix LiveDashboard for administrators:** today it only runs in development (`/dev/dashboard`). Mount it in production as well, behind the admin sign-in (a pipeline that requires the administrator role, plus `on_mount` with `MercatorWeb.LiveUserAuth` for its LiveView session), and link it from "Verwaltung" in the admin sidebar and dashboard, administrators only. Check what it shows (e.g. request logger, OS data) and leave out what an operator should not see in the browser.
+- *Empty right now.*
 
 ## Open questions
 

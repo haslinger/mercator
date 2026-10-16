@@ -7,7 +7,7 @@ order: 1
 - Erlang and Elixir via asdf, versions pinned in `.tool-versions` (also Typst for the PDFs).
 - PostgreSQL locally with `postgres`/`postgres`; `mix setup` installs dependencies, creates and migrates the database and seeds the Biber Holz demo (`priv/repo/seeds.exs`, idempotent).
 - `mix phx.server` on port 4000, with the Biber Holz brand, the payment simulator and the making-of switched on (`config/dev.exs`).
-- Dev tools: `/dev/mailbox` (sent emails), `/dev/dashboard` (LiveDashboard), `/dev/ash-admin` (raw data), and the Tidewave MCP endpoint for AI assistants.
+- Dev tools: `/dev/mailbox` (sent emails), `/dev/ash-admin` (raw data), and the Tidewave MCP endpoint for AI assistants. The LiveDashboard runs in all environments at `/admin/system` (administrators only).
 
 ## Before every commit
 

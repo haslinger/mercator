@@ -3631,6 +3631,7 @@ msgstr "Andere offene Gespräche"
 msgid "Sales desk"
 msgstr "Beratungsplatz"
 
+#: lib/mercator_web/admin_nav.ex:106
 #: lib/mercator_web/live/admin/desk_live.ex:1046
 #, elixir-autogen, elixir-format
 msgid "System"
@@ -4833,7 +4834,7 @@ msgctxt "incident state"
 msgid "Resolved"
 msgstr "Erledigt"
 
-#: lib/mercator_web/admin_nav.ex:119
+#: lib/mercator_web/admin_nav.ex:126
 #, elixir-autogen, elixir-format
 msgid "Mailbox (dev)"
 msgstr "Postfach (Dev)"

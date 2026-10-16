@@ -202,19 +202,32 @@ defmodule MercatorWeb.Router do
   #   pipe_through :api
   # end
 
-  # Enable LiveDashboard and Swoosh mailbox preview in development
-  if Application.compile_env(:mercator, :dev_routes) do
-    # If you want to use the LiveDashboard in production, you should put
-    # it behind authentication and allow only admins to access it.
-    # If your application does not have an admins-only section yet,
-    # you can use Plug.BasicAuth to set up some basic authentication
-    # as long as you are also using SSL (which you should anyway).
+  # LiveDashboard for administrators, also in production. Left out: the Ecto
+  # page (needs ecto_psql_extras), the request logger, environment variables
+  # and killing processes (allow_destructive_actions defaults to false).
+  scope "/admin" do
     import Phoenix.LiveDashboard.Router
 
+    pipe_through [:browser, :csp]
+
+    live_dashboard "/system",
+      metrics: MercatorWeb.Telemetry,
+      csp_nonce_assign_key: :csp_nonce,
+      ecto_repos: [],
+      request_logger: false,
+      live_session_name: :admin_live_dashboard,
+      on_mount: [
+        {MercatorWeb.Locale, :default},
+        {MercatorWeb.LiveUserAuth, :current_user},
+        {MercatorWeb.LiveUserAuth, {:require_role, :administrator}}
+      ]
+  end
+
+  # Swoosh mailbox preview in development
+  if Application.compile_env(:mercator, :dev_routes) do
     scope "/dev" do
       pipe_through :browser
 
-      live_dashboard "/dashboard", metrics: MercatorWeb.Telemetry
       forward "/mailbox", Plug.Swoosh.MailboxPreview
     end
   end

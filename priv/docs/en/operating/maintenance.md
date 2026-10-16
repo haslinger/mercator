@@ -24,6 +24,10 @@ docker compose logs app | grep -i error
 
 Expected problems are also recorded as incidents in the admin area; the log has the technical side.
 
+## System overview in the browser
+
+Administrators find the Phoenix LiveDashboard under **Administration → System** (`/admin/system`): memory, processes, load and live metrics (response times, database queries) of the running app. It does not show environment variables and does not allow changes such as killing processes.
+
 ## Console
 
 ```sh

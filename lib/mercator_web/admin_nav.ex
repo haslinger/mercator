@@ -100,7 +100,14 @@ defmodule MercatorWeb.AdminNav do
            [
              :administrator
            ]
-         )
+         ),
+         # the LiveDashboard, its own live session: linked with href
+         %{
+           item(gettext("System"), ~p"/admin/system", "hero-cpu-chip", "system", [
+             :administrator
+           ])
+           | external?: true
+         }
        ]}
     ]
     |> add_dev_tools()

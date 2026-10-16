@@ -109,6 +109,8 @@ defmodule MercatorWeb.Admin.HelpLiveTest do
         for %{path: "/admin" <> _ = path, plug: plug} <- Phoenix.Router.routes(MercatorWeb.Router),
             plug == Phoenix.LiveView.Plug,
             not String.starts_with?(path, "/admin/help"),
+            # the LiveDashboard has its own layout, without a "?"
+            not String.starts_with?(path, "/admin/system"),
             page = MercatorWeb.HelpLink.page(path),
             page not in named,
             do: page
