@@ -9,7 +9,7 @@ defmodule Mercator.Catalog.Unit do
   use Gettext, backend: MercatorWeb.Gettext
 
   @units %{
-    piece: %{symbol: "Stk.", dimension: :count, decimals?: false},
+    piece: %{dimension: :count, decimals?: false},
     lfm: %{symbol: "lfm", dimension: :length, decimals?: true},
     m2: %{symbol: "m²", dimension: :area, decimals?: true},
     m3: %{symbol: "m³", dimension: :volume, decimals?: true},
@@ -18,11 +18,18 @@ defmodule Mercator.Catalog.Unit do
     srm: %{symbol: "srm", dimension: :volume, decimals?: true},
     kg: %{symbol: "kg", dimension: :mass, decimals?: true},
     t: %{symbol: "t", dimension: :mass, decimals?: true},
-    pallet: %{symbol: "Pal.", dimension: :count, decimals?: false},
-    sack: %{symbol: "Sack", dimension: :count, decimals?: false}
+    pallet: %{dimension: :count, decimals?: false},
+    sack: %{dimension: :count, decimals?: false}
   }
 
-  @doc "The short symbol, e.g. `\"m³\"`."
+  @doc """
+  The short symbol, e.g. `"m³"`. The symbols of counted units are translated
+  in the current Gettext locale ("Stk." / "pc."); the others are the same in
+  all languages.
+  """
+  def symbol(:piece), do: pgettext("unit symbol", "pc.")
+  def symbol(:pallet), do: pgettext("unit symbol", "pallet")
+  def symbol(:sack), do: pgettext("unit symbol", "sack")
   def symbol(unit), do: @units[unit].symbol
 
   @doc "The physical dimension: `:count`, `:length`, `:area`, `:volume` or `:mass`."

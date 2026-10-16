@@ -29,4 +29,24 @@ defmodule Mercator.Catalog.UnitTest do
       assert Unit.label(:piece) == "piece"
     end)
   end
+
+  test "symbols of counted units are translated" do
+    Gettext.with_locale(MercatorWeb.Gettext, "de", fn ->
+      assert Enum.map([:piece, :pallet, :sack, :m3], &Unit.symbol/1) == [
+               "Stk.",
+               "Pal.",
+               "Sack",
+               "m³"
+             ]
+    end)
+
+    Gettext.with_locale(MercatorWeb.Gettext, "en", fn ->
+      assert Enum.map([:piece, :pallet, :sack, :m3], &Unit.symbol/1) == [
+               "pc.",
+               "pallet",
+               "sack",
+               "m³"
+             ]
+    end)
+  end
 end
