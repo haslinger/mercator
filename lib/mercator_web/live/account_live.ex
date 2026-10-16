@@ -1,7 +1,8 @@
 defmodule MercatorWeb.AccountLive do
   @moduledoc """
   The signed-in user's account page: profile (name, phone, language) and
-  password change.
+  password change (with the current password, or by a reset link sent to
+  the user's address).
   """
   use MercatorWeb, :live_view
 
@@ -17,6 +18,8 @@ defmodule MercatorWeb.AccountLive do
      socket
      |> assign(:page_title, gettext("My account"))
      |> assign(:demo_account?, Mercator.Demo.public_account?(user))
+     |> assign(:reset_link_sent?, false)
+     |> assign(:client_ip, MercatorWeb.ClientIp.from_socket(socket))
      |> assign_profile_form(user)
      |> assign_password_form(user)}
   end
@@ -105,6 +108,22 @@ defmodule MercatorWeb.AccountLive do
                 {gettext("Change password")}
               </button>
             </.form>
+            <div :if={!@demo_account?} class="border-t border-base-300 pt-4 mt-2">
+              <p class="text-sm text-base-content/70">
+                {gettext(
+                  "Forgotten your current password? We send you a link to set a new one by email."
+                )}
+              </p>
+              <button
+                type="button"
+                class="btn btn-outline btn-sm mt-2"
+                id="send-reset-link"
+                phx-click="send_reset_link"
+                disabled={@reset_link_sent?}
+              >
+                <.icon name="hero-envelope" class="size-4" /> {gettext("Send me a reset link")}
+              </button>
+            </div>
           </div>
         </section>
       </div>
@@ -152,6 +171,28 @@ defmodule MercatorWeb.AccountLive do
 
       {:error, form} ->
         {:noreply, assign(socket, :password_form, form)}
+    end
+  end
+
+  # Who has forgotten the password (e.g. signed in by magic link) proves
+  # access to the mailbox instead. Always the signed-in user's own address.
+  def handle_event("send_reset_link", _params, socket) do
+    user = socket.assigns.current_user
+    context = %{client_ip: socket.assigns.client_ip}
+
+    case Accounts.request_password_reset(user.email, actor: user, context: context) do
+      :ok ->
+        {:noreply,
+         socket
+         |> assign(:reset_link_sent?, true)
+         |> put_flash(
+           :info,
+           gettext("We have sent a link to set a new password to %{email}.", email: user.email)
+         )}
+
+      {:error, _error} ->
+        {:noreply,
+         put_flash(socket, :error, gettext("The link could not be sent. Please try again later."))}
     end
   end
 

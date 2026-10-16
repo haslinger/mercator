@@ -318,6 +318,12 @@ defmodule Mercator.Accounts.User do
     policy action([:change_password, :update_profile]) do
       authorize_if expr(id == ^actor(:id))
     end
+
+    # Public through the reset form anyway (rate limited, the link goes to
+    # the address); the account page sends it to the user's own address.
+    policy action(:request_password_reset_token) do
+      authorize_if actor_present()
+    end
   end
 
   attributes do

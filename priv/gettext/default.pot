@@ -97,32 +97,32 @@ msgstr ""
 msgid "close"
 msgstr ""
 
-#: lib/mercator_web/live/account_live.ex:77
+#: lib/mercator_web/live/account_live.ex:80
 #, elixir-autogen, elixir-format
 msgid "After changing your password you will be signed out on all devices."
 msgstr ""
 
-#: lib/mercator_web/live/account_live.ex:75
-#: lib/mercator_web/live/account_live.ex:105
+#: lib/mercator_web/live/account_live.ex:78
+#: lib/mercator_web/live/account_live.ex:108
 #, elixir-autogen, elixir-format
 msgid "Change password"
 msgstr ""
 
-#: lib/mercator_web/live/account_live.ex:92
+#: lib/mercator_web/live/account_live.ex:95
 #, elixir-autogen, elixir-format
 msgid "Current password"
 msgstr ""
 
 #: lib/mercator_web/components/layouts.ex:514
-#: lib/mercator_web/live/account_live.ex:63
+#: lib/mercator_web/live/account_live.ex:66
 #: lib/mercator_web/live/admin/user_index_live.ex:49
 #, elixir-autogen, elixir-format
 msgid "Language"
 msgstr ""
 
 #: lib/mercator_web/components/layouts.ex:308
-#: lib/mercator_web/live/account_live.ex:18
-#: lib/mercator_web/live/account_live.ex:34
+#: lib/mercator_web/live/account_live.ex:19
+#: lib/mercator_web/live/account_live.ex:37
 #: lib/mercator_web/live/addresses_live.ex:86
 #: lib/mercator_web/live/offers_live.ex:37
 #: lib/mercator_web/live/orders_live.ex:36
@@ -132,7 +132,7 @@ msgstr ""
 
 #: lib/mercator_web/components/address_components.ex:63
 #: lib/mercator_web/components/auth_components.ex:21
-#: lib/mercator_web/live/account_live.ex:58
+#: lib/mercator_web/live/account_live.ex:61
 #: lib/mercator_web/live/admin/category_tree_live.ex:296
 #: lib/mercator_web/live/admin/product_configurator_tab.ex:392
 #: lib/mercator_web/live/admin/product_configurator_tab.ex:452
@@ -147,29 +147,29 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
-#: lib/mercator_web/live/account_live.ex:97
+#: lib/mercator_web/live/account_live.ex:100
 #, elixir-autogen, elixir-format
 msgid "New password"
 msgstr ""
 
-#: lib/mercator_web/live/account_live.ex:59
+#: lib/mercator_web/live/account_live.ex:62
 #: lib/mercator_web/live/chat_live.ex:655
 #, elixir-autogen, elixir-format
 msgid "Phone"
 msgstr ""
 
-#: lib/mercator_web/live/account_live.ex:51
+#: lib/mercator_web/live/account_live.ex:54
 #, elixir-autogen, elixir-format
 msgid "Profile"
 msgstr ""
 
-#: lib/mercator_web/live/account_live.ex:102
+#: lib/mercator_web/live/account_live.ex:105
 #, elixir-autogen, elixir-format
 msgid "Repeat new password"
 msgstr ""
 
 #: lib/mercator_web/components/address_components.ex:94
-#: lib/mercator_web/live/account_live.ex:67
+#: lib/mercator_web/live/account_live.ex:70
 #: lib/mercator_web/live/admin/category_tree_live.ex:316
 #: lib/mercator_web/live/admin/gtc_live.ex:210
 #: lib/mercator_web/live/admin/incident_index_live.ex:326
@@ -189,12 +189,12 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
-#: lib/mercator_web/live/account_live.ex:150
+#: lib/mercator_web/live/account_live.ex:169
 #, elixir-autogen, elixir-format
 msgid "Your password has been changed. Please sign in again."
 msgstr ""
 
-#: lib/mercator_web/live/account_live.ex:127
+#: lib/mercator_web/live/account_live.ex:146
 #, elixir-autogen, elixir-format
 msgid "Your profile has been saved."
 msgstr ""
@@ -1958,7 +1958,7 @@ msgstr ""
 msgid "Malta"
 msgstr ""
 
-#: lib/mercator_web/live/account_live.ex:44
+#: lib/mercator_web/live/account_live.ex:47
 #: lib/mercator_web/live/addresses_live.ex:19
 #: lib/mercator_web/live/addresses_live.ex:89
 #, elixir-autogen, elixir-format
@@ -2454,7 +2454,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: lib/mercator_web/components/layouts.ex:310
-#: lib/mercator_web/live/account_live.ex:38
+#: lib/mercator_web/live/account_live.ex:41
 #: lib/mercator_web/live/order_live.ex:107
 #: lib/mercator_web/live/orders_live.ex:20
 #: lib/mercator_web/live/orders_live.ex:38
@@ -4223,7 +4223,7 @@ msgid "Back to the offer"
 msgstr ""
 
 #: lib/mercator_web/components/layouts.ex:313
-#: lib/mercator_web/live/account_live.ex:41
+#: lib/mercator_web/live/account_live.ex:44
 #: lib/mercator_web/live/offer_live.ex:48
 #: lib/mercator_web/live/offers_live.ex:21
 #: lib/mercator_web/live/offers_live.ex:39
@@ -5179,7 +5179,7 @@ msgstr ""
 msgid "Everything is reset every night at 3 o'clock, including accounts you register. Orders are not delivered and payments are simulated."
 msgstr ""
 
-#: lib/mercator_web/live/account_live.ex:80
+#: lib/mercator_web/live/account_live.ex:83
 #, elixir-autogen, elixir-format
 msgid "The password of a demo account cannot be changed."
 msgstr ""
@@ -5691,4 +5691,24 @@ msgstr ""
 #: lib/mercator_web/live/chat_live.ex:594
 #, elixir-autogen, elixir-format
 msgid "Calls run through our server and are not recorded."
+msgstr ""
+
+#: lib/mercator_web/live/account_live.ex:113
+#, elixir-autogen, elixir-format
+msgid "Forgotten your current password? We send you a link to set a new one by email."
+msgstr ""
+
+#: lib/mercator_web/live/account_live.ex:124
+#, elixir-autogen, elixir-format
+msgid "Send me a reset link"
+msgstr ""
+
+#: lib/mercator_web/live/account_live.ex:195
+#, elixir-autogen, elixir-format
+msgid "The link could not be sent. Please try again later."
+msgstr ""
+
+#: lib/mercator_web/live/account_live.ex:190
+#, elixir-autogen, elixir-format
+msgid "We have sent a link to set a new password to %{email}."
 msgstr ""

@@ -91,5 +91,32 @@ defmodule MercatorWeb.AccountLiveTest do
       assert has_element?(view, "#password-form")
       refute_redirected(view, ~p"/sign-in")
     end
+
+    test "sends a reset link to the user's own address", %{conn: conn, user: user} do
+      {:ok, view, _html} = live(conn, ~p"/account")
+
+      view |> element("#send-reset-link") |> render_click()
+
+      email = to_string(user.email)
+
+      assert_received {:email,
+                       %{subject: "Reset your password", to: [{_, ^email}], html_body: body}}
+
+      assert body =~ "/password-reset/"
+      assert has_element?(view, "#send-reset-link[disabled]")
+    end
+  end
+
+  describe "requesting a password reset" do
+    test "is allowed for a signed-in user" do
+      user = user_fixture()
+      assert :ok = Accounts.request_password_reset(user.email, actor: user)
+    end
+
+    test "is forbidden without an actor" do
+      user = user_fixture()
+
+      assert {:error, %Ash.Error.Forbidden{}} = Accounts.request_password_reset(user.email)
+    end
   end
 end

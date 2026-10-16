@@ -26,6 +26,7 @@ defmodule Mercator.Accounts do
       define :list_users, action: :read
       define :update_profile, action: :update_profile
       define :change_password, action: :change_password
+      define :request_password_reset, action: :request_password_reset_token, args: [:email]
       define :set_user_roles, action: :set_roles, args: [:roles]
       define :set_invoice_allowed, action: :set_invoice_allowed, args: [:invoice_allowed]
     end
