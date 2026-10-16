@@ -91,6 +91,8 @@ defmodule Mercator.MixProject do
       {:phoenix_live_dashboard, "~> 0.8.3"},
       # database page of the LiveDashboard (#134)
       {:ecto_psql_extras, "~> 0.8.8"},
+      # video advice, phase 10 (docs/video-design.md)
+      {:ex_webrtc, "~> 0.17.0"},
       {:esbuild, "~> 0.10", runtime: Mix.env() == :dev},
       {:tailwind, "~> 0.5", runtime: Mix.env() == :dev},
       {:heroicons,

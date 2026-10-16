@@ -15,12 +15,14 @@ ARG RUNNER_IMAGE="ubuntu:24.04"
 
 # ---- Build stage ----
 # libsctp1 (both stages): the Erlang VM loads it at start and otherwise logs
-# "Failed open sctp dynamic library" (harmless, SCTP is not used)
+# "Failed open sctp dynamic library" (harmless, SCTP is not used).
+# libssl-dev and pkg-config: ex_webrtc's DTLS (ex_dtls) is compiled against
+# OpenSSL (video advice, phase 10); the runtime stage has openssl already
 FROM ${BUILDER_IMAGE} AS builder
 ARG TYPST_VERSION
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
-      build-essential git curl ca-certificates xz-utils libsctp1 \
+      build-essential git curl ca-certificates xz-utils libsctp1 libssl-dev pkg-config \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Typst for the PDF documents (#104): the official Linux binary

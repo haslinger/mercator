@@ -39,6 +39,28 @@ if time_zone = System.get_env("SHOP_TIME_ZONE") do
   config :mercator, Oban, timezone: time_zone
 end
 
+# video advice (phase 10, docs/video-design.md section 6): the UDP ports for
+# media, e.g. CALL_PORT_RANGE=50000-50049 (published by Docker with the same
+# numbers), and STUN servers, e.g. CALL_ICE_SERVERS=stun:stun.example.org:3478
+# (comma-separated); both optional
+calls =
+  [
+    ice_port_range:
+      with range when is_binary(range) <- System.get_env("CALL_PORT_RANGE") do
+        case Regex.run(~r/^(\d+)-(\d+)$/, range) do
+          [_, first, last] -> String.to_integer(first)..String.to_integer(last)
+          nil -> raise "CALL_PORT_RANGE must look like 50000-50049, got #{inspect(range)}"
+        end
+      end,
+    ice_servers:
+      with servers when is_binary(servers) <- System.get_env("CALL_ICE_SERVERS") do
+        for url <- String.split(servers, ",", trim: true), do: %{urls: String.trim(url)}
+      end
+  ]
+  |> Enum.reject(fn {_key, value} -> is_nil(value) end)
+
+if calls != [], do: config(:mercator, Mercator.Consulting.Calls, calls)
+
 # Mollie (phase 7): test_… only simulates payments, live_… takes real money
 if config_env() != :test do
   if api_key = System.get_env("MOLLIE_API_KEY") do

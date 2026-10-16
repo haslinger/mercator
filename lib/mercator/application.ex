@@ -23,6 +23,9 @@ defmodule Mercator.Application do
         {Mercator.RateLimit, clean_period: :timer.minutes(10)},
         # in-memory payments of the payment simulator (dev, tests, demo)
         Mercator.Payments.Simulator,
+        # video advice (phase 10): one media relay process per call
+        {Registry, keys: :unique, name: Mercator.Consulting.Calls.Registry},
+        {DynamicSupervisor, name: Mercator.Consulting.Calls.Supervisor, strategy: :one_for_one},
         # Start a worker by calling: Mercator.Worker.start_link(arg)
         # {Mercator.Worker, arg},
         # Start to serve requests, typically the last entry

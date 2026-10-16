@@ -8,7 +8,7 @@ Questions are numbered globally (`#N`); the numbering is never restarted. When a
 
 Phases 1–9 are done (see [roadmap-history.md](roadmap-history.md)).
 
-- **10 Video advice** ([video-design.md](video-design.md), agreed 2026-10-16): audio, video and screen sharing in the advice conversation, self-hosted with Elixir WebRTC (`ex_webrtc`): an SFU room process in the release, signaling through the chat and desk LiveViews, UDP ports published from Docker. Next: step 1, the room process with a two-peer test.
+- **10 Video advice** ([video-design.md](video-design.md), agreed 2026-10-16): audio, video and screen sharing in the advice conversation, self-hosted with Elixir WebRTC (`ex_webrtc`): an SFU room process in the release, signaling through the chat and desk LiveViews, UDP ports published from Docker. Step 1 (room process, two-peer test) done; next: step 2, the `Call` resource, policies and the call states.
 
 ## Postponed
 

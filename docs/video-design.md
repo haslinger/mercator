@@ -58,8 +58,10 @@ RTCPeerConnection          ◀─UDP─▶ PeerConnection per      ◀─UDP─�
 - **Room process:** `Mercator.Consulting.Calls.Room`, a GenServer per active call,
   registered by conversation id (`Registry`) under a `DynamicSupervisor`. It owns one
   `PeerConnection` per participant, maps each incoming track to outgoing tracks on the
-  others, forwards RTP packets and passes keyframe requests (PLI) back to the sender,
-  so a newly joined participant gets a picture at once. The room ends when the last
+  other, forwards RTP packets and passes keyframe requests (PLI) back to the sender.
+  For a newly connected participant the room asks the sender for a keyframe with the
+  next video packet, so the picture appears at once (before the first packet the
+  sender's stream is not known yet). The room ends when the last
   participant leaves, or after a grace period when only one is left.
 - **Signaling through the existing LiveViews.** SDP offers and answers and ICE
   candidates travel as LiveView events (`push_event` / `this.pushEvent`) between the
@@ -73,9 +75,12 @@ RTCPeerConnection          ◀─UDP─▶ PeerConnection per      ◀─UDP─�
   leaving the page during a call.
 - **The consultant side lives in `DeskLive`**, next to the conversation and the
   customer context.
-- **Renegotiation:** turning on the camera or starting a screen share adds a track,
-  which needs a new offer/answer round. The server side is the "polite" peer
-  (perfect negotiation), so glare (both sides offering at once) resolves itself.
+- **No renegotiation:** each connection has three channels in a fixed order, audio,
+  camera and screen, negotiated once when the participant joins; the server always
+  makes the offer. Turning the camera or a screen share on or off only replaces the
+  track in the browser (`replaceTrack`), so the offer/answer round never repeats.
+  *(Simpler than the perfect negotiation planned first, possible because a call has
+  exactly two participants, #144.)*
 - **Domain:** calls are part of `Mercator.Consulting`; no new domain.
 
 ## 5. Calls in the conversation
@@ -133,7 +138,8 @@ RTCPeerConnection          ◀─UDP─▶ PeerConnection per      ◀─UDP─�
   server to each other participant. Two participants with video are about 2–4 Mbit/s
   up and down at the server, a screen share more in bursts. Fine for the demo server;
   worth stating in the operating guide.
-- **Codecs:** Opus and VP8 (all current browsers); H.264 as a fallback for older Safari.
+- **Codecs:** Opus and VP8 only (all current browsers, Safari since 12.1): with one
+  codec per kind, packets are forwarded unchanged between the two browsers.
 
 ## 7. Operations and observability
 
@@ -159,8 +165,12 @@ RTCPeerConnection          ◀─UDP─▶ PeerConnection per      ◀─UDP─�
 
 ## 9. Implementation order (one commit each, with tests)
 
-1. Dependency, room process and two-peer test: audio and video forwarded between two
-   Elixir peers; configuration (port range, ICE servers).
+1. ✅ Dependency, room process and two-peer test: audio and video forwarded between two
+   Elixir peers; configuration (port range, ICE servers). *Done 2026-10-16:*
+   `Mercator.Consulting.Calls` (API, `CALL_PORT_RANGE` and `CALL_ICE_SERVERS`) and
+   `Calls.Room`; `Mercator.FakeBrowser` (test support) plays a browser with its own
+   `PeerConnection`. The Docker builder needs `libssl-dev` and `pkg-config` for
+   `ex_dtls`; checked with a local image build and a WebRTC offer inside the release.
 2. `Call` resource, policies, start/accept/decline/hang up in the domain; system
    messages in the chat.
 3. Browser side: the "Call" hook (getUserMedia, RTCPeerConnection, perfect
