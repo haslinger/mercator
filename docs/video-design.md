@@ -226,7 +226,8 @@ RTCPeerConnection          ◀─UDP─▶ PeerConnection per      ◀─UDP─�
    (reason, seconds talked) on the Metrics page; when a connection fails, the room
    sends that participant's LiveView a summary of the ICE candidates and checks, and
    `Calls.connection_failed/3` ends the call as failed and reports an incident with it
-   (the browser gets the state without the details).
+   (the browser gets the state without the details). The WebRTC page was tested by hand with a running
+   call.
 7. Documentation (manual, help, operating) and the Biber Holz demo.
 
 ## 10. Questions (answered 2026-10-16)
