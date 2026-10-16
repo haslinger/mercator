@@ -192,7 +192,10 @@ RTCPeerConnection          ◀─UDP─▶ PeerConnection per      ◀─UDP─�
    belongs to the selected conversation on the desk: switching to another one hangs
    up. A reload rejoins the call (the room replaces the connection). `WatchCall`
    (formerly `ExpireCall`) also ends active calls whose media room has been empty
-   for more than 30 seconds after the answer.
+   for more than 30 seconds after the answer. Tested by hand 2026-10-16: Firefox ↔ Chrome
+   in both directions, on localhost (not inside the Tidewave page, whose frame blocks
+   camera and microphone). The chat panel can now be resized at its top-left corner
+   (kept per browser), for big screens.
 4. Screen sharing, device selection, speaking indicator, full-screen view.
 5. Deployment: UDP range in Docker, STUN/public address, operating guide; tested on the
    demo server.

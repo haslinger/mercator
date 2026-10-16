@@ -284,12 +284,23 @@ defmodule MercatorWeb.ChatLive do
       <%!-- always in the page (only hidden), so the message stream keeps its history --%>
       <section
         class={[
-          "card h-[min(44rem,calc(100vh-7rem))] w-[min(32rem,calc(100vw-2rem))] flex-col overflow-hidden bg-base-100 shadow-xl",
+          "card relative h-[min(44rem,calc(100vh-7rem))] w-[min(32rem,calc(100vw-2rem))] max-h-[calc(100vh-7rem)] max-w-[calc(100vw-2rem)] flex-col overflow-hidden bg-base-100 shadow-xl",
           if(@open?, do: "flex", else: "hidden")
         ]}
         id="chat-panel"
         aria-label={gettext("Advice")}
       >
+        <%!-- drag to resize (the panel grows up and to the left), double-click resets --%>
+        <div
+          id="chat-resize"
+          phx-hook=".ResizeChat"
+          data-panel="chat-panel"
+          class="absolute top-0 left-0 z-10 hidden size-4 cursor-nwse-resize touch-none sm:block"
+          title={gettext("Drag to resize, double-click to reset")}
+          aria-hidden="true"
+        >
+          <span class="absolute top-1 left-1 size-2 rounded-tl-sm border-t-2 border-l-2 border-primary-content/70"></span>
+        </div>
         <header class="flex items-center gap-2 bg-primary px-4 py-3 text-primary-content">
           <.icon name="hero-chat-bubble-left-right" class="size-5" />
           <div class="min-w-0 flex-1">
@@ -459,6 +470,43 @@ defmodule MercatorWeb.ChatLive do
         destroyed() {
           window.removeEventListener("mercator:open-chat", this.onOpen)
           window.removeEventListener("phx:page-loading-stop", this.onPage)
+        }
+      }
+    </script>
+    <script :type={Phoenix.LiveView.ColocatedHook} name=".ResizeChat">
+      // The panel's size, dragged at its top-left corner and kept per browser.
+      // Set through this.js(), so LiveView keeps it across page updates.
+      const KEY = "mercator:chat-size"
+      export default {
+        mounted() {
+          this.panel = document.getElementById(this.el.dataset.panel)
+          try { const size = JSON.parse(localStorage.getItem(KEY)); if (size) this.apply(size.w, size.h) } catch (_e) {}
+
+          this.el.addEventListener("pointerdown", (e) => {
+            e.preventDefault()
+            this.el.setPointerCapture(e.pointerId)
+            const rect = this.panel.getBoundingClientRect()
+            this.start = {x: e.clientX, y: e.clientY, w: rect.width, h: rect.height}
+          })
+          this.el.addEventListener("pointermove", (e) => {
+            if (!this.start) return
+            this.apply(this.start.w + this.start.x - e.clientX, this.start.h + this.start.y - e.clientY)
+          })
+          this.el.addEventListener("pointerup", () => {
+            if (!this.start) return
+            this.start = null
+            const rect = this.panel.getBoundingClientRect()
+            try { localStorage.setItem(KEY, JSON.stringify({w: rect.width, h: rect.height})) } catch (_e) {}
+          })
+          this.el.addEventListener("dblclick", () => {
+            this.js().removeAttribute(this.panel, "style")
+            try { localStorage.removeItem(KEY) } catch (_e) {}
+          })
+        },
+        // at least the size of a phone panel; the CSS max-width/height keep it in the window
+        apply(w, h) {
+          const width = Math.max(320, Math.round(w)), height = Math.max(420, Math.round(h))
+          this.js().setAttribute(this.panel, "style", `width: ${width}px; height: ${height}px`)
         }
       }
     </script>

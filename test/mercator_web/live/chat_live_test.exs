@@ -20,6 +20,13 @@ defmodule MercatorWeb.ChatLiveTest do
     refute ChatLive.show?(%Plug.Conn{request_path: "/admin/pages"})
   end
 
+  test "the panel has a grip to resize it", %{conn: conn} do
+    {conn, _owner} = visitor_conn(conn)
+    {:ok, view, _html} = live_isolated(conn, ChatLive)
+
+    assert has_element?(view, ~s(#chat-panel #chat-resize[data-panel="chat-panel"]))
+  end
+
   test "a visitor asks a question and gets the consultant's answer live", %{conn: conn} do
     {conn, owner} = visitor_conn(conn)
     {:ok, view, _html} = live_isolated(conn, ChatLive)
