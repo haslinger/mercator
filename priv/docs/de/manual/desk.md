@@ -27,6 +27,7 @@ Die Benachrichtigung zeigt den Namen und den Anfang der Nachricht und kommt in d
 2. Tippen Sie auf **Dieses Gerät benachrichtigen** und erlauben Sie Benachrichtigungen. Der Knopf wird grün: **Benachrichtigungen an**.
 3. Mit **Testen** schicken Sie sich eine Probe.
 4. Auf Android: nehmen Sie Chrome in den Einstellungen von der **Akku-Optimierung** aus (Einstellungen → Apps → Chrome → Akku → „Nicht eingeschränkt“). Sonst kann das Handy Benachrichtigungen verzögern.
+5. Auf Android kann die **erste Benachrichtigung als möglicher Spam** markiert werden: Android blendet sie aus und fragt, ob Sie sie trotzdem sehen wollen. Lassen Sie sie anzeigen, und bestätigen Sie danach, dass es **kein Spam** ist. Danach kommen die Benachrichtigungen normal.
 
 Am iPhone geht das nur, wenn der Shop zum Home-Bildschirm hinzugefügt ist (Teilen → „Zum Home-Bildschirm“), und von dort geöffnet wird. Ein zweiter Tipp auf den grünen Knopf schaltet die Benachrichtigungen für dieses Gerät aus; beim Abmelden gehen sie ebenfalls aus. Die Zustellung ist nicht garantiert: Der Ton am Beratungsplatz und der Rückruf nach zwei Minuten bleiben.
 
