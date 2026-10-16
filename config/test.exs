@@ -73,3 +73,7 @@ config :mercator, :payment_providers, [Mercator.Payments.Simulator]
 config :mercator, Mercator.Payments.Mollie,
   api_key: "test_dummy",
   req_options: [plug: {Req.Test, Mercator.Payments.Mollie}]
+
+# os_mon runs for the LiveDashboard's OS page; its port programs print
+# "Erlang has closed" when the test VM stops, so they stay off in tests
+config :os_mon, start_cpu_sup: false, start_memsup: false, start_disksup: false
