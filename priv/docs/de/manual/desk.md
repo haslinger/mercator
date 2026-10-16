@@ -29,6 +29,8 @@ Die Benachrichtigung zeigt den Namen und den Anfang der Nachricht und kommt in d
 4. Auf Android: nehmen Sie Chrome in den Einstellungen von der **Akku-Optimierung** aus (Einstellungen → Apps → Chrome → Akku → „Nicht eingeschränkt“). Sonst kann das Handy Benachrichtigungen verzögern.
 5. Auf Android kann die **erste Benachrichtigung als möglicher Spam** markiert werden: Android blendet sie aus und fragt, ob Sie sie trotzdem sehen wollen. Lassen Sie sie anzeigen, und bestätigen Sie danach, dass es **kein Spam** ist. Danach kommen die Benachrichtigungen normal.
 
+**Shop als App installiert?** Haben Sie den Shop auf dem Android-Handy als App installiert (z. B. „Biber Holz“ auf dem Startbildschirm), gehören die Benachrichtigungen dieser App, nicht mehr Chrome. Eine neu installierte App kann Benachrichtigungen lautlos und ohne Pop-up anzeigen. Öffnen Sie dann Einstellungen → Apps → *die Shop-App* → Benachrichtigungen, erlauben Sie **Ton, Vibration und Pop-up**, und schalten Sie am Beratungsplatz die Benachrichtigungen noch einmal aus und ein.
+
 Am iPhone geht das nur, wenn der Shop zum Home-Bildschirm hinzugefügt ist (Teilen → „Zum Home-Bildschirm“), und von dort geöffnet wird. Die Zustellung ist nicht garantiert: Der Ton am Beratungsplatz und der Rückruf nach zwei Minuten bleiben.
 
 **Ausschalten:** Ein Tipp auf den grünen Knopf **Benachrichtigungen an** schaltet sie für dieses Gerät wieder aus; auch beim Abmelden gehen sie aus. Jedes Gerät hat seinen eigenen Schalter: Handy und Computer schalten Sie getrennt ein und aus.
