@@ -23,4 +23,5 @@ Smaller improvements noted along the way, not tied to a phase step.
 
 ## Open questions
 
-- **#138 Checkout layout: wizard or collapsible steps?** The checkout page grows long. Recommendation: no multi-page wizard, but collapsible steps on the one page (checkout-design.md section 5 stays): a finished step collapses to a summary line with "Change", only the first unfinished step is open; returning customers with defaults see all steps collapsed, i.e. just the summary and "Place binding order"; on phones a sticky bottom bar with total and order button. Against a wizard: more clicks for the common case, back-button handling, totals and errors spread over pages.
+- *None right now.*
+
