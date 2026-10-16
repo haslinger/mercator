@@ -118,7 +118,9 @@ RTCPeerConnection          ◀─UDP─▶ PeerConnection per      ◀─UDP─�
   range is open even without a ufw rule. To make ufw decide, its rules have to be tied
   into Docker's `DOCKER-USER` chain (the ufw-docker approach); then
   `ufw route allow proto udp from any to 172.30.0.10 port 50000:50049` is the one rule
-  needed. The operating guide describes both the plain and the tightened setup.
+  needed. The demo server already has the [ufw-docker](https://github.com/chaifeng/ufw-docker)
+  rules, so step 5 is tested with that setup. The operating guide describes both the
+  plain and the tightened setup.
 - **Public address:** behind the router's NAT the app learns its public address from a
   STUN server (`ice_servers`), or it is configured (`host_to_srflx_ip_mapper`), since
   inside Docker the app only sees its container address (#147).
