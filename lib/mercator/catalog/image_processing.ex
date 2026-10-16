@@ -18,6 +18,7 @@ defmodule Mercator.Catalog.ImageProcessing do
   `{:error, reason}` if the file is not a readable image. `sizes` is a
   keyword list `name: {max_pixels, quality}`, by default the shop's sizes.
   """
+  # sobelow_skip ["Traversal.FileModule"]
   def process(source, dest_dir, sizes \\ @sizes) do
     with {:ok, image} <- Image.open(source),
          :ok <- File.mkdir_p(dest_dir),

@@ -22,6 +22,7 @@ Status as of 2026-10-15:
 
 Small improvements done along the way (from the backlog):
 
+- ~~**Sobelow skips are fingerprinted by line**~~ *(done 2026-10-16)*: the 22 accepted findings are now `# sobelow_skip ["Type"]` comments above their 15 functions and the `:browser` pipeline; `.sobelow-skips` is gone, so moved lines no longer bring findings back. Checked: removing one comment brings its finding back.
 - ~~**Phoenix LiveDashboard for administrators**~~ *(done 2026-10-16)*: mounted in all environments at `/admin/system` (instead of `/dev/dashboard`), with the shop's CSP (nonce) and `on_mount` requiring the administrator role; linked as "System" under "Verwaltung" (sidebar and dashboard). Database page via `ecto_psql_extras` (#134). Left out: the request logger (its endpoint plug is gone too), environment variables and killing processes. OS data via `:os_mon` (in `extra_applications`; in Docker it shows the host's CPU and memory, and the disks as the container sees them). Described in the operating guide (maintenance).
 - ~~**Unit symbols are not translated**~~ *(done 2026-10-16)*: `Unit.symbol/1` translates the counted units (`pgettext("unit symbol", …)`: Stk./pc., Pal./pallet, Sack/sack). lfm, fm, rm, srm and the SI units stay the same in both languages; their labels explain them.
 - ~~**Flash toasts cover the top bar**~~ *(done 2026-10-16)*: the flash group sits below the navbar (`top-20`).

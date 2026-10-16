@@ -15,6 +15,7 @@ defmodule Mercator.Pdf do
   template as `data.brand.logo`. Returns `{:ok, pdf_binary}` or
   `{:error, message}`.
   """
+  # sobelow_skip ["Traversal.FileModule"]
   def render(template, data) when is_binary(template) do
     dir = Path.join(System.tmp_dir!(), "mercator-pdf-#{System.unique_integer([:positive])}")
     File.mkdir_p!(dir)
@@ -33,6 +34,7 @@ defmodule Mercator.Pdf do
     do: Application.app_dir(:mercator, ["priv", "typst", "#{template}.typ"])
 
   # copies the brand logo next to the document, if Typst can read it
+  # sobelow_skip ["Traversal.FileModule"]
   defp put_logo(%{brand: brand} = data, dir) do
     logo =
       with path when is_binary(path) <- Mercator.Brand.image_path(:logo),
@@ -50,6 +52,7 @@ defmodule Mercator.Pdf do
 
   defp put_logo(data, _dir), do: data
 
+  # sobelow_skip ["CI.System", "Traversal.FileModule"]
   defp compile(dir) do
     args = ["compile", "--root", dir, Path.join(dir, "document.typ"), Path.join(dir, "out.pdf")]
 

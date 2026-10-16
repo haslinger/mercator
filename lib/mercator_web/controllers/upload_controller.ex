@@ -18,6 +18,7 @@ defmodule MercatorWeb.UploadController do
     ".pdf" => "application/pdf"
   }
 
+  # sobelow_skip ["Traversal.SendFile", "XSS.ContentType"]
   def show(conn, %{"path" => segments}) do
     with {:ok, file} <- Uploads.resolve(segments),
          {:ok, type, download?} <- type(Path.extname(file)) do

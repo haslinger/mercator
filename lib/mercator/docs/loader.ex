@@ -34,6 +34,7 @@ defmodule Mercator.Docs.Loader do
     end)
   end
 
+  # sobelow_skip ["Traversal.FileModule"]
   defp read(part, locale, path) do
     {meta, body} = path |> File.read!() |> front_matter()
     {title, body} = title(meta, body, path)

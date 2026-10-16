@@ -17,7 +17,7 @@ mix precommit
 
 It compiles with warnings as errors, checks formatting, runs Credo in strict mode, Sobelow (security) and all tests. Commit only when it passes, and check its exit status: a pipe hides it.
 
-- **Sobelow:** reviewed false positives are fingerprinted in `.sobelow-skips` (by line, so they need re-marking when the line moves: `mix sobelow --config --mark-skip-all` after checking that nothing new is among them); the reasons are in `.sobelow-conf`.
+- **Sobelow:** a reviewed false positive gets a `# sobelow_skip ["Type"]` comment (e.g. `["XSS.Raw"]`) directly above the function or pipeline it is in, and its reason goes into `.sobelow-conf`. The comment skips that type for the whole function, so keep such functions small. There is no `.sobelow-skips` file: its fingerprints contain line numbers and broke whenever code above moved.
 - **Credo** findings are fixed, not silenced.
 
 ## Tests

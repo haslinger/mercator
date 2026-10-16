@@ -29,6 +29,7 @@ defmodule Mercator.Content.FileTypes do
   `{:ok, extension, content_type}` when the file at `path` named `name` is
   one of the types, else `:error`.
   """
+  # sobelow_skip ["Traversal.FileModule"]
   def detect(path, name) do
     extension = name |> Path.extname() |> String.downcase()
 

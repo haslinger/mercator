@@ -1,6 +1,7 @@
 # Sobelow (security checks, run by `mix precommit`). Findings reviewed
-# 2026-10-15 and accepted as false positives are fingerprinted in
-# .sobelow-skips (file paths built by the shop itself, not from requests;
+# 2026-10-15 and accepted as false positives are marked with a
+# `# sobelow_skip ["Type"]` comment above the function or pipeline concerned,
+# so they survive moved lines (file paths built by the shop itself, not from requests;
 # uploads are resolved by Mercator.Uploads.resolve/1; Markdown is sanitized;
 # the Content-Security-Policy is set by MercatorWeb.Plugs.ContentSecurityPolicy
 # in its own pipeline; the demo reset truncates table names read from pg_tables

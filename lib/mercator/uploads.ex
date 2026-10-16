@@ -29,6 +29,7 @@ defmodule Mercator.Uploads do
   end
 
   @doc "Deletes a directory below the root, e.g. all sizes of one image."
+  # sobelow_skip ["Traversal.FileModule"]
   def delete_dir(relative) do
     File.rm_rf(path(relative))
     :ok

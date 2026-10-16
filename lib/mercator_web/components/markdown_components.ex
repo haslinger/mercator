@@ -16,6 +16,7 @@ defmodule MercatorWeb.MarkdownComponents do
 
       <.markdown text={Translated.t(@product.long_description, @locale)} />
   """
+  # sobelow_skip ["XSS.Raw"]
   def markdown(assigns) do
     ~H"""
     <div :if={@text not in [nil, ""]} class={["markdown", @class]} {@rest}>

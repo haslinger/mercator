@@ -15,6 +15,7 @@ defmodule MercatorWeb.DocsComponents do
   attr :rest, :global
 
   @doc "The chapter's text, styled by the `.markdown` rules in app.css."
+  # sobelow_skip ["XSS.Raw"]
   def chapter_html(assigns) do
     ~H"""
     <div class={["markdown", @class]} {@rest}>{Phoenix.HTML.raw(@chapter.html)}</div>
@@ -26,6 +27,7 @@ defmodule MercatorWeb.DocsComponents do
   attr :rest, :global
 
   @doc "The chapter's table of contents (headings level 2 and 3), if it has one."
+  # sobelow_skip ["XSS.Raw"]
   def chapter_toc(assigns) do
     ~H"""
     <nav :if={@chapter.toc != []} class={["space-y-1", @class]} {@rest}>

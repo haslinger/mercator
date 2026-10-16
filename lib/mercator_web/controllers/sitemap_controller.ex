@@ -12,6 +12,7 @@ defmodule MercatorWeb.SitemapController do
   alias Mercator.Content.Page
   alias MercatorWeb.{Layouts, Seo}
 
+  # sobelow_skip ["XSS.SendResp"]
   def index(conn, _params) do
     conn
     |> put_resp_content_type("application/xml")

@@ -132,6 +132,7 @@ defmodule Mercator.Demo do
   registered are gone too. Other pending jobs are dropped, except
   `keep_job_id` (the job running the reset).
   """
+  # sobelow_skip ["SQL.Query"]
   def reset(keep_job_id \\ nil) do
     clear_uploads()
     Simulator.clear()

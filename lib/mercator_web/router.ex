@@ -5,6 +5,7 @@ defmodule MercatorWeb.Router do
 
   import AshAuthentication.Plug.Helpers
 
+  # sobelow_skip ["Config.CSP"]
   pipeline :browser do
     plug :accepts, ["html"]
     # old page paths redirect permanently, before any session work

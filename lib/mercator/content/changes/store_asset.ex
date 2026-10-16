@@ -37,6 +37,7 @@ defmodule Mercator.Content.Changes.StoreAsset do
     end)
   end
 
+  # sobelow_skip ["Traversal.FileModule"]
   defp pdf?(source) do
     case File.open(source, [:read, :binary], &IO.binread(&1, 5)) do
       {:ok, "%PDF-"} -> true
@@ -65,6 +66,7 @@ defmodule Mercator.Content.Changes.StoreAsset do
     end
   end
 
+  # sobelow_skip ["Traversal.FileModule"]
   defp store_document(changeset, source, id, name, extension, content_type) do
     file_name = safe_name(name, extension)
     dir = Uploads.path("assets/#{id}")
