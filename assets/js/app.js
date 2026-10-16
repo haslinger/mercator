@@ -28,12 +28,13 @@ import {SortableHook} from "./hooks/sortable"
 import {MarkdownEditor} from "./hooks/markdown_editor"
 import {CallHook} from "./hooks/call"
 import {RingtoneHook} from "./hooks/ringtone"
+import {SendOnEnterHook} from "./hooks/send_on_enter"
 
 const csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 const liveSocket = new LiveSocket("/live", Socket, {
   longPollFallbackMs: 2500,
   params: {_csrf_token: csrfToken},
-  hooks: {...colocatedHooks, Sortable: SortableHook, MarkdownEditor, Call: CallHook, Ringtone: RingtoneHook},
+  hooks: {...colocatedHooks, Sortable: SortableHook, MarkdownEditor, Call: CallHook, Ringtone: RingtoneHook, SendOnEnter: SendOnEnterHook},
 })
 
 // Show progress bar on live navigation and form submits

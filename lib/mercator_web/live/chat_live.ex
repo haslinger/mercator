@@ -435,6 +435,7 @@ defmodule MercatorWeb.ChatLive do
             }
             aria-label={gettext("Your message")}
             id={"chat-input-#{@sent}"}
+            phx-hook="SendOnEnter"
             phx-mounted={@sent > 0 && JS.focus()}
           >{@form[:body].value}</textarea>
           <button

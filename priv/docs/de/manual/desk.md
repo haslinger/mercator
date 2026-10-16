@@ -34,7 +34,7 @@ Am iPhone geht das nur, wenn der Shop zum Home-Bildschirm hinzugefügt ist (Teil
 
 - **Listen:** wartende Gespräche (die ältesten zuerst, mit Wartezeit), Ihre Gespräche und andere offene.
 - **Übernehmen:** übernimmt ein Gespräch. Auch jede Antwort übernimmt ein wartendes Gespräch. Die Kundin oder der Kunde sieht, wer berät.
-- **Antworten:** Nachrichten gehen mit **Senden** hinaus; die Eingabetaste macht eine neue Zeile.
+- **Antworten:** die **Eingabetaste** sendet die Nachricht, **Umschalt+Eingabe** (oder **Strg+Eingabe**) macht eine neue Zeile. Am Handy macht die Eingabetaste eine neue Zeile, gesendet wird mit **Senden**.
 - **Teilen:** ein Produkt empfehlen (als Karte mit Bild und Preis), einen Link teilen, eine Datei aus der Mediathek oder vom eigenen Computer senden (Bilder, PDF, Word, Excel, LibreOffice, AutoCAD, bis 20 MB).
 - **Beenden:** schließt das Gespräch. Die Kundin oder der Kunde kann die Beratung danach mit 1 bis 5 Sternen bewerten.
 

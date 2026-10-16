@@ -815,6 +815,7 @@ defmodule MercatorWeb.Admin.DeskLive do
               class="textarea flex-1 resize-none"
               placeholder={gettext("Your answer")}
               id={"reply-input-#{@sent}"}
+              phx-hook="SendOnEnter"
               phx-mounted={@sent > 0 && JS.focus()}
             >{@form[:body].value}</textarea>
             <div class="flex flex-col gap-1 self-end">

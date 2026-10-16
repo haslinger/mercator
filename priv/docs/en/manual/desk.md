@@ -34,7 +34,7 @@ On an iPhone this only works when the shop is added to the home screen (Share â†
 
 - **Lists:** waiting conversations (oldest first, with waiting time), yours, and other open ones.
 - **Take:** takes a conversation. Any answer also takes a waiting one. The customer sees who is advising them.
-- **Answering:** messages go out with **Send**; Enter makes a new line.
+- **Answering:** **Enter** sends the message, **Shift+Enter** (or **Ctrl+Enter**) makes a new line. On a phone Enter makes a new line, and **Send** sends.
 - **Share:** recommend a product (a card with image and price), share a link, or send a file from the media library or from your own computer (images, PDF, Word, Excel, LibreOffice, AutoCAD, up to 20 MB).
 - **End:** closes the conversation. The customer can then rate the advice with 1 to 5 stars.
 

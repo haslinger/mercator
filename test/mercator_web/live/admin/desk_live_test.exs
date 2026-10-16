@@ -108,6 +108,8 @@ defmodule MercatorWeb.Admin.DeskLiveTest do
     assert has_element?(chat, "#chat-waiting")
 
     {:ok, desk, _html} = live(conn, ~p"/admin/desk/#{conversation.id}")
+    # Enter sends, Shift+Enter makes a new line (assets/js/hooks/send_on_enter.js)
+    assert has_element?(desk, "#reply-form textarea[phx-hook=SendOnEnter]")
     desk |> form("#reply-form", reply: %{body: "Ja, gerne!"}) |> render_submit()
 
     assert has_element?(desk, "#mine-list #desk-conversation-#{conversation.id}")

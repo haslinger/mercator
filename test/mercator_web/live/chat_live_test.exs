@@ -30,6 +30,8 @@ defmodule MercatorWeb.ChatLiveTest do
   test "a visitor asks a question and gets the consultant's answer live", %{conn: conn} do
     {conn, owner} = visitor_conn(conn)
     {:ok, view, _html} = live_isolated(conn, ChatLive)
+    # Enter sends, Shift+Enter makes a new line (assets/js/hooks/send_on_enter.js)
+    assert has_element?(view, "#chat-form textarea[phx-hook=SendOnEnter]")
 
     assert has_element?(view, "#chat-panel.hidden")
     view |> element("#chat-toggle") |> render_click()
