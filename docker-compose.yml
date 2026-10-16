@@ -5,6 +5,9 @@
 services:
   app:
     build: .
+    # a fixed name, so the previous version can be tagged for a rollback
+    # (DOCKER.md, "Update after a code change")
+    image: mercator:latest
     restart: unless-stopped
     ports:
       # host:container – only for the reverse proxy on this host, so bound to

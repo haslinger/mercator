@@ -7,12 +7,36 @@ All commands run in the directory with `docker-compose.yml`.
 ## Updating
 
 ```sh
+docker compose exec db pg_dump -U postgres mercator | gzip > mercator-$(date +%F).sql.gz
+docker tag mercator:latest mercator:previous   # keep the running version for a rollback
 git pull
 docker compose build
 docker compose up -d
+docker image prune -f                          # delete untagged old images
 ```
 
 The new app container runs the database migrations before it starts. The database and the uploads stay. Do **not** use `docker compose down -v` for an update: `-v` deletes the volumes, i.e. the database and all uploads.
+
+Back up first: migrations change the database and are not undone. Every build tags the new image `mercator:latest`; the one before loses its tag and stays on disk until `docker image prune` deletes it. `mercator:previous` is a tag, so it is kept: there is always one version to go back to. On the very first update `docker tag` fails because there is no `mercator:latest` yet; that is fine.
+
+## Rollback
+
+```sh
+docker tag mercator:previous mercator:latest
+docker compose up -d --no-build
+```
+
+If the update ran migrations, the old version may not work with the new database: also restore the backup made before the update (see Backup). Before the next build, check out the old commit again, since `git pull` moved the checkout on.
+
+## Disk space
+
+```sh
+docker system df                               # images, build cache, volumes
+docker image prune -f                          # untagged images (the running one is tagged)
+docker builder prune -f --filter until=168h    # build cache older than a week
+```
+
+The build cache makes builds fast; prune it only when space is short. Never use `docker system prune --volumes` or `docker volume prune`: the volumes are the database and the uploads.
 
 ## Status and logs
 
@@ -48,6 +72,20 @@ docker compose run --rm --no-deps --entrypoint tar -v "$PWD":/backup app \
 ```
 
 Keep `.env` safe as well; without its secrets, existing sign-in tokens and the database password are lost.
+
+To restore (with the dates of your backup files):
+
+```sh
+docker compose stop app
+docker compose exec db dropdb -U postgres mercator
+docker compose exec db createdb -U postgres mercator
+gunzip -c mercator-2026-10-16.sql.gz | docker compose exec -T db psql -U postgres -q mercator
+docker compose run --rm --no-deps --entrypoint tar -v "$PWD":/backup app \
+  xzf /backup/uploads-2026-10-16.tar.gz -C /data
+docker compose up -d
+```
+
+The app must be stopped, since the database cannot be dropped while it is connected. The uploads archive is unpacked over the current uploads: files added since the backup stay.
 
 ## Starting from scratch
 

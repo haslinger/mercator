@@ -7,12 +7,36 @@ Alle Befehle laufen im Verzeichnis mit `docker-compose.yml`.
 ## Aktualisieren
 
 ```sh
+docker compose exec db pg_dump -U postgres mercator | gzip > mercator-$(date +%F).sql.gz
+docker tag mercator:latest mercator:previous   # die laufende Version für ein Zurücksetzen aufheben
 git pull
 docker compose build
 docker compose up -d
+docker image prune -f                          # alte Images ohne Tag löschen
 ```
 
 Der neue App-Container führt vor dem Start die Datenbankmigrationen aus. Datenbank und Uploads bleiben erhalten. Für ein Update **nicht** `docker compose down -v` verwenden: `-v` löscht die Volumes, also die Datenbank und alle Uploads.
+
+Vorher sichern: Migrationen ändern die Datenbank und werden nicht rückgängig gemacht. Jeder Build bekommt den Tag `mercator:latest`; das Image davor verliert seinen Tag und bleibt auf der Platte, bis `docker image prune` es löscht. `mercator:previous` ist ein Tag und bleibt daher erhalten: Es gibt immer eine Version, zu der Sie zurückkehren können. Beim allerersten Update schlägt `docker tag` fehl, weil es noch kein `mercator:latest` gibt; das ist in Ordnung.
+
+## Zurücksetzen auf die vorige Version
+
+```sh
+docker tag mercator:previous mercator:latest
+docker compose up -d --no-build
+```
+
+Hat das Update Migrationen ausgeführt, läuft die alte Version mit der neuen Datenbank womöglich nicht: Spielen Sie dann auch die Sicherung von vor dem Update ein (siehe Sicherung). Checken Sie vor dem nächsten Build den alten Commit wieder aus, denn `git pull` hat den Stand weiterbewegt.
+
+## Speicherplatz
+
+```sh
+docker system df                               # Images, Build-Cache, Volumes
+docker image prune -f                          # Images ohne Tag (das laufende hat einen)
+docker builder prune -f --filter until=168h    # Build-Cache, älter als eine Woche
+```
+
+Der Build-Cache macht Builds schnell; leeren Sie ihn nur, wenn der Platz knapp wird. Verwenden Sie nie `docker system prune --volumes` oder `docker volume prune`: Die Volumes sind die Datenbank und die Uploads.
 
 ## Zustand und Logs
 
@@ -48,6 +72,20 @@ docker compose run --rm --no-deps --entrypoint tar -v "$PWD":/backup app \
 ```
 
 Bewahren Sie auch `.env` sicher auf; ohne ihre Geheimnisse sind bestehende Anmeldungen und das Datenbankpasswort verloren.
+
+Wiederherstellen (mit dem Datum Ihrer Sicherungsdateien):
+
+```sh
+docker compose stop app
+docker compose exec db dropdb -U postgres mercator
+docker compose exec db createdb -U postgres mercator
+gunzip -c mercator-2026-10-16.sql.gz | docker compose exec -T db psql -U postgres -q mercator
+docker compose run --rm --no-deps --entrypoint tar -v "$PWD":/backup app \
+  xzf /backup/uploads-2026-10-16.tar.gz -C /data
+docker compose up -d
+```
+
+Die App muss dabei gestoppt sein, denn solange sie verbunden ist, lässt sich die Datenbank nicht löschen. Das Uploads-Archiv wird über die vorhandenen Uploads entpackt: Dateien, die seit der Sicherung dazugekommen sind, bleiben.
 
 ## Neu beginnen
 
