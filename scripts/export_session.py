@@ -45,6 +45,8 @@ GENERAL_RULES = [
     (re.escape(BASE), "~/src"),
     (re.escape(re.sub(r"[^A-Za-z0-9]", "-", BASE)) + "-", "-src-"),
     (r"/home/[A-Za-z0-9_.-]+", "~"),
+    # Web Push endpoints (#151): the token part addresses one device
+    (r"(fcm\.googleapis\.com/fcm/send/|updates\.push\.services\.mozilla\.com/wpush/v\d/|web\.push\.apple\.com/)[A-Za-z0-9_:.-]+", r"\1…"),
 ]
 
 
