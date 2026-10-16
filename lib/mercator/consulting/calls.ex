@@ -21,10 +21,15 @@ defmodule Mercator.Consulting.Calls do
     * `:ice_servers` – STUN/TURN servers, e.g. `[%{urls: "stun:stun.example.org:3478"}]`
     * `:ice_port_range` – the UDP ports for media, e.g. `50000..50049`
       (published by Docker with the same numbers); ephemeral ports if unset
+    * `:public_host` – the server's public host name or IP address. Inside a
+      container the app only knows its container address; with this the
+      browsers are offered the public one (resolved for each call, so a
+      changing home IP behind DynDNS is followed)
   """
   use Gettext, backend: MercatorWeb.Gettext
 
   require Ash.Query
+  require Logger
 
   alias Mercator.Consulting.{Call, Conversation, Conversations}
   alias Mercator.Consulting.Calls.Room
@@ -132,6 +137,26 @@ defmodule Mercator.Consulting.Calls do
       video_codecs: [:vp8]
     ]
     |> put_if(:ice_port_range, Keyword.get(config, :ice_port_range))
+    |> put_if(:host_to_srflx_ip_mapper, public_address(Keyword.get(config, :public_host)))
+  end
+
+  # the container's IPv4 address stands for the public one (port forwarding
+  # keeps the port numbers)
+  defp public_address(nil), do: nil
+
+  defp public_address(host) do
+    case :inet.getaddr(String.to_charlist(host), :inet) do
+      {:ok, public_ip} ->
+        fn
+          {127, _, _, _} -> nil
+          {_, _, _, _} -> public_ip
+          _ipv6 -> nil
+        end
+
+      {:error, reason} ->
+        Logger.warning("calls: public host #{inspect(host)} not resolved (#{inspect(reason)})")
+        nil
+    end
   end
 
   defp put_if(options, _key, nil), do: options

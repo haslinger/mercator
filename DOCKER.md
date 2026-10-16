@@ -165,6 +165,36 @@ Then switch Mollie on as administrator under Verwaltung → Zahlungsanbieter
 `https://<your domain>/payments/mollie/webhook`; the reverse proxy forwards it
 like every other request, nothing to configure at Mollie.
 
+### Video calls
+
+Consultants can call customers from the advice conversation (audio, video,
+screen sharing). The media does not go through the reverse proxy but straight
+to the app over UDP, so three things are needed besides HTTPS:
+
+1. In `.env`, the public host name the browsers reach (usually as `PHX_HOST`):
+   ```sh
+   CALL_PUBLIC_HOST=biber.mittenin.at
+   ```
+   Inside the container the app only knows its container address; it offers
+   this host's address instead (resolved for every call, so DynDNS is fine).
+2. In the router, forward the UDP range `CALL_PORT_RANGE` (default
+   `50000-50049`) to the server, with the same port numbers.
+3. The firewall: Docker publishes ports with its own iptables rules, which take
+   effect before ufw's, so the range is open without further measures. With
+   the [ufw-docker](https://github.com/chaifeng/ufw-docker) rules, ufw decides,
+   and one rule limited to the app container is enough. The app has a fixed
+   address on its own Compose network (`APP_IP`, default `172.30.0.10`, in
+   `MERCATOR_SUBNET`, default `172.30.0.0/24`; change both if that collides):
+   ```sh
+   sudo ufw route allow proto udp from any to 172.30.0.10 port 50000:50049
+   ```
+
+The first `docker compose up -d` after this version moves both containers to
+the new network; the old default network stays behind unused
+(`docker network prune` removes it). Test with a phone on mobile data as the
+customer. A video call needs about 2–4 Mbit/s at the server in each direction.
+There is no TURN server, so networks that block UDP entirely cannot take part.
+
 ## 🔍 Verify
 
 ```sh

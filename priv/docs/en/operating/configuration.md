@@ -19,6 +19,10 @@ Everything secret or specific to the installation is in the file `.env` next to 
 | `MOLLIE_API_KEY` | Mollie for online payment: `test_…` simulates payments, `live_…` takes real money. Then switch it on under Administration → Payment providers |
 | `MERCATOR_MODE` | `demo` for the public demo, empty for a real shop (see [Demo mode](demo.md)) |
 | `DEMO_ADMIN_PASSWORD` | demo only: the administrator's password, at least 8 characters |
+| `CALL_PUBLIC_HOST` | video calls: the public host name (or IP) browsers reach the call media at, usually as `PHX_HOST`; without it calls only work inside the local network (see [Video calls](calls.md)) |
+| `CALL_PORT_RANGE` | video calls: the UDP ports for the media (default `50000-50049`), published with the same numbers |
+| `CALL_ICE_SERVERS` | video calls: optional STUN servers, comma-separated, e.g. `stun:stun.example.org:3478` |
+| `MERCATOR_SUBNET`, `APP_IP` | the app's Docker network and fixed address (default `172.30.0.0/24`, `172.30.0.10`); change both if the network collides with another one on the host |
 
 ## Settings in the back office
 

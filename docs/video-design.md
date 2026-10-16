@@ -211,7 +211,14 @@ RTCPeerConnection          ◀─UDP─▶ PeerConnection per      ◀─UDP─�
    and a ringback tone for the consultant (`assets/js/hooks/ringtone.js`, generated
    with Web Audio, no audio file).
 5. Deployment: UDP range in Docker, STUN/public address, operating guide; tested on the
-   demo server.
+   demo server. *Prepared 2026-10-16 (on the server: pending):* `docker-compose.yml`
+   publishes `CALL_PORT_RANGE` (default 50000–50049) one to one and gives the app a
+   fixed address on its own network (`APP_IP` 172.30.0.10 in `MERCATOR_SUBNET`
+   172.30.0.0/24); `CALL_PUBLIC_HOST` is resolved for every call and offered to the
+   browsers instead of the container address (`host_to_srflx_ip_mapper`), which also
+   follows a home IP behind DynDNS; STUN stays optional. Documented in DOCKER.md and
+   the operating guide (new chapter "Videoanrufe" / "Video calls", configuration,
+   troubleshooting).
 6. Observability: WebRTC dashboard page, telemetry, incidents for failed calls.
 7. Documentation (manual, help, operating) and the Biber Holz demo.
 

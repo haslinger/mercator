@@ -13,6 +13,15 @@ services:
       # host:container – only for the reverse proxy on this host, so bound to
       # localhost; change the host side if 4010 is taken
       - "127.0.0.1:${APP_PORT:-4010}:4000"
+      # media of video calls (phase 10, DOCKER.md "Video calls"): UDP, from
+      # everywhere, with the same numbers on host and container (the app tells
+      # the browsers its port numbers); the router forwards this range here
+      - "${CALL_PORT_RANGE:-50000-50049}:${CALL_PORT_RANGE:-50000-50049}/udp"
+    networks:
+      mercator:
+        # a fixed address, so the firewall can open the call ports for this
+        # container only (DOCKER.md "Video calls")
+        ipv4_address: ${APP_IP:-172.30.0.10}
     environment:
       DATABASE_URL: ecto://postgres:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is not set, see .env.example}@db/mercator
       SECRET_KEY_BASE: ${SECRET_KEY_BASE:?SECRET_KEY_BASE is not set, see .env.example}
@@ -31,6 +40,11 @@ services:
       MERCATOR_MODE: ${MERCATOR_MODE:-}
       DEMO_ADMIN_PASSWORD: ${DEMO_ADMIN_PASSWORD:-}
       MOLLIE_API_KEY: ${MOLLIE_API_KEY:-}
+      CALL_PORT_RANGE: ${CALL_PORT_RANGE:-50000-50049}
+      # the public host name or IP the browsers reach for call media (usually
+      # the same as PHX_HOST); without it calls work only inside the LAN
+      CALL_PUBLIC_HOST: ${CALL_PUBLIC_HOST:-}
+      CALL_ICE_SERVERS: ${CALL_ICE_SERVERS:-}
     volumes:
       - uploads:/data/uploads
     depends_on:
@@ -40,6 +54,8 @@ services:
   db:
     image: postgres:17
     restart: unless-stopped
+    networks:
+      - mercator
     environment:
       POSTGRES_DB: mercator
       POSTGRES_USER: postgres
@@ -51,6 +67,13 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
+
+networks:
+  mercator:
+    ipam:
+      config:
+        # change it (and APP_IP) if it collides with another network on the host
+        - subnet: ${MERCATOR_SUBNET:-172.30.0.0/24}
 
 volumes:
   db_data:
