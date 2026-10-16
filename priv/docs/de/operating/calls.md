@@ -26,4 +26,6 @@ Jedes Bild geht einmal zum Server und von dort zur anderen Seite. Ein Videoanruf
 
 ## Was die App nicht macht
 
-Kein TURN-Server: Netze, die UDP ganz sperren (manche Firmen, Hotels), erreichen den Anruf nicht. Kommt das oft vor, kann ein TURN-Server nachgerüstet werden.
+Kein TURN-Server: Netze, die UDP ganz sperren (manche Firmen, Hotels), erreichen den Anruf nicht. Ein Anruf, dessen Verbindung fehlschlägt, endet im Gesprächsverlauf mit „Der Anruf konnte nicht verbunden werden.“ und wird ein Vorfall; seine technischen Details zeigen, welche Adressen beide Seiten angeboten haben und ob Prüfpakete angekommen sind. Häufen sich solche Vorfälle, kann ein TURN-Server nachgerüstet werden.
+
+Die laufenden Verbindungen zeigt **Verwaltung → System → WebRTC**: Bitrate, Paketverluste und Laufzeit je Seite.

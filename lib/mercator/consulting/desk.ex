@@ -128,6 +128,7 @@ defmodule Mercator.Consulting.Desk do
              actor: actor
            ) do
       WatchCall.enqueue(call.id)
+      :telemetry.execute([:mercator, :call, :start], %{count: 1}, %{video: video?})
       Calls.broadcast(call)
       {:ok, call}
     else

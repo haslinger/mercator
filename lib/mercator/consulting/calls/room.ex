@@ -18,7 +18,9 @@ defmodule Mercator.Consulting.Calls.Room do
     * `%{"type" => "offer", "sdp" => …}` – answer it with `signal/3`
     * `%{"type" => "candidate", "candidate" => …}` – an ICE candidate
     * `%{"type" => "peer", "state" => "joined" | "left"}` – the other participant
-    * `%{"type" => "state", "state" => …}` – the connection state, e.g. `"connected"`
+    * `%{"type" => "state", "state" => …}` – the connection state, e.g. `"connected"`;
+      a `"failed"` one carries `"details"`, a summary of the ICE candidates and
+      checks for the incident (not for the browser)
     * `%{"type" => "screen", "state" => "on" | "off"}` – the other shares a screen
       (relayed with `relay/3`)
 
@@ -159,6 +161,19 @@ defmodule Mercator.Consulting.Calls.Room do
     {:noreply, state}
   end
 
+  defp handle_peer({:connection_state_change, :failed}, role, state) do
+    participant = Map.fetch!(state.participants, role)
+
+    send_signal(state, role, %{
+      "type" => "state",
+      "state" => "failed",
+      "details" => ice_summary(participant.pc)
+    })
+
+    Logger.warning("call #{state.conversation_id}: connection of #{role} failed")
+    noreply_after_leave(remove(state, role))
+  end
+
   defp handle_peer({:connection_state_change, connection_state}, role, state) do
     send_signal(state, role, %{"type" => "state", "state" => to_string(connection_state)})
 
@@ -169,10 +184,6 @@ defmodule Mercator.Consulting.Calls.Room do
         # :rtp; before packets arrived the sender is not known yet)
         {:noreply,
          put_in(state.participants[role].needs_keyframe, MapSet.new([:camera, :screen]))}
-
-      :failed ->
-        Logger.warning("call #{state.conversation_id}: connection of #{role} failed")
-        noreply_after_leave(remove(state, role))
 
       _other ->
         {:noreply, state}
@@ -301,6 +312,36 @@ defmodule Mercator.Consulting.Calls.Room do
        do: {:stop, :normal, state}
 
   defp noreply_after_leave(state), do: {:noreply, state}
+
+  # What ICE tried, for the incident of a failed connection: the candidates
+  # of both sides (type, address, port) and how the checks went.
+  defp ice_summary(pc) do
+    stats = pc |> PeerConnection.get_stats() |> Map.values()
+
+    candidates = fn type ->
+      for %{type: ^type} = c <- stats, do: "#{c.candidate_type} #{address(c.address)}:#{c.port}"
+    end
+
+    pairs = for %{type: :candidate_pair} = pair <- stats, do: pair
+
+    Enum.join(
+      [
+        "server candidates: " <> Enum.join(candidates.(:local_candidate), ", "),
+        "browser candidates: " <> Enum.join(candidates.(:remote_candidate), ", "),
+        "candidate pairs: #{length(pairs)}, checks sent #{sum(pairs, :requests_sent)}, " <>
+          "answered #{sum(pairs, :responses_received)}, received #{sum(pairs, :requests_received)}"
+      ],
+      "\n"
+    )
+  catch
+    :exit, _gone -> "no ICE statistics (the connection had ended)"
+  end
+
+  # an IP address, or a browser's mDNS name (….local)
+  defp address(ip) when is_tuple(ip), do: ip |> :inet.ntoa() |> to_string()
+  defp address(name), do: to_string(name)
+
+  defp sum(pairs, key), do: pairs |> Enum.map(&(Map.get(&1, key) || 0)) |> Enum.sum()
 
   # closes the connection and ends its process
   defp stop_peer(pc) do

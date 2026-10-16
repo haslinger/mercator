@@ -75,6 +75,21 @@ defmodule MercatorWeb.Telemetry do
           "The time the connection spent waiting before being checked out for the query"
       ),
 
+      # Video calls (phase 10)
+      counter("mercator.call.start.count",
+        tags: [:video],
+        description: "Calls started by consultants (video or audio)"
+      ),
+      counter("mercator.call.stop.duration",
+        tags: [:reason],
+        description: "Calls ended, by how (completed, declined, missed, cancelled, failed)"
+      ),
+      summary("mercator.call.stop.duration",
+        unit: :second,
+        keep: &(&1.reason == :completed),
+        description: "How long answered calls lasted"
+      ),
+
       # VM Metrics
       summary("vm.memory.total", unit: {:byte, :kilobyte}),
       summary("vm.total_run_queue_lengths.total"),

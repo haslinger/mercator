@@ -80,6 +80,25 @@ defmodule MercatorWeb.CallLiveTest do
     assert Calls.participants(ctx.conversation.id) == []
   end
 
+  test "a failed connection ends the call; the details stay on the server", ctx do
+    ctx.desk |> element("#call-audio") |> render_click()
+    render(ctx.chat)
+    ctx.chat |> element("#chat-accept-call") |> render_click()
+
+    failed = %{
+      "type" => "state",
+      "state" => "failed",
+      "details" => "server candidates: host 172.30.0.10:50000"
+    }
+
+    send(ctx.chat.pid, {:call_signal, ctx.conversation.id, failed})
+
+    assert_push_event(ctx.chat, "call:signal", pushed)
+    assert pushed == %{"type" => "state", "state" => "failed"}
+    refute has_element?(ctx.chat, "#chat-call-active")
+    assert Calls.open_call(ctx.conversation.id) == nil
+  end
+
   test "an audio call the customer declines", ctx do
     ctx.desk |> element("#call-audio") |> render_click()
     assert render(ctx.chat) && has_element?(ctx.chat, "#chat-call-ringing")

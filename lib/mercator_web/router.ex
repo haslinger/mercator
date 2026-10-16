@@ -217,6 +217,9 @@ defmodule MercatorWeb.Router do
       csp_nonce_assign_key: :csp_nonce,
       ecto_repos: [Mercator.Repo],
       request_logger: false,
+      # the peer connections of video calls (phase 10): bitrate, packet loss,
+      # round-trip time, the session descriptions (with participants' IPs)
+      additional_pages: [webrtc: ExWebRTCDashboard],
       live_session_name: :admin_live_dashboard,
       on_mount: [
         {MercatorWeb.Locale, :default},

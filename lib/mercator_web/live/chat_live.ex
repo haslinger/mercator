@@ -267,6 +267,15 @@ defmodule MercatorWeb.ChatLive do
 
   def handle_info({:call, call}, socket), do: {:noreply, assign(socket, :call, call)}
 
+  # the media connection failed: the call ends, the details go to an incident
+  def handle_info(
+        {:call_signal, _id, %{"state" => "failed", "details" => details} = message},
+        socket
+      ) do
+    if call = socket.assigns.call, do: Calls.connection_failed(call, :customer, details)
+    {:noreply, push_event(socket, "call:signal", Map.delete(message, "details"))}
+  end
+
   # signaling from the media room to the call area's hook
   def handle_info({:call_signal, _conversation_id, message}, socket),
     do: {:noreply, push_event(socket, "call:signal", message)}

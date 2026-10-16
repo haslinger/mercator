@@ -33,6 +33,7 @@ defmodule Mercator.Consulting.Calls do
 
   alias Mercator.Consulting.{Call, Conversation, Conversations}
   alias Mercator.Consulting.Calls.Room
+  alias Mercator.Operations.Incidents
 
   @doc "How long a call rings before it counts as missed, in seconds."
   def ring_seconds, do: Application.get_env(:mercator, :call_ring_seconds, 45)
@@ -62,6 +63,8 @@ defmodule Mercator.Consulting.Calls do
   def finish(%Call{} = call, reason) do
     with {:ok, call} <-
            Ash.update(call, %{end_reason: reason}, action: :finish, authorize?: false) do
+      :telemetry.execute([:mercator, :call, :stop], %{duration: duration(call)}, %{reason: reason})
+
       with_room(call.conversation_id, &Room.close/1)
       conversation = Ash.get!(Conversation, call.conversation_id, authorize?: false)
       Conversations.create_message(conversation, %{sender_kind: :system, body: summary(call)})
@@ -69,6 +72,44 @@ defmodule Mercator.Consulting.Calls do
       {:ok, call}
     end
   end
+
+  # seconds talked; 0 for a call that was not answered
+  defp duration(%Call{answered_at: nil}), do: 0
+  defp duration(%Call{answered_at: from, ended_at: to}), do: DateTime.diff(to, from)
+
+  @doc """
+  The media connection of `role` failed (reported by the room): the call
+  ends as failed, and an incident (#105) keeps what ICE tried, so blocked
+  UDP ports or a missing public address show up.
+  """
+  def connection_failed(%Call{} = call, role, details) do
+    with {:ok, call} <- finish(call, :failed) do
+      Incidents.in_shop_locale(fn ->
+        Incidents.report(%{
+          kind: :other,
+          title: gettext("A call could not be connected"),
+          description: failed_description(role),
+          details: details,
+          conversation_id: call.conversation_id,
+          fingerprint: "call_failed:#{call.id}"
+        })
+      end)
+
+      {:ok, call}
+    end
+  end
+
+  defp failed_description(:customer),
+    do:
+      gettext(
+        "The customer's connection to the media server failed (blocked UDP ports, a missing public address, or a network without UDP)."
+      )
+
+  defp failed_description(:consultant),
+    do:
+      gettext(
+        "The consultant's connection to the media server failed (blocked UDP ports, a missing public address, or a network without UDP)."
+      )
 
   @doc "The chat line for an ended call."
   def summary(%Call{end_reason: :completed} = call) do

@@ -26,4 +26,6 @@ Every picture goes once to the server and from there to the other side. A video 
 
 ## What the app does not do
 
-No TURN server: networks that block UDP entirely (some offices, hotels) cannot reach the call. If that happens often, a TURN server can be added.
+No TURN server: networks that block UDP entirely (some offices, hotels) cannot reach the call. A call whose connection fails ends in the conversation with "The call could not be connected." and becomes an incident; its technical details show which addresses both sides offered and whether check packets arrived. If such incidents pile up, a TURN server can be added.
+
+The running connections are shown under **Administration → System → WebRTC**: bitrate, packet loss and round-trip time per side.

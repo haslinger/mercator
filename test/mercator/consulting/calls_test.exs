@@ -83,6 +83,23 @@ defmodule Mercator.Consulting.CallsTest do
     refute_received {:browser, :customer, :signal, %{"type" => "screen"}}
   end
 
+  test "a failed connection is reported to its participant with what ICE tried" do
+    %{id: id} = call()
+    [{room, _}] = Registry.lookup(Mercator.Consulting.Calls.Registry, id)
+    %{participants: %{customer: %{pc: pc}}} = :sys.get_state(room)
+
+    send(room, {:ex_webrtc, pc, {:connection_state_change, :failed}})
+
+    assert_receive {:browser, :customer, :signal,
+                    %{"type" => "state", "state" => "failed", "details" => details}},
+                   @timeout
+
+    assert details =~ "server candidates: host"
+    assert details =~ "browser candidates:"
+    assert details =~ "checks sent"
+    assert Calls.participants(id) == [:consultant]
+  end
+
   test "a participant joining again replaces the earlier connection" do
     %{id: id, consultant: consultant} = call()
 

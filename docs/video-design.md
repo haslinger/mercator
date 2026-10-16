@@ -220,7 +220,13 @@ RTCPeerConnection          ◀─UDP─▶ PeerConnection per      ◀─UDP─�
    follows a home IP behind DynDNS; STUN stays optional. Documented in DOCKER.md and
    the operating guide (new chapter "Videoanrufe" / "Video calls", configuration,
    troubleshooting).
-6. Observability: WebRTC dashboard page, telemetry, incidents for failed calls.
+6. ✅ Observability: WebRTC dashboard page, telemetry, incidents for failed calls. *Done
+   2026-10-16:* `ex_webrtc_dashboard` as the page "WebRTC" under `/admin/system`;
+   telemetry `[:mercator, :call, :start]` (video or not) and `[:mercator, :call, :stop]`
+   (reason, seconds talked) on the Metrics page; when a connection fails, the room
+   sends that participant's LiveView a summary of the ICE candidates and checks, and
+   `Calls.connection_failed/3` ends the call as failed and reports an incident with it
+   (the browser gets the state without the details).
 7. Documentation (manual, help, operating) and the Biber Holz demo.
 
 ## 10. Questions (answered 2026-10-16)

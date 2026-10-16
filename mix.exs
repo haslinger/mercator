@@ -93,6 +93,8 @@ defmodule Mercator.MixProject do
       {:ecto_psql_extras, "~> 0.8.8"},
       # video advice, phase 10 (docs/video-design.md)
       {:ex_webrtc, "~> 0.17.0"},
+      # WebRTC statistics page in the LiveDashboard (phase 10, step 6)
+      {:ex_webrtc_dashboard, "~> 0.10.0"},
       {:esbuild, "~> 0.10", runtime: Mix.env() == :dev},
       {:tailwind, "~> 0.5", runtime: Mix.env() == :dev},
       {:heroicons,

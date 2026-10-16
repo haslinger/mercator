@@ -163,6 +163,48 @@ defmodule Mercator.Consulting.CallRecordsTest do
     assert Ash.get!(Call, call.id, authorize?: false).screen_shared
   end
 
+  test "a failed connection ends the call and becomes an incident", ctx do
+    {:ok, call} = Desk.call(ctx.conversation, ctx.consultant)
+    {:ok, call} = Conversations.accept_call(ctx.owner, call.id)
+
+    assert {:ok, %Call{end_reason: :failed}} =
+             Calls.connection_failed(call, :customer, "server candidates: host 172.30.0.10:50000")
+
+    assert "Der Anruf konnte nicht verbunden werden." in system_messages(ctx.owner)
+
+    conversation_id = ctx.conversation.id
+
+    assert [incident] =
+             Mercator.Operations.Incident
+             |> Ash.read!(authorize?: false)
+             |> Enum.filter(&(&1.conversation_id == conversation_id))
+
+    assert incident.details =~ "172.30.0.10:50000"
+    assert incident.description =~ "Kunde"
+  end
+
+  test "calls report telemetry: started, and ended with reason and duration", ctx do
+    ref = make_ref()
+    test_pid = self()
+
+    :telemetry.attach_many(
+      "call-telemetry-#{inspect(ref)}",
+      [[:mercator, :call, :start], [:mercator, :call, :stop]],
+      fn event, measurements, metadata, _ ->
+        send(test_pid, {ref, event, measurements, metadata})
+      end,
+      nil
+    )
+
+    on_exit(fn -> :telemetry.detach("call-telemetry-#{inspect(ref)}") end)
+
+    {:ok, call} = Desk.call(ctx.conversation, ctx.consultant, false)
+    assert_receive {^ref, [:mercator, :call, :start], %{count: 1}, %{video: false}}
+
+    {:ok, _} = Conversations.hang_up_call(ctx.owner, call.id)
+    assert_receive {^ref, [:mercator, :call, :stop], %{duration: 0}, %{reason: :declined}}
+  end
+
   test "ending the call ends its media and their connections", ctx do
     {:ok, call} = Desk.call(ctx.conversation, ctx.consultant)
     {:ok, _} = Conversations.accept_call(ctx.owner, call.id)

@@ -26,6 +26,7 @@ defmodule MercatorWeb.Admin.SystemDashboardTest do
     assert has_element?(view, ~s(a[href="/admin/system/metrics"]))
     assert has_element?(view, ~s(a[href="/admin/system/os_mon"]))
     assert has_element?(view, ~s(a[href="/admin/system/ecto_stats"]))
+    assert has_element?(view, ~s(a[href="/admin/system/webrtc"]))
     refute has_element?(view, ~s(a[href="/admin/system/request_logger"]))
     refute render(view) =~ "Environment"
   end
@@ -34,6 +35,20 @@ defmodule MercatorWeb.Admin.SystemDashboardTest do
     conn = log_in_user(build_conn(), user_fixture(roles: [:administrator]))
     assert {:ok, _view, html} = live(conn, "/admin/system/ecto_stats")
     assert html =~ "Mercator.Repo"
+  end
+
+  test "the WebRTC page lists the peer connections of calls" do
+    conn = log_in_user(build_conn(), user_fixture(roles: [:administrator]))
+    # with connections running (other tests' calls) the page first picks one
+    # (a redirect with ?nav=…), otherwise it shows that there are none
+    case live(conn, "/admin/system/webrtc") do
+      {:ok, _view, _html} ->
+        :ok
+
+      {:error, {:live_redirect, %{to: path}}} ->
+        assert path =~ "/admin/system/webrtc?nav="
+        assert {:ok, _view, _html} = live(conn, path)
+    end
   end
 
   test "is linked in the admin area for administrators only" do
