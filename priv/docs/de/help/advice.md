@@ -13,6 +13,17 @@ Unten rechts auf jeder Seite öffnet **Beratung** den Chat mit unseren Fachleute
 
 Melden Sie sich an, während ein Gespräch läuft, gehört es danach zu Ihrem Konto.
 
+## Anrufe
+
+Ihre Beraterin oder Ihr Berater kann Sie im Gespräch anrufen, direkt im Shop, ohne Telefonnummer und ohne zusätzliches Programm: Im Chat klingelt es, und Sie nehmen mit **Annehmen** an oder lehnen mit **Ablehnen** ab. Möchten Sie lieber sprechen als schreiben, bitten Sie mit dem Telefon-Symbol oben im Chat um einen Anruf.
+
+- **Ihr Mikrofon** braucht der Anruf; Ihr Browser fragt beim ersten Mal danach. Ihre **Kamera** bleibt aus, bis Sie sie einschalten.
+- **Bildschirm teilen:** Sie können uns z. B. eine Skizze zeigen, und wir Ihnen einen Plan.
+- **Weiterklicken:** Der Anruf läuft weiter, während Sie im Shop andere Seiten ansehen.
+- **Auflegen** beendet den Anruf.
+
+Anrufe laufen über unseren Server und werden nicht aufgezeichnet.
+
 ## Angebote
 
 Für größere Vorhaben erstellen wir Ihnen ein Angebot, auch mit Positionen wie Montage oder Lieferung. Dafür brauchen Sie ein Kundenkonto.

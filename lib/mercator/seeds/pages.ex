@@ -391,10 +391,16 @@ defmodule Mercator.Seeds.Pages do
             """
             ## Platzhalter
             Hier steht die Datenschutzerklärung des Shopbetreibers. Für die Demo nur so viel: Wir speichern die Daten, die Sie bei Registrierung, Bestellung und im Kontaktformular angeben, um Ihre Anfragen und Bestellungen zu bearbeiten. Die Demo-Daten werden regelmäßig zurückgesetzt.
+
+            ## Beratung und Anrufe
+            Nachrichten im Beratungs-Chat speichern wir mit dem Gespräch. Anrufe (Ton, Video, Bildschirm teilen) laufen verschlüsselt über unseren eigenen Server, nicht über einen fremden Dienst, und werden nicht aufgezeichnet. Wir speichern nur, wann ein Anruf begann und endete und ob Video oder eine Bildschirmfreigabe genutzt wurden. Für die Verbindung sieht unser Server die IP-Adresse Ihres Geräts.
             """,
             """
             ## Placeholder
             This is where the shop operator's privacy policy goes. For the demo only this much: we store the data you enter when registering, ordering and in the contact form to process your requests and orders. The demo data is reset regularly.
+
+            ## Advice and calls
+            We store the messages of the advice chat with the conversation. Calls (audio, video, screen sharing) run encrypted through our own server, not a third-party service, and are not recorded. We only store when a call began and ended and whether video or screen sharing was used. For the connection our server sees your device's IP address.
             """
           )
         ]

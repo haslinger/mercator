@@ -589,6 +589,10 @@ defmodule MercatorWeb.ChatLive do
           {pgettext("call", "Decline")}
         </button>
       </div>
+      <%!-- #149: before the customer answers --%>
+      <p :if={@call && @call.state == :ringing} class="text-xs opacity-70" id="chat-call-privacy">
+        {gettext("Calls run through our server and are not recorded.")}
+      </p>
       <div :if={@call && @call.state == :active} class="space-y-2" id="chat-call-active">
         <%!-- the customer starts with audio only (#142) --%>
         <.call_media id="chat-call-media" peer={@name} />

@@ -13,6 +13,17 @@ At the bottom right of every page, **Advice** opens the chat with our experts; o
 
 If you sign in during a conversation, it belongs to your account afterwards.
 
+## Calls
+
+Your consultant can call you during the conversation, right in the shop, without a phone number or an extra program: it rings in the chat, and you answer with **Answer** or decline with **Decline**. If you would rather talk than write, ask for a call with the phone icon at the top of the chat.
+
+- **Your microphone** is needed for the call; your browser asks for it the first time. Your **camera** stays off until you turn it on.
+- **Share screen:** you can show us a sketch, for example, and we can show you a plan.
+- **Browsing on:** the call continues while you look at other pages of the shop.
+- **Hang up** ends the call.
+
+Calls run through our server and are not recorded.
+
 ## Offers
 
 For larger projects we make you an offer, also with items such as assembly or delivery. You need an account for it.

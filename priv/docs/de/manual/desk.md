@@ -22,6 +22,16 @@ Ist niemand verfügbar, sieht die Kundin oder der Kunde einen Countdown von zwei
 
 Ist die Kundin oder der Kunde nicht mehr im Shop, kommt Ihre Antwort nach etwa einer Minute per E-Mail, mit einem Link zurück in den Chat.
 
+## Anrufen
+
+In einem Gespräch, das Sie übernommen haben, rufen Sie die Kundin oder den Kunden mit **Anrufen** (nur Ton) oder **Videoanruf** (mit Ihrer Kamera) direkt im Shop an; bei ihr oder ihm klingelt es im Chat. Bittet die Kundin oder der Kunde um einen Anruf, steht „Anruf erbeten“ im Gespräch, und Sie hören einen Ton.
+
+- **Die Anrufkarte** unten rechts zeigt den Anruf. Sie bleibt, während Sie andere Gespräche ansehen; **Zum Gespräch** führt zurück. Sie führen einen Anruf zur Zeit.
+- **Im Anruf:** Mikrofon und Kamera ein und aus, **Bildschirm teilen** (z. B. einen Plan oder den Konfigurator; teilt die andere Seite, endet Ihre Freigabe), **Vollbild**, und unter dem Regler-Symbol die Wahl von Mikrofon und Kamera. Ein grüner Rand zeigt, wer gerade spricht.
+- **Auflegen** beendet den Anruf. Im Gespräch steht danach, wie er ausging, z. B. „Videoanruf, 14:05–14:20“, „Anruf abgelehnt“ oder „Verpasster Anruf“ (nach 45 Sekunden ohne Antwort).
+
+Der Browser fragt beim ersten Anruf nach Mikrofon und Kamera. Anrufe werden nicht aufgezeichnet. Kommt eine Verbindung nicht zustande, steht im Gespräch „Der Anruf konnte nicht verbunden werden.“, und unter *Vorfälle* steht, woran es lag.
+
 ## Was Sie über die Kundin oder den Kunden sehen
 
 Rechts neben dem Gespräch (auf schmalen Bildschirmen darunter):

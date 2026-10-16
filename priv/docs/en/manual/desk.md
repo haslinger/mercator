@@ -22,6 +22,16 @@ If nobody is available, the customer sees a two-minute countdown and can then as
 
 If the customer has left the shop, your answer reaches them by email after about a minute, with a link back into the chat.
 
+## Calling
+
+In a conversation you have taken, **Call** (audio only) or **Video call** (with your camera) calls the customer right in the shop; it rings in their chat. If the customer asks for a call, "Call requested" appears in the conversation and you hear a tone.
+
+- **The call card** at the bottom right shows the call. It stays while you look at other conversations; **To the conversation** leads back. You are in one call at a time.
+- **During the call:** microphone and camera on and off, **Share screen** (e.g. a plan or the configurator; if the other side shares, your share ends), **Full screen**, and under the sliders icon the choice of microphone and camera. A green ring shows who is speaking.
+- **Hang up** ends the call. The conversation then shows how it went, e.g. "Video call, 14:05–14:20", "Call declined" or "Missed call" (after 45 seconds without an answer).
+
+The browser asks for microphone and camera at the first call. Calls are not recorded. If a connection cannot be made, the conversation shows "The call could not be connected.", and *Incidents* shows why.
+
 ## What you see about the customer
 
 Next to the conversation (below it on narrow screens):

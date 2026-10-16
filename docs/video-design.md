@@ -1,6 +1,6 @@
 # Video advice (phase 10) – design
 
-Status: **agreed 2026-10-16** (#139–#149). #139 phase 10 is self-hosted audio, video
+Status: **agreed and done 2026-10-16** (#139–#150; all steps in section 9). #139 phase 10 is self-hosted audio, video
 and screen sharing with Elixir WebRTC (`ex_webrtc`), inside the shop, instead of an
 external video service; #144 two participants (a prototype); #147 a published UDP
 range for a container with a fixed IP; the other questions as recommended (section 10).
@@ -228,7 +228,12 @@ RTCPeerConnection          ◀─UDP─▶ PeerConnection per      ◀─UDP─�
    `Calls.connection_failed/3` ends the call as failed and reports an incident with it
    (the browser gets the state without the details). The WebRTC page was tested by hand with a running
    call.
-7. Documentation (manual, help, operating) and the Biber Holz demo.
+7. ✅ Documentation (manual, help, operating) and the Biber Holz demo. *Done 2026-10-16:*
+   manual (desk: "Anrufen"), shop help ("Anrufe"), operating ("Videoanrufe",
+   configuration, troubleshooting, system), the privacy note in the ringing card and a
+   paragraph on the demo's privacy page (#149); demo data: a video call with screen
+   sharing in Karl's garden-house advice and a declined call in Lena's (English)
+   pellets conversation.
 
 ## 10. Questions (answered 2026-10-16)
 

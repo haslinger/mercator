@@ -1,7 +1,7 @@
 defmodule Mercator.Seeds.ConsultingTest do
   use Mercator.DataCase, async: false
 
-  alias Mercator.Consulting.{Conversation, Offer}
+  alias Mercator.Consulting.{Call, Calls, Conversation, Offer}
   alias Mercator.Seeds
 
   setup do
@@ -32,6 +32,23 @@ defmodule Mercator.Seeds.ConsultingTest do
     assert DateTime.diff(DateTime.utc_now(), oldest.inserted_at, :day) >= 59
 
     refute Repo.exists?(Oban.Job)
+  end
+
+  test "creates calls: a video call with screen sharing, and a declined one" do
+    calls = Ash.read!(Call, authorize?: false)
+
+    assert calls |> Enum.map(& &1.end_reason) |> Enum.sort() == [:completed, :declined]
+    assert Enum.all?(calls, &(&1.state == :ended))
+
+    video = Enum.find(calls, &(&1.end_reason == :completed))
+    assert video.video and video.screen_shared
+    assert DateTime.diff(video.ended_at, video.answered_at, :minute) in 5..6
+    assert DateTime.diff(DateTime.utc_now(), video.inserted_at, :day) >= 20
+
+    # the chat line names the backdated times
+    lines = for c <- conversations(), m <- c.messages, m.sender_kind == :system, do: m.body
+    assert Calls.summary(video) in lines
+    assert "Call declined" in lines
   end
 
   test "creates offers in different states, one revised and ordered" do

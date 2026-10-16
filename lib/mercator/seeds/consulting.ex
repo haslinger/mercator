@@ -12,6 +12,8 @@ defmodule Mercator.Seeds.Consulting do
       is being advised on pellets now; the offer with 12 % discount waits
       for a sales manager's approval (#98).
     * A visitor is waiting and asked for a callback (#95).
+    * Calls (phase 10): Sepp called Karl about the garden house by video and
+      shared a plan; Lena declined a call about the pellets.
 
   Everything goes through the real functions as the demo staff and is then
   backdated; emails are dropped. Each scenario is identified by its
@@ -22,7 +24,7 @@ defmodule Mercator.Seeds.Consulting do
 
   alias Mercator.Accounts.User
   alias Mercator.{Catalog, Repo, Sales}
-  alias Mercator.Consulting.{Conversation, Conversations, Desk, Offer, Offers}
+  alias Mercator.Consulting.{Call, Calls, Conversation, Conversations, Desk, Offer, Offers}
   alias Mercator.Sales.Checkout
   alias Mercator.Seeds.Orders
 
@@ -35,6 +37,7 @@ defmodule Mercator.Seeds.Consulting do
     "Mercator.Consulting.Workers.SendNewConversationNotice",
     "Mercator.Consulting.Workers.SendOfferEmail",
     "Mercator.Consulting.Workers.SendReplyNotice",
+    "Mercator.Consulting.Workers.WatchCall",
     "Mercator.Sales.Workers.SendOrderConfirmation"
   ]
 
@@ -105,6 +108,7 @@ defmodule Mercator.Seeds.Consulting do
             "Für die Almhütte nehmen wir das Lärchenöl, zwei Gebinde reichen für den ersten Anstrich."
           )
         end)
+        |> call(sepp, owner, -21, 8, talk: 6, screen: true)
 
       {:ok, offer} = Offers.create_for_conversation(c, sepp)
       {:ok, offer} = Offers.add_product(offer, variant.id, 1, sepp)
@@ -339,6 +343,7 @@ defmodule Mercator.Seeds.Consulting do
         |> step(0, -88, fn c ->
           customer(owner, c, "Perfect. Delivery in two weeks would be fine.")
         end)
+        |> call(sepp, owner, 0, -87, talk: 0, locale: "en")
 
       {:ok, offer} = Offers.create_for_conversation(c, sepp)
       {:ok, offer} = Offers.add_product(offer, variant.id, 3, sepp)
@@ -428,6 +433,52 @@ defmodule Mercator.Seeds.Consulting do
   end
 
   defp reload(c), do: Ash.get!(Conversation, c.id, authorize?: false)
+
+  defp end_call(call, _consultant, owner, 0, _screen?),
+    do: Conversations.hang_up_call(owner, call.id)
+
+  defp end_call(call, consultant, owner, _talk, screen?) do
+    {:ok, call} = Conversations.accept_call(owner, call.id)
+
+    if screen?,
+      do: Ash.update!(call, %{screen_shared: true}, action: :note_media, authorize?: false)
+
+    Desk.hang_up(call, consultant)
+  end
+
+  # A call by the consultant at `days`/`minutes`: answered and `talk` minutes
+  # long, or declined (`talk: 0`); then the call and its chat line are moved
+  # to that time (the line names the times, so it is written again).
+  defp call(c, consultant, owner, days, minutes, opts) do
+    Gettext.with_locale(MercatorWeb.Gettext, Keyword.get(opts, :locale, "de"), fn ->
+      {:ok, call} = Desk.call(c, consultant, Keyword.get(opts, :video, true))
+      talk = Keyword.fetch!(opts, :talk)
+      started = at(days, minutes)
+
+      {:ok, _call} = end_call(call, consultant, owner, talk, opts[:screen])
+
+      answered = if talk > 0, do: [answered_at: DateTime.add(started, 20, :second)], else: []
+
+      Repo.update_all(
+        from(row in "conversation_calls", where: row.id == type(^call.id, :binary_id)),
+        set: [inserted_at: started, ended_at: DateTime.add(started, talk, :minute)] ++ answered
+      )
+
+      line = Calls.summary(Ash.get!(Call, call.id, authorize?: false))
+
+      Repo.update_all(
+        from(m in "conversation_messages",
+          where:
+            m.conversation_id == type(^c.id, :binary_id) and m.sender_kind == "system" and
+              m.inserted_at > ^DateTime.add(DateTime.utc_now(), -60, :second)
+        ),
+        set: [body: line]
+      )
+
+      stamp_messages(c, DateTime.add(started, talk, :minute))
+      reload(c)
+    end)
+  end
 
   # messages written just now (later than any backdated one), a few seconds apart
   defp stamp_messages(c, time) do
