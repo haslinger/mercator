@@ -1,8 +1,9 @@
 # Video advice (phase 10) – design
 
-Status: **draft 2026-10-16**, for discussion. Decided so far: #139 phase 10 is
-self-hosted audio, video and screen sharing with Elixir WebRTC (`ex_webrtc`), inside
-the shop, instead of an external video service. Open questions: section 10.
+Status: **agreed 2026-10-16** (#139–#149). #139 phase 10 is self-hosted audio, video
+and screen sharing with Elixir WebRTC (`ex_webrtc`), inside the shop, instead of an
+external video service; #144 two participants (a prototype); #147 a published UDP
+range for a container with a fixed IP; the other questions as recommended (section 10).
 
 ## 1. Goals
 
@@ -49,10 +50,11 @@ RTCPeerConnection          ◀─UDP─▶ PeerConnection per      ◀─UDP─�
 ```
 
 - **SFU, not peer-to-peer.** Each browser connects to the server only. The server
-  forwards every track to the other participants. Peer-to-peer would be simpler for
+  forwards every track to the other participant. Peer-to-peer would be simpler for
   two people, but the media would bypass Elixir entirely (no showcase, no statistics,
-  no third participant, and the customer's IP address would be shown to the
-  consultant's browser and vice versa).
+  and the customer's IP address would be shown to the consultant's browser and vice
+  versa). The room is written for two participants (#144); forwarding to more is the
+  same loop, so a third participant stays possible later.
 - **Room process:** `Mercator.Consulting.Calls.Room`, a GenServer per active call,
   registered by conversation id (`Registry`) under a `DynamicSupervisor`. It owns one
   `PeerConnection` per participant, maps each incoming track to outgoing tracks on the
@@ -78,18 +80,19 @@ RTCPeerConnection          ◀─UDP─▶ PeerConnection per      ◀─UDP─�
 
 ## 5. Calls in the conversation
 
-- **Who:** the customer of the conversation and staff with a sales role (the assigned
-  consultant, colleagues who join from the desk). Checked by an Ash policy before the
+- **Who:** the customer of the conversation and the consultant who has taken it: two
+  participants (#144). Checked by an Ash policy before the
   LiveView may join the room; the room accepts only LiveView processes it was told
   about. Visitors without an account: #140.
 - **Starting:** the consultant starts a call ("Anrufen": audio, or with video); the
   customer's chat panel rings with "Annehmen" / "Ablehnen". The customer can ask for a
   call with one button, which rings at the desk (#141).
 - **Media:** audio always; camera per side, the customer's camera off by default
-  (#142); screen sharing from either side, one share at a time (#143); up to four
-  participants (#144).
+  (#142); screen sharing from either side, one share at a time (#143).
 - **Controls:** mute, camera on/off, share screen, choose microphone and camera,
   hang up; an indicator for who is speaking; a full-screen view for a shared screen.
+  A second consultant who wants to help takes over the conversation (as today) and
+  calls again.
 - **History:** a `Call` resource (conversation, who started it, participants, started
   and ended at, whether video and screen sharing were used, how it ended) plus a system
   message in the chat: "Videoanruf, 14:05–14:20". Useful for the consultant, for
@@ -102,10 +105,20 @@ RTCPeerConnection          ◀─UDP─▶ PeerConnection per      ◀─UDP─�
 
 - **HTTPS** is required for camera and microphone (except on `localhost`). The demo has
   it; for testing from other devices on the LAN in development, `mix phx.gen.cert`.
-- **UDP ports:** media does not go through the reverse proxy. The app listens on a
-  fixed UDP range (`ice_port_range`, e.g. 50000–50049, set by an environment variable);
-  `docker-compose.yml` publishes it, and the router and firewall forward it to the
-  server (#147). Signaling stays on HTTPS/WebSocket through the proxy.
+- **UDP ports (#147):** media does not go through the reverse proxy. The app listens
+  on a fixed UDP range (`ice_port_range`, e.g. 50000–50049, set by an environment
+  variable). `docker-compose.yml` publishes it with **the same numbers on host and
+  container** (`50000-50049:50000-50049/udp`), because the app announces its container
+  ports to the browsers. The router forwards the range to the server. Signaling stays
+  on HTTPS/WebSocket through the proxy.
+- **Fixed container IP (#147):** the app gets a fixed address on its own Compose
+  network (a fixed `subnet` and `ipv4_address`, e.g. `172.30.0.10`), so the firewall
+  can allow the range for that one container only. Note: Docker writes its own
+  iptables rules for published ports, and they take effect before ufw's, so a published
+  range is open even without a ufw rule. To make ufw decide, its rules have to be tied
+  into Docker's `DOCKER-USER` chain (the ufw-docker approach); then
+  `ufw route allow proto udp from any to 172.30.0.10 port 50000:50049` is the one rule
+  needed. The operating guide describes both the plain and the tightened setup.
 - **Public address:** behind the router's NAT the app learns its public address from a
   STUN server (`ice_servers`), or it is configured (`host_to_srflx_ip_mapper`), since
   inside Docker the app only sees its container address (#147).
@@ -151,41 +164,24 @@ RTCPeerConnection          ◀─UDP─▶ PeerConnection per      ◀─UDP─�
 3. Browser side: the "Call" hook (getUserMedia, RTCPeerConnection, perfect
    negotiation) and the call UI in the chat panel and the desk; audio first, then video.
 4. Screen sharing, device selection, speaking indicator, full-screen view.
-5. Third participant joining from the desk.
-6. Deployment: UDP range in Docker, STUN/public address, operating guide; tested on the
+5. Deployment: UDP range in Docker, STUN/public address, operating guide; tested on the
    demo server.
-7. Observability: WebRTC dashboard page, telemetry, incidents for failed calls.
-8. Documentation (manual, help, operating) and the Biber Holz demo.
+6. Observability: WebRTC dashboard page, telemetry, incidents for failed calls.
+7. Documentation (manual, help, operating) and the Biber Holz demo.
 
-## 10. Questions
+## 10. Questions (answered 2026-10-16)
 
-- **#140 Visitors:** may visitors without an account (who can chat today, #94) take a
-  call too? Recommendation: yes, the call is part of their conversation, and the
-  barrier should stay low; the consultant decides to call.
-- **#141 Who starts:** the consultant calls, the customer can ask for a call with a
-  button. Recommendation: as described; the customer cannot ring the desk directly,
-  so nobody is surprised by an incoming video call.
-- **#142 Camera defaults:** the customer joins with audio only and turns the camera on
-  if they want; the consultant's camera is on. Recommendation: yes.
-- **#143 Screen sharing:** both directions (the consultant shows a plan or the
-  configurator, the customer shows their sketch), one share at a time. Recommendation:
-  yes.
-- **#144 Participants:** up to four (customer, consultant, a colleague, maybe a second
-  person on the customer's side via the same conversation). Recommendation: the room
-  supports four from the start; the UI for a third participant is step 5.
-- **#145 Recording:** none. Recommendation: no recording at all (consent, storage,
-  GDPR); possible later with Membrane if ever needed.
-- **#146 TURN:** none at first, measure failed connections, then coturn (or `rel` once
-  it supports TCP/TLS). Alternatively `rel` from the start as part of the showcase, for
-  UDP-restricted networks only. Recommendation: none at first.
-- **#147 Docker networking:** a published UDP range (e.g. 50 ports) with the public
-  address from STUN or configuration, or `network_mode: host` for the app container
-  (simplest for WebRTC, but the app then shares the host's network and the database
-  must be reached differently). Recommendation: published range; this also means
-  forwarding the range in the router and opening it in the firewall of the demo
-  server.
-- **#148 History:** a `Call` resource plus a system message, as in section 5.
-  Recommendation: yes.
-- **#149 Privacy notice:** a short note before the first call ("Ihr Anruf läuft über
-  unseren Server und wird nicht aufgezeichnet.") and a paragraph for the privacy
-  policy page (CMS). Recommendation: yes.
+- ~~**#140 Visitors**~~ *(answered 2026-10-16: yes)* Visitors without an account (who can chat, #94) can take a call too; the call is part of their conversation, and the consultant decides to call.
+- ~~**#141 Who starts**~~ *(answered 2026-10-16: as recommended)* The consultant calls; the customer can ask for a call with a button, which rings at the desk. The customer cannot ring the desk directly, so nobody is surprised by an incoming video call.
+- ~~**#142 Camera defaults**~~ *(answered 2026-10-16: yes)* The customer joins with audio only and turns the camera on if they want; the consultant's camera is on.
+- ~~**#143 Screen sharing**~~ *(answered 2026-10-16: yes)* Both directions (the consultant shows a plan or the configurator, the customer their sketch), one share at a time.
+- ~~**#144 Participants**~~ *(answered 2026-10-16: two, it is a prototype)* The
+  customer and the consultant who has taken the conversation.
+- ~~**#145 Recording**~~ *(answered 2026-10-16: none)* No recording at all (consent, storage, GDPR); possible later with Membrane if ever needed.
+- ~~**#146 TURN**~~ *(answered 2026-10-16: none at first)* Failed connections are recorded (`Call`, incidents); coturn, or `rel` once it supports TCP/TLS, only if they occur.
+- ~~**#147 Docker networking**~~ *(answered 2026-10-16: a published UDP range)* With
+  the same port numbers on host and container, a fixed container IP on the app's own
+  Compose network, and the firewall allowing the range for that IP only (section 6).
+  `network_mode: host` is not used.
+- ~~**#148 History**~~ *(answered 2026-10-16: yes)* A `Call` resource plus a system message in the chat (section 5).
+- ~~**#149 Privacy notice**~~ *(answered 2026-10-16: yes)* A short note before the first call ("Ihr Anruf läuft über unseren Server und wird nicht aufgezeichnet.") and a paragraph for the privacy policy page (CMS).
