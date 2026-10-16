@@ -171,8 +171,17 @@ RTCPeerConnection          ◀─UDP─▶ PeerConnection per      ◀─UDP─�
    `Calls.Room`; `Mercator.FakeBrowser` (test support) plays a browser with its own
    `PeerConnection`. The Docker builder needs `libssl-dev` and `pkg-config` for
    `ex_dtls`; checked with a local image build and a WebRTC offer inside the release.
-2. `Call` resource, policies, start/accept/decline/hang up in the domain; system
-   messages in the chat.
+2. ✅ `Call` resource, policies, start/accept/decline/hang up in the domain; system
+   messages in the chat. *Done 2026-10-16:* `Mercator.Consulting.Call` (ringing →
+   active → ended; end reasons completed, declined, missed, cancelled, failed; at most
+   one open call per conversation by a partial unique index; `accept` and `finish`
+   only apply while the call is still open in the database, so two hang-ups at once
+   end it once). The consultant calls and hangs up via `Desk.call/3` and
+   `Desk.hang_up/2`, the customer answers, declines, hangs up and asks for a call via
+   `Conversations`; `Calls.finish/2` ends the media and writes "Videoanruf,
+   14:05–14:20", "Verpasster Anruf" etc. into the chat; `ExpireCall` ends unanswered
+   calls after `:call_ring_seconds` (45). The room now stops its peer connections
+   (they were only closed before) and links them.
 3. Browser side: the "Call" hook (getUserMedia, RTCPeerConnection, perfect
    negotiation) and the call UI in the chat panel and the desk; audio first, then video.
 4. Screen sharing, device selection, speaking indicator, full-screen view.

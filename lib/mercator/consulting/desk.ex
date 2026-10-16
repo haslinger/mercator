@@ -10,8 +10,8 @@ defmodule Mercator.Consulting.Desk do
 
   require Ash.Query
 
-  alias Mercator.Consulting.{Conversation, Conversations, Offers}
-  alias Mercator.Consulting.Workers.SendReplyNotice
+  alias Mercator.Consulting.{Call, Calls, Conversation, Conversations, Offers}
+  alias Mercator.Consulting.Workers.{ExpireCall, SendReplyNotice}
   alias Mercator.Sales.{BasketPricing, Baskets, Order}
 
   @loads [:customer, :consultant, :product]
@@ -106,6 +106,50 @@ defmodule Mercator.Consulting.Desk do
     do: {:ok, conversation}
 
   defp ensure_taken(conversation, actor), do: take(conversation, actor)
+
+  @doc """
+  The consultant calls the customer (phase 10, #141): only in a conversation
+  they have taken, one call at a time. With `video?` the consultant's camera
+  is on (#142). The call rings until the customer answers, declines, or
+  `Calls.ring_seconds/0` pass.
+  """
+  def call(conversation, actor, video? \\ true)
+
+  def call(
+        %Conversation{state: :active, consultant_id: id} = conversation,
+        %{id: id} = actor,
+        video?
+      ) do
+    with {:ok, call} <-
+           Ash.create(Call, %{conversation_id: conversation.id, video: video?},
+             action: :start,
+             actor: actor
+           ) do
+      ExpireCall.enqueue(call.id)
+      Calls.broadcast(call)
+      {:ok, call}
+    end
+  end
+
+  def call(_conversation, _actor, _video?), do: {:error, :not_your_conversation}
+
+  @doc "The consultant hangs up: a call that was not answered yet counts as cancelled."
+  def hang_up(%Call{} = call, actor) do
+    # the current state decides: the customer may have answered meanwhile
+    case Ash.get(Call, call.id, authorize?: false) do
+      {:ok, %Call{state: :ended}} ->
+        {:error, :ended}
+
+      {:ok, %Call{consultant_id: id} = call} when id == actor.id ->
+        Calls.finish(call, end_reason(call))
+
+      _not_found_or_not_own ->
+        {:error, :not_your_call}
+    end
+  end
+
+  defp end_reason(%Call{state: :ringing}), do: :cancelled
+  defp end_reason(%Call{}), do: :completed
 
   @doc "The consultant closes a conversation."
   def close(conversation, actor) do

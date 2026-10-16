@@ -1,7 +1,8 @@
 defmodule Mercator.Consulting do
   @moduledoc """
   Guided selling (phase 6, docs/guided-selling-design.md): conversations
-  between customers and consultants, and (later) offers.
+  between customers and consultants, offers, and calls (phase 10,
+  docs/video-design.md).
 
   Customers reach their conversations through `Mercator.Consulting.Conversations`,
   which scopes everything to the owner (a visitor session or a user, #94),
@@ -18,6 +19,7 @@ defmodule Mercator.Consulting do
   resources do
     resource Mercator.Consulting.Conversation
     resource Mercator.Consulting.Message
+    resource Mercator.Consulting.Call
     resource Mercator.Consulting.Offer
     resource Mercator.Consulting.OfferItem
   end

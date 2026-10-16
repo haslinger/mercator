@@ -1,11 +1,18 @@
 defmodule Mercator.Consulting.Calls do
   @moduledoc """
   Audio and video calls in advice conversations (phase 10,
-  docs/video-design.md): starting and finding the media relay of a call
-  (`Mercator.Consulting.Calls.Room`) and its WebRTC settings.
+  docs/video-design.md): the call records (`Mercator.Consulting.Call`),
+  the media relay of a call (`Mercator.Consulting.Calls.Room`) and its
+  WebRTC settings.
 
-  Who may call is decided by the caller of these functions (the LiveViews,
-  with the `Call` resource's policies); the room only relays.
+  The consultant calls and hangs up through `Mercator.Consulting.Desk`, the
+  customer answers through `Mercator.Consulting.Conversations`; both end in
+  `finish/2` here. Who may join the media is decided by the callers of
+  `join/3` (the LiveViews); the room only relays.
+
+  Changes are broadcast on `"conversation:<id>"` as `{:call, call}`, and a
+  customer's request for a call (#141) as `{:call_requested, conversation_id}`
+  on `"conversation:<id>"` and `"desk"`.
 
   Configuration (`config :mercator, Mercator.Consulting.Calls`, set from the
   environment in `config/runtime.exs`):
@@ -14,7 +21,59 @@ defmodule Mercator.Consulting.Calls do
     * `:ice_port_range` – the UDP ports for media, e.g. `50000..50049`
       (published by Docker with the same numbers); ephemeral ports if unset
   """
+  use Gettext, backend: MercatorWeb.Gettext
+
+  require Ash.Query
+
+  alias Mercator.Consulting.{Call, Conversation, Conversations}
   alias Mercator.Consulting.Calls.Room
+
+  @doc "How long a call rings before it counts as missed, in seconds."
+  def ring_seconds, do: Application.get_env(:mercator, :call_ring_seconds, 45)
+
+  @doc "The conversation's ringing or active call, or nil (not authorized: callers check access)."
+  def open_call(conversation_id) do
+    Call
+    |> Ash.Query.filter(conversation_id == ^conversation_id and state in [:ringing, :active])
+    |> Ash.read_one!(authorize?: false)
+  end
+
+  @doc """
+  Ends a call with a reason (`Call` `end_reason`): records it, ends the media
+  and writes the outcome into the chat ("Call, 14:05–14:20", "Missed call",
+  …). A call that has already ended is left as it is (`{:error, :ended}`).
+  """
+  def finish(%Call{state: :ended}, _reason), do: {:error, :ended}
+
+  def finish(%Call{} = call, reason) do
+    with {:ok, call} <-
+           Ash.update(call, %{end_reason: reason}, action: :finish, authorize?: false) do
+      with_room(call.conversation_id, &Room.close/1)
+      conversation = Ash.get!(Conversation, call.conversation_id, authorize?: false)
+      Conversations.create_message(conversation, %{sender_kind: :system, body: summary(call)})
+      broadcast(call)
+      {:ok, call}
+    end
+  end
+
+  @doc "The chat line for an ended call."
+  def summary(%Call{end_reason: :completed} = call) do
+    times = %{from: clock(call.answered_at), to: clock(call.ended_at)}
+
+    if call.video,
+      do: gettext("Video call, %{from}–%{to}", times),
+      else: gettext("Call, %{from}–%{to}", times)
+  end
+
+  def summary(%Call{end_reason: :declined}), do: gettext("Call declined")
+  def summary(%Call{end_reason: :failed}), do: gettext("The call could not be connected.")
+  def summary(%Call{}), do: gettext("Missed call")
+
+  defp clock(datetime), do: datetime |> Mercator.Clock.local() |> Calendar.strftime("%H:%M")
+
+  @doc false
+  def broadcast(%Call{} = call),
+    do: Conversations.broadcast("conversation:#{call.conversation_id}", {:call, call})
 
   @doc """
   Joins `role` (`:customer` or `:consultant`) to the call of a conversation,

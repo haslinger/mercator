@@ -58,11 +58,17 @@ defmodule Mercator.Consulting.Calls.Room do
 
   def leave(room, role) when role in @roles, do: GenServer.call(room, {:leave, role})
 
+  @doc "Ends the call for everyone (the call was hung up)."
+  def close(room), do: GenServer.call(room, :close)
+
   @doc "The roles in the call."
   def participants(room), do: GenServer.call(room, :participants)
 
   @impl true
   def init(conversation_id) do
+    # the peer connections are linked: they end with the room, and a crashed
+    # connection arrives as an exit message instead of taking the room down
+    Process.flag(:trap_exit, true)
     {:ok, %{conversation_id: conversation_id, participants: %{}}}
   end
 
@@ -93,6 +99,11 @@ defmodule Mercator.Consulting.Calls.Room do
     {:reply, Map.keys(state.participants), state}
   end
 
+  def handle_call(:close, _from, state) do
+    state = Enum.reduce(Map.keys(state.participants), state, &remove(&2, &1))
+    {:stop, :normal, :ok, state}
+  end
+
   @impl true
   def handle_info({:ex_webrtc, pc, message}, state) do
     case role_of(state, pc) do
@@ -101,11 +112,26 @@ defmodule Mercator.Consulting.Calls.Room do
     end
   end
 
+  # the participant's signal process (LiveView) ended
   def handle_info({:DOWN, ref, :process, _pid, _reason}, state) do
-    case Enum.find(state.participants, fn {_role, p} -> ref in [p.signal_ref, p.pc_ref] end) do
+    case Enum.find(state.participants, fn {_role, p} -> p.signal_ref == ref end) do
       {role, _participant} -> noreply_after_leave(remove(state, role))
       nil -> {:noreply, state}
     end
+  end
+
+  # a peer connection ended by itself (closed ones are removed already)
+  def handle_info({:EXIT, pid, _reason}, state) do
+    case role_of(state, pid) do
+      nil -> {:noreply, state}
+      role -> noreply_after_leave(remove(state, role, stopped?: true))
+    end
+  end
+
+  @impl true
+  def terminate(_reason, state) do
+    for {_role, participant} <- state.participants, do: stop_peer(participant.pc)
+    :ok
   end
 
   defp handle_peer({:ice_candidate, candidate}, role, state) do
@@ -175,10 +201,10 @@ defmodule Mercator.Consulting.Calls.Room do
   # A connection with the three channels, each sending (the other's media)
   # and receiving (this participant's), and the offer for the browser.
   defp connect(conversation_id, signal_pid) do
-    case PeerConnection.start(Calls.peer_options()) do
+    case PeerConnection.start_link(Calls.peer_options()) do
       {:ok, pc} ->
         with {:error, reason} <- offer(conversation_id, pc, signal_pid) do
-          PeerConnection.close(pc)
+          stop_peer(pc)
           {:error, reason}
         end
 
@@ -199,7 +225,6 @@ defmodule Mercator.Consulting.Calls.Room do
       {:ok,
        %{
          pc: pc,
-         pc_ref: Process.monitor(pc),
          signal_pid: signal_pid,
          signal_ref: Process.monitor(signal_pid),
          outbound: Map.new(slots, fn {slot, tr} -> {slot, tr.sender.track.id} end),
@@ -234,15 +259,14 @@ defmodule Mercator.Consulting.Calls.Room do
     Enum.find_value(participant.inbound, fn {track_id, s} -> if s == slot, do: track_id end)
   end
 
-  defp remove(state, role) do
+  defp remove(state, role, opts \\ []) do
     case Map.pop(state.participants, role) do
       {nil, _participants} ->
         state
 
       {participant, participants} ->
-        Process.demonitor(participant.pc_ref, [:flush])
         Process.demonitor(participant.signal_ref, [:flush])
-        PeerConnection.close(participant.pc)
+        unless opts[:stopped?], do: stop_peer(participant.pc)
         state = %{state | participants: participants}
         notify_other(state, role, %{"type" => "peer", "state" => "left"})
         state
@@ -261,6 +285,13 @@ defmodule Mercator.Consulting.Calls.Room do
        do: {:stop, :normal, state}
 
   defp noreply_after_leave(state), do: {:noreply, state}
+
+  # closes the connection and ends its process
+  defp stop_peer(pc) do
+    PeerConnection.stop(pc)
+  catch
+    :exit, _already_gone -> :ok
+  end
 
   defp role_of(state, pc) do
     Enum.find_value(state.participants, fn {role, p} -> if p.pc == pc, do: role end)

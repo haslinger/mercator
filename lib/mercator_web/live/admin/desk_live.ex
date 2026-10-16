@@ -336,6 +336,10 @@ defmodule MercatorWeb.Admin.DeskLive do
 
   def handle_info({:visit, _path}, socket), do: {:noreply, socket}
 
+  # calls (phase 10): shown from step 3 on
+  def handle_info({:call, _call}, socket), do: {:noreply, socket}
+  def handle_info({:call_requested, _conversation_id}, socket), do: {:noreply, socket}
+
   def handle_info({:basket_changed, key}, %{assigns: %{selected: %{} = selected}} = socket) do
     if Baskets.owner_key(Desk.basket_owner(selected)) == key,
       do:

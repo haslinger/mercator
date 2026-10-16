@@ -12,10 +12,12 @@ defmodule Mercator.Consulting.Conversations do
     * `"conversation:<id>"` – `{:message, message}`, `{:conversation, conversation}`
     * `"desk"` – `{:conversation, conversation}` for the sales desk
   """
+  use Gettext, backend: MercatorWeb.Gettext
+
   require Ash.Query
 
   alias Mercator.Catalog.Listing
-  alias Mercator.Consulting.{Conversation, Message}
+  alias Mercator.Consulting.{Call, Calls, Conversation, Message}
   alias Mercator.Consulting.Workers.{SendCallbackRequest, SendNewConversationNotice}
 
   @pubsub Mercator.PubSub
@@ -176,6 +178,62 @@ defmodule Mercator.Consulting.Conversations do
       do: true
 
   def rateable?(_conversation), do: false
+
+  @doc """
+  The customer asks the consultant for a call (phase 10, #141): only when a
+  consultant has taken the conversation and no call is open. The desk is
+  told; the consultant decides to call.
+  """
+  def request_call(owner, conversation_id) do
+    with %Conversation{state: :active} = conversation <- get(owner, conversation_id),
+         nil <- Calls.open_call(conversation.id),
+         {:ok, _message} <-
+           create_message(conversation, %{
+             sender_kind: :system,
+             body: gettext("Call requested")
+           }) do
+      broadcast("conversation:#{conversation.id}", {:call_requested, conversation.id})
+      broadcast("desk", {:call_requested, conversation.id})
+      :ok
+    else
+      %Call{} -> {:error, :call_open}
+      %Conversation{} -> {:error, :no_consultant}
+      nil -> {:error, :not_found}
+      error -> error
+    end
+  end
+
+  @doc "The customer answers a ringing call in their conversation."
+  def accept_call(owner, call_id) do
+    with {:ok, %Call{state: :ringing} = call} <- own_call(owner, call_id),
+         {:ok, call} <- Ash.update(call, %{}, action: :accept, authorize?: false) do
+      Calls.broadcast(call)
+      {:ok, call}
+    else
+      {:ok, %Call{}} -> {:error, :not_ringing}
+      error -> error
+    end
+  end
+
+  @doc "The customer declines a ringing call, or hangs up an active one."
+  def hang_up_call(owner, call_id) do
+    case own_call(owner, call_id) do
+      {:ok, %Call{state: :ringing} = call} -> Calls.finish(call, :declined)
+      {:ok, %Call{state: :active} = call} -> Calls.finish(call, :completed)
+      {:ok, %Call{}} -> {:error, :ended}
+      error -> error
+    end
+  end
+
+  # the call, if it belongs to one of the owner's conversations
+  defp own_call(owner, call_id) do
+    with {:ok, call} <- Ash.get(Call, call_id, authorize?: false),
+         %Conversation{} <- get(owner, call.conversation_id) do
+      {:ok, call}
+    else
+      _not_found_or_not_own -> {:error, :not_found}
+    end
+  end
 
   @doc "Stores a message, marks activity and tells everyone in the conversation."
   def create_message(conversation, attrs) do
