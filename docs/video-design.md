@@ -211,7 +211,8 @@ RTCPeerConnection          ◀─UDP─▶ PeerConnection per      ◀─UDP─�
    and a ringback tone for the consultant (`assets/js/hooks/ringtone.js`, generated
    with Web Audio, no audio file).
 5. Deployment: UDP range in Docker, STUN/public address, operating guide; tested on the
-   demo server. *Prepared 2026-10-16 (on the server: pending):* `docker-compose.yml`
+   demo server. ✅ *Done 2026-10-16, tested on biber.mittenin.at with a phone on
+   mobile data as the customer (through the router's port forwarding, no TURN):* `docker-compose.yml`
    publishes `CALL_PORT_RANGE` (default 50000–50049) one to one and gives the app a
    fixed address on its own network (`APP_IP` 172.30.0.10 in `MERCATOR_SUBNET`
    172.30.0.0/24); `CALL_PUBLIC_HOST` is resolved for every call and offered to the
