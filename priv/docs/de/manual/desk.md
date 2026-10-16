@@ -21,7 +21,7 @@ Mit **Dieses Gerät benachrichtigen** oben am Beratungsplatz meldet der Shop neu
 - wenn jemand ein **neues Gespräch** beginnt (alle mit eingeschalteten Benachrichtigungen gleichzeitig), und
 - wenn in **Ihrem Gespräch** die Kundin oder der Kunde schreibt, außer Sie haben es gerade am Beratungsplatz offen.
 
-Ein Tipp darauf öffnet das Gespräch. So schalten Sie es ein:
+Die Benachrichtigung zeigt den Namen und den Anfang der Nachricht und kommt in der Regel nach etwa **drei Sekunden** (gemessen auf der Demo mit einem Android-Handy). Ein Tipp darauf öffnet das Gespräch. So schalten Sie es ein:
 
 1. Öffnen Sie den Shop auf dem Gerät (am Handy in **Chrome**), melden Sie sich an und gehen Sie zum Beratungsplatz.
 2. Tippen Sie auf **Dieses Gerät benachrichtigen** und erlauben Sie Benachrichtigungen. Der Knopf wird grün: **Benachrichtigungen an**.
