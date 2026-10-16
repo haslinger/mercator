@@ -117,6 +117,27 @@ defmodule MercatorWeb.Admin.DeskLiveTest do
     assert has_element?(chat, "#chat-messages", "Ja, gerne!")
   end
 
+  test "a waiting customer is hard to miss: alert and tab title", %{conn: conn} do
+    {:ok, desk, _html} = live(conn, ~p"/admin/desk")
+    refute has_element?(desk, "#waiting-alert")
+    assert page_title(desk) =~ ~r/^Beratungsplatz/
+
+    {_customer_conn, owner} = visitor_conn()
+    {:ok, conversation} = Conversations.start(owner, "Ist jemand da?")
+
+    assert has_element?(desk, "#waiting-alert-count", "Jemand wartet auf Beratung.")
+    assert has_element?(desk, "#waiting-alert-open", "Öffnen")
+    assert page_title(desk) =~ ~r/^\(1\) Beratungsplatz/
+
+    desk |> element("#waiting-alert-open") |> render_click()
+    assert_patch(desk, ~p"/admin/desk/#{conversation.id}")
+    assert page_title(desk) =~ ~r/^\(1\) /
+
+    desk |> form("#reply-form", reply: %{body: "Ja, gerne!"}) |> render_submit()
+    refute has_element?(desk, "#waiting-alert")
+    refute page_title(desk) =~ "(1)"
+  end
+
   test "callback requests are marked on the desk", %{conn: conn} do
     {_customer_conn, owner} = visitor_conn()
     {:ok, conversation} = Conversations.start(owner, "Bitte zurückrufen")

@@ -8,7 +8,9 @@ Customers start a conversation with the **Advice** button at the bottom right of
 
 ## Being available
 
-The **Available / Away** switch shows whether you take conversations. While you are available and the desk is open, new conversations play a tone and show a browser notification. Your choice survives a reload; a new tab starts as "Away".
+The **Available / Away** switch shows whether you take conversations. While you are available and the desk is open, new conversations play a tone and show a browser notification. Your choice survives a reload; a new tab starts as "Away". After signing in, the desk opens and you are available at once.
+
+While someone is waiting, a **blinking red light** at the top shows how many are waiting and for how long; **Open** goes to the first conversation. The number is also in the browser tab's title, e.g. "(2) Sales desk", so you notice it from another tab.
 
 If nobody is available, the customer sees a two-minute countdown and can then ask for an answer by email or a phone callback. These conversations are marked **Callback** or **Reply by email** in the list, and the shop also emails its own address.
 

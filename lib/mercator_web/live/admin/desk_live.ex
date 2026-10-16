@@ -50,7 +50,7 @@ defmodule MercatorWeb.Admin.DeskLive do
     {:ok,
      socket
      |> assign(
-       page_title: gettext("Sales desk"),
+       title: gettext("Sales desk"),
        available?: false,
        selected: nil,
        selected_call: nil,
@@ -115,7 +115,8 @@ defmodule MercatorWeb.Admin.DeskLive do
     |> assign(:selected, Map.delete(conversation, :messages))
     |> assign(:selected_call, Calls.open_call(conversation.id))
     |> assign(:context, Desk.context(conversation, socket.assigns.current_user))
-    |> assign(:page_title, conversation.subject || gettext("Sales desk"))
+    |> assign(:title, conversation.subject || gettext("Sales desk"))
+    |> assign_page_title()
     |> stream(:messages, conversation.messages, reset: true)
   end
 
@@ -124,7 +125,8 @@ defmodule MercatorWeb.Admin.DeskLive do
       do: Phoenix.PubSub.unsubscribe(Mercator.PubSub, "conversation:#{previous.id}")
 
     socket
-    |> assign(selected: nil, selected_call: nil, context: nil)
+    |> assign(selected: nil, selected_call: nil, context: nil, title: gettext("Sales desk"))
+    |> assign_page_title()
     |> stream(:messages, [], reset: true)
   end
 
@@ -150,8 +152,17 @@ defmodule MercatorWeb.Admin.DeskLive do
     actor = socket.assigns.current_user
     active = Desk.active(actor)
     {mine, others} = Enum.split_with(active, &(&1.consultant_id == actor.id))
-    assign(socket, waiting: Desk.waiting(actor), mine: mine, others: others)
+
+    socket
+    |> assign(waiting: Desk.waiting(actor), mine: mine, others: others)
+    |> assign_page_title()
   end
+
+  # Someone waiting shows in the browser tab too: "(2) Sales desk".
+  defp assign_page_title(%{assigns: %{waiting: [_ | _] = waiting}} = socket),
+    do: assign(socket, :page_title, "(#{length(waiting)}) #{socket.assigns.title}")
+
+  defp assign_page_title(socket), do: assign(socket, :page_title, socket.assigns.title)
 
   defp new_form, do: to_form(%{"body" => ""}, as: :reply)
 
@@ -545,6 +556,8 @@ defmodule MercatorWeb.Admin.DeskLive do
           {if @available?, do: gettext("Available"), else: gettext("Away")}
         </button>
       </div>
+
+      <.waiting_alert waiting={@waiting} available?={@available?} />
 
       <div class="grid gap-6 lg:grid-cols-[18rem_1fr] xl:grid-cols-[18rem_1fr_22rem] 2xl:grid-cols-[20rem_1fr_26rem]">
         <aside class="space-y-4">
@@ -1228,6 +1241,59 @@ defmodule MercatorWeb.Admin.DeskLive do
       </div>
     </aside>
     """
+  end
+
+  # Hard to miss after looking away: a pulsing lamp with the number of
+  # customers waiting and how long the first one has been waiting; one
+  # click opens that conversation.
+  attr :waiting, :list, required: true
+  attr :available?, :boolean, required: true
+
+  defp waiting_alert(%{waiting: []} = assigns), do: ~H""
+
+  defp waiting_alert(assigns) do
+    assigns = assign(assigns, :first, hd(assigns.waiting))
+
+    ~H"""
+    <div
+      role="alert"
+      class={["alert", if(@available?, do: "alert-warning", else: "alert-soft alert-warning")]}
+      id="waiting-alert"
+    >
+      <span class="relative flex size-4 shrink-0" aria-hidden="true">
+        <span class="absolute inline-flex size-full rounded-full bg-error opacity-75 motion-safe:animate-ping"></span>
+        <span class="relative inline-flex size-4 rounded-full bg-error"></span>
+      </span>
+      <div>
+        <p class="font-semibold" id="waiting-alert-count">
+          {ngettext(
+            "A customer is waiting for advice.",
+            "%{count} customers are waiting for advice.",
+            length(@waiting)
+          )}
+        </p>
+        <p class="text-sm">{waiting_for(@first)}</p>
+      </div>
+      <.link patch={~p"/admin/desk/#{@first.id}"} class="btn btn-sm" id="waiting-alert-open">
+        {pgettext("action", "Open")}
+      </.link>
+    </div>
+    """
+  end
+
+  defp waiting_for(conversation) do
+    name = Desk.display_name(conversation.customer)
+
+    case DateTime.diff(DateTime.utc_now(), conversation.inserted_at, :minute) do
+      0 ->
+        gettext("%{name} has just asked.", name: name)
+
+      _minutes ->
+        gettext("%{name} has been waiting for %{time}.",
+          name: name,
+          time: since(conversation.inserted_at)
+        )
+    end
   end
 
   attr :id, :string, required: true

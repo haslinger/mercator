@@ -8,7 +8,9 @@ Kundinnen und Kunden starten eine Beratung über den Knopf **Beratung** unten re
 
 ## Verfügbar sein
 
-Mit dem Schalter **Verfügbar / Abwesend** zeigen Sie, ob Sie Gespräche annehmen. Solange Sie verfügbar sind und der Beratungsplatz offen ist, hören Sie bei neuen Gesprächen einen Ton und erhalten eine Browser-Benachrichtigung. Die Wahl bleibt beim Neuladen erhalten; ein neuer Tab beginnt mit „Abwesend“.
+Mit dem Schalter **Verfügbar / Abwesend** zeigen Sie, ob Sie Gespräche annehmen. Solange Sie verfügbar sind und der Beratungsplatz offen ist, hören Sie bei neuen Gesprächen einen Ton und erhalten eine Browser-Benachrichtigung. Die Wahl bleibt beim Neuladen erhalten; ein neuer Tab beginnt mit „Abwesend“. Nach der Anmeldung öffnet sich der Beratungsplatz, und Sie sind gleich verfügbar.
+
+Wartet jemand, erscheint oben ein **blinkendes rotes Licht** mit der Zahl der Wartenden und der Wartezeit; **Öffnen** führt zum ersten Gespräch. Die Zahl steht auch im Titel des Browser-Tabs, z. B. „(2) Beratungsplatz“, damit Sie es auch in einem anderen Tab sehen.
 
 Ist niemand verfügbar, sieht die Kundin oder der Kunde einen Countdown von zwei Minuten und kann dann um Antwort per E-Mail oder einen Rückruf bitten. Diese Gespräche tragen in der Liste das Zeichen **Rückruf** bzw. **Antwort per E-Mail**; der Shop schickt zusätzlich eine E-Mail an die Shop-Adresse.
 

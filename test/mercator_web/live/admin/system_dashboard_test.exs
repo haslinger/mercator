@@ -40,14 +40,21 @@ defmodule MercatorWeb.Admin.SystemDashboardTest do
   test "the WebRTC page lists the peer connections of calls" do
     conn = log_in_user(build_conn(), user_fixture(roles: [:administrator]))
     # with connections running (other tests' calls) the page first picks one
-    # (a redirect with ?nav=…), otherwise it shows that there are none
-    case live(conn, "/admin/system/webrtc") do
+    # (a redirect with ?nav=…), otherwise it shows that there are none; a
+    # picked connection may end meanwhile, then the page picks the next one
+    assert :ok = open_webrtc_page(conn, "/admin/system/webrtc", 5)
+  end
+
+  defp open_webrtc_page(_conn, _path, 0), do: :too_many_redirects
+
+  defp open_webrtc_page(conn, path, tries) do
+    case live(conn, path) do
       {:ok, _view, _html} ->
         :ok
 
-      {:error, {:live_redirect, %{to: path}}} ->
-        assert path =~ "/admin/system/webrtc?nav="
-        assert {:ok, _view, _html} = live(conn, path)
+      {:error, {:live_redirect, %{to: next}}} ->
+        assert next =~ "/admin/system/webrtc?nav="
+        open_webrtc_page(conn, next, tries - 1)
     end
   end
 
