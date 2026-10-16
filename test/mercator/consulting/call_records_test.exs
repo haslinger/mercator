@@ -153,6 +153,16 @@ defmodule Mercator.Consulting.CallRecordsTest do
     assert {:error, :no_consultant} = Conversations.request_call(ctx.owner, waiting.id)
   end
 
+  test "a screen share is noted on the call and told to the other participant", ctx do
+    {:ok, call} = Desk.call(ctx.conversation, ctx.consultant)
+    {:ok, call} = Conversations.accept_call(ctx.owner, call.id)
+    :ok = Calls.join(ctx.conversation.id, :consultant)
+
+    assert :ok = Calls.screen_share(call, :customer, true)
+    assert_receive {:call_signal, _, %{"type" => "screen", "state" => "on"}}
+    assert Ash.get!(Call, call.id, authorize?: false).screen_shared
+  end
+
   test "ending the call ends its media and their connections", ctx do
     {:ok, call} = Desk.call(ctx.conversation, ctx.consultant)
     {:ok, _} = Conversations.accept_call(ctx.owner, call.id)

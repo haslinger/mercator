@@ -62,6 +62,14 @@ defmodule MercatorWeb.CallLiveTest do
     render_hook(desk, "call_media_ready", %{})
     assert Enum.sort(Calls.participants(ctx.conversation.id)) == [:consultant, :customer]
 
+    # the controls of the call area (step 4)
+    for control <- ~w(mute camera screen fullscreen settings mic cam),
+        do: assert(has_element?(chat, "#chat-call-media [data-call-#{control}]"))
+
+    # the customer shares the screen: the consultant's hook is told
+    render_hook(chat, "call_screen", %{"on" => true})
+    assert_push_event(desk, "call:signal", %{"type" => "screen", "state" => "on"})
+
     chat |> element("#chat-hang-up") |> render_click()
     refute has_element?(chat, "#chat-call")
     render(desk)

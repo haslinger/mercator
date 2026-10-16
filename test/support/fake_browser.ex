@@ -38,8 +38,13 @@ defmodule Mercator.FakeBrowser do
       sequence: 0
     }
 
-    :ok = Calls.join(conversation_id, role)
-    {:ok, state}
+    {:ok, state, {:continue, :join}}
+  end
+
+  @impl true
+  def handle_continue(:join, state) do
+    :ok = Calls.join(state.conversation_id, state.role)
+    {:noreply, state}
   end
 
   @impl true

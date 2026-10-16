@@ -19,6 +19,8 @@ defmodule Mercator.Consulting.Calls.Room do
     * `%{"type" => "candidate", "candidate" => …}` – an ICE candidate
     * `%{"type" => "peer", "state" => "joined" | "left"}` – the other participant
     * `%{"type" => "state", "state" => …}` – the connection state, e.g. `"connected"`
+    * `%{"type" => "screen", "state" => "on" | "off"}` – the other shares a screen
+      (relayed with `relay/3`)
 
   The room stops when the last participant leaves; a participant leaves when
   their signal process ends or their connection fails.
@@ -49,14 +51,23 @@ defmodule Mercator.Consulting.Calls.Room do
   Joins `role` with `signal_pid` (which receives the signaling). A second
   join of the same role (e.g. after a reload) replaces the first.
   """
+  # starting a connection creates a DTLS certificate, which may take a few
+  # seconds on a busy machine
   def join(room, role, signal_pid) when role in @roles,
-    do: GenServer.call(room, {:join, role, signal_pid})
+    do: GenServer.call(room, {:join, role, signal_pid}, :timer.seconds(20))
 
   @doc "Passes a message from the participant's browser: an answer or an ICE candidate."
   def signal(room, role, message) when role in @roles,
     do: GenServer.call(room, {:signal, role, message})
 
   def leave(room, role) when role in @roles, do: GenServer.call(room, {:leave, role})
+
+  @doc """
+  Passes a message from `role`'s browser to the other participant's, e.g.
+  `%{"type" => "screen", "state" => "on"}` when a screen share starts.
+  """
+  def relay(room, role, message) when role in @roles,
+    do: GenServer.call(room, {:relay, role, message})
 
   @doc "Ends the call for everyone (the call was hung up)."
   def close(room), do: GenServer.call(room, :close)
@@ -94,6 +105,11 @@ defmodule Mercator.Consulting.Calls.Room do
   end
 
   def handle_call({:leave, role}, _from, state), do: reply_after_leave(remove(state, role), :ok)
+
+  def handle_call({:relay, role, message}, _from, state) do
+    notify_other(state, role, message)
+    {:reply, :ok, state}
+  end
 
   def handle_call(:participants, _from, state) do
     {:reply, Map.keys(state.participants), state}

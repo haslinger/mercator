@@ -197,7 +197,14 @@ RTCPeerConnection          ◀─UDP─▶ PeerConnection per      ◀─UDP─�
    in both directions, on localhost (not inside the Tidewave page, whose frame blocks
    camera and microphone). The chat panel can now be resized at its top-left corner
    (kept per browser), for big screens.
-4. Screen sharing, device selection, speaking indicator, full-screen view.
+4. ✅ Screen sharing, device selection, speaking indicator, full-screen view. *Done
+   2026-10-16 (code and tests; by hand: pending):* screen sharing both ways through
+   the third channel, the newest share wins (the room relays "screen on/off" between
+   the participants, `Calls.screen_share/3` notes it on the call); microphone and
+   camera chosen in a small device panel, switched live with `replaceTrack`; a ring
+   around the call box while the other speaks, and around the mute button while one
+   speaks (Web Audio level); the call box in full screen. The room's `join` waits up to
+   20 s (creating the DTLS certificate is slow on a busy machine).
 5. Deployment: UDP range in Docker, STUN/public address, operating guide; tested on the
    demo server.
 6. Observability: WebRTC dashboard page, telemetry, incidents for failed calls.

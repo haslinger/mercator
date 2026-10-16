@@ -103,6 +103,16 @@ defmodule Mercator.Consulting.Calls do
 
   def leave(conversation_id, role), do: with_room(conversation_id, &Room.leave(&1, role))
 
+  @doc """
+  A participant starts or stops sharing their screen (#143): the other is
+  told (and stops their own share, one at a time), and the call notes it.
+  """
+  def screen_share(%Call{} = call, role, on?) when is_boolean(on?) do
+    if on?, do: Ash.update(call, %{screen_shared: true}, action: :note_media, authorize?: false)
+    message = %{"type" => "screen", "state" => if(on?, do: "on", else: "off")}
+    with_room(call.conversation_id, &Room.relay(&1, role, message))
+  end
+
   @doc "The roles in the conversation's call, `[]` if there is none."
   def participants(conversation_id) do
     case with_room(conversation_id, &Room.participants/1) do

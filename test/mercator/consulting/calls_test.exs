@@ -69,6 +69,15 @@ defmodule Mercator.Consulting.CallsTest do
     GenServer.stop(customer)
   end
 
+  test "relays a message from one participant to the other, e.g. a screen share" do
+    %{id: id} = call()
+    [{room, _}] = Registry.lookup(Mercator.Consulting.Calls.Registry, id)
+
+    :ok = Calls.Room.relay(room, :customer, %{"type" => "screen", "state" => "on"})
+    assert_receive {:browser, :consultant, :signal, %{"type" => "screen", "state" => "on"}}
+    refute_received {:browser, :customer, :signal, %{"type" => "screen"}}
+  end
+
   test "a participant joining again replaces the earlier connection" do
     %{id: id, consultant: consultant} = call()
 

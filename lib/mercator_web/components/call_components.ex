@@ -19,10 +19,16 @@ defmodule MercatorWeb.CallComponents do
       phx-hook="Call"
       phx-update="ignore"
       data-video={to_string(@video)}
+      data-text-microphone={gettext("Microphone")}
+      data-text-camera={gettext("Camera")}
       class="space-y-2"
     >
-      <%!-- layers in one 16:9 box: name, the other camera, a shared screen, own camera --%>
-      <div class="relative aspect-video overflow-hidden rounded-box bg-neutral text-neutral-content">
+      <%!-- layers in one 16:9 box (full screen on request): name, the other's
+           camera, a shared screen, own camera; a ring while the other speaks --%>
+      <div
+        data-call-box
+        class="relative aspect-video overflow-hidden rounded-box bg-neutral text-neutral-content transition-shadow [&:fullscreen]:aspect-auto [&:fullscreen]:rounded-none"
+      >
         <div class="absolute inset-0 flex items-center justify-center gap-2 text-sm opacity-80">
           <.icon name="hero-phone" class="size-5" />
           <span>{@peer}</span>
@@ -59,28 +65,55 @@ defmodule MercatorWeb.CallComponents do
         </p>
       </div>
       <div class="flex justify-center gap-2">
-        <button
-          type="button"
-          data-call-mute
-          aria-pressed="false"
-          class="btn btn-sm btn-circle"
-          title={gettext("Microphone on/off")}
-          aria-label={gettext("Microphone on/off")}
-        >
-          <.icon name="hero-microphone" class="size-4" />
-        </button>
-        <button
-          type="button"
-          data-call-camera
-          aria-pressed="false"
-          class="btn btn-sm btn-circle"
-          title={gettext("Camera on/off")}
-          aria-label={gettext("Camera on/off")}
-        >
-          <.icon name="hero-video-camera" class="size-4" />
-        </button>
+        <.call_button name="mute" icon="hero-microphone" label={gettext("Microphone on/off")} />
+        <.call_button name="camera" icon="hero-video-camera" label={gettext("Camera on/off")} />
+        <.call_button
+          name="screen"
+          icon="hero-computer-desktop"
+          label={gettext("Share screen on/off")}
+        />
+        <.call_button
+          name="fullscreen"
+          icon="hero-arrows-pointing-out"
+          label={gettext("Full screen")}
+        />
+        <.call_button
+          name="settings"
+          icon="hero-adjustments-horizontal"
+          label={gettext("Microphone and camera")}
+        />
+      </div>
+      <div data-call-devices class="hidden space-y-2 rounded-box bg-base-200 p-2 text-sm">
+        <label class="block">
+          <span class="text-xs opacity-70">{gettext("Microphone")}</span>
+          <select data-call-mic class="select select-sm w-full"></select>
+        </label>
+        <label class="block">
+          <span class="text-xs opacity-70">{gettext("Camera")}</span>
+          <select data-call-cam class="select select-sm w-full"></select>
+        </label>
       </div>
     </div>
+    """
+  end
+
+  attr :name, :string, required: true
+  attr :icon, :string, required: true
+  attr :label, :string, required: true
+
+  # a round control, found by the hook through data-call-<name>
+  defp call_button(assigns) do
+    ~H"""
+    <button
+      type="button"
+      {%{"data-call-#{@name}" => true}}
+      aria-pressed="false"
+      class="btn btn-sm btn-circle"
+      title={@label}
+      aria-label={@label}
+    >
+      <.icon name={@icon} class="size-4" />
+    </button>
     """
   end
 end

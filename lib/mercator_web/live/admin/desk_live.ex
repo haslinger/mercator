@@ -232,6 +232,12 @@ defmodule MercatorWeb.Admin.DeskLive do
     {:noreply, socket}
   end
 
+  # a screen share starts or stops: the other side is told (#143)
+  def handle_event("call_screen", %{"on" => on?}, socket) when is_boolean(on?) do
+    if my_active_call?(socket), do: Calls.screen_share(socket.assigns.call, :consultant, on?)
+    {:noreply, socket}
+  end
+
   def handle_event("call_" <> _event, _params, socket), do: {:noreply, socket}
 
   def handle_event("close", _params, socket) do
