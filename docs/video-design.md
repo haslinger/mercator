@@ -123,7 +123,7 @@ RTCPeerConnection          ◀─UDP─▶ PeerConnection per      ◀─UDP─�
   iptables rules for published ports, and they take effect before ufw's, so a published
   range is open even without a ufw rule. To make ufw decide, its rules have to be tied
   into Docker's `DOCKER-USER` chain (the ufw-docker approach); then
-  `ufw route allow proto udp from any to 172.30.0.10 port 50000:50049` is the one rule
+  `ufw route allow proto udp from any to 172.30.0.10 port 50000:50049 comment mercator-calling` is the one rule
   needed. The demo server already has the [ufw-docker](https://github.com/chaifeng/ufw-docker)
   rules, so step 5 is tested with that setup. The operating guide describes both the
   plain and the tightened setup.

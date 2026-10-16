@@ -11,7 +11,7 @@ For this to work from outside, three things are needed besides HTTPS:
 3. **The firewall:** Docker publishes the ports with its own rules, which take effect before ufw's; without further measures the range is open. With the [ufw-docker](https://github.com/chaifeng/ufw-docker) rules ufw decides, and one rule is enough, limited to the app container with its fixed address (`APP_IP`, default `172.30.0.10`):
 
 ```sh
-sudo ufw route allow proto udp from any to 172.30.0.10 port 50000:50049
+sudo ufw route allow proto udp from any to 172.30.0.10 port 50000:50049 comment mercator-calling
 ```
 
 After changing `.env` or `docker-compose.yml`: `docker compose up -d`.

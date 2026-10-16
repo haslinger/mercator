@@ -186,7 +186,7 @@ to the app over UDP, so three things are needed besides HTTPS:
    address on its own Compose network (`APP_IP`, default `172.30.0.10`, in
    `MERCATOR_SUBNET`, default `172.30.0.0/24`; change both if that collides):
    ```sh
-   sudo ufw route allow proto udp from any to 172.30.0.10 port 50000:50049
+   sudo ufw route allow proto udp from any to 172.30.0.10 port 50000:50049 comment mercator-calling
    ```
 
 The first `docker compose up -d` after this version moves both containers to
