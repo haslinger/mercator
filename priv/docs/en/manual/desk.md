@@ -16,12 +16,12 @@ If nobody is available, the customer sees a two-minute countdown and can then as
 
 ## Notifications on your phone
 
-With **Notify this device** at the top of the desk, the shop tells you about new conversations even when the desk is closed: on your phone or computer, even with the browser closed. You get a notification
+With **Notify this device** at the top of the desk, the shop tells you about new conversations even when the desk is closed: on your phone even with Chrome closed, on your computer as long as the browser is running (also in the background). You get a notification
 
 - when someone starts a **new conversation** (everyone with notifications on, at the same time), and
 - when the customer writes in **your conversation**, unless you have it open at the desk.
 
-The notification shows the name and the start of the message and usually arrives after about **three seconds** (measured on the demo with an Android phone). Tapping it opens the conversation. To switch it on:
+The notification shows the name and the start of the message and usually arrives after about **three seconds** (measured on the demo with an Android phone). On Android it also arrives when an app like Hibernator has stopped Chrome (tested). Tapping it opens the conversation. To switch it on:
 
 1. Open the shop on the device (on a phone in **Chrome**), sign in and go to the desk.
 2. Tap **Notify this device** and allow notifications. The button turns green: **Notifications on**.
