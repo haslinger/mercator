@@ -4,14 +4,20 @@ defmodule MercatorWeb.Admin.DeskLive do
   whether they are available (Phoenix Presence), see waiting and open
   conversations, take one and chat with the customer. Available consultants
   are notified of new conversations with a tone and a browser notification.
+
+  Calls (phase 10): in a conversation they have taken, consultants call the
+  customer (audio or video); a customer's request for a call is notified
+  like a new conversation. The call belongs to the selected conversation:
+  switching to another one hangs up.
   """
   use MercatorWeb, :live_view
 
   import MercatorWeb.ConsultingComponents, only: [attachment: 1, stars: 1]
   import MercatorWeb.OfferComponents, only: [state_badge: 1]
+  import MercatorWeb.CallComponents, only: [call_media: 1]
 
   alias Mercator.{Catalog, Content}
-  alias Mercator.Consulting.{Desk, Offer, Offers}
+  alias Mercator.Consulting.{Call, Calls, Desk, Offer, Offers}
   alias Mercator.Content.FileTypes
   alias Mercator.Sales.Baskets
   alias MercatorWeb.{Format, Presence}
@@ -45,6 +51,7 @@ defmodule MercatorWeb.Admin.DeskLive do
        page_title: gettext("Sales desk"),
        available?: false,
        selected: nil,
+       call: nil,
        context: nil,
        share: nil,
        share_query: "",
@@ -82,11 +89,15 @@ defmodule MercatorWeb.Admin.DeskLive do
     if previous = socket.assigns.selected,
       do: Phoenix.PubSub.unsubscribe(Mercator.PubSub, "conversation:#{previous.id}")
 
+    if socket.assigns.call && socket.assigns.call.conversation_id != conversation.id,
+      do: hang_up(socket)
+
     if connected?(socket),
       do: Phoenix.PubSub.subscribe(Mercator.PubSub, "conversation:#{conversation.id}")
 
     socket
     |> assign(:selected, Map.delete(conversation, :messages))
+    |> assign(:call, Calls.open_call(conversation.id))
     |> assign(:context, Desk.context(conversation, socket.assigns.current_user))
     |> assign(:page_title, conversation.subject || gettext("Sales desk"))
     |> stream(:messages, conversation.messages, reset: true)
@@ -96,8 +107,20 @@ defmodule MercatorWeb.Admin.DeskLive do
     if previous = socket.assigns.selected,
       do: Phoenix.PubSub.unsubscribe(Mercator.PubSub, "conversation:#{previous.id}")
 
-    socket |> assign(selected: nil, context: nil) |> stream(:messages, [], reset: true)
+    if socket.assigns.call, do: hang_up(socket)
+
+    socket |> assign(selected: nil, call: nil, context: nil) |> stream(:messages, [], reset: true)
   end
+
+  # the consultant's own call ends when they leave its conversation
+  defp hang_up(%{assigns: %{call: %Call{} = call, current_user: user}}) do
+    if call.consultant_id == user.id, do: Desk.hang_up(call, user)
+  end
+
+  defp my_active_call?(%{assigns: %{call: %Call{state: :active} = call, current_user: user}}),
+    do: call.consultant_id == user.id
+
+  defp my_active_call?(_socket), do: false
 
   defp load_lists(socket) do
     actor = socket.assigns.current_user
@@ -143,6 +166,65 @@ defmodule MercatorWeb.Admin.DeskLive do
         {:noreply, put_flash(socket, :error, gettext("This change is not possible."))}
     end
   end
+
+  # --- calls (phase 10) ---
+
+  def handle_event("call", params, socket) do
+    case Desk.call(
+           socket.assigns.selected,
+           socket.assigns.current_user,
+           params["video"] == "true"
+         ) do
+      {:ok, call} ->
+        {:noreply, assign(socket, :call, call)}
+
+      {:error, _reason} ->
+        {:noreply, put_flash(socket, :error, gettext("The call could not be started."))}
+    end
+  end
+
+  def handle_event("hang_up_call", _params, %{assigns: %{call: %Call{} = call}} = socket) do
+    Desk.hang_up(call, socket.assigns.current_user)
+    {:noreply, socket}
+  end
+
+  # the call area has microphone (and camera): join the media
+  def handle_event("call_media_ready", _params, socket) do
+    if my_active_call?(socket),
+      do: Calls.join(socket.assigns.selected.id, :consultant, self())
+
+    {:noreply, socket}
+  end
+
+  def handle_event("call_signal", params, socket) do
+    if my_active_call?(socket),
+      do:
+        Calls.signal(
+          socket.assigns.selected.id,
+          :consultant,
+          Map.take(params, ~w(type sdp candidate))
+        )
+
+    {:noreply, socket}
+  end
+
+  def handle_event("call_media_error", _params, %{assigns: %{call: %Call{} = call}} = socket) do
+    Calls.finish(call, :failed)
+
+    {:noreply,
+     put_flash(
+       socket,
+       :error,
+       gettext("The call needs your microphone. Please allow access and try again.")
+     )}
+  end
+
+  def handle_event("call_video", _params, %{assigns: %{call: %Call{} = call}} = socket) do
+    Ash.update(call, %{video: true}, action: :note_media, authorize?: false)
+    {:noreply, socket}
+  end
+
+  def handle_event("call_" <> _event, _params, socket), do: {:noreply, socket}
 
   def handle_event("close", _params, socket) do
     Desk.close(socket.assigns.selected, socket.assigns.current_user)
@@ -336,9 +418,30 @@ defmodule MercatorWeb.Admin.DeskLive do
 
   def handle_info({:visit, _path}, socket), do: {:noreply, socket}
 
-  # calls (phase 10): shown from step 3 on
+  def handle_info({:call, %Call{} = call}, %{assigns: %{selected: %{id: id}}} = socket)
+      when call.conversation_id == id,
+      do: {:noreply, assign(socket, :call, if(call.state == :ended, do: nil, else: call))}
+
   def handle_info({:call, _call}, socket), do: {:noreply, socket}
-  def handle_info({:call_requested, _conversation_id}, socket), do: {:noreply, socket}
+
+  # signaling from the media room to the call area's hook
+  def handle_info({:call_signal, _conversation_id, message}, socket),
+    do: {:noreply, push_event(socket, "call:signal", message)}
+
+  # a customer of one of my conversations asks for a call (#141)
+  def handle_info({:call_requested, conversation_id}, socket) do
+    case Enum.find(socket.assigns.mine, &(&1.id == conversation_id)) do
+      nil ->
+        {:noreply, socket}
+
+      conversation ->
+        {:noreply,
+         push_event(socket, "desk:notify", %{
+           title: gettext("Call requested"),
+           body: Desk.display_name(conversation.customer)
+         })}
+    end
+  end
 
   def handle_info({:basket_changed, key}, %{assigns: %{selected: %{} = selected}} = socket) do
     if Baskets.owner_key(Desk.basket_owner(selected)) == key,
@@ -488,6 +591,33 @@ defmodule MercatorWeb.Admin.DeskLive do
               {gettext("Ended")}
               <span :if={@selected.closed_at}>{Format.datetime(@selected.closed_at)}</span>
             </span>
+            <%= if @selected.state == :active and @selected.consultant_id == @current_user.id and !@call do %>
+              <button
+                type="button"
+                phx-click="call"
+                phx-value-video="false"
+                class="btn btn-sm"
+                id="call-audio"
+              >
+                <.icon name="hero-phone" class="size-4" /> {pgettext("call", "Call")}
+              </button>
+              <button
+                type="button"
+                phx-click="call"
+                phx-value-video="true"
+                class="btn btn-sm"
+                id="call-video"
+              >
+                <.icon name="hero-video-camera" class="size-4" /> {gettext("Video call")}
+              </button>
+            <% end %>
+            <span
+              :if={@call && @call.consultant_id != @current_user.id}
+              class="badge badge-success"
+              id="conversation-in-call"
+            >
+              <.icon name="hero-phone" class="size-3" /> {gettext("In a call")}
+            </span>
             <button
               :if={
                 @selected.state == :waiting or
@@ -520,6 +650,42 @@ defmodule MercatorWeb.Admin.DeskLive do
               <.icon name="hero-exclamation-triangle" class="size-4" />
             </.link>
           </header>
+
+          <div
+            :if={@call && @call.consultant_id == @current_user.id}
+            class="space-y-2 border-b border-base-200 p-4"
+            id="desk-call"
+          >
+            <div :if={@call.state == :ringing} class="flex items-center gap-3" id="desk-call-ringing">
+              <span class="loading loading-dots loading-sm text-success"></span>
+              <p class="flex-1 text-sm">
+                {gettext("Calling %{name} …", name: Desk.display_name(@selected.customer))}
+              </p>
+              <button
+                type="button"
+                phx-click="hang_up_call"
+                class="btn btn-ghost btn-sm"
+                id="desk-cancel-call"
+              >
+                {gettext("Cancel")}
+              </button>
+            </div>
+            <div :if={@call.state == :active} class="mx-auto max-w-xl space-y-2" id="desk-call-active">
+              <.call_media
+                id="desk-call-media"
+                video={@call.video}
+                peer={Desk.display_name(@selected.customer)}
+              />
+              <button
+                type="button"
+                phx-click="hang_up_call"
+                class="btn btn-error btn-sm w-full"
+                id="desk-hang-up"
+              >
+                <.icon name="hero-phone-x-mark" class="size-4" /> {gettext("Hang up")}
+              </button>
+            </div>
+          </div>
 
           <div class="flex-1 overflow-y-auto p-4" id="desk-scroll" phx-hook=".DeskScroll">
             <div id="desk-messages" phx-update="stream">

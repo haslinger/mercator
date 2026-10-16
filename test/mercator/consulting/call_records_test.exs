@@ -7,7 +7,7 @@ defmodule Mercator.Consulting.CallRecordsTest do
   import Mercator.AccountsFixtures
 
   alias Mercator.Consulting.{Call, Calls, Conversations, Desk}
-  alias Mercator.Consulting.Workers.ExpireCall
+  alias Mercator.Consulting.Workers.WatchCall
 
   setup do
     owner = {:session, "token-#{System.unique_integer([:positive])}"}
@@ -28,7 +28,7 @@ defmodule Mercator.Consulting.CallRecordsTest do
     assert %Call{state: :ringing, video: true} = call
     assert call.consultant_id == ctx.consultant.id
     assert_receive {:call, %Call{state: :ringing}}
-    assert_enqueued worker: ExpireCall, args: %{call_id: call.id}
+    assert_enqueued worker: WatchCall, args: %{call_id: call.id}
     assert Calls.open_call(ctx.conversation.id).id == call.id
 
     {:ok, call} = Conversations.accept_call(ctx.owner, call.id)
@@ -58,16 +58,28 @@ defmodule Mercator.Consulting.CallRecordsTest do
     assert {:error, :ended} = Desk.hang_up(call, ctx.consultant)
   end
 
-  test "a call nobody answers ends as missed; an answered one keeps running", ctx do
+  test "a call nobody answers ends as missed; an answered one is watched", ctx do
     {:ok, call} = Desk.call(ctx.conversation, ctx.consultant)
-    assert :ok = perform_job(ExpireCall, %{call_id: call.id})
+    assert :ok = perform_job(WatchCall, %{call_id: call.id})
     assert %Call{state: :ended, end_reason: :missed} = Ash.get!(Call, call.id, authorize?: false)
     assert Calls.summary(%Call{end_reason: :missed}) in system_messages(ctx.owner)
 
     {:ok, call} = Desk.call(ctx.conversation, ctx.consultant)
     {:ok, _} = Conversations.accept_call(ctx.owner, call.id)
-    assert :ok = perform_job(ExpireCall, %{call_id: call.id})
+    # just answered: time to connect, look again later
+    assert {:snooze, 60} = perform_job(WatchCall, %{call_id: call.id})
     assert %Call{state: :active} = Ash.get!(Call, call.id, authorize?: false)
+
+    # answered a while ago, but nobody is in the media room any more
+    Mercator.Repo.query!(
+      "UPDATE conversation_calls SET answered_at = answered_at - interval '2 minutes' WHERE id = $1",
+      [Ecto.UUID.dump!(call.id)]
+    )
+
+    assert :ok = perform_job(WatchCall, %{call_id: call.id})
+
+    assert %Call{state: :ended, end_reason: :completed} =
+             Ash.get!(Call, call.id, authorize?: false)
   end
 
   test "a call ends once, even if two hang up at the same moment", ctx do

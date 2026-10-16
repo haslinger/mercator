@@ -179,11 +179,20 @@ RTCPeerConnection          ◀─UDP─▶ PeerConnection per      ◀─UDP─�
    end it once). The consultant calls and hangs up via `Desk.call/3` and
    `Desk.hang_up/2`, the customer answers, declines, hangs up and asks for a call via
    `Conversations`; `Calls.finish/2` ends the media and writes "Videoanruf,
-   14:05–14:20", "Verpasster Anruf" etc. into the chat; `ExpireCall` ends unanswered
+   14:05–14:20", "Verpasster Anruf" etc. into the chat; `WatchCall` ends unanswered
    calls after `:call_ring_seconds` (45). The room now stops its peer connections
    (they were only closed before) and links them.
-3. Browser side: the "Call" hook (getUserMedia, RTCPeerConnection, perfect
-   negotiation) and the call UI in the chat panel and the desk; audio first, then video.
+3. ✅ Browser side: the "Call" hook (getUserMedia, RTCPeerConnection) and the call UI
+   in the chat panel and the desk; audio and camera. *Done 2026-10-16 (code and
+   LiveView tests; by hand: pending):* `assets/js/hooks/call.js` (answers the room's
+   offer once, fills the fixed channels, mute and camera buttons, warns before leaving
+   the page), `MercatorWeb.CallComponents.call_media/1`; the customer answers or
+   declines in the chat panel (which opens when a call rings) and can ask for a call;
+   the consultant calls (audio or video) from the conversation's header. The call
+   belongs to the selected conversation on the desk: switching to another one hangs
+   up. A reload rejoins the call (the room replaces the connection). `WatchCall`
+   (formerly `ExpireCall`) also ends active calls whose media room has been empty
+   for more than 30 seconds after the answer.
 4. Screen sharing, device selection, speaking indicator, full-screen view.
 5. Deployment: UDP range in Docker, STUN/public address, operating guide; tested on the
    demo server.

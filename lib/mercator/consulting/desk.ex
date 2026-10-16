@@ -11,7 +11,7 @@ defmodule Mercator.Consulting.Desk do
   require Ash.Query
 
   alias Mercator.Consulting.{Call, Calls, Conversation, Conversations, Offers}
-  alias Mercator.Consulting.Workers.{ExpireCall, SendReplyNotice}
+  alias Mercator.Consulting.Workers.{SendReplyNotice, WatchCall}
   alias Mercator.Sales.{BasketPricing, Baskets, Order}
 
   @loads [:customer, :consultant, :product]
@@ -125,7 +125,7 @@ defmodule Mercator.Consulting.Desk do
              action: :start,
              actor: actor
            ) do
-      ExpireCall.enqueue(call.id)
+      WatchCall.enqueue(call.id)
       Calls.broadcast(call)
       {:ok, call}
     end

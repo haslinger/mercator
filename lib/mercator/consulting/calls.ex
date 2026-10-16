@@ -12,7 +12,7 @@ defmodule Mercator.Consulting.Calls do
 
   Changes are broadcast on `"conversation:<id>"` as `{:call, call}`, and a
   customer's request for a call (#141) as `{:call_requested, conversation_id}`
-  on `"conversation:<id>"` and `"desk"`.
+  on `"desk"`.
 
   Configuration (`config :mercator, Mercator.Consulting.Calls`, set from the
   environment in `config/runtime.exs`):

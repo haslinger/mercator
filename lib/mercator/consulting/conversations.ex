@@ -192,7 +192,6 @@ defmodule Mercator.Consulting.Conversations do
              sender_kind: :system,
              body: gettext("Call requested")
            }) do
-      broadcast("conversation:#{conversation.id}", {:call_requested, conversation.id})
       broadcast("desk", {:call_requested, conversation.id})
       :ok
     else

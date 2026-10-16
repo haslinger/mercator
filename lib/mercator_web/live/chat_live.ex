@@ -8,12 +8,18 @@ defmodule MercatorWeb.ChatLive do
   "Beraten lassen" button on product pages dispatches the browser event
   `mercator:open-chat` with a subject and product, which opens the panel.
   A link with `?chat=open` (from the reply email, #97) opens it on load.
+
+  Calls (phase 10): the consultant's call rings in the panel; once accepted,
+  the call area (`MercatorWeb.CallComponents`) joins the media room as the
+  customer. Since this LiveView survives live navigation, the call goes on
+  while the customer browses the shop.
   """
   use MercatorWeb, :live_view
 
   import MercatorWeb.ConsultingComponents, only: [attachment: 1]
+  import MercatorWeb.CallComponents, only: [call_media: 1]
 
-  alias Mercator.Consulting.Conversations
+  alias Mercator.Consulting.{Call, Calls, Conversations}
 
   on_mount {MercatorWeb.Locale, :default}
   on_mount {AshAuthentication.Phoenix.LiveSession, :default}
@@ -34,13 +40,14 @@ defmodule MercatorWeb.ChatLive do
     {:ok,
      socket
      |> assign(open?: session["open"] == true, unread: 0, context: %{}, form: new_form(), sent: 0)
-     |> assign(rating_for: nil, rated?: false)
+     |> assign(rating_for: nil, rated?: false, call_error: nil)
      |> assign_conversation(conversation), layout: false}
   end
 
   defp assign_conversation(socket, nil) do
     socket
     |> assign(conversation: nil, callback_offered?: false, callback_error: nil)
+    |> assign(call: nil, call_requested?: false)
     |> stream(:messages, [], reset: true)
   end
 
@@ -49,6 +56,7 @@ defmodule MercatorWeb.ChatLive do
     |> assign(:conversation, Map.delete(conversation, :messages))
     |> assign(:callback_offered?, waited_long_enough?(conversation))
     |> assign(:callback_error, nil)
+    |> assign(call: Calls.open_call(conversation.id), call_requested?: false)
     |> stream(:messages, conversation.messages, reset: true)
   end
 
@@ -61,6 +69,12 @@ defmodule MercatorWeb.ChatLive do
   defp waited_long_enough?(_conversation), do: false
 
   defp new_form, do: to_form(%{"body" => ""}, as: :chat)
+
+  defp active_call?(%{assigns: %{call: %Call{state: :active}, conversation: %{}}}), do: true
+  defp active_call?(_socket), do: false
+
+  defp consultant_name(%{consultant: %{name: name}}) when is_binary(name) and name != "", do: name
+  defp consultant_name(_conversation), do: gettext("Your consultant")
 
   # receive the conversation's messages and appear online on the sales desk
   defp follow(conversation) do
@@ -167,6 +181,66 @@ defmodule MercatorWeb.ChatLive do
 
   def handle_event("rate", _params, socket), do: {:noreply, socket}
 
+  # --- calls (phase 10) ---
+
+  def handle_event("request_call", _params, socket) do
+    case Conversations.request_call(socket.assigns.basket_owner, socket.assigns.conversation.id) do
+      :ok -> {:noreply, assign(socket, :call_requested?, true)}
+      {:error, _reason} -> {:noreply, socket}
+    end
+  end
+
+  def handle_event("accept_call", _params, %{assigns: %{call: %Call{} = call}} = socket) do
+    case Conversations.accept_call(socket.assigns.basket_owner, call.id) do
+      {:ok, call} -> {:noreply, assign(socket, call: call, call_error: nil)}
+      {:error, _reason} -> {:noreply, socket}
+    end
+  end
+
+  def handle_event("hang_up_call", _params, %{assigns: %{call: %Call{} = call}} = socket) do
+    Conversations.hang_up_call(socket.assigns.basket_owner, call.id)
+    {:noreply, socket}
+  end
+
+  # the call area has microphone (and camera): join the media
+  def handle_event("call_media_ready", _params, socket) do
+    if active_call?(socket),
+      do: Calls.join(socket.assigns.conversation.id, :customer, self())
+
+    {:noreply, socket}
+  end
+
+  def handle_event("call_signal", params, socket) do
+    if active_call?(socket),
+      do:
+        Calls.signal(
+          socket.assigns.conversation.id,
+          :customer,
+          Map.take(params, ~w(type sdp candidate))
+        )
+
+    {:noreply, socket}
+  end
+
+  # no microphone, or the permission was refused
+  def handle_event("call_media_error", _params, %{assigns: %{call: %Call{} = call}} = socket) do
+    Calls.finish(call, :failed)
+
+    {:noreply,
+     assign(
+       socket,
+       :call_error,
+       gettext("The call needs your microphone. Please allow access and try again.")
+     )}
+  end
+
+  def handle_event("call_video", _params, %{assigns: %{call: %Call{} = call}} = socket) do
+    Ash.update(call, %{video: true}, action: :note_media, authorize?: false)
+    {:noreply, socket}
+  end
+
+  def handle_event("call_" <> _event, _params, socket), do: {:noreply, socket}
+
   def handle_event("skip_rating", _params, socket),
     do: {:noreply, assign(socket, rating_for: nil, open?: false)}
 
@@ -178,9 +252,18 @@ defmodule MercatorWeb.ChatLive do
 
   def handle_info({:visit, _path}, socket), do: {:noreply, socket}
 
-  # calls (phase 10): shown from step 3 on
-  def handle_info({:call, _call}, socket), do: {:noreply, socket}
-  def handle_info({:call_requested, _conversation_id}, socket), do: {:noreply, socket}
+  def handle_info({:call, %Call{state: :ended}}, socket),
+    do: {:noreply, assign(socket, call: nil, call_requested?: false)}
+
+  # a ringing call opens the panel
+  def handle_info({:call, %Call{state: :ringing} = call}, socket),
+    do: {:noreply, assign(socket, call: call, call_error: nil, open?: true, unread: 0)}
+
+  def handle_info({:call, call}, socket), do: {:noreply, assign(socket, :call, call)}
+
+  # signaling from the media room to the call area's hook
+  def handle_info({:call_signal, _conversation_id, message}, socket),
+    do: {:noreply, push_event(socket, "call:signal", message)}
 
   def handle_info({:conversation, %{state: :closed} = conversation}, socket) do
     {:noreply, ended(socket, conversation)}
@@ -214,6 +297,20 @@ defmodule MercatorWeb.ChatLive do
             <p class="text-xs leading-snug opacity-80" id="chat-status">{status(@conversation)}</p>
           </div>
           <button
+            :if={@conversation && @conversation.state == :active && !@call}
+            type="button"
+            phx-click="request_call"
+            disabled={@call_requested?}
+            class="btn btn-ghost btn-xs text-primary-content disabled:text-primary-content/60"
+            title={
+              if @call_requested?, do: gettext("Call requested"), else: gettext("Ask for a call")
+            }
+            aria-label={gettext("Ask for a call")}
+            id="chat-request-call"
+          >
+            <.icon name="hero-phone" class="size-4" />
+          </button>
+          <button
             :if={@conversation}
             type="button"
             phx-click="end"
@@ -232,6 +329,13 @@ defmodule MercatorWeb.ChatLive do
             <.icon name="hero-x-mark" class="size-5" />
           </button>
         </header>
+
+        <.call_area
+          :if={@call || @call_error}
+          call={@call}
+          error={@call_error}
+          name={consultant_name(@conversation)}
+        />
 
         <div class="flex-1 space-y-2 overflow-y-auto p-3" id="chat-scroll" phx-hook=".ScrollDown">
           <.rating_form :if={@rating_for} />
@@ -376,6 +480,63 @@ defmodule MercatorWeb.ChatLive do
         updated() { this.el.scrollTop = this.el.scrollHeight }
       }
     </script>
+    """
+  end
+
+  attr :call, :map, default: nil
+  attr :error, :string, default: nil
+  attr :name, :string, required: true
+
+  # the consultant calls: ringing, then the call itself (phase 10)
+  defp call_area(assigns) do
+    ~H"""
+    <div class="space-y-2 border-b border-base-200 p-3" id="chat-call">
+      <p :if={@error} class="alert alert-warning py-2 text-sm" id="chat-call-error">
+        <.icon name="hero-microphone" class="size-5" /> {@error}
+      </p>
+      <div
+        :if={@call && @call.state == :ringing}
+        class="flex items-center gap-3"
+        id="chat-call-ringing"
+      >
+        <span class="relative flex size-10 items-center justify-center rounded-full bg-success text-success-content">
+          <span class="absolute inline-flex size-full animate-ping rounded-full bg-success opacity-50"></span>
+          <.icon
+            name={if @call.video, do: "hero-video-camera", else: "hero-phone"}
+            class="relative size-5"
+          />
+        </span>
+        <p class="flex-1 text-sm font-semibold">{gettext("%{name} is calling", name: @name)}</p>
+        <button
+          type="button"
+          phx-click="accept_call"
+          class="btn btn-success btn-sm"
+          id="chat-accept-call"
+        >
+          {pgettext("call", "Answer")}
+        </button>
+        <button
+          type="button"
+          phx-click="hang_up_call"
+          class="btn btn-ghost btn-sm"
+          id="chat-decline-call"
+        >
+          {pgettext("call", "Decline")}
+        </button>
+      </div>
+      <div :if={@call && @call.state == :active} class="space-y-2" id="chat-call-active">
+        <%!-- the customer starts with audio only (#142) --%>
+        <.call_media id="chat-call-media" peer={@name} />
+        <button
+          type="button"
+          phx-click="hang_up_call"
+          class="btn btn-error btn-sm w-full"
+          id="chat-hang-up"
+        >
+          <.icon name="hero-phone-x-mark" class="size-4" /> {gettext("Hang up")}
+        </button>
+      </div>
+    </div>
     """
   end
 
