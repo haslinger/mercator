@@ -8,7 +8,7 @@ Kundinnen und Kunden starten eine Beratung über den Knopf **Beratung** unten re
 
 ## Verfügbar sein
 
-Mit dem Schalter **Verfügbar / Abwesend** zeigen Sie, ob Sie Gespräche annehmen. Solange Sie verfügbar sind und der Beratungsplatz offen ist, hören Sie bei neuen Gesprächen einen Ton und erhalten eine Browser-Benachrichtigung. Die Wahl bleibt beim Neuladen erhalten; ein neuer Tab beginnt mit „Abwesend“. Nach der Anmeldung öffnet sich der Beratungsplatz, und Sie sind gleich verfügbar.
+Mit dem Schalter **Verfügbar / Abwesend** zeigen Sie, ob Sie Gespräche annehmen. Solange Sie verfügbar sind und der Beratungsplatz offen ist, hören Sie bei neuen Gesprächen einen Ton und erhalten eine Browser-Benachrichtigung. Die Wahl bleibt beim Neuladen erhalten; ein neuer Tab beginnt mit „Abwesend“. Nach der Anmeldung öffnet sich der Beratungsplatz, und Sie sind gleich verfügbar. Auf dem eigenen Telefon oder in der installierten App melden Sie sich mit **Angemeldet bleiben** an; dann bleiben Sie 30 Tage angemeldet, auch wenn das Telefon die App schließt.
 
 Wartet jemand, erscheint oben ein **blinkendes rotes Licht** mit der Zahl der Wartenden und der Wartezeit; **Öffnen** führt zum ersten Gespräch. Die Zahl steht auch im Titel des Browser-Tabs, z. B. „(2) Beratungsplatz“, damit Sie es auch in einem anderen Tab sehen.
 

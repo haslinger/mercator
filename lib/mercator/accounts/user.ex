@@ -133,14 +133,25 @@ defmodule Mercator.Accounts.User do
         sensitive? true
       end
 
+      argument :remember_me, :boolean do
+        description "Whether to stay signed in on this device (a remember me cookie)."
+        allow_nil? true
+      end
+
       prepare {Mercator.Accounts.Preparations.RateLimit, bucket: :sign_in}
 
       # validates the provided email and password and generates a token
       prepare AshAuthentication.Strategy.Password.SignInPreparation
+      prepare AshAuthentication.Strategy.RememberMe.MaybeGenerateTokenPreparation
 
       metadata :token, :string do
         description "A JWT that can be used to authenticate the user."
         allow_nil? false
+      end
+
+      metadata :remember_me, :map do
+        description "The remember me token and its cookie, when asked for."
+        allow_nil? true
       end
     end
 
@@ -162,12 +173,23 @@ defmodule Mercator.Accounts.User do
         sensitive? true
       end
 
+      argument :remember_me, :boolean do
+        description "Whether to stay signed in on this device (a remember me cookie)."
+        allow_nil? true
+      end
+
       # validates the provided sign in token and generates a token
       prepare AshAuthentication.Strategy.Password.SignInWithTokenPreparation
+      prepare AshAuthentication.Strategy.RememberMe.MaybeGenerateTokenPreparation
 
       metadata :token, :string do
         description "A JWT that can be used to authenticate the user."
         allow_nil? false
+      end
+
+      metadata :remember_me, :map do
+        description "The remember me token and its cookie, when asked for."
+        allow_nil? true
       end
     end
 
@@ -289,6 +311,11 @@ defmodule Mercator.Accounts.User do
 
       metadata :token, :string do
         allow_nil? false
+      end
+
+      metadata :remember_me, :map do
+        description "The remember me token and its cookie, when asked for."
+        allow_nil? true
       end
     end
 

@@ -8,7 +8,7 @@ Customers start a conversation with the **Advice** button at the bottom right of
 
 ## Being available
 
-The **Available / Away** switch shows whether you take conversations. While you are available and the desk is open, new conversations play a tone and show a browser notification. Your choice survives a reload; a new tab starts as "Away". After signing in, the desk opens and you are available at once.
+The **Available / Away** switch shows whether you take conversations. While you are available and the desk is open, new conversations play a tone and show a browser notification. Your choice survives a reload; a new tab starts as "Away". After signing in, the desk opens and you are available at once. On your own phone or in the installed app, sign in with **Remember me**; you then stay signed in for 30 days, even when the phone closes the app.
 
 While someone is waiting, a **blinking red light** at the top shows how many are waiting and for how long; **Open** goes to the first conversation. The number is also in the browser tab's title, e.g. "(2) Sales desk", so you notice it from another tab.
 

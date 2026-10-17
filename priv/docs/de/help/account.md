@@ -11,6 +11,8 @@ Anmelden können Sie sich auf zwei Arten:
 - mit E-Mail-Adresse und **Passwort**,
 - ohne Passwort: **Anmeldelink per E-Mail senden** schickt Ihnen einen Link, der Sie anmeldet. Gibt es noch kein Konto zu der Adresse, entsteht es dabei; danach fragen wir nach Ihrem Namen.
 
+Mit **Angemeldet bleiben** bleiben Sie auf diesem Gerät 30 Tage lang angemeldet, auch wenn Sie den Browser oder die installierte App schließen. Auf gemeinsam genutzten Geräten lassen Sie das Häkchen besser weg. **Abmelden** beendet es.
+
 **Passwort vergessen?** schickt einen Link, mit dem Sie ein neues Passwort setzen. Nach mehreren falschen Versuchen ist die Anmeldung für eine Viertelstunde gesperrt; das schützt Ihr Konto.
 
 ## Mein Konto

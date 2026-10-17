@@ -15,6 +15,8 @@ defmodule MercatorWeb.Router do
     plug :put_root_layout, html: {MercatorWeb.Layouts, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    # "Angemeldet bleiben": a new session from the remember me cookie
+    plug :sign_in_with_remember_me
     plug :load_from_session
     plug MercatorWeb.Locale
     plug MercatorWeb.Navigation
