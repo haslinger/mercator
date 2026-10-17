@@ -31,6 +31,27 @@ defmodule Mercator.Seeds.PagesTest do
     assert has_element?(view, "#page form [name='form[message]']")
   end
 
+  test "imprint and privacy policy name the operator; the cookie notice links the policy",
+       %{conn: conn} do
+    Pages.run()
+
+    {:ok, view, _html} = live(conn, ~p"/pages/impressum")
+    assert has_element?(view, "#page", "Informatom EDV-Dienstleistungen e.U.")
+    assert has_element?(view, "#page", "FN 357693 w")
+    assert has_element?(view, "#page", "erfundenes Unternehmen")
+
+    {:ok, view, _html} = live(conn, ~p"/pages/datenschutz")
+    assert has_element?(view, "#page table td code", "_mercator_key")
+    assert has_element?(view, "#page", "Datenschutzbehörde")
+
+    # only necessary cookies: a notice, no consent; the hook shows it
+    assert has_element?(view, "#cookie-notice[phx-hook].hidden")
+    assert has_element?(view, ~s(#cookie-notice-more[href="/pages/datenschutz"]))
+
+    {:ok, view, _html} = live(conn, ~p"/pages/datenschutz?locale=en")
+    assert has_element?(view, "#page", "strictly necessary cookies")
+  end
+
   test "is idempotent and keeps pages changed by editors" do
     Pages.run()
     {:ok, about} = Content.get_page_by_path("ueber-uns", authorize?: false)

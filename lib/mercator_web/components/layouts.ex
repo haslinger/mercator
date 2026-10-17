@@ -178,6 +178,7 @@ defmodule MercatorWeb.Layouts do
             </.link>
           </nav>
         </footer>
+        <.cookie_notice privacy={Enum.find(@nav.footer, &(&1.key == "privacy"))} locale={@locale} />
       </div>
 
       <div :if={@sidebar?} class="drawer-side z-20">
@@ -495,6 +496,58 @@ defmodule MercatorWeb.Layouts do
     Enum.group_by(pages, fn page ->
       if page.parent_id && MapSet.member?(ids, page.parent_id), do: page.parent_id, else: :root
     end)
+  end
+
+  attr :privacy, :any, default: nil, doc: "the privacy policy page, if there is one"
+  attr :locale, :string, default: nil
+
+  # Only strictly necessary cookies, so no consent is needed (§ 165 (3) TKG
+  # 2021): a notice that says so, until it is closed (kept in localStorage,
+  # shown by the hook so it does not flash for those who closed it)
+  defp cookie_notice(assigns) do
+    ~H"""
+    <div
+      id="cookie-notice"
+      phx-hook=".CookieNotice"
+      class="fixed bottom-4 left-4 right-24 z-20 hidden sm:right-auto sm:max-w-md"
+      role="region"
+      aria-label={gettext("Cookies")}
+    >
+      <div class="flex items-start gap-3 rounded-box bg-base-100 p-4 text-sm shadow-lg ring-1 ring-base-300">
+        <.icon name="hero-shield-check" class="mt-0.5 size-5 shrink-0 text-primary" />
+        <p class="flex-1">
+          {gettext(
+            "We only use cookies that the shop needs to work (sign-in, basket, language), no tracking or advertising cookies."
+          )}
+          <.link
+            :if={@privacy}
+            navigate={page_path(@privacy)}
+            class="link link-primary whitespace-nowrap"
+            id="cookie-notice-more"
+          >
+            {gettext("Privacy policy")}
+          </.link>
+        </p>
+        <button type="button" class="btn btn-primary btn-sm" data-close id="cookie-notice-ok">
+          {gettext("OK")}
+        </button>
+      </div>
+    </div>
+    <script :type={Phoenix.LiveView.ColocatedHook} name=".CookieNotice">
+      const KEY = "mercator:cookie-notice"
+      export default {
+        mounted() {
+          let closed = false
+          try { closed = localStorage.getItem(KEY) === "closed" } catch (_e) {}
+          if (!closed) this.js().show(this.el)
+          this.el.querySelector("[data-close]").addEventListener("click", () => {
+            try { localStorage.setItem(KEY, "closed") } catch (_e) {}
+            this.js().hide(this.el)
+          })
+        }
+      }
+    </script>
+    """
   end
 
   @doc "The URL of a CMS page: `/` for the start page, otherwise `/pages/…`."
