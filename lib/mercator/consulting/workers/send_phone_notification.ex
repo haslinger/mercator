@@ -34,7 +34,7 @@ defmodule Mercator.Consulting.Workers.SendPhoneNotification do
         |> deliver(conversation.id, fn ->
           %{
             title: gettext("New conversation"),
-            body: excerpt(Desk.display_name(conversation.customer), first(conversation.messages))
+            body: excerpt(Desk.display_name(conversation.customer), question(conversation))
           }
         end)
 
@@ -107,8 +107,11 @@ defmodule Mercator.Consulting.Workers.SendPhoneNotification do
   defp topic(nil), do: nil
   defp topic(id), do: String.replace(id, "-", "")
 
-  defp first([message | _]), do: message
-  defp first([]), do: nil
+  # the customer's first message, or their wish to talk (#155)
+  defp question(conversation) do
+    Enum.find(conversation.messages, &(&1.sender_kind == :customer)) ||
+      if conversation.call_requested_at, do: %{body: gettext("Would like to talk")}
+  end
 
   defp excerpt(name, message) do
     text =

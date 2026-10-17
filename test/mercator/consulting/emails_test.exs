@@ -101,6 +101,15 @@ defmodule Mercator.Consulting.EmailsTest do
     end)
   end
 
+  test "a new conversation of a customer who would rather talk (#155)", context do
+    {:ok, conversation} = Conversations.start_call({:user, context.customer})
+    assert :ok = perform_job(SendNewConversationNotice, %{conversation_id: conversation.id})
+
+    assert_email_sent(fn email ->
+      assert email.text_body =~ "Der Kunde möchte telefonieren."
+    end)
+  end
+
   describe "offers" do
     setup context do
       [variant] = Ash.load!(product_fixture(), :variants).variants

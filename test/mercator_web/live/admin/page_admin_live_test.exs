@@ -217,6 +217,28 @@ defmodule MercatorWeb.Admin.PageAdminLiveTest do
       |> render_submit()
 
       assert has_element?(view, ~s(#blocks a[href="/pages/kontakt"]), "Kontakt")
+
+      # #154: the ways to get advice; the phone number is on by default
+      view |> element("#add-block-contact_options") |> render_click()
+
+      assert has_element?(
+               view,
+               ~s(#block-form input[type=checkbox][name="block[show_phone]"][checked])
+             )
+
+      view
+      |> form("#block-form", %{
+        "block" => %{
+          "headline" => %{"de" => "So beraten wir Sie"},
+          "message_link" => "/pages/schreiben",
+          "show_phone" => "false"
+        }
+      })
+      |> render_submit()
+
+      assert has_element?(view, "#blocks h2", "So beraten wir Sie")
+      assert has_element?(view, ~s(#blocks [id$=-message] a[href="/pages/schreiben"]))
+      refute has_element?(view, "#blocks [id$=-phone]")
     end
 
     test "columns and FAQ have a list of entries", %{conn: conn, editor: editor} do

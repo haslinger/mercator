@@ -128,9 +128,16 @@ defmodule MercatorWeb.Admin.PageEditLive do
 
     # list blocks start with a few empty entries
     block =
-      if type in ["columns", "faq"],
-        do: Map.put(block, "items", Enum.map(1..3, fn _ -> new_item() end)),
-        else: block
+      case type do
+        list when list in ["columns", "faq"] ->
+          Map.put(block, "items", Enum.map(1..3, fn _ -> new_item() end))
+
+        "contact_options" ->
+          Map.put(block, "show_phone", true)
+
+        _other ->
+          block
+      end
 
     {:noreply, edit_block(socket, block)}
   end
@@ -728,6 +735,22 @@ defmodule MercatorWeb.Admin.PageEditLive do
     """
   end
 
+  defp block_fields(%{type: "contact_options"} = assigns) do
+    ~H"""
+    <.translated_input field={@form[:headline]} label={gettext("Headline")} />
+    <.translated_input field={@form[:text]} label={gettext("Text")} type="markdown" />
+    <.input
+      field={@form[:message_link]}
+      label={gettext("Page with the contact form, e.g. /pages/kontakt (empty: no email card)")}
+    />
+    <.input
+      field={@form[:show_phone]}
+      type="checkbox"
+      label={gettext("Show the shop's phone number")}
+    />
+    """
+  end
+
   defp block_fields(%{type: "columns"} = assigns) do
     ~H"""
     <.list_items
@@ -919,6 +942,7 @@ defmodule MercatorWeb.Admin.PageEditLive do
   defp block_type_label("products"), do: gettext("Products")
   defp block_type_label("categories"), do: gettext("Categories")
   defp block_type_label("call_to_action"), do: gettext("Call to action")
+  defp block_type_label("contact_options"), do: gettext("Ways to get advice")
   defp block_type_label("columns"), do: gettext("Columns")
   defp block_type_label("faq"), do: gettext("FAQ")
   defp block_type_label("shared"), do: gettext("Shared block")

@@ -129,6 +129,7 @@ defmodule Mercator.Consulting.Desk do
            ) do
       WatchCall.enqueue(call.id)
       :telemetry.execute([:mercator, :call, :start], %{count: 1}, %{video: video?})
+      clear_call_request(conversation)
       Calls.broadcast(call)
       {:ok, call}
     else
@@ -138,6 +139,22 @@ defmodule Mercator.Consulting.Desk do
   end
 
   def call(_conversation, _actor, _video?), do: {:error, :not_your_conversation}
+
+  # the consultant calls: the customer's request for a call (#155) is
+  # answered (read again: the desk's copy may be older than the request)
+  defp clear_call_request(%Conversation{id: id}) do
+    case Ash.get!(Conversation, id, authorize?: false) do
+      %Conversation{call_requested_at: nil} ->
+        :ok
+
+      conversation ->
+        conversation =
+          Ash.update!(conversation, %{}, action: :clear_call_request, authorize?: false)
+
+        Conversations.broadcast("conversation:#{id}", {:conversation, conversation})
+        Conversations.broadcast("desk", {:conversation, conversation})
+    end
+  end
 
   @doc "The consultant hangs up: a call that was not answered yet counts as cancelled."
   def hang_up(%Call{} = call, actor) do

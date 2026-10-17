@@ -21,6 +21,7 @@ Alles Geheime und Installationsspezifische steht in der Datei `.env` neben `dock
 | `VAPID_SUBJECT` | optional: Kontakt für die Push-Dienste, z. B. `mailto:shop@example.com` (Standard: `MAIL_FROM_ADDRESS`) |
 | `MERCATOR_MODE` | `demo` für die öffentliche Demo, leer für einen echten Shop (siehe [Demo-Modus](demo.md)) |
 | `DEMO_ADMIN_PASSWORD` | nur Demo: das Passwort der Administration, mindestens 8 Zeichen |
+| `CONSULTING_WAIT_SECONDS` | Beratung: Sekunden, die eine Kundin oder ein Kunde auf eine Beraterin oder einen Berater wartet, bevor der Rückruf angeboten wird (Standard `180`) |
 | `CALL_PUBLIC_HOST` | Videoanrufe: der öffentliche Name (oder die IP), unter dem die Browser die Medien erreichen, meist wie `PHX_HOST`; ohne ihn gehen Anrufe nur im eigenen Netz (siehe [Videoanrufe](calls.md)) |
 | `CALL_PORT_RANGE` | Videoanrufe: die UDP-Ports für die Medien (Standard `50000-50049`), mit denselben Nummern veröffentlicht |
 | `CALL_ICE_SERVERS` | Videoanrufe: optionale STUN-Server, mit Komma getrennt, z. B. `stun:stun.example.org:3478` |

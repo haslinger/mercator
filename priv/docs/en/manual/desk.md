@@ -12,7 +12,7 @@ The **Available / Away** switch shows whether you take conversations. While you 
 
 While someone is waiting, a **blinking red light** at the top shows how many are waiting and for how long; **Open** goes to the first conversation. The number is also in the browser tab's title, e.g. "(2) Sales desk", so you notice it from another tab.
 
-If nobody is available, the customer sees a two-minute countdown and can then ask for an answer by email or a phone callback. These conversations are marked **Callback** or **Reply by email** in the list, and the shop also emails its own address.
+If nobody is available, the customer sees a three-minute countdown and can then ask for an answer by email or a phone callback. These conversations are marked **Callback** or **Reply by email** in the list, and the shop also emails its own address.
 
 ## Notifications on your phone
 
@@ -31,7 +31,7 @@ The notification shows the name and the start of the message and usually arrives
 
 **Shop installed as an app?** If you installed the shop as an app on your Android phone (e.g. "Biber Holz" on the home screen), its notifications belong to that app, no longer to Chrome. A newly installed app may show notifications silently and without a pop-up. Then open Settings → Apps → *the shop app* → Notifications, allow **sound, vibration and pop-up**, and switch notifications off and on again at the desk.
 
-On an iPhone this only works when the shop is added to the home screen (Share → "Add to Home Screen") and opened from there. Delivery is not guaranteed: the tone at the desk and the callback after two minutes stay.
+On an iPhone this only works when the shop is added to the home screen (Share → "Add to Home Screen") and opened from there. Delivery is not guaranteed: the tone at the desk and the callback after three minutes stay.
 
 **Switching off:** tapping the green button **Notifications on** switches them off for this device again; signing out switches them off too. Each device has its own switch: you switch your phone and your computer on and off separately.
 
@@ -47,7 +47,7 @@ If the customer has left the shop, your answer reaches them by email after about
 
 ## Calling
 
-In a conversation you have taken, **Call** (audio only) or **Video call** (with your camera) calls the customer right in the shop; it rings in their chat. If the customer asks for a call, "Call requested" appears in the conversation and you hear a tone. During the call, microphone, camera and screen sharing are **green** while they are on; a muted microphone is **red**.
+In a conversation you have taken, **Call** (audio only) or **Video call** (with your camera) calls the customer right in the shop; it rings in their chat. If the customer asks for a call, "Call requested" appears in the conversation and you hear a tone. Customers can also start a conversation that way, without a message: such conversations are marked **Call** in the list and show "Would like to talk: please call." until you call. During the call, microphone, camera and screen sharing are **green** while they are on; a muted microphone is **red**.
 
 - **The call card** at the bottom right shows the call. It stays while you look at other conversations; **To the conversation** leads back. You are in one call at a time.
 - **During the call:** microphone and camera on and off, **Share screen** (e.g. a plan or the configurator; if the other side shares, your share ends), **Full screen**, and under the sliders icon the choice of microphone and camera. A green ring shows who is speaking.

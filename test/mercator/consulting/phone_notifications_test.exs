@@ -145,6 +145,20 @@ defmodule Mercator.Consulting.PhoneNotificationsTest do
 
       assert_received {:push, _, %{"title" => "New conversation", "body" => "Visitor: Hello"}}
     end
+
+    test "a customer who would rather talk (#155)" do
+      device = device(user_fixture(roles: [:sales]))
+      {:ok, conversation} = Conversations.start_call(visitor())
+
+      stub_push_service([device])
+
+      perform_job(SendPhoneNotification, %{
+        event: "new_conversation",
+        conversation_id: conversation.id
+      })
+
+      assert_received {:push, _, %{"body" => "Gast: Möchte telefonieren"}}
+    end
   end
 
   describe "a customer's message" do

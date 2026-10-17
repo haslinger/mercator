@@ -106,9 +106,10 @@ defmodule Mercator.Consulting.ConsultingEmail do
       [
         "Ein neues Gespräch wartet, aber niemand ist am Beratungsplatz.",
         "Kunde: #{Desk.display_name(conversation.customer)}",
-        "Thema: #{conversation.subject || "–"} (#{conversation.page || "–"})",
-        ""
+        "Thema: #{conversation.subject || "–"} (#{conversation.page || "–"})"
       ] ++
+        if(conversation.call_requested_at, do: ["Der Kunde möchte telefonieren."], else: []) ++
+        [""] ++
         String.split(question, "\n") ++
         ["", url(~p"/admin/desk/#{conversation.id}")]
 

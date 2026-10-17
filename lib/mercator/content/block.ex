@@ -33,6 +33,11 @@ defmodule Mercator.Content.Block do
           type: Mercator.Content.Blocks.CallToAction,
           tag: :type,
           tag_value: "call_to_action"
+        ],
+        contact_options: [
+          type: Mercator.Content.Blocks.ContactOptions,
+          tag: :type,
+          tag_value: "contact_options"
         ]
       ]
     ]

@@ -9,6 +9,12 @@ defmodule MercatorWeb.ChatLive do
   `mercator:open-chat` with a subject and product, which opens the panel.
   A link with `?chat=open` (from the reply email, #97) opens it on load.
 
+  Without a conversation, the panel offers both ways (#157): writing, or
+  talking (`start_call`, #155), which starts a conversation with a call
+  request. The "Kontaktwege" block (#154) opens the panel the same way,
+  with `start: "call"` or `start: "write"` in the event. Whether a
+  consultant is at the desk (#156) shows in the panel and on the button.
+
   Calls (phase 10): the consultant's call rings in the panel; once accepted,
   the call area (`MercatorWeb.CallComponents`) joins the media room as the
   customer. Since this LiveView survives live navigation, the call goes on
@@ -20,6 +26,7 @@ defmodule MercatorWeb.ChatLive do
   import MercatorWeb.CallComponents, only: [call_media: 1]
 
   alias Mercator.Consulting.{Call, Calls, Conversations}
+  alias MercatorWeb.Presence
 
   on_mount {MercatorWeb.Locale, :default}
   on_mount {AshAuthentication.Phoenix.LiveSession, :default}
@@ -36,18 +43,20 @@ defmodule MercatorWeb.ChatLive do
   def mount(_params, session, socket) do
     conversation = Conversations.current(socket.assigns.basket_owner)
     if conversation && connected?(socket), do: follow(conversation)
+    if connected?(socket), do: Phoenix.PubSub.subscribe(Mercator.PubSub, Presence.topic())
 
     {:ok,
      socket
      |> assign(open?: session["open"] == true, unread: 0, context: %{}, form: new_form(), sent: 0)
-     |> assign(rating_for: nil, rated?: false, call_error: nil)
+     |> assign(rating_for: nil, rated?: false, call_error: nil, path: nil)
+     |> assign(:available?, Presence.available_count() > 0)
      |> assign_conversation(conversation), layout: false}
   end
 
   defp assign_conversation(socket, nil) do
     socket
     |> assign(conversation: nil, callback_offered?: false, callback_error: nil)
-    |> assign(call: nil, call_requested?: false)
+    |> assign(call: nil)
     |> stream(:messages, [], reset: true)
   end
 
@@ -56,7 +65,7 @@ defmodule MercatorWeb.ChatLive do
     |> assign(:conversation, Map.delete(conversation, :messages))
     |> assign(:callback_offered?, waited_long_enough?(conversation))
     |> assign(:callback_error, nil)
-    |> assign(call: Calls.open_call(conversation.id), call_requested?: false)
+    |> assign(call: Calls.open_call(conversation.id))
     |> stream(:messages, conversation.messages, reset: true)
   end
 
@@ -67,7 +76,7 @@ defmodule MercatorWeb.ChatLive do
 
   # #95: after the waiting time, or right away when nobody is at the desk
   defp waited_long_enough?(%{state: :waiting} = conversation) do
-    MercatorWeb.Presence.available_count() == 0 or
+    Presence.available_count() == 0 or
       DateTime.diff(DateTime.utc_now(), conversation.inserted_at) >= Conversations.wait_seconds()
   end
 
@@ -84,7 +93,7 @@ defmodule MercatorWeb.ChatLive do
   # receive the conversation's messages and appear online on the sales desk
   defp follow(conversation) do
     Conversations.subscribe(conversation.id)
-    MercatorWeb.Presence.track_customer(self(), conversation.id)
+    Presence.track_customer(self(), conversation.id)
   end
 
   @impl true
@@ -100,8 +109,16 @@ defmodule MercatorWeb.ChatLive do
       page: params["page"]
     }
 
-    {:noreply, assign(socket, open?: true, unread: 0, context: context)}
+    socket = assign(socket, open?: true, unread: 0, context: context)
+
+    case params["start"] do
+      "call" -> start_call(socket)
+      "write" -> {:noreply, push_event(socket, "chat:focus", %{})}
+      _other -> {:noreply, socket}
+    end
   end
+
+  def handle_event("start_call", _params, socket), do: start_call(socket)
 
   def handle_event("send", %{"chat" => %{"body" => body}} = params, socket) do
     body = String.trim(body)
@@ -133,7 +150,7 @@ defmodule MercatorWeb.ChatLive do
     if conversation = socket.assigns.conversation,
       do: Conversations.visit(socket.assigns.basket_owner, conversation.id, path)
 
-    {:noreply, socket}
+    {:noreply, assign(socket, :path, path)}
   end
 
   # the countdown in the browser has run out
@@ -188,12 +205,7 @@ defmodule MercatorWeb.ChatLive do
 
   # --- calls (phase 10) ---
 
-  def handle_event("request_call", _params, socket) do
-    case Conversations.request_call(socket.assigns.basket_owner, socket.assigns.conversation.id) do
-      :ok -> {:noreply, assign(socket, :call_requested?, true)}
-      {:error, _reason} -> {:noreply, socket}
-    end
-  end
+  def handle_event("request_call", _params, socket), do: start_call(socket)
 
   def handle_event("accept_call", _params, %{assigns: %{call: %Call{} = call}} = socket) do
     case Conversations.accept_call(socket.assigns.basket_owner, call.id) do
@@ -264,7 +276,7 @@ defmodule MercatorWeb.ChatLive do
   def handle_info({:visit, _path}, socket), do: {:noreply, socket}
 
   def handle_info({:call, %Call{state: :ended}}, socket),
-    do: {:noreply, assign(socket, call: nil, call_requested?: false)}
+    do: {:noreply, assign(socket, call: nil)}
 
   # a ringing call opens the panel
   def handle_info({:call, %Call{state: :ringing} = call}, socket),
@@ -292,6 +304,10 @@ defmodule MercatorWeb.ChatLive do
   def handle_info({:conversation, conversation}, socket) do
     {:noreply, assign(socket, :conversation, Map.delete(conversation, :messages))}
   end
+
+  # a consultant came to the desk or left it (#156)
+  def handle_info(%Phoenix.Socket.Broadcast{event: "presence_diff"}, socket),
+    do: {:noreply, assign(socket, :available?, Presence.available_count() > 0)}
 
   @impl true
   def render(assigns) do
@@ -328,19 +344,19 @@ defmodule MercatorWeb.ChatLive do
             <p class="font-semibold">{gettext("Advice")}</p>
             <p class="text-xs leading-snug opacity-80" id="chat-status">{status(@conversation)}</p>
           </div>
+          <%!-- #155: talking instead of writing, also while waiting --%>
           <button
-            :if={@conversation && @conversation.state == :active && !@call}
+            :if={in_conversation?(@conversation) && !@call}
             type="button"
             phx-click="request_call"
-            disabled={@call_requested?}
-            class="btn btn-ghost btn-xs text-primary-content disabled:text-primary-content/60"
-            title={
-              if @call_requested?, do: gettext("Call requested"), else: gettext("Ask for a call")
-            }
-            aria-label={gettext("Ask for a call")}
+            disabled={not is_nil(@conversation.call_requested_at)}
+            class="btn btn-sm border-primary-content/40 bg-primary-content/10 text-primary-content hover:bg-primary-content/20 disabled:bg-transparent disabled:text-primary-content/70"
             id="chat-request-call"
           >
             <.icon name="hero-phone" class="size-4" />
+            {if @conversation.call_requested_at,
+              do: gettext("Call requested"),
+              else: gettext("Rather talk?")}
           </button>
           <button
             :if={@conversation}
@@ -374,8 +390,39 @@ defmodule MercatorWeb.ChatLive do
           <p :if={@rated?} class="alert alert-success py-2 text-sm" id="chat-rated">
             <.icon name="hero-heart" class="size-5" /> {gettext("Thank you for your rating!")}
           </p>
-          <div :if={!@conversation and !@rating_for} class="space-y-2 text-sm" id="chat-intro">
-            <p>{gettext("Our experts are happy to help you choose – just ask your question.")}</p>
+          <div :if={!@conversation and !@rating_for} class="space-y-3 text-sm" id="chat-intro">
+            <.availability available?={@available?} id="chat-availability" />
+            <p>
+              {gettext("Our experts are happy to help you choose. How would you like to be advised?")}
+            </p>
+            <%!-- #157: both ways, so nobody has to write who would rather talk --%>
+            <div class="grid grid-cols-2 gap-2" id="chat-ways">
+              <button
+                type="button"
+                phx-click={JS.focus(to: "#chat-form textarea")}
+                class="flex flex-col items-start gap-1 rounded-box border border-base-300 p-3 text-left transition hover:border-primary hover:bg-primary/5"
+                id="chat-way-write"
+              >
+                <.icon name="hero-chat-bubble-left-right" class="size-6 text-primary" />
+                <span class="font-semibold">{gettext("Write")}</span>
+                <span class="text-xs opacity-70">{gettext("Type your question below.")}</span>
+              </button>
+              <button
+                type="button"
+                phx-click="start_call"
+                class="flex flex-col items-start gap-1 rounded-box border border-base-300 p-3 text-left transition hover:border-primary hover:bg-primary/5"
+                id="chat-way-call"
+              >
+                <.icon name="hero-phone" class="size-6 text-primary" />
+                <span class="font-semibold">{gettext("Talk")}</span>
+                <span class="text-xs opacity-70">
+                  {if @available?,
+                    do:
+                      gettext("A consultant calls you here in the browser; video only if you like."),
+                    else: gettext("We call you back as soon as we can.")}
+                </span>
+              </button>
+            </div>
             <p class="text-xs opacity-70" id="chat-help">
               {gettext("Answers to common questions are also in the")}
               <a href={~p"/help"} class="link">{gettext("help")}</a>.
@@ -468,6 +515,13 @@ defmodule MercatorWeb.ChatLive do
           >
             {@unread}
           </span>
+          <%!-- #156: a consultant is at the desk --%>
+          <span
+            :if={@available? and @unread == 0 and !@open?}
+            class="indicator-item indicator-bottom size-3 rounded-full border-2 border-primary bg-success"
+            title={gettext("Available now")}
+            id="chat-available"
+          ></span>
         </div>
         <span class="hidden sm:inline">{gettext("Advice")}</span>
       </button>
@@ -479,6 +533,11 @@ defmodule MercatorWeb.ChatLive do
           // "Beraten lassen" buttons dispatch this event (with subject and product)
           this.onOpen = (e) => this.pushEvent("open", {...(e.detail || {}), page: window.location.pathname})
           window.addEventListener("mercator:open-chat", this.onOpen)
+          // "Write" in the contact options block (#154): straight into the text box
+          this.handleEvent("chat:focus", () => {
+            const input = this.el.querySelector("#chat-form textarea")
+            if (input) setTimeout(() => input.focus(), 0)
+          })
           // tell the consultant which page the customer is on (also after live navigation)
           this.onPage = () => this.pushEvent("location", {path: window.location.pathname})
           window.addEventListener("phx:page-loading-stop", this.onPage)
@@ -616,6 +675,28 @@ defmodule MercatorWeb.ChatLive do
     """
   end
 
+  attr :available?, :boolean, required: true
+  attr :id, :string, required: true
+
+  # #156: whether a consultant is at the desk right now
+  defp availability(assigns) do
+    ~H"""
+    <p
+      class="flex items-center gap-2 text-xs font-medium"
+      id={@id}
+      data-available={to_string(@available?)}
+    >
+      <span class={[
+        "inline-block size-2.5 rounded-full",
+        if(@available?, do: "bg-success animate-pulse", else: "bg-base-300")
+      ]}></span>
+      {if @available?,
+        do: gettext("Available now"),
+        else: gettext("Nobody available right now – we will get back to you")}
+    </p>
+    """
+  end
+
   attr :conversation, :map, required: true
   attr :offered?, :boolean, required: true
   attr :error, :string, default: nil
@@ -652,14 +733,25 @@ defmodule MercatorWeb.ChatLive do
         <% @offered? -> %>
           <form class="space-y-2 rounded-box bg-base-200 p-3" id="chat-callback" phx-submit="callback">
             <p>{gettext("Sorry, nobody is available right now. May we contact you?")}</p>
+            <%!-- who asked to talk is called back by default (#155) --%>
             <div class="join w-full">
               <label class="join-item btn btn-sm flex-1 has-[:checked]:btn-primary">
-                <input type="radio" name="kind" value="email" checked class="sr-only" /> {gettext(
-                  "Email"
-                )}
+                <input
+                  type="radio"
+                  name="kind"
+                  value="email"
+                  checked={is_nil(@conversation.call_requested_at)}
+                  class="sr-only"
+                /> {gettext("Email")}
               </label>
               <label class="join-item btn btn-sm flex-1 has-[:checked]:btn-primary">
-                <input type="radio" name="kind" value="phone" class="sr-only" /> {gettext("Phone")}
+                <input
+                  type="radio"
+                  name="kind"
+                  value="phone"
+                  checked={not is_nil(@conversation.call_requested_at)}
+                  class="sr-only"
+                /> {gettext("Phone")}
               </label>
             </div>
             <input
@@ -682,12 +774,38 @@ defmodule MercatorWeb.ChatLive do
             phx-hook=".Countdown"
             data-until={@until}
           >
-            {gettext("A consultant will be with you shortly …")}
+            {if @conversation.call_requested_at,
+              do: gettext("A consultant will call you here shortly …"),
+              else: gettext("A consultant will be with you shortly …")}
             <span data-remaining class="font-mono"></span>
           </p>
       <% end %>
     </div>
     """
+  end
+
+  # #155: the customer would rather talk. Without a conversation, one is
+  # started with the request; in a running one, the consultant is asked.
+  defp start_call(%{assigns: %{conversation: nil}} = socket) do
+    owner = socket.assigns.basket_owner
+    context = Map.put_new(socket.assigns.context, :page, socket.assigns.path)
+    {:ok, conversation} = Conversations.start_call(owner, context)
+    follow(conversation)
+
+    {:noreply,
+     socket
+     |> assign_conversation(conversation)
+     |> assign(open?: true, rating_for: nil, rated?: false)}
+  end
+
+  defp start_call(%{assigns: %{conversation: conversation}} = socket) do
+    case Conversations.request_call(socket.assigns.basket_owner, conversation.id) do
+      {:ok, conversation} ->
+        {:noreply, assign(socket, :conversation, Map.delete(conversation, :messages))}
+
+      {:error, _reason} ->
+        {:noreply, socket}
+    end
   end
 
   # a closed conversation: ask for a rating if a consultant advised, else close the panel

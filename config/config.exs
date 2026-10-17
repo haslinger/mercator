@@ -145,8 +145,9 @@ config :mercator, :rate_limits,
   contact: {5, :timer.hours(1)}
 
 # Guided selling (#95): seconds a customer waits for a consultant before the
-# callback form appears (immediately when nobody is at the sales desk)
-config :mercator, :consulting_wait_seconds, 120
+# callback form appears (immediately when nobody is at the sales desk);
+# CONSULTING_WAIT_SECONDS at runtime
+config :mercator, :consulting_wait_seconds, 180
 
 # AutoCAD drawings may be shared in conversations (Mercator.Content.FileTypes);
 # the mime package does not know them (needs `mix deps.compile mime --force`)

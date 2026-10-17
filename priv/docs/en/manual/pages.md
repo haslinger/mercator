@@ -14,7 +14,9 @@ Pages form a tree, and their address follows it, e.g. `/pages/contact/directions
 
 ## Content from blocks
 
-A page consists of blocks, which you choose with **Add block**, edit one at a time and arrange by dragging: text (Markdown), hero image, text with image, image, gallery, download, products, categories, call to action, columns, FAQ, contact form and shared block.
+A page consists of blocks, which you choose with **Add block**, edit one at a time and arrange by dragging: text (Markdown), hero image, text with image, image, gallery, download, products, categories, call to action, ways to get advice, columns, FAQ, contact form and shared block.
+
+**Ways to get advice** shows side by side how customers get advice: writing (chat), talking (a call in the browser), optionally a message (a link to the page with the contact form) and the shop's phone number. The block shows live whether someone is at the sales desk.
 
 **Shared blocks** (their own list under Pages) are maintained once and shown on several pages, e.g. opening hours. A shared block always shows its published version.
 

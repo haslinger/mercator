@@ -21,6 +21,7 @@ Everything secret or specific to the installation is in the file `.env` next to 
 | `VAPID_SUBJECT` | optional: a contact for the push services, e.g. `mailto:shop@example.com` (default: `MAIL_FROM_ADDRESS`) |
 | `MERCATOR_MODE` | `demo` for the public demo, empty for a real shop (see [Demo mode](demo.md)) |
 | `DEMO_ADMIN_PASSWORD` | demo only: the administrator's password, at least 8 characters |
+| `CONSULTING_WAIT_SECONDS` | advice: seconds a customer waits for a consultant before the callback is offered (default `180`) |
 | `CALL_PUBLIC_HOST` | video calls: the public host name (or IP) browsers reach the call media at, usually as `PHX_HOST`; without it calls only work inside the local network (see [Video calls](calls.md)) |
 | `CALL_PORT_RANGE` | video calls: the UDP ports for the media (default `50000-50049`), published with the same numbers |
 | `CALL_ICE_SERVERS` | video calls: optional STUN servers, comma-separated, e.g. `stun:stun.example.org:3478` |

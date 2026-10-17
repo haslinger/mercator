@@ -138,19 +138,49 @@ defmodule Mercator.Consulting.CallRecordsTest do
     assert {:error, :not_your_call} = Desk.hang_up(call, user_fixture(roles: [:sales]))
   end
 
-  test "the customer asks for a call (#141)", ctx do
+  test "the customer asks for a call (#141); calling answers the request", ctx do
     Phoenix.PubSub.subscribe(Mercator.PubSub, "desk")
     id = ctx.conversation.id
 
-    assert :ok = Conversations.request_call(ctx.owner, id)
+    assert {:ok, %{call_requested_at: %DateTime{}}} = Conversations.request_call(ctx.owner, id)
     assert_receive {:call_requested, ^id}
     assert "Anruf erbeten" in system_messages(ctx.owner)
 
     {:ok, _call} = Desk.call(ctx.conversation, ctx.consultant)
+    assert Conversations.current(ctx.owner).call_requested_at == nil
+    assert_receive {:conversation, %{id: ^id, call_requested_at: nil}}
     assert {:error, :call_open} = Conversations.request_call(ctx.owner, id)
 
+    {:ok, closed} = Conversations.start(ctx.owner, "Noch eine Frage")
+    {:ok, _} = Conversations.close(ctx.owner, closed.id)
+    assert {:error, :closed} = Conversations.request_call(ctx.owner, closed.id)
+  end
+
+  test "while waiting, the customer may ask for a call too (#155)", ctx do
     {:ok, waiting} = Conversations.start(ctx.owner, "Noch eine Frage")
-    assert {:error, :no_consultant} = Conversations.request_call(ctx.owner, waiting.id)
+    assert {:ok, %{state: :waiting} = waiting} = Conversations.request_call(ctx.owner, waiting.id)
+    assert waiting.call_requested_at
+  end
+
+  test "a conversation starts with a call request instead of a message (#155)" do
+    Phoenix.PubSub.subscribe(Mercator.PubSub, "desk")
+    owner = {:session, "token-#{System.unique_integer([:positive])}"}
+
+    assert {:ok, conversation} = Conversations.start_call(owner, %{page: "/", subject: "Bauholz"})
+    assert %{state: :waiting, page: "/", subject: "Bauholz"} = conversation
+    assert conversation.call_requested_at
+    assert [%{sender_kind: :system, body: "Anruf erbeten"}] = conversation.messages
+
+    id = conversation.id
+    assert_receive {:conversation, %{id: ^id}}
+    # nobody at the desk: the shop address is told
+    assert_enqueued worker: Mercator.Consulting.Workers.SendNewConversationNotice,
+                    args: %{conversation_id: id}
+
+    consultant = user_fixture(roles: [:sales])
+    {:ok, conversation} = Desk.take(conversation, consultant)
+    {:ok, _call} = Desk.call(conversation, consultant)
+    assert Conversations.current(owner).call_requested_at == nil
   end
 
   test "a screen share is noted on the call and told to the other participant", ctx do

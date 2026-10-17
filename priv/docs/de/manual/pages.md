@@ -14,7 +14,9 @@ Seiten bilden einen Baum; ihre Adresse folgt ihm, z. B. `/pages/kontakt/anfahrt`
 
 ## Inhalt aus Blöcken
 
-Eine Seite besteht aus Blöcken, die Sie mit **Block hinzufügen** wählen, einzeln bearbeiten und durch Ziehen ordnen: Text (Markdown), Titelbild, Text mit Bild, Bild, Galerie, Download, Produkte, Kategorien, Handlungsaufforderung, Spalten, FAQ, Kontaktformular und Gemeinsamer Block.
+Eine Seite besteht aus Blöcken, die Sie mit **Block hinzufügen** wählen, einzeln bearbeiten und durch Ziehen ordnen: Text (Markdown), Titelbild, Text mit Bild, Bild, Galerie, Download, Produkte, Kategorien, Handlungsaufforderung, Kontaktwege, Spalten, FAQ, Kontaktformular und Gemeinsamer Block.
+
+**Kontaktwege** zeigen nebeneinander, wie Kundinnen und Kunden Beratung bekommen: Schreiben (Chat), Sprechen (Anruf im Browser), optional eine Nachricht (Link auf die Seite mit dem Kontaktformular) und die Telefonnummer des Shops. Der Block zeigt live, ob gerade jemand am Beratungsplatz ist.
 
 **Gemeinsame Blöcke** (eigene Liste unter Seiten) pflegen Sie einmal und zeigen sie auf mehreren Seiten, etwa die Öffnungszeiten. Ein Gemeinsamer Block zeigt immer seine veröffentlichte Fassung.
 

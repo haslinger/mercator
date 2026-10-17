@@ -78,6 +78,18 @@ defmodule Mercator.Consulting.Conversation do
       change set_attribute(:callback_requested_at, &DateTime.utc_now/0)
     end
 
+    update :request_call do
+      description "The customer would rather talk (#141, #155): the consultant is asked to call."
+      accept []
+      change set_attribute(:call_requested_at, &DateTime.utc_now/0)
+    end
+
+    update :clear_call_request do
+      description "The consultant has called: the request is done."
+      accept []
+      change set_attribute(:call_requested_at, nil)
+    end
+
     update :rate do
       description "The customer rates a closed conversation (#101): 1 to 5 stars, a comment."
       accept [:rating, :rating_comment]
@@ -145,6 +157,12 @@ defmodule Mercator.Consulting.Conversation do
       constraints: [max_length: 200, trim?: true]
 
     attribute :callback_requested_at, :utc_datetime_usec, public?: true
+
+    attribute :call_requested_at, :utc_datetime_usec do
+      description "The customer asked for a call and the consultant has not called yet (#155)."
+      public? true
+    end
+
     attribute :closed_at, :utc_datetime_usec, public?: true
 
     attribute :rating, :integer do

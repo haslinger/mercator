@@ -172,15 +172,15 @@ defmodule Mercator.Seeds.Pages do
             limit: 4
           },
           %{
-            type: "call_to_action",
-            headline: t("Beratung gewünscht?", "Need advice?"),
+            type: "contact_options",
+            headline: t("Wie möchten Sie beraten werden?", "How would you like to be advised?"),
             text:
               t(
-                "Unsere Holzexperten helfen bei Auswahl, Mengen und Zuschnitt.",
-                "Our timber experts help with choice, quantities and cutting."
+                "Unsere Holzexperten helfen bei Auswahl, Mengen und Zuschnitt – schriftlich oder im Gespräch.",
+                "Our timber experts help with choice, quantities and cutting – in writing or in a call."
               ),
-            button_label: t("Kontakt aufnehmen", "Get in touch"),
-            button_link: "/pages/kontakt"
+            message_link: "/pages/kontakt",
+            show_phone: true
           }
         ]
       },
@@ -337,6 +337,11 @@ defmodule Mercator.Seeds.Pages do
         title: t("Kontakt", "Contact"),
         blocks: [
           %{type: "shared", page_id: hours.id},
+          %{
+            type: "contact_options",
+            headline: t("So erreichen Sie uns", "How to reach us"),
+            show_phone: true
+          },
           %{
             type: "contact_form",
             intro:

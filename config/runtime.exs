@@ -34,6 +34,15 @@ if brand = System.get_env("BRAND") do
   config :mercator, :brand_key, key
 end
 
+# guided selling (#95): seconds a customer waits for a consultant before the
+# callback form appears, e.g. CONSULTING_WAIT_SECONDS=300 (default 180)
+with seconds when seconds not in [nil, ""] <- System.get_env("CONSULTING_WAIT_SECONDS") do
+  case Integer.parse(seconds) do
+    {seconds, ""} when seconds > 0 -> config :mercator, :consulting_wait_seconds, seconds
+    _ -> raise "CONSULTING_WAIT_SECONDS must be a number of seconds, got #{inspect(seconds)}"
+  end
+end
+
 if time_zone = System.get_env("SHOP_TIME_ZONE") do
   config :mercator, :time_zone, time_zone
   config :mercator, Oban, timezone: time_zone

@@ -12,7 +12,7 @@ Mit dem Schalter **Verfügbar / Abwesend** zeigen Sie, ob Sie Gespräche annehme
 
 Wartet jemand, erscheint oben ein **blinkendes rotes Licht** mit der Zahl der Wartenden und der Wartezeit; **Öffnen** führt zum ersten Gespräch. Die Zahl steht auch im Titel des Browser-Tabs, z. B. „(2) Beratungsplatz“, damit Sie es auch in einem anderen Tab sehen.
 
-Ist niemand verfügbar, sieht die Kundin oder der Kunde einen Countdown von zwei Minuten und kann dann um Antwort per E-Mail oder einen Rückruf bitten. Diese Gespräche tragen in der Liste das Zeichen **Rückruf** bzw. **Antwort per E-Mail**; der Shop schickt zusätzlich eine E-Mail an die Shop-Adresse.
+Ist niemand verfügbar, sieht die Kundin oder der Kunde einen Countdown von drei Minuten und kann dann um Antwort per E-Mail oder einen Rückruf bitten. Diese Gespräche tragen in der Liste das Zeichen **Rückruf** bzw. **Antwort per E-Mail**; der Shop schickt zusätzlich eine E-Mail an die Shop-Adresse.
 
 ## Benachrichtigungen aufs Handy
 
@@ -31,7 +31,7 @@ Die Benachrichtigung zeigt den Namen und den Anfang der Nachricht und kommt in d
 
 **Shop als App installiert?** Haben Sie den Shop auf dem Android-Handy als App installiert (z. B. „Biber Holz“ auf dem Startbildschirm), gehören die Benachrichtigungen dieser App, nicht mehr Chrome. Eine neu installierte App kann Benachrichtigungen lautlos und ohne Pop-up anzeigen. Öffnen Sie dann Einstellungen → Apps → *die Shop-App* → Benachrichtigungen, erlauben Sie **Ton, Vibration und Pop-up**, und schalten Sie am Beratungsplatz die Benachrichtigungen noch einmal aus und ein.
 
-Am iPhone geht das nur, wenn der Shop zum Home-Bildschirm hinzugefügt ist (Teilen → „Zum Home-Bildschirm“), und von dort geöffnet wird. Die Zustellung ist nicht garantiert: Der Ton am Beratungsplatz und der Rückruf nach zwei Minuten bleiben.
+Am iPhone geht das nur, wenn der Shop zum Home-Bildschirm hinzugefügt ist (Teilen → „Zum Home-Bildschirm“), und von dort geöffnet wird. Die Zustellung ist nicht garantiert: Der Ton am Beratungsplatz und der Rückruf nach drei Minuten bleiben.
 
 **Ausschalten:** Ein Tipp auf den grünen Knopf **Benachrichtigungen an** schaltet sie für dieses Gerät wieder aus; auch beim Abmelden gehen sie aus. Jedes Gerät hat seinen eigenen Schalter: Handy und Computer schalten Sie getrennt ein und aus.
 
@@ -47,7 +47,7 @@ Ist die Kundin oder der Kunde nicht mehr im Shop, kommt Ihre Antwort nach etwa e
 
 ## Anrufen
 
-In einem Gespräch, das Sie übernommen haben, rufen Sie die Kundin oder den Kunden mit **Anrufen** (nur Ton) oder **Videoanruf** (mit Ihrer Kamera) direkt im Shop an; bei ihr oder ihm klingelt es im Chat. Bittet die Kundin oder der Kunde um einen Anruf, steht „Anruf erbeten“ im Gespräch, und Sie hören einen Ton. Während des Anrufs sind Mikrofon, Kamera und Bildschirmfreigabe **grün**, solange sie eingeschaltet sind; ein stummgeschaltetes Mikrofon ist **rot**.
+In einem Gespräch, das Sie übernommen haben, rufen Sie die Kundin oder den Kunden mit **Anrufen** (nur Ton) oder **Videoanruf** (mit Ihrer Kamera) direkt im Shop an; bei ihr oder ihm klingelt es im Chat. Bittet die Kundin oder der Kunde um einen Anruf, steht „Anruf erbeten“ im Gespräch, und Sie hören einen Ton. Das geht auch schon beim Start, ganz ohne Nachricht: Solche Gespräche tragen in der Liste das Zeichen **Anruf** und oben „Möchte telefonieren: bitte anrufen.“, bis Sie anrufen. Während des Anrufs sind Mikrofon, Kamera und Bildschirmfreigabe **grün**, solange sie eingeschaltet sind; ein stummgeschaltetes Mikrofon ist **rot**.
 
 - **Die Anrufkarte** unten rechts zeigt den Anruf. Sie bleibt, während Sie andere Gespräche ansehen; **Zum Gespräch** führt zurück. Sie führen einen Anruf zur Zeit.
 - **Im Anruf:** Mikrofon und Kamera ein und aus, **Bildschirm teilen** (z. B. einen Plan oder den Konfigurator; teilt die andere Seite, endet Ihre Freigabe), **Vollbild**, und unter dem Regler-Symbol die Wahl von Mikrofon und Kamera. Ein grüner Rand zeigt, wer gerade spricht.

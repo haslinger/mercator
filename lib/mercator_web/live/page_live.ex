@@ -17,6 +17,7 @@ defmodule MercatorWeb.PageLive do
   alias Mercator.Content
   alias Mercator.Content.{Asset, Blocks}
   alias Mercator.Translated
+  alias MercatorWeb.Presence
 
   on_mount {MercatorWeb.LiveUserAuth, :live_user_optional}
 
@@ -38,6 +39,7 @@ defmodule MercatorWeb.PageLive do
            |> MercatorWeb.BlockData.load()
            |> Map.merge(%{page_id: page.id, client_ip: MercatorWeb.ClientIp.from_socket(socket)})
          )
+         |> assign_availability()
          |> assign(:preview?, preview?)
          |> assign(:ancestors, Content.published_ancestors(page))
          |> assign(:children, Content.published_children(page))
@@ -61,6 +63,37 @@ defmodule MercatorWeb.PageLive do
          |> push_navigate(to: ~p"/")}
     end
   end
+
+  # #156: a page with the ways to get advice (#154) shows live whether a
+  # consultant is at the desk
+  defp assign_availability(socket) do
+    if contact_options?(socket.assigns.content.blocks, socket.assigns.block_data) do
+      if connected?(socket), do: Phoenix.PubSub.subscribe(Mercator.PubSub, Presence.topic())
+      update_availability(socket)
+    else
+      socket
+    end
+  end
+
+  defp update_availability(socket),
+    do: update(socket, :block_data, &Map.put(&1, :available?, Presence.available_count() > 0))
+
+  defp contact_options?(blocks, block_data) do
+    shared =
+      block_data
+      |> Map.get(:shared, %{})
+      |> Map.values()
+      |> Enum.flat_map(fn
+        {blocks, _data} -> blocks
+        nil -> []
+      end)
+
+    Enum.any?(blocks ++ shared, &match?(%Ash.Union{value: %Blocks.ContactOptions{}}, &1))
+  end
+
+  @impl true
+  def handle_info(%Phoenix.Socket.Broadcast{event: "presence_diff"}, socket),
+    do: {:noreply, update_availability(socket)}
 
   # description: the SEO text, else the first text of the page; image: the first one
   defp assign_page_meta(socket, page, content) do

@@ -37,7 +37,19 @@ defmodule Mercator.Consulting.Conversations do
   Starts a conversation with the customer's first message. `context` may
   hold `:subject`, `:page` and `:product_id`.
   """
-  def start(owner, body, context \\ %{}) do
+  def start(owner, body, context \\ %{}),
+    do: open(owner, context, &post(owner, &1.id, body))
+
+  @doc """
+  Starts a conversation without writing (#155): the customer would rather
+  talk. The consultant who takes it sees the request and calls; the chat is
+  there for links, products and offers. When nobody is at the desk, the
+  widget offers the callback right away (#95).
+  """
+  def start_call(owner, context \\ %{}),
+    do: open(owner, context, &mark_call_requested/1)
+
+  defp open(owner, context, first) do
     attrs =
       context
       |> Map.take([:subject, :page, :product_id])
@@ -45,7 +57,7 @@ defmodule Mercator.Consulting.Conversations do
       |> Map.merge(owner_attrs(owner))
 
     with {:ok, conversation} <- Ash.create(Conversation, attrs, action: :start, authorize?: false),
-         {:ok, _message} <- post(owner, conversation.id, body) do
+         {:ok, _first} <- first.(conversation) do
       conversation = current(owner)
       broadcast("desk", {:conversation, conversation})
 
@@ -125,7 +137,7 @@ defmodule Mercator.Consulting.Conversations do
       )
 
   @doc "How long a customer waits for a consultant before being offered a callback (#95)."
-  def wait_seconds, do: Application.get_env(:mercator, :consulting_wait_seconds, 120)
+  def wait_seconds, do: Application.get_env(:mercator, :consulting_wait_seconds, 180)
 
   @doc "The customer is now on `path`; the consultant sees it live."
   def visit(owner, conversation_id, path) when is_binary(path) do
@@ -185,26 +197,33 @@ defmodule Mercator.Consulting.Conversations do
   def rateable?(_conversation), do: false
 
   @doc """
-  The customer asks the consultant for a call (phase 10, #141): only when a
-  consultant has taken the conversation and no call is open. The desk is
-  told; the consultant decides to call.
+  The customer asks for a call (phase 10, #141), also while still waiting
+  for a consultant (#155), when no call is open. The desk is told; the
+  consultant decides to call.
   """
   def request_call(owner, conversation_id) do
-    with %Conversation{state: :active} = conversation <- get(owner, conversation_id),
+    with %Conversation{state: state} = conversation when state in [:waiting, :active] <-
+           get(owner, conversation_id),
          nil <- Calls.open_call(conversation.id),
-         {:ok, _message} <-
-           create_message(conversation, %{
-             sender_kind: :system,
-             body: gettext("Call requested")
-           }) do
+         {:ok, conversation} <- mark_call_requested(conversation) do
+      broadcast("conversation:#{conversation.id}", {:conversation, conversation})
+      broadcast("desk", {:conversation, conversation})
       broadcast("desk", {:call_requested, conversation.id})
-      :ok
+      {:ok, conversation}
     else
       %Call{} -> {:error, :call_open}
-      %Conversation{} -> {:error, :no_consultant}
+      %Conversation{} -> {:error, :closed}
       nil -> {:error, :not_found}
       error -> error
     end
+  end
+
+  defp mark_call_requested(conversation) do
+    with {:ok, conversation} <-
+           Ash.update(conversation, %{}, action: :request_call, authorize?: false),
+         {:ok, _message} <-
+           create_message(conversation, %{sender_kind: :system, body: gettext("Call requested")}),
+         do: {:ok, conversation}
   end
 
   @doc "The customer answers a ringing call in their conversation."

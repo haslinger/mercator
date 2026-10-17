@@ -474,6 +474,7 @@ defmodule MercatorWeb.Admin.DeskLive do
                 :callback_kind,
                 :callback_contact,
                 :callback_requested_at,
+                :call_requested_at,
                 :closed_at,
                 :rating,
                 :rating_comment
@@ -488,7 +489,7 @@ defmodule MercatorWeb.Admin.DeskLive do
         do:
           push_event(socket, "desk:notify", %{
             title: gettext("New conversation"),
-            body: conversation.subject || gettext("A customer would like advice.")
+            body: conversation.subject || new_conversation_text(conversation)
           }),
         else: socket
 
@@ -533,9 +534,12 @@ defmodule MercatorWeb.Admin.DeskLive do
   def handle_info({:call_signal, _conversation_id, message}, socket),
     do: {:noreply, push_event(socket, "call:signal", message)}
 
-  # a customer of one of my conversations asks for a call (#141)
+  # a customer of one of my conversations asks for a call (#141), or a
+  # waiting one while I am available (#155)
   def handle_info({:call_requested, conversation_id}, socket) do
-    case Enum.find(socket.assigns.mine, &(&1.id == conversation_id)) do
+    waiting = if socket.assigns.available?, do: socket.assigns.waiting, else: []
+
+    case Enum.find(socket.assigns.mine ++ waiting, &(&1.id == conversation_id)) do
       nil ->
         {:noreply, socket}
 
@@ -570,6 +574,11 @@ defmodule MercatorWeb.Admin.DeskLive do
   def handle_info(:tick, socket), do: {:noreply, load_lists(socket)}
 
   # a conversation that was just started (not one that changed later)
+  defp new_conversation_text(%{call_requested_at: %DateTime{}}),
+    do: gettext("A customer would like to talk.")
+
+  defp new_conversation_text(_conversation), do: gettext("A customer would like advice.")
+
   defp new?(conversation), do: DateTime.diff(DateTime.utc_now(), conversation.inserted_at) < 10
 
   # --- rendering ---
@@ -682,6 +691,14 @@ defmodule MercatorWeb.Admin.DeskLive do
                     gettext("Callback requested by phone: %{contact}",
                       contact: @selected.callback_contact
                     )}
+              </p>
+              <p
+                :if={@selected.call_requested_at && @selected.state != :closed}
+                class="text-sm font-semibold text-success"
+                id="conversation-call-requested"
+              >
+                <.icon name="hero-phone" class="size-4" />
+                {gettext("Would like to talk: please call.")}
               </p>
               <p class="truncate text-sm text-base-content/60">
                 <span :if={@selected.subject}>{@selected.subject} · </span>
@@ -1472,6 +1489,13 @@ defmodule MercatorWeb.Admin.DeskLive do
               <div class="min-w-0 flex-1">
                 <p class="truncate font-medium">
                   {Desk.display_name(conversation.customer)}
+                  <span
+                    :if={conversation.call_requested_at}
+                    class="badge badge-success badge-xs"
+                    id={"desk-call-requested-#{conversation.id}"}
+                  >
+                    <.icon name="hero-phone" class="size-3" /> {gettext("Call")}
+                  </span>
                   <span :if={conversation.callback_requested_at} class="badge badge-warning badge-xs">
                     {if conversation.callback_kind == :email,
                       do: gettext("Reply by email"),

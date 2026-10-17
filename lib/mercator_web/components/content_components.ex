@@ -15,6 +15,7 @@ defmodule MercatorWeb.ContentComponents do
 
   alias Mercator.Content.{Asset, Blocks}
   alias Mercator.Translated
+  alias Phoenix.LiveView.JS
 
   attr :block, Ash.Union, required: true
   attr :locale, :string, required: true
@@ -205,7 +206,7 @@ defmodule MercatorWeb.ContentComponents do
         :for={block <- elem(@shared, 0)}
         block={block}
         locale={@locale}
-        data={Map.merge(elem(@shared, 1), Map.take(@data, [:page_id, :client_ip]))}
+        data={Map.merge(elem(@shared, 1), Map.take(@data, [:page_id, :client_ip, :available?]))}
       />
     </div>
     """
@@ -242,6 +243,128 @@ defmodule MercatorWeb.ContentComponents do
         {t(@b.button_label, @locale)}
       </a>
     </section>
+    """
+  end
+
+  # #154: writing and talking open the chat widget (MercatorWeb.ChatLive);
+  # `available?` (#156) is unknown (nil) in the editor's preview
+  defp render_block(%{b: %Blocks.ContactOptions{}} = assigns) do
+    phone = assigns.b.show_phone && Mercator.Brand.get(:phone)
+
+    assigns =
+      assigns
+      |> assign(:available?, assigns.data[:available?])
+      |> assign(:phone, phone)
+      |> assign(:ways, 2 + Enum.count([assigns.b.message_link, phone], & &1))
+
+    ~H"""
+    <section class="space-y-6 rounded-box bg-base-200 p-6 md:p-8" id={"block-#{@b.id}"}>
+      <div class="space-y-2">
+        <h2 :if={t(@b.headline, @locale)} class="text-2xl font-bold">{t(@b.headline, @locale)}</h2>
+        <.markdown text={t(@b.text, @locale)} />
+        <p
+          :if={is_boolean(@available?)}
+          class="flex items-center gap-2 text-sm font-medium"
+          id={"block-#{@b.id}-availability"}
+          data-available={to_string(@available?)}
+        >
+          <span class={[
+            "inline-block size-2.5 rounded-full",
+            if(@available?, do: "bg-success animate-pulse", else: "bg-base-content/30")
+          ]}></span>
+          {if @available?,
+            do: gettext("Our consultants are available now"),
+            else: gettext("Nobody available right now – we will get back to you")}
+        </p>
+      </div>
+      <div class={[
+        "grid gap-4",
+        case @ways do
+          2 -> "sm:grid-cols-2"
+          3 -> "md:grid-cols-3"
+          _four -> "sm:grid-cols-2 lg:grid-cols-4"
+        end
+      ]}>
+        <.contact_way
+          icon="hero-chat-bubble-left-right"
+          title={gettext("Write")}
+          text={
+            if @available? == false,
+              do: gettext("Ask in the chat; we answer as soon as we are back."),
+              else: gettext("Ask in the chat and get an answer right away.")
+          }
+          id={"block-#{@b.id}-write"}
+        >
+          <button
+            type="button"
+            phx-click={JS.dispatch("mercator:open-chat", detail: %{start: "write"})}
+            class="btn btn-primary"
+          >
+            {gettext("Start chat")}
+          </button>
+        </.contact_way>
+        <.contact_way
+          icon="hero-phone"
+          title={gettext("Talk")}
+          text={
+            if @available? == false,
+              do: gettext("Leave your number and we will call you back."),
+              else: gettext("A consultant calls you here in the browser; video only if you like.")
+          }
+          id={"block-#{@b.id}-call"}
+        >
+          <button
+            type="button"
+            phx-click={JS.dispatch("mercator:open-chat", detail: %{start: "call"})}
+            class="btn btn-primary"
+          >
+            {if @available? == false, do: gettext("Request a callback"), else: gettext("Call me")}
+          </button>
+        </.contact_way>
+        <.contact_way
+          :if={@b.message_link}
+          icon="hero-envelope"
+          title={gettext("Message")}
+          text={gettext("Send us your question; we answer by email.")}
+          id={"block-#{@b.id}-message"}
+        >
+          <a href={@b.message_link} class="btn btn-outline">{gettext("Write a message")}</a>
+        </.contact_way>
+        <.contact_way
+          :if={@phone}
+          icon="hero-device-phone-mobile"
+          title={gettext("Phone")}
+          text={gettext("Call us during our opening hours.")}
+          id={"block-#{@b.id}-phone"}
+        >
+          <a href={"tel:" <> String.replace(@phone, ~r/[^\d+]/, "")} class="btn btn-outline">
+            {@phone}
+          </a>
+        </.contact_way>
+      </div>
+    </section>
+    """
+  end
+
+  attr :icon, :string, required: true
+  attr :title, :string, required: true
+  attr :text, :string, required: true
+  attr :id, :string, required: true
+  slot :inner_block, required: true
+
+  defp contact_way(assigns) do
+    ~H"""
+    <div
+      class="flex flex-col gap-3 rounded-box bg-base-100 p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+      id={@id}
+    >
+      <span class="flex size-11 items-center justify-center rounded-full bg-primary/10 text-primary">
+        <.icon name={@icon} class="size-6" />
+      </span>
+      <h3 class="text-lg font-semibold">{@title}</h3>
+      <p class="flex-1 text-sm text-base-content/70">{@text}</p>
+      <div>{render_slot(@inner_block)}</div>
+    </div>
     """
   end
 
