@@ -95,16 +95,16 @@ defmodule Mercator.Seeds.Pages do
           Montag bis Freitag 7–17 Uhr
           Samstag 8–12 Uhr
 
-          Biber Holz GmbH, Waldweg 1, 3914 Waldhausen
-          Telefon +43 1 234 56 78
+          Biber Holz GmbH, Waldweg 1, 0000 Waldhausen
+          Telefon +43 000 1234567
           """,
           """
           ### Opening hours of the sawmill and pickup
           Monday to Friday 7 am–5 pm
           Saturday 8 am–12 noon
 
-          Biber Holz GmbH, Waldweg 1, 3914 Waldhausen, Austria
-          Phone +43 1 234 56 78
+          Biber Holz GmbH, Waldweg 1, 0000 Waldhausen, Austria
+          Phone +43 000 1234567
           """
         )
       ]
@@ -382,6 +382,7 @@ defmodule Mercator.Seeds.Pages do
             Firmensitz: Wien
             Unternehmensgegenstand: Dienstleistungen in der automatischen Datenverarbeitung und Informationstechnik
             Gewerbebehörde: Magistratisches Bezirksamt für den 2. Bezirk
+            Kammer: Wirtschaftskammer Wien, Fachgruppe Unternehmensberatung, Buchhaltung und Informationstechnologie (UBIT)
             Anwendbare Rechtsvorschriften: Gewerbeordnung, abrufbar unter [www.ris.bka.gv.at](https://www.ris.bka.gv.at)
 
             Medieninhaber: Mag. Stefan Haslinger
@@ -414,6 +415,7 @@ defmodule Mercator.Seeds.Pages do
             Registered office: Vienna
             Business: services in automatic data processing and information technology
             Trade authority: Magistratisches Bezirksamt for the 2nd district of Vienna
+            Chamber: Vienna Economic Chamber (Wirtschaftskammer Wien), professional group for management consultancy, accounting and information technology (UBIT)
             Applicable regulations: Austrian Trade Regulation Act (Gewerbeordnung), available at [www.ris.bka.gv.at](https://www.ris.bka.gv.at)
 
             Media owner: Mag. Stefan Haslinger

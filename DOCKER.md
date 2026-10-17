@@ -274,6 +274,29 @@ The build cache makes builds fast; prune it only when space is short. Never
 use `docker system prune --volumes` or `docker volume prune`: the volumes are
 the database and the uploads.
 
+### Log retention
+
+The privacy policy of the demo promises that server logs are kept **at most
+seven days**. The app logs no visitor addresses in normal requests, but it does
+log the client IP when a rate limit is reached, and failed emails with their
+recipient. Two places keep logs:
+
+* **The containers** (`docker compose logs`): `docker-compose.yml` uses Docker's
+  `local` log driver with at most 3 files of 10 MB per container. That limits
+  the size, not the age: on a quiet server the oldest lines can be older than a
+  week. Recreating a container starts its log afresh, so a weekly cron job on
+  the host keeps the promise:
+
+  ```sh
+  # crontab -e (as the user that runs Docker); purpose: mercator log retention
+  30 3 * * 0  cd /path/to/mercator && docker compose up -d --force-recreate app db
+  ```
+
+* **The reverse proxy**: its access log holds every visitor's IP address. With
+  nginx on Debian/Ubuntu, logrotate handles `/var/log/nginx/*.log`; set
+  `daily` and `rotate 7` (or `maxage 7`) there. Caddy keeps no access log
+  unless `log` is set in the `Caddyfile`; with one, set `roll_keep_for 168h`.
+
 ## 🧹 Reset to a clean slate
 
 Deletes the database and all uploads:

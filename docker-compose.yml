@@ -2,9 +2,18 @@
 # the server from this checkout; settings and secrets come from .env (see
 # .env.example). A reverse proxy on the host does HTTPS and forwards to the
 # published port.
+# Container logs rotate by size, so they cannot grow without end; the
+# privacy policy promises at most seven days (DOCKER.md "Log retention")
+x-logging: &logging
+  driver: local
+  options:
+    max-size: "10m"
+    max-file: "3"
+
 services:
   app:
     build: .
+    logging: *logging
     # a fixed name, so the previous version can be tagged for a rollback
     # (DOCKER.md, "Update after a code change")
     image: mercator:latest
@@ -57,6 +66,7 @@ services:
 
   db:
     image: postgres:17
+    logging: *logging
     restart: unless-stopped
     networks:
       - mercator

@@ -11,8 +11,8 @@ config :mercator, :brands,
       "en" => "Austrian alpine forestry\nQuality construction and fine timber since 1928"
     },
     email: "service@example.com",
-    phone: "+43 1 234 56 78",
-    address: "Waldweg 1, 3914 Waldhausen",
+    phone: "+43 000 1234567",
+    address: "Waldweg 1, 0000 Waldhausen",
     # order numbers like BH-2026-00042 (#68)
     order_prefix: "BH",
     # demo bank account (the example IBAN from the ISO 13616 standard)
