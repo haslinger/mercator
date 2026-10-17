@@ -286,7 +286,7 @@ defmodule MercatorWeb.ContentComponents do
         end
       ]}>
         <.contact_way
-          icon="hero-chat-bubble-left-right"
+          icon="hero-pencil-square"
           title={gettext("Write")}
           text={
             if @available? == false,

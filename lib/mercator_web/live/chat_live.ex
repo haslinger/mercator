@@ -403,7 +403,7 @@ defmodule MercatorWeb.ChatLive do
                 class="flex flex-col items-start gap-1 rounded-box border border-base-300 p-3 text-left transition hover:border-primary hover:bg-primary/5"
                 id="chat-way-write"
               >
-                <.icon name="hero-chat-bubble-left-right" class="size-6 text-primary" />
+                <.icon name="hero-pencil-square" class="size-6 text-primary" />
                 <span class="font-semibold">{gettext("Write")}</span>
                 <span class="text-xs opacity-70">{gettext("Type your question below.")}</span>
               </button>
