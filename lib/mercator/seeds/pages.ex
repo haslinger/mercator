@@ -359,7 +359,7 @@ defmodule Mercator.Seeds.Pages do
             """
             **Biber Holz GmbH** (fiktives Demo-Unternehmen)
             Waldweg 1, 3914 Waldhausen, Österreich
-            Telefon +43 1 234 56 78 · service@mittenin.at
+            Telefon +43 1 234 56 78 · service@example.com
 
             Firmenbuchnummer: FN 000000x (Demo) · UID: ATU00000000 (Demo)
             Unternehmensgegenstand: Forstwirtschaft, Sägewerk, Holzhandel
@@ -369,7 +369,7 @@ defmodule Mercator.Seeds.Pages do
             """
             **Biber Holz GmbH** (fictitious demo company)
             Waldweg 1, 3914 Waldhausen, Austria
-            Phone +43 1 234 56 78 · service@mittenin.at
+            Phone +43 1 234 56 78 · service@example.com
 
             Company register: FN 000000x (demo) · VAT ID: ATU00000000 (demo)
             Business: forestry, sawmill, timber trade
