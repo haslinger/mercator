@@ -5179,7 +5179,7 @@ msgstr ""
 
 #: lib/mercator_web/components/demo_components.ex:55
 #, elixir-autogen, elixir-format
-msgid "Everything is reset every night at 3 o'clock, including accounts you register. Orders are not delivered and payments are simulated."
+msgid "Everything is reset every night at 3 o'clock, including accounts you register, and everyone is signed out (also with \"Remember me\"). Orders are not delivered and payments are simulated."
 msgstr ""
 
 #: lib/mercator_web/live/account_live.ex:83

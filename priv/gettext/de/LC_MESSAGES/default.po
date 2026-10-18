@@ -5179,8 +5179,8 @@ msgstr "Demo-Shop: keine echten Bestellungen, alles wird jede Nacht zurückgeset
 
 #: lib/mercator_web/components/demo_components.ex:55
 #, elixir-autogen, elixir-format
-msgid "Everything is reset every night at 3 o'clock, including accounts you register. Orders are not delivered and payments are simulated."
-msgstr "Alles wird jede Nacht um 3 Uhr zurückgesetzt, auch Konten, die Sie registrieren. Bestellungen werden nicht geliefert, Zahlungen nur simuliert."
+msgid "Everything is reset every night at 3 o'clock, including accounts you register, and everyone is signed out (also with \"Remember me\"). Orders are not delivered and payments are simulated."
+msgstr "Alles wird jede Nacht um 3 Uhr zurückgesetzt, auch Konten, die Sie registrieren, und alle werden abgemeldet (auch mit „Angemeldet bleiben“). Bestellungen werden nicht geliefert, Zahlungen nur simuliert."
 
 #: lib/mercator_web/live/account_live.ex:83
 #, elixir-autogen, elixir-format

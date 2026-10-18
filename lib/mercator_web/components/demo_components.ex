@@ -53,7 +53,7 @@ defmodule MercatorWeb.DemoComponents do
       </h2>
       <p class="text-sm text-base-content/70 mt-1">
         {gettext(
-          "Everything is reset every night at 3 o'clock, including accounts you register. Orders are not delivered and payments are simulated."
+          "Everything is reset every night at 3 o'clock, including accounts you register, and everyone is signed out (also with \"Remember me\"). Orders are not delivered and payments are simulated."
         )}
       </p>
       <div :if={@logins?} class="mt-4">

@@ -68,7 +68,9 @@ emails become incidents (failed Oban jobs, #105).
   in test mode can be switched on once its key is set.
 - **Nightly reset:** an Oban cron job (03:00 Vienna time) empties all tables (except the
   migrations), removes uploads and seeds again. Accounts visitors registered are gone
-  too.
+  too. Logins do not survive it either, not even "remember me" ones (e.g. in the phone
+  app): the token table is emptied and the users are seeded anew. Accepted, the demo is
+  meant to be ephemeral.
 
 ## 6. Steps (one commit each, with tests)
 
