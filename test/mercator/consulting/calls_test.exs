@@ -94,7 +94,8 @@ defmodule Mercator.Consulting.CallsTest do
                     %{"type" => "state", "state" => "failed", "details" => details}},
                    @timeout
 
-    assert details =~ "server candidates: host"
+    # the order varies: peer-reflexive (prflx) candidates found during the checks may come first
+    assert details =~ ~r/server candidates: [^\n]*\bhost /
     assert details =~ "browser candidates:"
     assert details =~ "checks sent"
     assert Calls.participants(id) == [:consultant]

@@ -201,7 +201,7 @@ config :mercator, :mail_from, {"Mercator", "noreply@localhost"}
 
 # Configure esbuild (the version is required)
 config :esbuild,
-  version: "0.25.4",
+  version: "0.28.2",
   mercator: [
     args:
       ~w(js/app.js --bundle --target=es2022 --outdir=../priv/static/assets/js --external:/fonts/* --external:/images/* --alias:@=.),
@@ -211,7 +211,7 @@ config :esbuild,
 
 # Configure tailwind (the version is required)
 config :tailwind,
-  version: "4.3.3",
+  version: "4.3.4",
   mercator: [
     args: ~w(
       --input=assets/css/app.css
