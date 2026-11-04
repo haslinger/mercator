@@ -64,4 +64,14 @@ defmodule MercatorWeb.RememberMeTest do
     conn = with_cookie(token) |> get(~p"/account")
     assert redirected_to(conn) =~ "/sign-in"
   end
+
+  # app.js switches off phone notifications only after an explicit sign-out
+  # (not when a session expires or the demo reset signs everyone out)
+  test "signing out marks the browser with a short-lived signed_out cookie", %{conn: conn} do
+    conn = sign_in(conn, user_fixture(), false)
+    refute conn.resp_cookies["signed_out"]
+
+    conn = conn |> recycle() |> delete(~p"/sign-out")
+    assert %{value: "1", max_age: 300, http_only: false} = conn.resp_cookies["signed_out"]
+  end
 end

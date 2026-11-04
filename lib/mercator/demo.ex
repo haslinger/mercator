@@ -13,7 +13,8 @@ defmodule Mercator.Demo do
       password reset (#46, `public_account?/1`),
     * the payment simulator is registered (runtime.exs) and active,
     * everything is reset every night (`reset/0`,
-      `Mercator.Demo.Workers.Reset`).
+      `Mercator.Demo.Workers.Reset`), except the accounts listed in
+      `DEMO_KEEP_ACCOUNTS` (`kept_accounts/0`).
   """
   import Ecto.Query, only: [from: 2]
 
@@ -126,11 +127,23 @@ defmodule Mercator.Demo do
   end
 
   @doc """
+  The emails of the accounts the nightly reset keeps (`DEMO_KEEP_ACCOUNTS`,
+  comma-separated), lower case.
+  """
+  def kept_accounts, do: Application.get_env(:mercator, :demo_keep_accounts, [])
+
+  @doc """
   Resets the demo: deletes the uploads, empties all tables (except the
   migrations and the background jobs) and seeds again, in one transaction
   (visitors see the old data until it is done). Accounts that visitors
   registered are gone too. Other pending jobs are dropped, except
   `keep_job_id` (the job running the reset).
+
+  The accounts in `kept_accounts/0` survive unchanged (same id, password and
+  roles), with their sign-ins (tokens) and phone notifications (push
+  subscriptions), so a staff phone stays signed in and keeps ringing. Their
+  other data (conversations, orders, ...) is reset. A seeded demo account is
+  never kept: seeding repairs it (#47).
   """
   # sobelow_skip ["SQL.Query"]
   def reset(keep_job_id \\ nil) do
@@ -139,9 +152,12 @@ defmodule Mercator.Demo do
 
     {:ok, _users} =
       transact(fn ->
+        save_kept_accounts()
         Repo.query!("TRUNCATE #{Enum.join(tables(), ", ")} RESTART IDENTITY CASCADE")
         drop_jobs(keep_job_id)
-        seed_data()
+        users = seed_data()
+        restore_kept_accounts()
+        users
       end)
 
     :ok
@@ -158,6 +174,41 @@ defmodule Mercator.Demo do
       """)
 
     List.flatten(rows)
+  end
+
+  # Copies the kept accounts, their tokens and push subscriptions into
+  # temporary tables (this connection only, dropped at commit).
+  defp save_kept_accounts do
+    Repo.query!(
+      "CREATE TEMP TABLE kept_users ON COMMIT DROP AS SELECT * FROM users WHERE email = ANY($1::citext[])",
+      [kept_accounts()]
+    )
+
+    Repo.query!(
+      "CREATE TEMP TABLE kept_tokens ON COMMIT DROP AS SELECT * FROM tokens " <>
+        "WHERE subject IN (SELECT 'user?id=' || id FROM kept_users)"
+    )
+
+    Repo.query!(
+      "CREATE TEMP TABLE kept_push_subscriptions ON COMMIT DROP AS SELECT * FROM push_subscriptions " <>
+        "WHERE user_id IN (SELECT id FROM kept_users)"
+    )
+  end
+
+  # After seeding: seeded accounts win (ON CONFLICT on the email), the
+  # tokens and subscriptions follow only accounts that came back.
+  defp restore_kept_accounts do
+    Repo.query!("INSERT INTO users SELECT * FROM kept_users ON CONFLICT DO NOTHING")
+
+    Repo.query!(
+      "INSERT INTO tokens SELECT * FROM kept_tokens " <>
+        "WHERE subject IN (SELECT 'user?id=' || id FROM users) ON CONFLICT DO NOTHING"
+    )
+
+    Repo.query!(
+      "INSERT INTO push_subscriptions SELECT * FROM kept_push_subscriptions " <>
+        "WHERE user_id IN (SELECT id FROM users) ON CONFLICT DO NOTHING"
+    )
   end
 
   defp drop_jobs(nil), do: Repo.query!("DELETE FROM oban_jobs")

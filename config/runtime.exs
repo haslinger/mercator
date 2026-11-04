@@ -106,6 +106,14 @@ case System.get_env("MERCATOR_MODE", "") do
     providers = Application.get_env(:mercator, :payment_providers, [])
     config :mercator, :payment_providers, Enum.uniq([Mercator.Payments.Simulator | providers])
 
+    # accounts the nightly reset keeps, e.g. a staff member's own (comma-separated emails)
+    config :mercator,
+           :demo_keep_accounts,
+           System.get_env("DEMO_KEEP_ACCOUNTS", "")
+           |> String.split(",", trim: true)
+           |> Enum.map(&(&1 |> String.trim() |> String.downcase()))
+           |> Enum.reject(&(&1 == ""))
+
     if config_env() == :prod do
       # the administrator's password is never published (#45)
       password = System.get_env("DEMO_ADMIN_PASSWORD", "")

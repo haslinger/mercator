@@ -7,7 +7,7 @@ Mit `MERCATOR_MODE=demo` ist die Installation eine öffentliche Demo (wie die Bi
 - **Befüllen:** beim ersten Start mit leerer Datenbank lädt die App die Demodaten: Katalog mit Fotos, Seiten, Bestellungen, Gespräche, Angebote und Demo-Benutzer (dauert etwa eine Minute).
 - **Demo-Benutzer:** die Administration bekommt `DEMO_ADMIN_PASSWORD` und wird nie öffentlich gezeigt. Alle anderen haben das Passwort `mercator-demo`; die Anmeldeseite bietet sie als Ein-Klick-Knöpfe an, ohne Adressen oder Passwort zu zeigen. Sie können Passwort und Rollen nicht ändern und kein neues Passwort anfordern.
 - **Zahlung:** der Zahlungssimulator ist der aktive Anbieter; niemand zahlt echtes Geld.
-- **Nächtliches Zurücksetzen um 03:00** (Shop-Zeit): alle Tabellen werden geleert (auch Konten, die Besucherinnen und Besucher angelegt haben), Uploads gelöscht und die Demodaten neu geladen.
+- **Nächtliches Zurücksetzen um 03:00** (Shop-Zeit): alle Tabellen werden geleert (auch Konten, die Besucherinnen und Besucher angelegt haben), Uploads gelöscht und die Demodaten neu geladen. Konten in `DEMO_KEEP_ACCOUNTS` (E-Mail-Adressen mit Komma getrennt, z. B. das eigene Mitarbeiterkonto) bleiben erhalten, samt Anmeldungen und Handy-Benachrichtigungen; ihre Gespräche und Bestellungen werden wie alles andere zurückgesetzt. Die Demo-Konten selbst werden immer zurückgesetzt.
 - **Making-of:** die Sitzungsprotokolle und Projektkennzahlen unter `/making-of`, verlinkt in der Fußzeile.
 - Ein **Demo**-Zeichen in der Kopfzeile.
 

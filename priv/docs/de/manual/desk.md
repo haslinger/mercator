@@ -33,7 +33,7 @@ Die Benachrichtigung zeigt den Namen und den Anfang der Nachricht und kommt in d
 
 Am iPhone geht das nur, wenn der Shop zum Home-Bildschirm hinzugefügt ist (Teilen → „Zum Home-Bildschirm“), und von dort geöffnet wird. Die Zustellung ist nicht garantiert: Der Ton am Beratungsplatz und der Rückruf nach drei Minuten bleiben.
 
-**Ausschalten:** Ein Tipp auf den grünen Knopf **Benachrichtigungen an** schaltet sie für dieses Gerät wieder aus; auch beim Abmelden gehen sie aus. Jedes Gerät hat seinen eigenen Schalter: Handy und Computer schalten Sie getrennt ein und aus.
+**Ausschalten:** Ein Tipp auf den grünen Knopf **Benachrichtigungen an** schaltet sie für dieses Gerät wieder aus; auch beim Abmelden gehen sie aus. Läuft die Anmeldung nur ab (nach 30 Tagen), bleiben sie an; ein Tipp darauf führt dann zur Anmeldung. Jedes Gerät hat seinen eigenen Schalter: Handy und Computer schalten Sie getrennt ein und aus.
 
 ## Ein Gespräch führen
 

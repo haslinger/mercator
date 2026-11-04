@@ -35,7 +35,7 @@ Two stages, like pan:
 - Everything secret or site-specific comes from `.env` (gitignored; `.env.example`
   documents it): `POSTGRES_PASSWORD`, `SECRET_KEY_BASE`, `TOKEN_SIGNING_SECRET`,
   `PHX_HOST`, `TRUSTED_PROXIES` (the reverse proxy, for client IPs and rate limits),
-  `MAIL_FROM_ADDRESS`, the SMTP settings, `MERCATOR_MODE`, `DEMO_ADMIN_PASSWORD`, and
+  `MAIL_FROM_ADDRESS`, the SMTP settings, `MERCATOR_MODE`, `DEMO_ADMIN_PASSWORD`, `DEMO_KEEP_ACCOUNTS`, and
   later `MOLLIE_API_KEY`.
   Optional: `VAPID_PUBLIC_KEY`/`VAPID_PRIVATE_KEY` for phone notifications (#151).
 
@@ -70,7 +70,11 @@ emails become incidents (failed Oban jobs, #105).
   migrations), removes uploads and seeds again. Accounts visitors registered are gone
   too. Logins do not survive it either, not even "remember me" ones (e.g. in the phone
   app): the token table is emptied and the users are seeded anew. Accepted, the demo is
-  meant to be ephemeral.
+  meant to be ephemeral. Exception (#166, 2026-11-04): the accounts in
+  `DEMO_KEEP_ACCOUNTS` (comma-separated emails, e.g. the operator's own staff account)
+  are copied to temporary tables with their tokens and push subscriptions and put back
+  after seeding, unchanged (same id), so a staff phone stays signed in and keeps ringing.
+  Seeded demo accounts win over kept ones (#47).
 
 ## 6. Steps (one commit each, with tests)
 

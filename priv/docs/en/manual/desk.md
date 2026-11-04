@@ -33,7 +33,7 @@ The notification shows the name and the start of the message and usually arrives
 
 On an iPhone this only works when the shop is added to the home screen (Share → "Add to Home Screen") and opened from there. Delivery is not guaranteed: the tone at the desk and the callback after three minutes stay.
 
-**Switching off:** tapping the green button **Notifications on** switches them off for this device again; signing out switches them off too. Each device has its own switch: you switch your phone and your computer on and off separately.
+**Switching off:** tapping the green button **Notifications on** switches them off for this device again; signing out switches them off too. If your sign-in only expires (after 30 days), they stay on; tapping one then leads to the sign-in page. Each device has its own switch: you switch your phone and your computer on and off separately.
 
 ## Holding a conversation
 

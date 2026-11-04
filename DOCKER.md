@@ -57,7 +57,10 @@ In `.env` set at least:
   logo, colours, contact data); empty for the neutral Mercator look.
 * For the demo: `MERCATOR_MODE=demo` and `DEMO_ADMIN_PASSWORD` (the
   administrator's password, never published; at least 8 characters, and
-  not `change-me`). For a customer's shop leave `MERCATOR_MODE` empty.
+  not `change-me`). Optional `DEMO_KEEP_ACCOUNTS`: comma-separated emails
+  of accounts the nightly reset keeps (e.g. your own staff account, which then
+  stays signed in and keeps its phone notifications). For a customer's shop
+  leave `MERCATOR_MODE` empty.
 
 `.env` is gitignored, so `git pull` never touches it. It is read when the
 containers start; after changing it, `docker compose up -d` is enough.

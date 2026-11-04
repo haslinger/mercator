@@ -48,6 +48,7 @@ services:
       BRAND: ${BRAND:-}
       MERCATOR_MODE: ${MERCATOR_MODE:-}
       DEMO_ADMIN_PASSWORD: ${DEMO_ADMIN_PASSWORD:-}
+      DEMO_KEEP_ACCOUNTS: ${DEMO_KEEP_ACCOUNTS:-}
       MOLLIE_API_KEY: ${MOLLIE_API_KEY:-}
       # phone notifications (Web Push): `mix mercator.gen.vapid`
       VAPID_PUBLIC_KEY: ${VAPID_PUBLIC_KEY:-}

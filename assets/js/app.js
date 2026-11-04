@@ -72,9 +72,12 @@ if ("serviceWorker" in navigator) {
 }
 
 // Phone notifications (Web Push, #151) belong to the signed-in staff member:
-// once signed out, this device stops receiving them (the server deletes the
-// subscription when the push service reports it gone)
-if ("serviceWorker" in navigator && document.documentElement.dataset.signedIn !== "true") {
+// after an explicit sign-out (the server sets the "signed_out" cookie) this
+// device stops receiving them (the server deletes the subscription when the
+// push service reports it gone). An expired session or the nightly demo
+// reset keep them, so the phone still rings.
+if ("serviceWorker" in navigator && document.cookie.split("; ").includes("signed_out=1")) {
+  document.cookie = "signed_out=; max-age=0; path=/; samesite=lax"
   navigator.serviceWorker.getRegistration()
     .then(registration => registration?.pushManager?.getSubscription())
     .then(subscription => subscription?.unsubscribe())

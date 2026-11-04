@@ -101,6 +101,9 @@ defmodule MercatorWeb.AuthController do
     |> clear_session(:mercator)
     |> then(&if(chosen_locale, do: put_session(&1, "chosen_locale", chosen_locale), else: &1))
     |> put_flash(:info, gettext("You are now signed out."))
+    # tells app.js to switch off phone notifications on this device; only an
+    # explicit sign-out does, an expired session or the demo reset do not
+    |> put_resp_cookie("signed_out", "1", http_only: false, max_age: 300, same_site: "Lax")
     |> redirect(to: return_to)
   end
 end

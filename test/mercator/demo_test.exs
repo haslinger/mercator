@@ -6,7 +6,7 @@ defmodule Mercator.DemoTest do
   import Mercator.AccountsFixtures
 
   alias AshAuthentication.{Info, Strategy}
-  alias Mercator.{Accounts, Demo, Payments, Seeds}
+  alias Mercator.{Accounts, Demo, Payments, Repo, Seeds}
   alias Mercator.Accounts.User
   alias Mercator.Demo.Workers.Reset
   alias Mercator.Payments.Simulator
@@ -170,6 +170,53 @@ defmodule Mercator.DemoTest do
       assert length(Ash.read!(User, authorize?: false)) == length(Seeds.demo_users())
       assert File.ls!(uploads) == []
       assert Payments.active() == Simulator
+    end
+
+    test "the nightly reset keeps the listed accounts with sign-ins and push subscriptions" do
+      Demo.seed()
+      admin = user("admin@mittenin.at")
+      staff = user_fixture(email: "Keep.Me@example.com")
+      {:ok, staff} = Accounts.set_user_roles(staff, [:sales], actor: admin)
+      {:ok, _token, _claims} = AshAuthentication.Jwt.token_for_user(staff)
+
+      {:ok, _subscription} =
+        Accounts.subscribe_push(
+          %{endpoint: "https://push.example.com/keep-me", p256dh: "key", auth: "secret"},
+          actor: staff
+        )
+
+      sales = user("sales@mittenin.at")
+      Ash.Seed.update!(sales, %{name: "Changed"})
+      visitor = user_fixture()
+
+      Application.put_env(:mercator, :demo_keep_accounts, [
+        "keep.me@example.com",
+        "sales@mittenin.at"
+      ])
+
+      on_exit(fn -> Application.delete_env(:mercator, :demo_keep_accounts) end)
+
+      assert :ok = perform_job(Reset, %{})
+
+      kept = user("keep.me@example.com")
+      assert kept.id == staff.id
+      assert kept.roles == [:sales]
+      assert kept.hashed_password == staff.hashed_password
+
+      assert [%{endpoint: "https://push.example.com/keep-me"}] =
+               Accounts.list_my_push_subscriptions!(actor: kept)
+
+      assert %{rows: [[tokens]]} =
+               Repo.query!("SELECT count(*) FROM tokens WHERE subject = $1", [
+                 "user?id=#{kept.id}"
+               ])
+
+      assert tokens > 0
+
+      # a seeded account is repaired, not kept; visitors are gone
+      assert user("sales@mittenin.at").name == "Sepp Fuchs"
+      refute user(to_string(visitor.email))
+      assert length(Ash.read!(User, authorize?: false)) == length(Seeds.demo_users()) + 1
     end
   end
 end
