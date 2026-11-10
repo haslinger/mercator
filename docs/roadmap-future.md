@@ -23,4 +23,6 @@ Smaller improvements noted along the way, not tied to a phase step.
 
 ## Open questions
 
-*None right now.*
+Last used number: **#168** (the next new question is #169).
+
+- **#168** ex_webrtc 0.18 and phoenix_live_dashboard 0.9 are blocked because ex_webrtc_dashboard 0.10.0 pins the older versions. Recommendation: wait for a new ex_webrtc_dashboard release.
